@@ -1,0 +1,418 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>网络数据包过滤 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/connectivity/networking/api/net_pkt_filter.html" />
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../../search.html" />
+    <link rel="next" title="网络 Shell" href="net_shell.html" />
+    <link rel="prev" title="流量分类" href="traffic-class.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html">
+            
+              <img src="../../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">服务</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">连接</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">网络</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../overview.html">概述</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../net-stack-architecture.html">网络协议栈架构</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../net_config_guide.html">网络配置指南</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../networking_with_host.html">与主机系统联网</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../network_monitoring.html">监视网络流量</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../network_tracing.html">网络跟踪</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../conformance/index.html">使用 TTCN-3 进行协议一致性测试</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="index.html">网络 API</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="apis.html">网络 API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="buf_mgmt.html">网络数据包管理</a></li>
+<li class="toctree-l5"><a class="reference internal" href="net_tech.html">网络技术</a></li>
+<li class="toctree-l5"><a class="reference internal" href="protocols.html">协议</a></li>
+<li class="toctree-l5"><a class="reference internal" href="quic.html">QUIC 传输接口</a></li>
+<li class="toctree-l5 current"><a class="reference internal" href="system_mgmt.html">网络系统管理</a><ul class="current">
+<li class="toctree-l6"><a class="reference internal" href="net_config.html">网络配置库</a></li>
+<li class="toctree-l6"><a class="reference internal" href="dhcpv4.html">DHCPv4</a></li>
+<li class="toctree-l6"><a class="reference internal" href="dhcpv6.html">DHCPv6</a></li>
+<li class="toctree-l6"><a class="reference internal" href="net_hostname.html">主机名配置</a></li>
+<li class="toctree-l6"><a class="reference internal" href="net_core.html">网络核心辅助函数</a></li>
+<li class="toctree-l6"><a class="reference internal" href="net_if.html">网络接口</a></li>
+<li class="toctree-l6"><a class="reference internal" href="net_l2.html">L2 层管理</a></li>
+<li class="toctree-l6"><a class="reference internal" href="net_offload.html">网络流量卸载</a></li>
+<li class="toctree-l6"><a class="reference internal" href="net_linkaddr.html">链路层地址处理</a></li>
+<li class="toctree-l6"><a class="reference internal" href="ethernet_mgmt.html">以太网管理</a></li>
+<li class="toctree-l6"><a class="reference internal" href="traffic-class.html">流量分类</a></li>
+<li class="toctree-l6 current"><a class="current reference internal" href="#">网络数据包过滤</a></li>
+<li class="toctree-l6"><a class="reference internal" href="net_shell.html">网络 Shell</a></li>
+<li class="toctree-l6"><a class="reference internal" href="tls_credentials_shell.html">TLS 凭据 Shell</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="tsn.html">时间敏感网络</a></li>
+<li class="toctree-l5"><a class="reference internal" href="zperf.html">zperf：网络流量生成器</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../conn_mgr/index.html">连接管理器</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../dsa.html">分布式交换架构（DSA）</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../bluetooth/index.html">Bluetooth</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../usb/index.html">USB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../canbus/index.html">控制器局域网（CAN）总线协议</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lora_lorawan/index.html">LoRa 和 LoRaWAN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modbus/index.html">Modbus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modem/index.html">调制解调器模块</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../../index.html">连接</a> &raquo;</li>
+  
+     <li><a href="../index.html">网络</a> &raquo;</li>
+  
+     <li><a href="index.html">网络 API</a> &raquo;</li>
+  
+     <li><a href="system_mgmt.html">网络系统管理</a> &raquo;</li>
+  
+  <li>网络数据包过滤</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="network-packet-filtering">
+<span id="net-pkt-filter-interface"></span><h1>网络数据包过滤<a class="headerlink" href="#network-packet-filtering" title="链接到此标题。"></a></h1>
+<nav class="contents local" id="id1">
+<ul class="simple">
+<li><p><a class="reference internal" href="#overview" id="id2">概述</a></p></li>
+<li><p><a class="reference internal" href="#examples" id="id3">示例</a></p></li>
+<li><p><a class="reference internal" href="#api-reference" id="id4">API 参考</a></p></li>
+</ul>
+</nav>
+<section id="overview">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">概述</a><a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>网络数据包过滤功能提供了构建自定义规则的基础设施，用于接受和/或拒绝数据包的发送和接收。它还允许修改传入网络数据包的优先级。这可用于构建基本的防火墙、控制网络流量等。</p>
+<p>必须设置 <a class="reference internal" href="../../../../kconfig.html#CONFIG_NET_PKT_FILTER" title="CONFIG_NET_PKT_FILTER"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_PKT_FILTER</span></code></a> 才能启用相关 API。</p>
+<p>发送路径和接收路径都可以有一个过滤规则列表。每条规则由一组条件和一个数据包处理结果组成。每个数据包都要接受规则所附条件的检验。当某条规则的所有条件都为真时，数据包的处理结果立即按该规则的规定确定，不再考虑其余规则。如果有一个条件为假，则考虑列表中的下一条规则。</p>
+<p>数据包处理结果可以是 <code class="docutils literal notranslate"><span class="pre">NET_OK</span></code> （接受数据包）、<code class="docutils literal notranslate"><span class="pre">NET_DROP</span></code> （丢弃数据包）或 <code class="docutils literal notranslate"><span class="pre">NET_CONTINUE</span></code> （动态修改其优先级）。</p>
+<p>当处理结果为 <code class="docutils literal notranslate"><span class="pre">NET_CONTINUE</span></code> 时，优先级会被更新，但最终结果尚未确定，处理将继续进行。如果多条规则的所有条件都为真，则数据包获得最后考虑的那条规则的优先级。</p>
+<p>规则由 <code class="xref c c-struct docutils literal notranslate"><span class="pre">npf_rule</span></code> 对象表示。可以使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">npf_insert_rule()</span></code>、<code class="xref c c-func docutils literal notranslate"><span class="pre">npf_append_rule()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">npf_remove_rule()</span></code> 将其插入、追加到 <code class="xref c c-struct docutils literal notranslate"><span class="pre">npf_rule_list</span></code> 对象所包含的规则列表中，或从中移除。</p>
+<p>网络协议栈的不同层有不同的规则集。有些规则应用于以太网等 L2 层，有些应用于处理 IPv4 或 IPv6 协议的 L3 层。<code class="docutils literal notranslate"><span class="pre">local_in</span></code> 规则用于匹配运行在 IPv4 或 IPv6 之上的传入协议类型，例如 UDP 或 TCP 数据包。各层的规则支持可由下文提到的相关 Kconfig 选项控制。</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">npf_send_rules</span></code> 是应用于 L2 层传出数据包的规则列表</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">npf_recv_rules</span></code> 是应用于 L2 层传入数据包的规则列表</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">npf_ipv4_recv_rules</span></code> 是应用于传入 IPv4 数据包的规则列表。可通过 <a class="reference internal" href="../../../../kconfig.html#CONFIG_NET_PKT_FILTER_IPV4_HOOK" title="CONFIG_NET_PKT_FILTER_IPV4_HOOK"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_PKT_FILTER_IPV4_HOOK</span></code></a> 选项启用或禁用。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">npf_ipv6_recv_rules</span></code> 是应用于传入 IPv6 数据包的规则列表。可通过 <a class="reference internal" href="../../../../kconfig.html#CONFIG_NET_PKT_FILTER_IPV6_HOOK" title="CONFIG_NET_PKT_FILTER_IPV6_HOOK"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_PKT_FILTER_IPV6_HOOK</span></code></a> 选项启用或禁用。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">npf_local_in_recv_rules</span></code> 是应用于传入 UDP 或 TCP 数据包的规则列表。可通过 <a class="reference internal" href="../../../../kconfig.html#CONFIG_NET_PKT_FILTER_LOCAL_IN_HOOK" title="CONFIG_NET_PKT_FILTER_LOCAL_IN_HOOK"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_PKT_FILTER_LOCAL_IN_HOOK</span></code></a> 选项启用或禁用。</p></li>
+</ul>
+<p>如果过滤规则列表为空，则默认结果为 <code class="docutils literal notranslate"><span class="pre">NET_OK</span></code>。如果一个非空规则列表一直执行到末尾，则默认结果为 <code class="docutils literal notranslate"><span class="pre">NET_DROP</span></code>。不过，建议始终以显式的默认终止规则（<code class="docutils literal notranslate"><span class="pre">npf_default_ok</span></code> 或 <code class="docutils literal notranslate"><span class="pre">npf_default_drop</span></code>）结束非空规则列表。</p>
+<p>规则条件由 <code class="xref c c-struct docutils literal notranslate"><span class="pre">npf_test</span></code> 表示。当某个条件需要额外的测试数据时，可以将该结构体嵌入到一个更大的结构体中。此类条件的测试函数负责根据传入的 <code class="docutils literal notranslate"><span class="pre">npf_test</span></code> 结构体指针获取外层结构体。</p>
+<p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/net/net_pkt_filter.h">include/zephyr/net/net_pkt_filter.h</a> 中提供了一些便捷宏，用于为各种条件静态定义条件实例；还提供了 <code class="xref c c-macro docutils literal notranslate"><span class="pre">NPF_RULE()</span></code> 和 <code class="xref c c-macro docutils literal notranslate"><span class="pre">NPF_PRIORITY()</span></code>，用于创建立即给出处理结果或修改优先级的规则实例。</p>
+<p>关于如何创建和管理数据包过滤器，另请参见 <a class="reference internal" href="../../../../samples/net/pkt_filter/README.html#net-pkt-filter" title="安装网络数据包过滤器钩子。">Network packet filter</a> 示例。网络 shell 提供了 <code class="docutils literal notranslate"><span class="pre">net</span> <span class="pre">filter</span></code> 命令，可在运行时查看已安装的规则。</p>
+</section>
+<section id="examples">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">示例</a><a class="headerlink" href="#examples" title="链接到此标题。"></a></h2>
+<p>下面是一个用法示例：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="n">NPF_SIZE_MAX</span><span class="p">(</span><span class="n">maxsize_200</span><span class="p">,</span><span class="w"> </span><span class="mi">200</span><span class="p">);</span>
+<span class="k">static</span><span class="w"> </span><span class="n">NPF_ETH_TYPE_MATCH</span><span class="p">(</span><span class="n">ip_packet</span><span class="p">,</span><span class="w"> </span><span class="n">NET_ETH_PTYPE_IP</span><span class="p">);</span>
+
+<span class="k">static</span><span class="w"> </span><span class="n">NPF_RULE</span><span class="p">(</span><span class="n">small_ip_pkt</span><span class="p">,</span><span class="w"> </span><span class="n">NET_OK</span><span class="p">,</span><span class="w"> </span><span class="n">ip_packet</span><span class="p">,</span><span class="w"> </span><span class="n">maxsize_200</span><span class="p">);</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">install_my_filter</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">npf_insert_recv_rule</span><span class="p">(</span><span class="o">&amp;</span><span class="n">npf_default_drop</span><span class="p">);</span>
+<span class="w">    </span><span class="n">npf_insert_recv_rule</span><span class="p">(</span><span class="o">&amp;</span><span class="n">small_ip_pkt</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>上述规则会接受 200 字节及以下的 IP 数据包，并丢弃其他所有数据包。</p>
+<p>实现相同结果的另一种（效率较低的）方式是：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="n">NPF_SIZE_MIN</span><span class="p">(</span><span class="n">minsize_201</span><span class="p">,</span><span class="w"> </span><span class="mi">201</span><span class="p">);</span>
+<span class="k">static</span><span class="w"> </span><span class="n">NPF_ETH_TYPE_UNMATCH</span><span class="p">(</span><span class="n">not_ip_packet</span><span class="p">,</span><span class="w"> </span><span class="n">NET_ETH_PTYPE_IP</span><span class="p">);</span>
+
+<span class="k">static</span><span class="w"> </span><span class="n">NPF_RULE</span><span class="p">(</span><span class="n">reject_big_pkts</span><span class="p">,</span><span class="w"> </span><span class="n">NET_DROP</span><span class="p">,</span><span class="w"> </span><span class="n">minsize_201</span><span class="p">);</span>
+<span class="k">static</span><span class="w"> </span><span class="n">NPF_RULE</span><span class="p">(</span><span class="n">reject_non_ip</span><span class="p">,</span><span class="w"> </span><span class="n">NET_DROP</span><span class="p">,</span><span class="w"> </span><span class="n">not_ip_packet</span><span class="p">);</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">install_my_filter</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">npf_append_recv_rule</span><span class="p">(</span><span class="o">&amp;</span><span class="n">reject_big_pkts</span><span class="p">);</span>
+<span class="w">    </span><span class="n">npf_append_recv_rule</span><span class="p">(</span><span class="o">&amp;</span><span class="n">reject_non_ip</span><span class="p">);</span>
+<span class="w">    </span><span class="n">npf_append_recv_rule</span><span class="p">(</span><span class="o">&amp;</span><span class="n">npf_default_ok</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>此示例为不同的网络流量分配优先级。它为 <code class="docutils literal notranslate"><span class="pre">ptp</span></code> 数据包分配网络控制优先级（<code class="docutils literal notranslate"><span class="pre">NET_PRIORITY_NC</span></code>），为第 6 版互联网协议流量分配关键应用优先级（<code class="docutils literal notranslate"><span class="pre">NET_PRIORITY_CA</span></code>），为第 4 版互联网协议流量分配卓越努力优先级（<code class="docutils literal notranslate"><span class="pre">NET_PRIORITY_EE</span></code>），并为 <code class="docutils literal notranslate"><span class="pre">lldp</span></code> 和 <code class="docutils literal notranslate"><span class="pre">arp</span></code> 分配最低的后台优先级（<code class="docutils literal notranslate"><span class="pre">NET_PRIORITY_BK</span></code>）。</p>
+<p>只有在项目配置 <a class="reference internal" href="../../../../kconfig.html#CONFIG_NET_TC_RX_COUNT" title="CONFIG_NET_TC_RX_COUNT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_TC_RX_COUNT</span></code></a> 中启用了多个流量类别队列时，优先级规则才真正有用。数据包优先级到流量类别队列的映射遵循 802.1Q 标准，并取决于 <a class="reference internal" href="../../../../kconfig.html#CONFIG_NET_TC_RX_COUNT" title="CONFIG_NET_TC_RX_COUNT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_TC_RX_COUNT</span></code></a>。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="n">NPF_ETH_TYPE_MATCH</span><span class="p">(</span><span class="n">is_arp</span><span class="p">,</span><span class="w"> </span><span class="n">NET_ETH_PTYPE_ARP</span><span class="p">);</span>
+<span class="k">static</span><span class="w"> </span><span class="n">NPF_ETH_TYPE_MATCH</span><span class="p">(</span><span class="n">is_lldp</span><span class="p">,</span><span class="w"> </span><span class="n">NET_ETH_PTYPE_LLDP</span><span class="p">);</span>
+<span class="k">static</span><span class="w"> </span><span class="n">NPF_ETH_TYPE_MATCH</span><span class="p">(</span><span class="n">is_ptp</span><span class="p">,</span><span class="w"> </span><span class="n">NET_ETH_PTYPE_PTP</span><span class="p">);</span>
+<span class="k">static</span><span class="w"> </span><span class="n">NPF_ETH_TYPE_MATCH</span><span class="p">(</span><span class="n">is_ipv4</span><span class="p">,</span><span class="w"> </span><span class="n">NET_ETH_PTYPE_IP</span><span class="p">);</span>
+<span class="k">static</span><span class="w"> </span><span class="n">NPF_ETH_TYPE_MATCH</span><span class="p">(</span><span class="n">is_ipv6</span><span class="p">,</span><span class="w"> </span><span class="n">NET_ETH_PTYPE_IPV6</span><span class="p">);</span>
+
+<span class="k">static</span><span class="w"> </span><span class="n">NPF_PRIORITY</span><span class="p">(</span><span class="n">priority_bk</span><span class="p">,</span><span class="w"> </span><span class="n">NET_PRIORITY_BK</span><span class="p">,</span><span class="w"> </span><span class="n">is_arp</span><span class="p">,</span><span class="w"> </span><span class="n">is_lldp</span><span class="p">);</span>
+<span class="k">static</span><span class="w"> </span><span class="n">NPF_PRIORITY</span><span class="p">(</span><span class="n">priority_ee</span><span class="p">,</span><span class="w"> </span><span class="n">NET_PRIORITY_EE</span><span class="p">,</span><span class="w"> </span><span class="n">is_ipv4</span><span class="p">);</span>
+<span class="k">static</span><span class="w"> </span><span class="n">NPF_PRIORITY</span><span class="p">(</span><span class="n">priority_ca</span><span class="p">,</span><span class="w"> </span><span class="n">NET_PRIORITY_CA</span><span class="p">,</span><span class="w"> </span><span class="n">is_ipv6</span><span class="p">);</span>
+<span class="k">static</span><span class="w"> </span><span class="n">NPF_PRIORITY</span><span class="p">(</span><span class="n">priority_nc</span><span class="p">,</span><span class="w"> </span><span class="n">NET_PRIORITY_NC</span><span class="p">,</span><span class="w"> </span><span class="n">is_ptp</span><span class="p">);</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">install_my_filter</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">npf_append_recv_rule</span><span class="p">(</span><span class="o">&amp;</span><span class="n">priority_bk</span><span class="p">);</span>
+<span class="w">    </span><span class="n">npf_append_recv_rule</span><span class="p">(</span><span class="o">&amp;</span><span class="n">priority_ee</span><span class="p">);</span>
+<span class="w">    </span><span class="n">npf_append_recv_rule</span><span class="p">(</span><span class="o">&amp;</span><span class="n">priority_ca</span><span class="p">);</span>
+<span class="w">    </span><span class="n">npf_append_recv_rule</span><span class="p">(</span><span class="o">&amp;</span><span class="n">priority_nc</span><span class="p">);</span>
+<span class="w">    </span><span class="n">npf_append_recv_rule</span><span class="p">(</span><span class="o">&amp;</span><span class="n">npf_default_ok</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="api-reference">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">API 参考</a><a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">net_pkt_filter</span></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/pkt_filter/README.html#net-pkt-filter" title="安装网络数据包过滤器钩子。">Network packet filter</a></span><span class="code-sample-description">安装网络数据包过滤器钩子。</span></li>
+</ul>
+</div>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">npf_basic_cond</span></dt>
+</dl>
+
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">npf_eth_cond</span></dt>
+</dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 4月 15, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

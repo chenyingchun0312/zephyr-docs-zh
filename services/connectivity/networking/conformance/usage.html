@@ -1,0 +1,529 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>运行一致性测试套件 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/connectivity/networking/conformance/usage.html" />
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../../search.html" />
+    <link rel="next" title="一致性测试的组成方式" href="architecture.html" />
+    <link rel="prev" title="使用 TTCN-3 进行协议一致性测试" href="index.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html">
+            
+              <img src="../../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">服务</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">连接</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">网络</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../overview.html">概述</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../net-stack-architecture.html">网络协议栈架构</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../net_config_guide.html">网络配置指南</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../networking_with_host.html">与主机系统联网</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../network_monitoring.html">监视网络流量</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../network_tracing.html">网络跟踪</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="index.html">使用 TTCN-3 进行协议一致性测试</a><ul class="current">
+<li class="toctree-l5 current"><a class="current reference internal" href="#">运行一致性测试套件</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#what-a-run-needs">运行所需的条件</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#installing-titan">安装 Titan</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#running-the-suites-with-the-script">使用脚本运行测试套件</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#setting-up-the-network-interfaces">设置网络接口</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#running-the-suites-with-twister">使用 Twister 运行测试套件</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#running-a-suite-by-hand">手动运行测试套件</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#reading-the-result">解读结果</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#when-a-suite-is-skipped">测试套件被跳过时</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#troubleshooting">故障排除</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="architecture.html">一致性测试的组成方式</a></li>
+<li class="toctree-l5"><a class="reference internal" href="index.html#how-it-fits-together">整体结构</a></li>
+<li class="toctree-l5"><a class="reference internal" href="index.html#the-suites">测试套件</a></li>
+<li class="toctree-l5"><a class="reference internal" href="index.html#known-gaps">已知的覆盖缺口</a></li>
+<li class="toctree-l5"><a class="reference internal" href="index.html#continuous-integration">持续集成</a></li>
+<li class="toctree-l5"><a class="reference internal" href="index.html#other-ttcn-3-suites">其他 TTCN-3 测试套件</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../api/index.html">网络 API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../conn_mgr/index.html">连接管理器</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../dsa.html">分布式交换架构（DSA）</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../bluetooth/index.html">Bluetooth</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../usb/index.html">USB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../canbus/index.html">控制器局域网（CAN）总线协议</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lora_lorawan/index.html">LoRa 和 LoRaWAN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modbus/index.html">Modbus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modem/index.html">调制解调器模块</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../../index.html">连接</a> &raquo;</li>
+  
+     <li><a href="../index.html">网络</a> &raquo;</li>
+  
+     <li><a href="index.html">使用 TTCN-3 进行协议一致性测试</a> &raquo;</li>
+  
+  <li>运行一致性测试套件</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="running-the-conformance-suites">
+<span id="ttcn3-running"></span><h1>运行一致性测试套件<a class="headerlink" href="#running-the-conformance-suites" title="链接到此标题。"></a></h1>
+<nav class="contents local" id="id1">
+<ul class="simple">
+<li><p><a class="reference internal" href="#what-a-run-needs" id="id2">运行所需的条件</a></p></li>
+<li><p><a class="reference internal" href="#installing-titan" id="id3">安装 Titan</a></p>
+<ul>
+<li><p><a class="reference internal" href="#building-titan-from-source" id="id4">从源码构建 Titan</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#running-the-suites-with-the-script" id="id5">使用脚本运行测试套件</a></p></li>
+<li><p><a class="reference internal" href="#setting-up-the-network-interfaces" id="id6">设置网络接口</a></p>
+<ul>
+<li><p><a class="reference internal" href="#zeth-the-shared-interface" id="id7"><code class="docutils literal notranslate"><span class="pre">zeth</span></code>：共享接口</a></p></li>
+<li><p><a class="reference internal" href="#zethl2-the-address-less-interface" id="id8"><code class="docutils literal notranslate"><span class="pre">zethL2</span></code>：无地址接口</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#running-the-suites-with-twister" id="id9">使用 Twister 运行测试套件</a></p>
+<ul>
+<li><p><a class="reference internal" href="#running-as-root" id="id10">以 root 身份运行</a></p></li>
+<li><p><a class="reference internal" href="#why-a-run-is-serial" id="id11">为什么运行是串行的</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#running-a-suite-by-hand" id="id12">手动运行测试套件</a></p></li>
+<li><p><a class="reference internal" href="#reading-the-result" id="id13">解读结果</a></p></li>
+<li><p><a class="reference internal" href="#when-a-suite-is-skipped" id="id14">测试套件被跳过时</a></p></li>
+<li><p><a class="reference internal" href="#troubleshooting" id="id15">故障排除</a></p>
+<ul>
+<li><p><a class="reference internal" href="#the-suite-does-not-compile" id="id16">测试套件无法编译</a></p></li>
+<li><p><a class="reference internal" href="#the-suite-sees-nothing-and-times-out" id="id17">测试套件收不到任何数据并超时</a></p></li>
+<li><p><a class="reference internal" href="#a-run-hangs-or-is-cut-off" id="id18">运行挂起或被中断</a></p></li>
+<li><p><a class="reference internal" href="#leftover-state" id="id19">遗留状态</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<p>一次运行的过程如下：Twister 构建并启动被测系统，测试框架使用 Titan 构建 TTCN-3 测试套件，测试套件通过 tap 接口与正在运行的应用程序通信，最后 Titan 的判定结果成为测试结果。</p>
+<section id="what-a-run-needs">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">运行所需的条件</a><a class="headerlink" href="#what-a-run-needs" title="链接到此标题。"></a></h2>
+<ul class="simple">
+<li><p><strong>Titan 安装</strong>，并将 <code class="docutils literal notranslate"><span class="pre">TTCN3_DIR</span></code> 指向它。参见 <a class="reference internal" href="#ttcn3-installing-titan"><span class="std std-ref">安装 Titan</span></a>。</p></li>
+<li><p><strong>第三方 TTCN-3 模块</strong>，使用 <code class="file docutils literal notranslate"><span class="pre">ttcn3/fetch-modules.sh</span></code> 获取一次即可。这些模块按固定的提交克隆，不属于 <code class="docutils literal notranslate"><span class="pre">net-tools</span></code> 仓库。</p></li>
+<li><p><strong>net-tools 检出副本</strong>，west 工作区中已经有了：它在 <code class="file docutils literal notranslate"><span class="pre">west.yml</span></code> 的 <code class="docutils literal notranslate"><span class="pre">tools</span></code> 组中，而该组未被过滤掉。</p></li>
+<li><p><strong>make</strong>，因为 Titan 用它来构建测试套件。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">zeth</span></code> <strong>接口</strong>，对于在 IP 层以下工作的测试套件则为 <code class="docutils literal notranslate"><span class="pre">zethL2</span></code>。参见 <a class="reference internal" href="#ttcn3-interfaces"><span class="std std-ref">设置网络接口</span></a>。</p></li>
+<li><p><strong>root 权限</strong>，用于无法避免使用特权端口或数据包套接字的测试套件。</p></li>
+<li><p><strong>expect</strong>，用于通过 Titan 主控制器运行的测试套件。</p></li>
+</ul>
+<p><a class="reference internal" href="index.html#ttcn3-suites"><span class="std std-ref">测试套件</span></a> 列出了各测试套件分别需要其中哪些条件，<a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/scripts/net/run-conformance-tests.sh">scripts/net/run-conformance-tests.sh</a> <code class="docutils literal notranslate"><span class="pre">--list</span></code> 也会打印相同的信息。</p>
+<p>测试框架会在设置了 <code class="docutils literal notranslate"><span class="pre">NET_TOOLS_BASE</span></code> 时到该位置查找 net-tools，否则先在相对于 <code class="docutils literal notranslate"><span class="pre">ZEPHYR_BASE</span></code> 的 <code class="file docutils literal notranslate"><span class="pre">../tools/net-tools/ttcn3</span></code> 查找，再到上一级目录查找。所有这些都会在构建之前检查，缺少任何一项都会跳过测试并给出原因，而不是让测试失败。</p>
+</section>
+<section id="installing-titan">
+<span id="ttcn3-installing-titan"></span><h2><a class="toc-backref" href="#id3" role="doc-backlink">安装 Titan</a><a class="headerlink" href="#installing-titan" title="链接到此标题。"></a></h2>
+<p>大多数发行版都打包了 Titan，持续集成安装的就是它：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">sudo apt install --no-install-recommends eclipse-titan expect</span>
+<span class="go">export TTCN3_DIR=/usr</span>
+</pre></div>
+</div>
+<p>打包的版本落后于测试套件所依赖的协议模块，因此如果测试套件编译失败，请改为从源码构建最新的 Titan。</p>
+<section id="building-titan-from-source">
+<h3><a class="toc-backref" href="#id4" role="doc-backlink">从源码构建 Titan</a><a class="headerlink" href="#building-titan-from-source" title="链接到此标题。"></a></h3>
+<p><code class="file docutils literal notranslate"><span class="pre">net-tools/docker/Dockerfile.ttcn3</span></code> 会将 Titan 构建到 <code class="file docutils literal notranslate"><span class="pre">/opt/titan</span></code> 中，可作为手动构建的参考，既可以作为容器使用，也可以作为操作步骤照做。这是一个本地选项，持续集成并不使用它。</p>
+<p>手动构建 Titan 时有两点必须做对。Titan 通过其源码树中的 <code class="file docutils literal notranslate"><span class="pre">Makefile.personal</span></code> 进行配置，而不是通过 <code class="docutils literal notranslate"><span class="pre">configure</span></code> 脚本，其中的 <code class="docutils literal notranslate"><span class="pre">TTCN3_DIR</span></code> 是安装前缀。另外，<code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">install</span></code> 必须串行执行：运行时库的某些部分包含由另一部分生成的头文件，并行 make 会在这一竞争中出错。</p>
+</section>
+</section>
+<section id="running-the-suites-with-the-script">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">使用脚本运行测试套件</a><a class="headerlink" href="#running-the-suites-with-the-script" title="链接到此标题。"></a></h2>
+<p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/scripts/net/run-conformance-tests.sh">scripts/net/run-conformance-tests.sh</a> 用一条命令完成后两节所述的工作，是运行测试套件最简单的方式：它会查找 net-tools，在缺少模块时获取模块，创建所选测试套件需要的接口，在所选测试套件需要 root 时以 <code class="docutils literal notranslate"><span class="pre">sudo</span></code> 重新运行自身，运行一次 Twister，然后再拆除这些接口。</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">export TTCN3_DIR=/usr</span>
+<span class="go">./scripts/net/run-conformance-tests.sh</span>
+</pre></div>
+</div>
+<p>指定测试套件名称时只运行这些测试套件，这是在处理某一个测试套件时保持非特权运行的快捷方式：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./scripts/net/run-conformance-tests.sh mdns dns</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">--list</span></code> 显示各测试套件及其所需条件，<code class="docutils literal notranslate"><span class="pre">--keep</span></code> 保留接口供下次运行使用，<code class="docutils literal notranslate"><span class="pre">--start</span></code> 和 <code class="docutils literal notranslate"><span class="pre">--stop</span></code> 只执行对应的那一半操作。<code class="docutils literal notranslate"><span class="pre">--help</span></code> 列出其余选项以及检测到的目录。</p>
+<p>由于特权运行会以 root 身份创建文件，脚本在退出前会把 Twister 输出目录和测试套件构建目录的所有权交还给调用它的用户。</p>
+</section>
+<section id="setting-up-the-network-interfaces">
+<span id="ttcn3-interfaces"></span><h2><a class="toc-backref" href="#id6" role="doc-backlink">设置网络接口</a><a class="headerlink" href="#setting-up-the-network-interfaces" title="链接到此标题。"></a></h2>
+<p>测试套件使用两个 tap 接口，因为在 IP 层以下工作的测试套件不能与会自行应答的主机共用一条链路。</p>
+<section id="zeth-the-shared-interface">
+<h3><a class="toc-backref" href="#id7" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">zeth</span></code>：共享接口</a><a class="headerlink" href="#zeth-the-shared-interface" title="链接到此标题。"></a></h3>
+<p>供通过套接字工作的测试套件使用，此时测试器只是链路上的另一台主机：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd $ZEPHYR_BASE/../tools/net-tools</span>
+<span class="go">sudo ./net-setup.sh --config zeth.conf start</span>
+</pre></div>
+</div>
+<p>主机持有 <code class="docutils literal notranslate"><span class="pre">192.0.2.2/24</span></code> 和 <code class="docutils literal notranslate"><span class="pre">2001:db8::2</span></code>；Zephyr 在 <code class="docutils literal notranslate"><span class="pre">192.0.2.1</span></code> 和 <code class="docutils literal notranslate"><span class="pre">2001:db8::1</span></code> 上应答。将 <code class="docutils literal notranslate"><span class="pre">start</span></code> 替换为 <code class="docutils literal notranslate"><span class="pre">stop</span></code> 即可拆除该接口。</p>
+</section>
+<section id="zethl2-the-address-less-interface">
+<h3><a class="toc-backref" href="#id8" role="doc-backlink"><code class="docutils literal notranslate"><span class="pre">zethL2</span></code>：无地址接口</a><a class="headerlink" href="#zethl2-the-address-less-interface" title="链接到此标题。"></a></h3>
+<p>供在 IP 层以下工作的测试套件使用：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">sudo ./net-setup.sh --config zeth-l2.conf --iface zethL2 start</span>
+</pre></div>
+</div>
+<p>该接口特意不分配 IP 地址。除非另行设置，Linux 会为它在任何接口上持有的任何地址应答地址解析和邻居发现，而来自主机的应答与来自 Zephyr 的应答无法区分。测试器使用原始帧通信，因此不需要自己的地址。</p>
+<p>该配置设置了三个 sysctl 来阻止主机参与：<code class="docutils literal notranslate"><span class="pre">arp_ignore=8</span></code> 使其不为任何本地地址应答地址解析，<code class="docutils literal notranslate"><span class="pre">arp_announce=2</span></code> 使其从不使用该接口未持有的地址应答，<code class="docutils literal notranslate"><span class="pre">disable_ipv6=1</span></code> 使其不发送邻居通告或路由器请求。</p>
+<p><code class="docutils literal notranslate"><span class="pre">zethL2</span></code> 这个名称不能随意更改，参见 <a class="reference internal" href="architecture.html#ttcn3-test-network"><span class="std std-ref">测试网络</span></a>。</p>
+</section>
+</section>
+<section id="running-the-suites-with-twister">
+<h2><a class="toc-backref" href="#id9" role="doc-backlink">使用 Twister 运行测试套件</a><a class="headerlink" href="#running-the-suites-with-twister" title="链接到此标题。"></a></h2>
+<p>获取一次第三方模块。该脚本可以安全地重复运行：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd $ZEPHYR_BASE/../tools/net-tools</span>
+<span class="go">./ttcn3/fetch-modules.sh</span>
+</pre></div>
+</div>
+<p>然后运行测试：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">export TTCN3_DIR=/usr</span>
+<span class="go">cd $ZEPHYR_BASE</span>
+<span class="go">./scripts/twister -p native_sim --enable-slow -T tests/net/conformance</span>
+</pre></div>
+</div>
+<p>必须使用 <code class="docutils literal notranslate"><span class="pre">--enable-slow</span></code>：这些测试套件将自身标记为慢速，因为完整运行需要几十分钟。<code class="docutils literal notranslate"><span class="pre">native_sim</span></code> 是它们唯一允许的平台。</p>
+<p>通过测试标识符 <code class="docutils literal notranslate"><span class="pre">net.conformance.&lt;suite&gt;</span></code> 选择单个测试套件：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./scripts/twister -p native_sim --enable-slow -T tests/net/conformance \</span>
+<span class="go">    -s net.conformance.mdns</span>
+</pre></div>
+</div>
+<p>它们还带有 <code class="docutils literal notranslate"><span class="pre">net</span></code> 和 <code class="docutils literal notranslate"><span class="pre">conformance</span></code> 标签，因此 <code class="docutils literal notranslate"><span class="pre">--tag</span> <span class="pre">conformance</span></code> 会选中所有测试套件。</p>
+<section id="running-as-root">
+<h3><a class="toc-backref" href="#id10" role="doc-backlink">以 root 身份运行</a><a class="headerlink" href="#running-as-root" title="链接到此标题。"></a></h3>
+<p>有些测试套件必须以 root 身份运行。DHCP 规定使用 67 和 68 端口，且无法改用其他端口，因此测试器无法避免绑定特权端口；而从链路上读取帧需要数据包套接字。如果运行时权限不足，这些测试会自行跳过。</p>
+<p>请使用 <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">-E</span></code>，以便保留 <code class="docutils literal notranslate"><span class="pre">TTCN3_DIR</span></code> 及其余环境变量。一次运行要么全部以特权运行，要么全部不以特权运行，两者不能混合的原因参见 <a class="reference internal" href="architecture.html#ttcn3-runner"><span class="std std-ref">测试框架</span></a>。</p>
+</section>
+<section id="why-a-run-is-serial">
+<h3><a class="toc-backref" href="#id11" role="doc-backlink">为什么运行是串行的</a><a class="headerlink" href="#why-a-run-is-serial" title="链接到此标题。"></a></h3>
+<p>每个被测系统都在同一接口上以同一地址应答，因此同一时间只能运行一个一致性测试。它们会对接口加排他锁并互相等待，这意味着无论给 Twister 分配多少个作业，运行整个目录时都是串行的。</p>
+</section>
+</section>
+<section id="running-a-suite-by-hand">
+<span id="ttcn3-running-by-hand"></span><h2><a class="toc-backref" href="#id12" role="doc-backlink">手动运行测试套件</a><a class="headerlink" href="#running-a-suite-by-hand" title="链接到此标题。"></a></h2>
+<p>Twister 很方便，但每轮运行都较慢。在编写或调试测试套件时，可以自己分别运行这两部分。</p>
+<p>启动被测系统并让其保持运行：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd $ZEPHYR_BASE</span>
+<span class="go">west build -p -b native_sim -d ../build/mdns tests/net/conformance/mdns</span>
+<span class="go">../build/mdns/zephyr/zephyr.exe</span>
+</pre></div>
+</div>
+<p>构建测试套件并针对被测系统运行：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cd $ZEPHYR_BASE/../tools/net-tools/ttcn3</span>
+<span class="go">./build.sh mdns</span>
+<span class="go">cd suites/mdns/build</span>
+<span class="go">./mdns ../mdns.cfg</span>
+</pre></div>
+</div>
+<p>如果测试套件的测试用例会创建并行测试组件，请改为通过主控制器启动：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ttcn3_start ./coap ../coap.cfg</span>
+</pre></div>
+</div>
+<p>指定测试用例名称即可运行单个测试用例：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./mdns ../mdns.cfg MDNS_Suite.tc_a_query</span>
+</pre></div>
+</div>
+<p>地址、接口和超时都来自测试套件配置文件的 <code class="docutils literal notranslate"><span class="pre">[MODULE_PARAMETERS]</span></code> 部分，因此只需编辑一个文件而无需修改测试套件，就能将运行转移到另一条链路上。</p>
+<p>有一件事测试框架会做，而手动运行时需要自己完成：将 Titan 的库目录加入 <code class="docutils literal notranslate"><span class="pre">LD_LIBRARY_PATH</span></code>。</p>
+</section>
+<section id="reading-the-result">
+<span id="ttcn3-verdicts"></span><h2><a class="toc-backref" href="#id13" role="doc-backlink">解读结果</a><a class="headerlink" href="#reading-the-result" title="链接到此标题。"></a></h2>
+<p>Titan 运行结束时会给出每种判定结果的数量以及本次运行的判定结果：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Verdict statistics: 0 none (0.00 %), 7 pass (100.00 %), 0 inconc (0.00 %), 0 fail (0.00 %), 0 error (0.00 %).</span>
+<span class="go">Test execution summary: 7 test cases were executed. Overall verdict: pass</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">inconc</span></code> 表示测试用例无法得出结论，通常是因为它所依赖的某件事没有发生。这不算通过。<code class="docutils literal notranslate"><span class="pre">error</span></code> 表示测试套件本身出错，而不是被测系统出错。</p>
+<p>证据位于两个地方。Titan 会为每个测试套件在构建目录中写入一份日志，文件名取自配置文件中的 <code class="docutils literal notranslate"><span class="pre">LogFile</span></code> 设置。Twister 会在其输出目录下写入 <code class="file docutils literal notranslate"><span class="pre">twister_harness.log</span></code>，其中以 <code class="docutils literal notranslate"><span class="pre">INFO</span></code> 级别包含测试套件的全部输出。</p>
+</section>
+<section id="when-a-suite-is-skipped">
+<h2><a class="toc-backref" href="#id14" role="doc-backlink">测试套件被跳过时</a><a class="headerlink" href="#when-a-suite-is-skipped" title="链接到此标题。"></a></h2>
+<p>测试套件所需的一切都会在构建之前检查，缺少任何一项都会跳过测试，而不是让测试失败。原因按检查顺序列出如下：</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>原因</p></th>
+<th class="head"><p>处理方法</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">TTCN3_DIR</span> <span class="pre">is</span> <span class="pre">unset</span></code></p></td>
+<td><p>安装 Titan 并导出 <code class="docutils literal notranslate"><span class="pre">TTCN3_DIR</span></code>，参见 <a class="reference internal" href="#ttcn3-installing-titan"><span class="std std-ref">安装 Titan</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">make</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">installed</span></code></p></td>
+<td><p>安装 make；Titan 使用生成的 makefile 构建测试套件</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">no</span> <span class="pre">TTCN-3</span> <span class="pre">suites</span> <span class="pre">under</span> <span class="pre">...</span></code></p></td>
+<td><p>未找到 net-tools；请设置 <code class="docutils literal notranslate"><span class="pre">NET_TOOLS_BASE</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">...</span> <span class="pre">has</span> <span class="pre">no</span> <span class="pre">&lt;suite&gt;</span> <span class="pre">suite</span></code></p></td>
+<td><p>net-tools 检出副本早于该测试套件；请更新它</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">third</span> <span class="pre">party</span> <span class="pre">modules</span> <span class="pre">are</span> <span class="pre">missing</span></code></p></td>
+<td><p>运行 <code class="file docutils literal notranslate"><span class="pre">ttcn3/fetch-modules.sh</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">the</span> <span class="pre">&lt;iface&gt;</span> <span class="pre">interface</span> <span class="pre">does</span> <span class="pre">not</span> <span class="pre">exist</span></code></p></td>
+<td><p>使用 <code class="file docutils literal notranslate"><span class="pre">net-setup.sh</span></code> 创建该接口，参见 <a class="reference internal" href="#ttcn3-interfaces"><span class="std std-ref">设置网络接口</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ttcn3_start</span> <span class="pre">is</span> <span class="pre">not</span> <span class="pre">in</span> <span class="pre">TTCN3_DIR/bin</span></code></p></td>
+<td><p>安装 <code class="docutils literal notranslate"><span class="pre">expect</span></code> 以及附带主控制器的 Titan</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">has</span> <span class="pre">to</span> <span class="pre">be</span> <span class="pre">run</span> <span class="pre">as</span> <span class="pre">root</span></code></p></td>
+<td><p>使用 <code class="docutils literal notranslate"><span class="pre">sudo</span> <span class="pre">-E</span></code> 重新运行，或使用脚本</p></td>
+</tr>
+</tbody>
+</table>
+<p>在环境中设置 <code class="docutils literal notranslate"><span class="pre">NET_CONFORMANCE_REQUIRED</span></code>，可将上述每种情况都变为失败。这适用于以测试套件为目的的运行，例如每晚作业：在这种运行中，没有运行的测试不能被当作运行过的测试而通过。</p>
+</section>
+<section id="troubleshooting">
+<h2><a class="toc-backref" href="#id15" role="doc-backlink">故障排除</a><a class="headerlink" href="#troubleshooting" title="链接到此标题。"></a></h2>
+<section id="the-suite-does-not-compile">
+<h3><a class="toc-backref" href="#id16" role="doc-backlink">测试套件无法编译</a><a class="headerlink" href="#the-suite-does-not-compile" title="链接到此标题。"></a></h3>
+<p>几乎都是因为打包的 Titan 落后于测试套件所依赖的协议模块。请从源码构建 Titan。</p>
+</section>
+<section id="the-suite-sees-nothing-and-times-out">
+<h3><a class="toc-backref" href="#id17" role="doc-backlink">测试套件收不到任何数据并超时</a><a class="headerlink" href="#the-suite-sees-nothing-and-times-out" title="链接到此标题。"></a></h3>
+<p>检查应用程序和测试套件是否在同一接口上：在 IP 层以下工作的测试套件需要 <code class="docutils literal notranslate"><span class="pre">zethL2</span></code>，而应用程序构建时必须带有指定同一接口的 <code class="docutils literal notranslate"><span class="pre">host-interface</span></code> 属性，测试在 <code class="file docutils literal notranslate"><span class="pre">boards/native_sim.overlay</span></code> 中设置了该属性。如果链路上是主机而不是 Zephyr 在应答，说明 <code class="docutils literal notranslate"><span class="pre">zethL2</span></code> 的 sysctl 设置未生效；可以用 <code class="docutils literal notranslate"><span class="pre">sysctl</span> <span class="pre">net.ipv4.conf.zethL2.arp_ignore</span></code> 确认。</p>
+</section>
+<section id="a-run-hangs-or-is-cut-off">
+<h3><a class="toc-backref" href="#id18" role="doc-backlink">运行挂起或被中断</a><a class="headerlink" href="#a-run-hangs-or-is-cut-off" title="链接到此标题。"></a></h3>
+<p>一次运行外层嵌套了四个超时，哪个超时触发就说明问题出在哪里：等待应用程序就绪行的 30 秒、构建测试套件的 1800 秒、运行测试套件的 600 秒，以及整个 Twister 测试的 900 秒。超时的测试套件会连同其整个进程组一起被终止，因此不会遗留主控制器进程。</p>
+</section>
+<section id="leftover-state">
+<h3><a class="toc-backref" href="#id19" role="doc-backlink">遗留状态</a><a class="headerlink" href="#leftover-state" title="链接到此标题。"></a></h3>
+<p>使用 <code class="file docutils literal notranslate"><span class="pre">net-setup.sh</span></code> 和 <code class="docutils literal notranslate"><span class="pre">stop</span></code> 拆除接口。测试获取的锁是临时目录中名为 <code class="file docutils literal notranslate"><span class="pre">zephyr-net-conformance-&lt;euid&gt;.lock</span></code> 的文件；进程退出时锁会被释放，因此残留的锁文件不会造成影响。</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 9月 28, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

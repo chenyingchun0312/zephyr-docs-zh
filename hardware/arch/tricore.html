@@ -1,0 +1,616 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TriCore AURIX 开发者指南 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/hardware/arch/tricore.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="x86 开发者指南" href="x86.html" />
+    <link rel="prev" title="半主机（Semihosting）指南" href="semihost.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">硬件支持</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">架构相关指南</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="arc-support-status.html">Zephyr 在 ARC 处理器上的支持状态</a></li>
+<li class="toctree-l3"><a class="reference internal" href="arm_cortex_m.html">Arm Cortex-M 开发者指南</a></li>
+<li class="toctree-l3"><a class="reference internal" href="arm64.html">ARM64 开发者指南</a></li>
+<li class="toctree-l3"><a class="reference internal" href="risc-v.html">Zephyr 在 RISC-V 处理器上的支持状态</a></li>
+<li class="toctree-l3"><a class="reference internal" href="semihost.html">半主机（Semihosting）指南</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">TriCore AURIX 开发者指南</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">概述</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#key-supported-features">主要支持的特性</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#architecture">架构</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#registers">寄存器</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#context-save-areas-csa">上下文保存区（CSA）</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#os-features">操作系统特性</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#threads">线程</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#thread-stack-alignment">线程栈对齐</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#stack-pointers">栈指针</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#thread-context-switching">线程上下文切换</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#interrupt-handling">中断处理</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#interrupt-priority">中断优先级</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#locking-and-unlocking-irqs">锁定和解锁 IRQ</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#dynamic-interrupts">动态中断</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#cpu-idling">CPU 空闲</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#trap-handling">陷阱处理</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#floating-point">浮点</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#toolchain">工具链</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#supported-boards">支持的开发板</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#qemu-boards">QEMU 开发板</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#drivers">驱动</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#architecture-references">架构参考资料</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#maintainers-and-collaborators">维护者和协作者</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="x86.html">x86 开发者指南</a></li>
+<li class="toctree-l3"><a class="reference internal" href="xtensa.html">Xtensa 开发者指南</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../barriers/index.html">屏障 API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cache/index.html">缓存</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../emulator/index.html">Zephyr 的设备仿真器/模拟器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../emulator/bus_emulators.html">外部总线及总线所连外设的仿真器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../firmware/index.html">固件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../peripherals/index.html">外设</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pinctrl/index.html">引脚控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../porting/index.html">移植</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../virtualization/index.html">虚拟化</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">硬件支持</a> &raquo;</li>
+  
+     <li><a href="index.html">架构相关指南</a> &raquo;</li>
+  
+  <li>TriCore AURIX 开发者指南</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="tricore-aurix-developer-guide">
+<span id="tricore-developer-guide"></span><h1>TriCore AURIX 开发者指南<a class="headerlink" href="#tricore-aurix-developer-guide" title="链接到此标题。"></a></h1>
+<section id="overview">
+<h2>概述<a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>本页介绍 Zephyr 中 Infineon TriCore AURIX 架构移植的状态，以及为 AURIX 平台开发 Zephyr 应用程序时需要注意的方面。</p>
+<p><a class="reference external" href="https://www.infineon.com/cms/en/product/microcontroller/32-bit-tricore-microcontroller/">TriCore</a> 架构是一种面向实时嵌入式系统的统一 32 位微控制器-DSP 架构。它在单个核心中集成了微控制器的实时能力、DSP 的运算能力以及 RISC 加载/存储架构的性能。</p>
+<p>该移植涵盖两个 AURIX SoC 家族：</p>
+<ul class="simple">
+<li><p>使用 TC1.6.2P ISA 的 <a class="reference external" href="https://www.infineon.com/products/microcontroller/32-bit-tricore/aurix-tc3xx">AURIX TC3xx</a></p></li>
+<li><p>使用 TC1.8P ISA 的 <a class="reference external" href="https://www.infineon.com/products/microcontroller/32-bit-tricore/aurix-tc4x">AURIX TC4x</a></p></li>
+</ul>
+<p>目前两者都只通过 QEMU 开发板提供支持，见 <a class="reference internal" href="#tricore-qemu-boards"><span class="std std-ref">支持的开发板</span></a>。</p>
+</section>
+<section id="key-supported-features">
+<h2>主要支持的特性<a class="headerlink" href="#key-supported-features" title="链接到此标题。"></a></h2>
+<p>下表汇总了各个受支持的 AURIX SoC 家族上主要操作系统特性的状态。</p>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">特性支持</span><a class="headerlink" href="#id1" title="链接到此表格。"></a></caption>
+<colgroup>
+<col style="width: 50.0%" />
+<col style="width: 25.0%" />
+<col style="width: 25.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>特性</p></th>
+<th class="head"><p><strong>TC3xx</strong></p></th>
+<th class="head"><p><strong>TC4x</strong></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>ISA 版本</p></td>
+<td><p>TC1.6.2P</p></td>
+<td><p>TC1.8P</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>操作系统特性</strong></p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>单线程内核支持</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-odd"><td><p>多线程内核支持</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-even"><td><p>用户空间</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>中断处理</strong></p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>常规中断（软件 ISR 表）</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-odd"><td><p>嵌套中断</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-even"><td><p>动态中断</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-odd"><td><p>直接中断</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+</tr>
+<tr class="row-even"><td><p>CPU 空闲</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>内存保护</strong></p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>MPU</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>定时器</strong></p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>系统定时器（STM）</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>缓存</strong></p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>指令/数据缓存控制</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>浮点</strong></p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>单精度 FPU</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-odd"><td><p>双精度 FPU</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>多处理</strong></p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>SMP</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+</tr>
+<tr class="row-even"><td><p>AMP</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="architecture">
+<h2>架构<a class="headerlink" href="#architecture" title="链接到此标题。"></a></h2>
+<section id="registers">
+<h3>寄存器<a class="headerlink" href="#registers" title="链接到此标题。"></a></h3>
+<p>TriCore 架构提供 32 个通用寄存器（GPR），分为 16 个 32 位数据寄存器（D[0] 到 D[15]）和 16 个 32 位地址寄存器（A[0] 到 A[15]）。此外，程序计数器（PC）、程序状态字（PSW）和前一上下文信息寄存器（PCXI）构成核心系统状态。</p>
+<p>有几个地址寄存器和数据寄存器具有专门用途：</p>
+<ul class="simple">
+<li><p>A[10]：栈指针（SP）</p></li>
+<li><p>A[11]：返回地址（RA）</p></li>
+<li><p>A[0]、A[1]、A[8]、A[9]：全局地址寄存器</p></li>
+<li><p>D[15]：隐式数据寄存器</p></li>
+<li><p>A[15]：隐式基地址寄存器</p></li>
+</ul>
+<p>TC4x 的 TC1.8P 核心实现了虚拟机管理程序（hypervisor）扩展，并以虚拟化模式启动。当 SoC select <a class="reference internal" href="../../kconfig.html#CONFIG_CPU_HAS_TRICORE_VIRTUALIZATION" title="CONFIG_CPU_HAS_TRICORE_VIRTUALIZATION"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CPU_HAS_TRICORE_VIRTUALIZATION</span></code></a> 时，启动代码会降级到默认虚拟机中运行。</p>
+</section>
+<section id="context-save-areas-csa">
+<h3>上下文保存区（CSA）<a class="headerlink" href="#context-save-areas-csa" title="链接到此标题。"></a></h3>
+<p>TriCore 架构使用上下文保存区（CSA）在硬件中保存和恢复上下文。每个 CSA 是一个 64 字节的内存块，按 64 字节边界对齐。CSA 链接在一起，形成两个链表：</p>
+<ul class="simple">
+<li><p><strong>空闲上下文链表（FCX）</strong>：可用 CSA 池</p></li>
+<li><p><strong>前一上下文链表（PCX）</strong>：当前执行路径上已保存上下文的链</p></li>
+</ul>
+<p>寄存器组分为上部上下文和下部上下文：</p>
+<ul class="simple">
+<li><p><strong>上部上下文</strong>（在中断、陷阱和调用时自动保存）：A[10]-A[15]、D[8]-D[15]、PSW 和 PCXI。</p></li>
+<li><p><strong>下部上下文</strong>（通过 SVLCX 或 BISR 指令显式保存）：A[2]-A[7]、D[0]-D[7]、A[11] 和 PCXI。</p></li>
+</ul>
+<p>因此，在上下文切换、中断进入或函数调用时，软件无需压栈和出栈寄存器。</p>
+<p>在 Zephyr 中，CSA 池是一个包含 <a class="reference internal" href="../../kconfig.html#CONFIG_TRICORE_CSA_COUNT" title="CONFIG_TRICORE_CSA_COUNT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TRICORE_CSA_COUNT</span></code></a> 个条目的静态数组。<code class="file docutils literal notranslate"><span class="pre">arch/tricore/core/reset.S</span></code> 中的启动代码将所有 CSA 链接到空闲链表中，并设置 FCX 和 LCX 寄存器。LCX 被设置在距链表末尾 <a class="reference internal" href="../../kconfig.html#CONFIG_TRICORE_CSA_FCD_RESERVE" title="CONFIG_TRICORE_CSA_FCD_RESERVE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TRICORE_CSA_FCD_RESERVE</span></code></a> 个条目的位置，这样空闲上下文链表耗尽（FCD）陷阱处理程序仍有剩余的 CSA 可用于报告故障并中止线程。</p>
+</section>
+</section>
+<section id="os-features">
+<h2>操作系统特性<a class="headerlink" href="#os-features" title="链接到此标题。"></a></h2>
+<section id="threads">
+<h3>线程<a class="headerlink" href="#threads" title="链接到此标题。"></a></h3>
+<section id="thread-stack-alignment">
+<h4>线程栈对齐<a class="headerlink" href="#thread-stack-alignment" title="链接到此标题。"></a></h4>
+<p>TriCore 上的 Zephyr 线程使用 8 字节栈对齐（<code class="docutils literal notranslate"><span class="pre">ARCH_STACK_PTR_ALIGN</span> <span class="pre">=</span> <span class="pre">8</span></code>），与 EABI 对栈指针的要求一致。</p>
+</section>
+<section id="stack-pointers">
+<h4>栈指针<a class="headerlink" href="#stack-pointers" title="链接到此标题。"></a></h4>
+<p>TriCore 架构使用单个栈指针寄存器 A[10]。PSW.IS 位表示处理器是运行在线程栈上还是中断栈上。在 PSW.IS == 0 的情况下进入中断或陷阱时，硬件会从中断栈指针（ISP）寄存器加载 A[10]，并设置 PSW.IS = 1。</p>
+<p>在 Zephyr 中，所有异常和中断共享同一个中断栈。其大小由 <a class="reference internal" href="../../kconfig.html#CONFIG_ISR_STACK_SIZE" title="CONFIG_ISR_STACK_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ISR_STACK_SIZE</span></code></a> 控制。</p>
+</section>
+</section>
+<section id="thread-context-switching">
+<h3>线程上下文切换<a class="headerlink" href="#thread-context-switching" title="链接到此标题。"></a></h3>
+<p>上下文切换使用 <code class="docutils literal notranslate"><span class="pre">SYSCALL</span></code> 指令。<code class="docutils literal notranslate"><span class="pre">arch_switch()</span></code> 执行 <code class="docutils literal notranslate"><span class="pre">syscall</span> <span class="pre">1</span></code>，以监管者模式进入系统调用陷阱处理程序。该处理程序保存下部上下文并调用 <code class="docutils literal notranslate"><span class="pre">z_tricore_switch()</span></code>，后者会：</p>
+<ul class="simple">
+<li><p>将当前的 PCXI（即换出线程 CSA 链的头部）保存到换出线程中，</p></li>
+<li><p>加载换入线程的 PCXI 并返回。</p></li>
+</ul>
+<p>随后，处理程序通过 RSLCX 恢复换入线程的下部上下文，并通过 RFE 返回，RFE 会恢复其上部上下文。</p>
+<p>当线程中止自身时，内核通过 <code class="docutils literal notranslate"><span class="pre">to_reclaim</span></code> 将其交出，处理程序会在切换之后将其 CSA 链归还到空闲链表中。</p>
+<p>上下文切换也可以从中断上下文中触发。在最外层中断返回（<code class="docutils literal notranslate"><span class="pre">nested</span> <span class="pre">==</span> <span class="pre">0</span></code>）且没有更高优先级的中断挂起（<code class="docutils literal notranslate"><span class="pre">ICR.PIPN</span> <span class="pre">==</span> <span class="pre">0</span></code>）时，<code class="docutils literal notranslate"><span class="pre">_isr_wrapper</span></code> 会向调度器请求下一个线程。</p>
+<p>实现位于 <code class="file docutils literal notranslate"><span class="pre">arch/tricore/core/switch.S</span></code>、<code class="file docutils literal notranslate"><span class="pre">arch/tricore/core/syscall_wrapper.S</span></code> 和 <code class="file docutils literal notranslate"><span class="pre">arch/tricore/core/isr_wrapper.S</span></code> 中。</p>
+</section>
+<section id="interrupt-handling">
+<h3>中断处理<a class="headerlink" href="#interrupt-handling" title="链接到此标题。"></a></h3>
+<section id="interrupt-priority">
+<h4>中断优先级<a class="headerlink" href="#interrupt-priority" title="链接到此标题。"></a></h4>
+<p>TriCore 架构最多支持 255 个中断优先级。每个中断源都在中断路由器（IR）中其服务请求控制（SRC）寄存器内被分配一个服务请求优先级号（SRPN）。ICR（中断控制寄存器）保存当前 CPU 优先级号（CCPN）和挂起中断优先级号（PIPN）。</p>
+<p>当 <code class="docutils literal notranslate"><span class="pre">ICR.IE</span> <span class="pre">==</span> <span class="pre">1</span></code> 且 <code class="docutils literal notranslate"><span class="pre">PIPN</span> <span class="pre">&gt;</span> <span class="pre">CCPN</span></code> 时，中断被响应。</p>
+<p>进入中断时，硬件会：</p>
+<ul class="simple">
+<li><p>将上部上下文保存到一个 CSA 中，</p></li>
+<li><p>设置 <code class="docutils literal notranslate"><span class="pre">PCXI.PIE</span> <span class="pre">=</span> <span class="pre">ICR.IE</span></code> 和 <code class="docutils literal notranslate"><span class="pre">PCXI.PCPN</span> <span class="pre">=</span> <span class="pre">ICR.CCPN</span></code>，</p></li>
+<li><p>设置 <code class="docutils literal notranslate"><span class="pre">ICR.CCPN</span> <span class="pre">=</span> <span class="pre">ICR.PIPN</span></code> 和 <code class="docutils literal notranslate"><span class="pre">ICR.IE</span> <span class="pre">=</span> <span class="pre">0</span></code>，</p></li>
+<li><p>如果尚未处于中断栈上，则从 ISP 加载 A[10]，</p></li>
+<li><p>跳转到位于 <code class="docutils literal notranslate"><span class="pre">BIV</span> <span class="pre">+</span> <span class="pre">32</span> <span class="pre">*</span> <span class="pre">PIPN</span></code> 的向量入口。</p></li>
+</ul>
+<p>Zephyr 提供 256 个间隔为 32 字节的向量入口。每个入口保存下部上下文并跳转到 <code class="docutils literal notranslate"><span class="pre">_isr_wrapper</span></code>，后者从中断路由器读取当前活动的中断号，并通过软件 ISR 表进行分派。<code class="docutils literal notranslate"><span class="pre">_isr_wrapper</span></code> 在调用处理程序之前会重新启用中断，因此更高优先级的中断可以嵌套。</p>
+<p>从中断返回（RFE）时，硬件会从 PCXI 恢复上部上下文和之前的 ICR 状态。</p>
+<p>向量位于 <code class="file docutils literal notranslate"><span class="pre">arch/tricore/core/vectors.c</span></code> 中。</p>
+</section>
+<section id="locking-and-unlocking-irqs">
+<h4>锁定和解锁 IRQ<a class="headerlink" href="#locking-and-unlocking-irqs" title="链接到此标题。"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">arch_irq_lock()</span></code> 将当前的 ICR 值作为 key 返回，并执行 <code class="docutils literal notranslate"><span class="pre">DISABLE</span></code> 指令清除 ICR.IE。如果 key 中设置了 ICR.IE，<code class="docutils literal notranslate"><span class="pre">arch_irq_unlock()</span></code> 会执行 <code class="docutils literal notranslate"><span class="pre">ENABLE</span></code>。</p>
+</section>
+<section id="dynamic-interrupts">
+<h4>动态中断<a class="headerlink" href="#dynamic-interrupts" title="链接到此标题。"></a></h4>
+<p>启用 <a class="reference internal" href="../../kconfig.html#CONFIG_DYNAMIC_INTERRUPTS" title="CONFIG_DYNAMIC_INTERRUPTS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_DYNAMIC_INTERRUPTS</span></code></a> 后，可以在运行时通过软件 ISR 表连接中断。</p>
+</section>
+</section>
+<section id="cpu-idling">
+<h3>CPU 空闲<a class="headerlink" href="#cpu-idling" title="链接到此标题。"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">arch_cpu_idle()</span></code> 启用中断，<code class="docutils literal notranslate"><span class="pre">arch_cpu_atomic_idle()</span></code> 则根据其 key 恢复中断状态；随后两者都执行 <code class="docutils literal notranslate"><span class="pre">WAIT</span></code>，核心在下一个中断到来时被唤醒。</p>
+<p>实现位于 <code class="file docutils literal notranslate"><span class="pre">arch/tricore/core/cpu_idle.c</span></code> 中。</p>
+</section>
+<section id="trap-handling">
+<h3>陷阱处理<a class="headerlink" href="#trap-handling" title="链接到此标题。"></a></h3>
+<p>TriCore 架构定义了 8 类陷阱，向量间隔为 32 字节，通过 BTV（基陷阱向量）寄存器寻址：</p>
+<ul class="simple">
+<li><p>第 0 类：MMU 陷阱</p></li>
+<li><p>第 1 类：内部保护陷阱（特权指令、内存保护、全局寄存器写保护）</p></li>
+<li><p>第 2 类：指令错误（非法或未实现的操作码、无效操作数、对齐、无效的本地内存地址）</p></li>
+<li><p>第 3 类：上下文管理（空闲上下文耗尽、调用深度溢出）</p></li>
+<li><p>第 4 类：系统总线和外设错误</p></li>
+<li><p>第 5 类：断言陷阱</p></li>
+<li><p>第 6 类：系统调用（SYSCALL 指令）</p></li>
+<li><p>第 7 类：不可屏蔽中断（NMI）</p></li>
+</ul>
+<p>Zephyr 将第 0 到 5 类以及第 7 类陷阱路由到 <code class="docutils literal notranslate"><span class="pre">z_tricore_fault()</span></code>，它会记录陷阱类别、陷阱标识号（TIN）和寄存器转储，然后调用 <code class="docutils literal notranslate"><span class="pre">z_fatal_error()</span></code>。空闲上下文链表下溢（FCU，第 3 类 TIN 4）时没有剩余的 CSA 可用于处理该陷阱，核心会停机。</p>
+<p>系统调用陷阱（第 6 类）用于上下文切换（<code class="docutils literal notranslate"><span class="pre">syscall</span> <span class="pre">1</span></code>）、引发异常（<code class="docutils literal notranslate"><span class="pre">syscall</span> <span class="pre">2</span></code>）和 IRQ 卸载（<code class="docutils literal notranslate"><span class="pre">syscall</span> <span class="pre">3</span></code>）。</p>
+<p>实现位于 <code class="file docutils literal notranslate"><span class="pre">arch/tricore/core/fatal.c</span></code> 和 <code class="file docutils literal notranslate"><span class="pre">arch/tricore/core/vectors.c</span></code> 中。</p>
+</section>
+<section id="floating-point">
+<h3>浮点<a class="headerlink" href="#floating-point" title="链接到此标题。"></a></h3>
+<p>TriCore 的 FPU 集成在数据通路中，对 D[0]-D[15] 数据寄存器进行运算。没有单独的 FPU 数据寄存器。FPU 的舍入模式和异常标志保存在 PSW 中，而 PSW 在中断、陷阱和调用时作为上部上下文的一部分被保存和恢复。</p>
+<p>FPU 陷阱控制和捕获寄存器（<code class="docutils literal notranslate"><span class="pre">FPU_TRAP_CON</span></code> 及其后的 <code class="docutils literal notranslate"><span class="pre">FPU_TRAP_*</span></code> 寄存器）不属于上下文。Zephyr 不启用 FPU 陷阱，因此对线程有意义的 FPU 状态都在已保存的上下文中，在多线程应用程序中无需额外处理。</p>
+<ul class="simple">
+<li><p>TC3xx（TC1.6.2P）：单精度 FPU（IEEE 754）</p></li>
+<li><p>TC4x（TC1.8P）：单精度和双精度 FPU（IEEE 754）</p></li>
+</ul>
+</section>
+</section>
+<section id="toolchain">
+<h2>工具链<a class="headerlink" href="#toolchain" title="链接到此标题。"></a></h2>
+<p>TriCore 移植使用 Infineon 提供的 11.3.1 版 AURIX GCC 工具链构建：<a class="reference external" href="https://softwaretools.infineon.com/assets/com.ifx.tb.tool.aurixgcc">Infineon AURIX GCC</a></p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">export ZEPHYR_TOOLCHAIN_VARIANT=tricore</span>
+<span class="go">export TRICORE_TOOLCHAIN_PATH=/path/to/tricore-gcc</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">TRICORE_TOOLCHAIN_PATH</span></code> 默认为 <code class="docutils literal notranslate"><span class="pre">/opt/toolchains/tricore-elf</span></code>。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>Zephyr SDK 不包含 TriCore 工具链。</p>
+</div>
+</section>
+<section id="supported-boards">
+<span id="tricore-qemu-boards"></span><h2>支持的开发板<a class="headerlink" href="#supported-boards" title="链接到此标题。"></a></h2>
+<section id="qemu-boards">
+<h3>QEMU 开发板<a class="headerlink" href="#qemu-boards" title="链接到此标题。"></a></h3>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>开发板</p></td>
+<td><p>SoC</p></td>
+<td><p>ISA</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../boards/qemu/tricore/doc/index.html#qemu_tc3x">QEMU Emulation for Infineon AURIX TC39x</a></p></td>
+<td><p>TC39x</p></td>
+<td><p>TC1.6.2P</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../boards/qemu/tricore/doc/index.html#qemu_tc4x">QEMU Emulation for Infineon AURIX TC4Dx</a></p></td>
+<td><p>TC4Dx</p></td>
+<td><p>TC1.8P</p></td>
+</tr>
+</tbody>
+</table>
+<p>TriCore AURIX 的 QEMU 维护在 <a class="reference external" href="https://gitlab.com/linumiz/infineon/release/qemu-aurix">linumiz/qemu-aurix</a>，它增加了 AURIX 外设仿真。开发板文档介绍了如何搭建该环境并运行应用程序。</p>
+</section>
+</section>
+<section id="drivers">
+<h2>驱动<a class="headerlink" href="#drivers" title="链接到此标题。"></a></h2>
+<p>下表列出了 TriCore 移植中可用的外设驱动：</p>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>驱动</p></td>
+<td><p><strong>TC3xx</strong></p></td>
+<td><p><strong>TC4x</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>中断路由器（IR）</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-odd"><td><p>系统定时器（STM）</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-even"><td><p>UART（ASCLIN），仅支持轮询模式</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="architecture-references">
+<h2>架构参考资料<a class="headerlink" href="#architecture-references" title="链接到此标题。"></a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.infineon.com/assets/row/public/documents/10/44/infineon-infineon-tricore-tc1.8-architecture-usermanual-en.pdf">TC1.8 架构手册第 1 卷</a></p></li>
+<li><p><a class="reference external" href="https://www.infineon.com/assets/row/public/documents/10/44/infineon-tricore-tc1.8-architecture-volume2-usermanual-en.pdf">TC1.8 架构手册第 2 卷</a></p></li>
+<li><p><a class="reference external" href="https://www.infineon.com/assets/row/public/documents/10/44/infineon-aurix-architecture-vol1-usermanual-en.pdf">TC1.6 架构手册第 1 卷</a></p></li>
+<li><p><a class="reference external" href="https://www.infineon.com/assets/row/public/documents/10/44/infineon-aurix-architecture-vol2-usermanual-en.pdf">TC1.6 架构手册第 2 卷</a></p></li>
+</ul>
+</section>
+<section id="maintainers-and-collaborators">
+<h2>维护者和协作者<a class="headerlink" href="#maintainers-and-collaborators" title="链接到此标题。"></a></h2>
+<p>Zephyr 中 TriCore AURIX 架构移植的状态为：<em>维护中</em>。</p>
+<p>维护者和协作者名单见 <code class="file docutils literal notranslate"><span class="pre">MAINTAINERS.yml</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">TriCore</span> <span class="pre">arch</span></code> 和 <code class="docutils literal notranslate"><span class="pre">Infineon</span> <span class="pre">AURIX</span> <span class="pre">Platforms</span></code> 两个领域。</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 10月 27, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

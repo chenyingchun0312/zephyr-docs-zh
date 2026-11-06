@@ -1,0 +1,27 @@
+var group__regulator__parent__max20362 =
+[
+    [ "max20362.h", "drivers_2regulator_2max20362_8h.html", null ],
+    [ "MAX20362_INGEN_INT_MASK_ALL", "group__regulator__parent__max20362.html#gaa1465b71561aaea295636066fb6bf846", null ],
+    [ "MAX20362_INGENINT_DRPMAX_MASK", "group__regulator__parent__max20362.html#ga54a06997b332c094d2c8451b299883a7", null ],
+    [ "MAX20362_INGENINT_DRPMIN_MASK", "group__regulator__parent__max20362.html#ga886c3bd5f8f04c496566d5ae4d830f7b", null ],
+    [ "MAX20362_INGENINT_OUTTMO_MASK", "group__regulator__parent__max20362.html#ga4184d5fb84788ab19f6639920ee2d243", null ],
+    [ "MAX20362_INGENINT_SIMOPIN_MASK", "group__regulator__parent__max20362.html#gaef0d64dbe97e1baa80b63d5f66edeee2", null ],
+    [ "MAX20362_INGENINT_TNKTMO_MASK", "group__regulator__parent__max20362.html#ga860a173430349a49c5b731d18fd6f331", null ],
+    [ "MAX20362_INT_BBINUVLO_MASK", "group__regulator__parent__max20362.html#ga3403d0d0cf4a17fec8d60a5faf04a5c4", null ],
+    [ "MAX20362_INT_BBSTOFF_MASK", "group__regulator__parent__max20362.html#ga0984f89a16a9472de6ea258217782b57", null ],
+    [ "MAX20362_INT_BBSTON_MASK", "group__regulator__parent__max20362.html#ga3132a45880cdb27745b9c2563cc96b70", null ],
+    [ "MAX20362_INT_BSTFLT_MASK", "group__regulator__parent__max20362.html#gab5bbfb375183b969e2b31839d7db7889", null ],
+    [ "MAX20362_INT_CAPOVLO_MASK", "group__regulator__parent__max20362.html#ga5b1b5c774d6aebaa378d1909d31ab13f", null ],
+    [ "MAX20362_INT_CAPUVLO_MASK", "group__regulator__parent__max20362.html#gaa66b7d738c596808bf76d282f66bfcaa", null ],
+    [ "MAX20362_INT_MASK_ALL", "group__regulator__parent__max20362.html#gad9eabba2abf5c8deaae6270c7305bd7a", null ],
+    [ "MAX20362_INT_THMFLT_MASK", "group__regulator__parent__max20362.html#ga653b9d31b1ab26d43a0b74a541ff8047", null ],
+    [ "MAX20362_INT_UVLO_MASK", "group__regulator__parent__max20362.html#ga179e119da832e746b3a39c325f87f60b", null ],
+    [ "MAX20362_LDO_INT_MASK_ALL", "group__regulator__parent__max20362.html#ga937da6e8b96d82a75a695d9708392d39", null ],
+    [ "MAX20362_LDOINT_CLP_MASK", "group__regulator__parent__max20362.html#gab7e94d5d83218f6a28d37b7b96e74f2c", null ],
+    [ "MAX20362_LDOINT_DIV_MASK", "group__regulator__parent__max20362.html#ga8b1b64a14e2f10ef953a08b7a4dbfc1c", null ],
+    [ "MAX20362_LDOINT_SHR_MASK", "group__regulator__parent__max20362.html#ga78af4eaf13610d2f7def724266e0217c", null ],
+    [ "MAX20362_LDOINT_THM_MASK", "group__regulator__parent__max20362.html#gaa2d65dc3d622a810ba33f099a3eaf750", null ],
+    [ "regulator_max20362_set_ingen_int_mask", "group__regulator__parent__max20362.html#ga1520e58ba2864383a43508722d352b8b", null ],
+    [ "regulator_max20362_set_int_mask", "group__regulator__parent__max20362.html#ga43205673ced0b689fd05cdf74e779b15", null ],
+    [ "regulator_max20362_set_ldo_int_mask", "group__regulator__parent__max20362.html#ga702d38f23b63cefe61178245ce6491df", null ]
+];

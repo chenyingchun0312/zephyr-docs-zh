@@ -1,0 +1,490 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Twister 黑盒测试 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/develop/twister/twister_blackbox.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="Ctest" href="harness/ctest.html" />
+    <link rel="prev" title="Twister 状态" href="twister_statuses.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">使用 Zephyr 进行开发</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/index.html">入门指南</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beyond-GSG.html">入门指南之外</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../env_vars.html">环境变量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../application/index.html">应用程序开发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../debug/index.html">调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/index.html">API 状态与准则</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../languages/index.html">编程语言支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../optimizations/index.html">优化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../flash_debug/index.html">烧录与硬件调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html">模块（外部项目）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../west/index.html">West（Zephyr 的元工具）</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">测试运行器（Twister）</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="commandline.html">命令行选项</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pytest.html">与 pytest 测试框架集成</a></li>
+<li class="toctree-l3"><a class="reference internal" href="twister_statuses.html">Twister 状态</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Twister 黑盒测试</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#basics">基础知识</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sample-test-file">测试文件示例</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#comparison-with-cli">与命令行的对比</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#other-functionalities">其他功能</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#decorators">装饰器</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#fixtures">Fixture</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#how-do-i">如何……</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#call-twister-multiple-times-in-one-test">在一个测试中多次调用 Twister？</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#board-configuration">开发板配置</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#toolchain-selection">工具链选择</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#tests">测试</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#harnesses">Harness</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#sidecars">Sidecar</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#selecting-platform-scope">选择平台范围</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#running-in-integration-mode">以集成模式运行</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#running-tests-on-custom-emulator">在自定义模拟器上运行测试</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#running-tests-in-random-order">以随机顺序运行测试</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#running-tests-on-hardware">在硬件上运行测试</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#test-output-and-reports">测试输出与报告</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#live-run-monitoring">实时运行监控</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#twister-configuration-file">Twister 配置文件</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../test/index.html">测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sca/index.html">静态代码分析（SCA）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../toolchains/index.html">工具链</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tools/index.html">工具与 IDE</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">使用 Zephyr 进行开发</a> &raquo;</li>
+  
+     <li><a href="index.html">测试运行器（Twister）</a> &raquo;</li>
+  
+  <li>Twister 黑盒测试</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="twister-blackbox-tests">
+<span id="twister-blackbox"></span><h1>Twister 黑盒测试<a class="headerlink" href="#twister-blackbox-tests" title="链接到此标题。"></a></h1>
+<p>本指南旨在说明测试文件的结构，帮助读者理解现有文件并编写自己的测试。所有开发者都应修复自己弄坏的测试，并在引入新功能时编写新的测试，因此这些知识对每一位 Twister 开发者都很重要。</p>
+<section id="basics">
+<h2>基础知识<a class="headerlink" href="#basics" title="链接到此标题。"></a></h2>
+<p>Twister 黑盒测试使用 <code class="docutils literal notranslate"><span class="pre">pytest</span></code> 库以 Python 编写，相关内容请参阅 <a class="reference internal" href="pytest.html#integration-with-pytest"><span class="std std-ref">此处</span></a>。辅助测试数据保持其原有的格式。测试和数据全部位于 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/scripts/tests/twister_blackbox">scripts/tests/twister_blackbox</a> 目录中，并以 <code class="docutils literal notranslate"><span class="pre">test_</span></code> 为前缀。</p>
+<p>黑盒测试不应了解 twister 的内部代码，而应像用户那样调用 twister 并检查结果。</p>
+</section>
+<section id="sample-test-file">
+<h2>测试文件示例<a class="headerlink" href="#sample-test-file" title="链接到此标题。"></a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="ch">#!/usr/bin/env python3</span>
+<span class="linenos"> 2</span><span class="c1"># Copyright (c) 2024 Intel Corporation</span>
+<span class="linenos"> 3</span><span class="c1">#</span>
+<span class="linenos"> 4</span><span class="c1"># SPDX-License-Identifier: Apache-2.0</span>
+<span class="linenos"> 5</span>
+<span class="linenos"> 6</span><span class="kn">import</span><span class="w"> </span><span class="nn">importlib</span>
+<span class="linenos"> 7</span><span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="linenos"> 8</span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="linenos"> 9</span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="linenos">10</span><span class="kn">from</span><span class="w"> </span><span class="nn">unittest</span><span class="w"> </span><span class="kn">import</span> <span class="n">mock</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span><span class="kn">import</span><span class="w"> </span><span class="nn">pytest</span>
+<span class="linenos">13</span><span class="kn">from</span><span class="w"> </span><span class="nn">conftest</span><span class="w"> </span><span class="kn">import</span> <span class="n">TEST_DATA</span><span class="p">,</span> <span class="n">ZEPHYR_BASE</span><span class="p">,</span> <span class="n">test_filename_mock</span>
+<span class="linenos">14</span><span class="kn">from</span><span class="w"> </span><span class="nn">twisterlib.testplan</span><span class="w"> </span><span class="kn">import</span> <span class="n">TestPlan</span>
+<span class="linenos">15</span>
+<span class="linenos">16</span>
+<span class="linenos">17</span><span class="k">class</span><span class="w"> </span><span class="nc">TestDummy</span><span class="p">:</span>
+<span class="linenos">18</span>    <span class="n">TESTDATA_X</span> <span class="o">=</span> <span class="p">[</span>
+<span class="linenos">19</span>        <span class="p">(</span><span class="s2">"smoke"</span><span class="p">,</span> <span class="mi">5</span><span class="p">),</span>
+<span class="linenos">20</span>        <span class="p">(</span><span class="s2">"acceptance"</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span>
+<span class="linenos">21</span>    <span class="p">]</span>
+<span class="linenos">22</span>
+<span class="linenos">23</span>    <span class="nd">@classmethod</span>
+<span class="linenos">24</span>    <span class="k">def</span><span class="w"> </span><span class="nf">setup_class</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<span class="linenos">25</span>        <span class="n">apath</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">ZEPHYR_BASE</span><span class="p">,</span> <span class="s2">"scripts"</span><span class="p">,</span> <span class="s2">"twister"</span><span class="p">)</span>
+<span class="linenos">26</span>        <span class="bp">cls</span><span class="o">.</span><span class="n">loader</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">machinery</span><span class="o">.</span><span class="n">SourceFileLoader</span><span class="p">(</span><span class="s2">"__main__"</span><span class="p">,</span> <span class="n">apath</span><span class="p">)</span>
+<span class="linenos">27</span>        <span class="bp">cls</span><span class="o">.</span><span class="n">spec</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">spec_from_loader</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">loader</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="bp">cls</span><span class="o">.</span><span class="n">loader</span><span class="p">)</span>
+<span class="linenos">28</span>        <span class="bp">cls</span><span class="o">.</span><span class="n">twister_module</span> <span class="o">=</span> <span class="n">importlib</span><span class="o">.</span><span class="n">util</span><span class="o">.</span><span class="n">module_from_spec</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">spec</span><span class="p">)</span>
+<span class="linenos">29</span>
+<span class="linenos">30</span>    <span class="nd">@classmethod</span>
+<span class="linenos">31</span>    <span class="k">def</span><span class="w"> </span><span class="nf">teardown_class</span><span class="p">(</span><span class="bp">cls</span><span class="p">):</span>
+<span class="linenos">32</span>        <span class="k">pass</span>
+<span class="linenos">33</span>
+<span class="linenos">34</span>    <span class="nd">@pytest</span><span class="o">.</span><span class="n">mark</span><span class="o">.</span><span class="n">parametrize</span><span class="p">(</span>
+<span class="linenos">35</span>        <span class="s2">"level, expected_tests"</span><span class="p">,</span> <span class="n">TESTDATA_X</span><span class="p">,</span> <span class="n">ids</span><span class="o">=</span><span class="p">[</span><span class="s2">"smoke"</span><span class="p">,</span> <span class="s2">"acceptance"</span><span class="p">]</span>
+<span class="linenos">36</span>    <span class="p">)</span>
+<span class="linenos">37</span>    <span class="nd">@mock</span><span class="o">.</span><span class="n">patch</span><span class="o">.</span><span class="n">object</span><span class="p">(</span><span class="n">TestPlan</span><span class="p">,</span> <span class="s2">"TEST_DEFINITION_FILENAME"</span><span class="p">,</span> <span class="n">test_filename_mock</span><span class="p">)</span>
+<span class="linenos">38</span>    <span class="k">def</span><span class="w"> </span><span class="nf">test_level</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">capfd</span><span class="p">,</span> <span class="n">out_path</span><span class="p">,</span> <span class="n">level</span><span class="p">,</span> <span class="n">expected_tests</span><span class="p">):</span>
+<span class="linenos">39</span>        <span class="c1"># Select platforms used for the tests</span>
+<span class="linenos">40</span>        <span class="n">test_platforms</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"qemu_x86"</span><span class="p">,</span> <span class="s2">"frdm_k64f"</span><span class="p">]</span>
+<span class="linenos">41</span>        <span class="c1"># Select test root</span>
+<span class="linenos">42</span>        <span class="n">path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">TEST_DATA</span><span class="p">,</span> <span class="s2">"tests"</span><span class="p">)</span>
+<span class="linenos">43</span>        <span class="n">config_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">TEST_DATA</span><span class="p">,</span> <span class="s2">"test_config.yaml"</span><span class="p">)</span>
+<span class="linenos">44</span>
+<span class="linenos">45</span>        <span class="c1"># Set flags for our Twister command as a list of strs</span>
+<span class="linenos">46</span>        <span class="n">args</span> <span class="o">=</span> <span class="p">(</span>
+<span class="linenos">47</span>            <span class="c1"># Flags related to the generic test setup:</span>
+<span class="linenos">48</span>            <span class="c1"># * Control the level of detail in stdout/err</span>
+<span class="linenos">49</span>            <span class="c1"># * Establish the output directory</span>
+<span class="linenos">50</span>            <span class="c1"># * Select Zephyr tests to use</span>
+<span class="linenos">51</span>            <span class="c1"># * Control whether to only build or build and run aforementioned tests</span>
+<span class="linenos">52</span>            <span class="p">[</span><span class="s2">"-i"</span><span class="p">,</span> <span class="s2">"--outdir"</span><span class="p">,</span> <span class="n">out_path</span><span class="p">,</span> <span class="s2">"-T"</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="s2">"-y"</span><span class="p">]</span>
+<span class="linenos">53</span>            <span class="c1"># Flags under test</span>
+<span class="linenos">54</span>            <span class="o">+</span> <span class="p">[</span><span class="s2">"--level"</span><span class="p">,</span> <span class="n">level</span><span class="p">]</span>
+<span class="linenos">55</span>            <span class="c1"># Flags required for the test</span>
+<span class="linenos">56</span>            <span class="o">+</span> <span class="p">[</span><span class="s2">"--test-config"</span><span class="p">,</span> <span class="n">config_path</span><span class="p">]</span>
+<span class="linenos">57</span>            <span class="c1"># Flags related to platform selection</span>
+<span class="linenos">58</span>            <span class="o">+</span> <span class="p">[</span>
+<span class="linenos">59</span>                <span class="n">val</span>
+<span class="linenos">60</span>                <span class="k">for</span> <span class="n">pair</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">([</span><span class="s2">"-p"</span><span class="p">]</span> <span class="o">*</span> <span class="nb">len</span><span class="p">(</span><span class="n">test_platforms</span><span class="p">),</span> <span class="n">test_platforms</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="linenos">61</span>                <span class="k">for</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">pair</span>
+<span class="linenos">62</span>            <span class="p">]</span>
+<span class="linenos">63</span>        <span class="p">)</span>
+<span class="linenos">64</span>
+<span class="linenos">65</span>        <span class="c1"># First, provide the args variable as our Twister command line arguments.</span>
+<span class="linenos">66</span>        <span class="c1"># Then, catch the exit code in the sys_exit variable.</span>
+<span class="linenos">67</span>        <span class="k">with</span> <span class="n">mock</span><span class="o">.</span><span class="n">patch</span><span class="o">.</span><span class="n">object</span><span class="p">(</span><span class="n">sys</span><span class="p">,</span> <span class="s2">"argv"</span><span class="p">,</span> <span class="p">[</span><span class="n">sys</span><span class="o">.</span><span class="n">argv</span><span class="p">[</span><span class="mi">0</span><span class="p">]]</span> <span class="o">+</span> <span class="n">args</span><span class="p">),</span> <span class="n">pytest</span><span class="o">.</span><span class="n">raises</span><span class="p">(</span>
+<span class="linenos">68</span>            <span class="ne">SystemExit</span>
+<span class="linenos">69</span>        <span class="p">)</span> <span class="k">as</span> <span class="n">sys_exit</span><span class="p">:</span>
+<span class="linenos">70</span>            <span class="c1"># Execute the Twister call itself.</span>
+<span class="linenos">71</span>            <span class="bp">self</span><span class="o">.</span><span class="n">loader</span><span class="o">.</span><span class="n">exec_module</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">twister_module</span><span class="p">)</span>
+<span class="linenos">72</span>
+<span class="linenos">73</span>        <span class="c1"># Check whether the Twister call succeeded</span>
+<span class="linenos">74</span>        <span class="k">assert</span> <span class="nb">str</span><span class="p">(</span><span class="n">sys_exit</span><span class="o">.</span><span class="n">value</span><span class="p">)</span> <span class="o">==</span> <span class="s2">"0"</span>
+<span class="linenos">75</span>
+<span class="linenos">76</span>        <span class="c1"># Access to the test file output</span>
+<span class="linenos">77</span>        <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_path</span><span class="p">,</span> <span class="s2">"testplan.json"</span><span class="p">))</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+<span class="linenos">78</span>            <span class="n">j</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+<span class="linenos">79</span>        <span class="n">filtered_j</span> <span class="o">=</span> <span class="p">[</span>
+<span class="linenos">80</span>            <span class="p">(</span><span class="n">ts</span><span class="p">[</span><span class="s2">"platform"</span><span class="p">],</span> <span class="n">ts</span><span class="p">[</span><span class="s2">"name"</span><span class="p">],</span> <span class="n">tc</span><span class="p">[</span><span class="s2">"identifier"</span><span class="p">])</span>
+<span class="linenos">81</span>            <span class="k">for</span> <span class="n">ts</span> <span class="ow">in</span> <span class="n">j</span><span class="p">[</span><span class="s2">"testsuites"</span><span class="p">]</span>
+<span class="linenos">82</span>            <span class="k">for</span> <span class="n">tc</span> <span class="ow">in</span> <span class="n">ts</span><span class="p">[</span><span class="s2">"testcases"</span><span class="p">]</span>
+<span class="linenos">83</span>            <span class="k">if</span> <span class="s2">"reason"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">tc</span>
+<span class="linenos">84</span>        <span class="p">]</span>
+<span class="linenos">85</span>
+<span class="linenos">86</span>        <span class="c1"># Read stdout and stderr to out and err variables respectively</span>
+<span class="linenos">87</span>        <span class="n">out</span><span class="p">,</span> <span class="n">err</span> <span class="o">=</span> <span class="n">capfd</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>
+<span class="linenos">88</span>        <span class="c1"># Rewrite the captured buffers to stdout and stderr so the user can still read them</span>
+<span class="linenos">89</span>        <span class="n">sys</span><span class="o">.</span><span class="n">stdout</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+<span class="linenos">90</span>        <span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">err</span><span class="p">)</span>
+<span class="linenos">91</span>
+<span class="linenos">92</span>        <span class="c1"># Test-relevant checks</span>
+<span class="linenos">93</span>        <span class="k">assert</span> <span class="n">expected_tests</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">filtered_j</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="comparison-with-cli">
+<h2>与命令行的对比<a class="headerlink" href="#comparison-with-cli" title="链接到此标题。"></a></h2>
+<p>上面的测试运行的命令为</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">twister -i --outdir $OUTDIR -T $TEST_DATA/tests -y --level $LEVEL</span>
+<span class="go">--test-config $TEST_DATA/test_config.yaml -p qemu_x86 -p frdm_k64f</span>
+</pre></div>
+</div>
+<p>这里假定命令行中已经运行过 <code class="docutils literal notranslate"><span class="pre">zephyr-env.sh</span></code> 或 <code class="docutils literal notranslate"><span class="pre">zephyr-env.cmd</span></code>。</p>
+<p>借助 <code class="docutils literal notranslate"><span class="pre">importlib</span></code> 的 <code class="docutils literal notranslate"><span class="pre">exec_module()</span></code> <a class="footnote-reference brackets" href="#f1" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>，这样的测试能够提供一次 Twister 运行通常会产生的所有输出。我们可以通过 <code class="docutils literal notranslate"><span class="pre">args</span></code> 变量方便地设置 Twister 调用所需的所有标志 <a class="footnote-reference brackets" href="#f2" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>，并通过 <code class="docutils literal notranslate"><span class="pre">out</span></code> 和 <code class="docutils literal notranslate"><span class="pre">err</span></code> 变量检查标准输出或标准错误输出。</p>
+<p>除了标准输出外，我们还可以检查通常位于 <code class="docutils literal notranslate"><span class="pre">twister-out</span></code> 目录中的输出文件。大多数情况下，我们会将 <code class="docutils literal notranslate"><span class="pre">out_path</span></code> fixture 与 <code class="docutils literal notranslate"><span class="pre">--outdir</span></code> 标志（第 52 行）配合使用，把测试生成的文件保存在临时目录中。黑盒测试中通常读取的文件有 <code class="docutils literal notranslate"><span class="pre">testplan.json</span></code>、<code class="docutils literal notranslate"><span class="pre">twister.xml</span></code> 和 <code class="docutils literal notranslate"><span class="pre">twister.log</span></code>。</p>
+</section>
+<section id="other-functionalities">
+<h2>其他功能<a class="headerlink" href="#other-functionalities" title="链接到此标题。"></a></h2>
+<section id="decorators">
+<h3>装饰器<a class="headerlink" href="#decorators" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">&#64;pytest.mark.usefixtures('clear_log')</span></code></dt><dd><ul>
+<li><p>让我们可以使用 <code class="docutils literal notranslate"><span class="pre">conftest.py</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">clear_log</span></code> fixture。该 fixture 将来会改为 <code class="docutils literal notranslate"><span class="pre">autouse</span></code>，届时可以删除这个装饰器。</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">&#64;pytest.mark.parametrize('level,</span> <span class="pre">expected_tests',</span> <span class="pre">TESTDATA_X,</span> <span class="pre">ids=['smoke',</span> <span class="pre">'acceptance'])</span></code></dt><dd><ul>
+<li><p>这是 <code class="docutils literal notranslate"><span class="pre">pytest</span></code> 测试参数化的一个例子，相关内容请参阅 <a class="reference external" href="https://docs.pytest.org/en/7.1.x/example/parametrize.html#different-options-for-test-ids">此处</a>。TESTDATA 通常声明为类字段。</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">&#64;mock.patch.object(TestPlan,</span> <span class="pre">'TEST_DEFINITION_FILENAME',</span> <span class="pre">test_filename_mock)</span></code></dt><dd><ul>
+<li><p>该装饰器让我们只使用 <code class="docutils literal notranslate"><span class="pre">test_data</span></code> 中定义的测试，而忽略 <code class="docutils literal notranslate"><span class="pre">tests</span></code> 目录中的 Zephyr 测试用例。<strong>注意，所有 ``test_data`` 测试使用的文件名都是</strong> <code class="docutils literal notranslate"><span class="pre">test_data.yaml</span></code> <strong>，而不是</strong> <code class="docutils literal notranslate"><span class="pre">testcase.yaml</span></code> <strong>！</strong> 有关 <code class="docutils literal notranslate"><span class="pre">mock</span></code> 库的内容请参阅 <a class="reference external" href="https://docs.python.org/3/library/unittest.mock.html">此处</a>。</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+<section id="fixtures">
+<h3>Fixture<a class="headerlink" href="#fixtures" title="链接到此标题。"></a></h3>
+<p>黑盒测试使用 <code class="docutils literal notranslate"><span class="pre">pytest</span></code> 的 fixture，进一步的说明请参阅 <a class="reference external" href="https://docs.pytest.org/en/6.2.x/fixture.html">此处</a>。</p>
+<p>如果想添加自己的 fixture，请考虑它们只在一个测试文件中使用，还是会在多个文件中使用。</p>
+<ul>
+<li><p>如果在多个文件中使用，请在 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/scripts/tests/twister_blackbox/conftest.py">scripts/tests/twister_blackbox/conftest.py</a> 文件中创建该 fixture。</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/scripts/tests/twister_blackbox/conftest.py">scripts/tests/twister_blackbox/conftest.py</a> 中已经包含了一些 fixture，可以参考其中的示例。</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>如果只在一个文件中使用，请在该文件中声明。</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>也可以考虑改用类字段，可参考 TESTDATA 的示例。</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+</section>
+</section>
+<section id="how-do-i">
+<h2>如何……<a class="headerlink" href="#how-do-i" title="链接到此标题。"></a></h2>
+<section id="call-twister-multiple-times-in-one-test">
+<h3>在一个测试中多次调用 Twister？<a class="headerlink" href="#call-twister-multiple-times-in-one-test" title="链接到此标题。"></a></h3>
+<p>有时我们要测试的内容需要先运行过 Twister。<code class="docutils literal notranslate"><span class="pre">--test-only</span></code> 标志就是一个典型例子，因为它需要与之前的 <code class="docutils literal notranslate"><span class="pre">--build-only</span></code> Twister 调用配合使用。这种情况应该如何处理？</p>
+<p>如果只是调用两次 <code class="docutils literal notranslate"><span class="pre">importlib</span></code> 的 <code class="docutils literal notranslate"><span class="pre">exec_module</span></code>，会出现日志重复。<code class="docutils literal notranslate"><span class="pre">twister.log</span></code> 中的每一行都会重复两次（调用三次就会重复三次，依此类推），而不是覆盖日志或追加到日志末尾。</p>
+<p>这是因为 Twister 文件中使用了日志记录器模块变量，因此再次执行该模块会导致日志记录器拥有多个处理器。</p>
+<p>为解决这一问题，应在两次调用之间使用</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">capfd</span><span class="o">.</span><span class="n">readouterr</span><span class="p">()</span>   <span class="c1"># To remove output from the buffer</span>
+                     <span class="c1"># Note that if you want output from all runs after each other,</span>
+                     <span class="c1"># skip this line.</span>
+<span class="n">clear_log_in_test</span><span class="p">()</span>  <span class="c1"># To remove log duplication</span>
+</pre></div>
+</div>
+<hr class="docutils" />
+<p class="rubric">脚注</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="f1" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>注意 <code class="docutils literal notranslate"><span class="pre">setup_class()</span></code> 类函数，它让我们可以像直接调用一样运行 <code class="docutils literal notranslate"><span class="pre">twister</span></code> Python 文件（绕过 <code class="docutils literal notranslate"><span class="pre">__name__</span> <span class="pre">==</span> <span class="pre">'__main__'</span></code> 检查）。</p>
+</aside>
+<aside class="footnote brackets" id="f2" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">2</a><span class="fn-bracket">]</span></span>
+<p>建议在几乎所有测试中都保留 <code class="docutils literal notranslate"><span class="pre">args</span></code> 定义的第一部分不变，因为它用于通用的测试设置。</p>
+</aside>
+</aside>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 6月 17, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

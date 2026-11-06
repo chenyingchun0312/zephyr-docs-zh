@@ -1,0 +1,491 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SoC 移植指南 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/hardware/porting/soc_porting.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="开发板移植指南" href="board_porting.html" />
+    <link rel="prev" title="架构移植指南" href="arch.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">硬件支持</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../arch/index.html">架构相关指南</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../barriers/index.html">屏障 API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cache/index.html">缓存</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../emulator/index.html">Zephyr 的设备仿真器/模拟器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../emulator/bus_emulators.html">外部总线及总线所连外设的仿真器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../firmware/index.html">固件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../peripherals/index.html">外设</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pinctrl/index.html">引脚控制</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">移植</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="arch.html">架构移植指南</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">SoC 移植指南</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#soc-definitions">SoC 相关定义</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#architecture">架构</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#create-your-soc-directory">创建 SoC 目录</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#write-your-soc-yaml">编写 SoC YAML</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#write-your-soc-devicetree">编写 SoC 设备树</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#multiple-cpu-clusters">多个 CPU 集群</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#write-kconfig-files">编写 Kconfig 文件</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#id2">多个 CPU 集群</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="board_porting.html">开发板移植指南</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shields.html">扩展板（shield）</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../virtualization/index.html">虚拟化</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">硬件支持</a> &raquo;</li>
+  
+     <li><a href="index.html">移植</a> &raquo;</li>
+  
+  <li>SoC 移植指南</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="soc-porting-guide">
+<span id="id1"></span><h1>SoC 移植指南<a class="headerlink" href="#soc-porting-guide" title="链接到此标题。"></a></h1>
+<p>本页介绍如何在 Zephyr 中添加对新 <a class="reference internal" href="../../glossary.html#term-SoC"><span class="xref std std-term">SoC</span></a> 的支持，无论是在上游 Zephyr 项目中，还是在你自己的本地仓库中。</p>
+<section id="soc-definitions">
+<h2>SoC 相关定义<a class="headerlink" href="#soc-definitions" title="链接到此标题。"></a></h2>
+<p>本文假定你已熟悉 Zephyr 中的开发板概念。有关硬件支持层级以及 Zephyr 文档中所用术语的概要介绍，请参阅 <a class="reference internal" href="board_porting.html#hw-support-hierarchy"><span class="std std-ref">硬件支持层级</span></a>。</p>
+<p>对于 SoC 移植，最重要的术语有：</p>
+<ul class="simple">
+<li><p>SoC：开发板 CPU 所属的具体片上系统。</p></li>
+<li><p>SoC 系列（series）：一组密切相关的 SoC。</p></li>
+<li><p>SoC 家族（family）：一组更宽泛的、具有相似特性的 SoC。</p></li>
+<li><p>CPU 集群：由一个或多个 CPU 核心组成的集群。</p></li>
+<li><p>CPU 核心：某个架构的一个具体 CPU 实例。</p></li>
+<li><p>架构：指令集架构。</p></li>
+</ul>
+<section id="architecture">
+<h3>架构<a class="headerlink" href="#architecture" title="链接到此标题。"></a></h3>
+<p>见 <a class="reference internal" href="arch.html#architecture-porting-guide"><span class="std std-ref">架构移植指南</span></a>。</p>
+</section>
+</section>
+<section id="create-your-soc-directory">
+<h2>创建 SoC 目录<a class="headerlink" href="#create-your-soc-directory" title="链接到此标题。"></a></h2>
+<p>每个 SoC 必须有唯一的名称。请使用 SoC 厂商给出的正式名称，并检查该名称是否已被使用。某些情况下，可能已经有人贡献了同名的 SoC。如果 SoC 名称已被使用，那么你或许应该改进现有的 SoC，而不是新建一个。可以使用 <code class="docutils literal notranslate"><span class="pre">list_hardware</span></code> 脚本获取 Zephyr 中所有已知 SoC 的列表，例如在 Zephyr 根目录下运行 <code class="docutils literal notranslate"><span class="pre">./scripts/list_hardware.py</span> <span class="pre">--soc-root=.</span> <span class="pre">--socs</span></code>，即可列出已被使用的名称。</p>
+<p>首先创建目录 <code class="docutils literal notranslate"><span class="pre">zephyr/soc/&lt;VENDOR&gt;/soc1</span></code>，其中 <code class="docutils literal notranslate"><span class="pre">&lt;VENDOR&gt;</span></code> 是你的厂商子目录。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>如果要将 SoC 贡献给 Zephyr，则必须使用 <code class="docutils literal notranslate"><span class="pre">&lt;VENDOR&gt;</span></code> 子目录；但如果 SoC 放在本地仓库中，则 <code class="docutils literal notranslate"><span class="pre">&lt;your-repo&gt;/soc</span></code> 下可以使用任意目录结构。<code class="docutils literal notranslate"><span class="pre">&lt;VENDOR&gt;</span></code> 子目录必须与 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/dts/bindings/vendor-prefixes.txt">dts/bindings/vendor-prefixes.txt</a> 列表中定义的某个厂商一致。如果该 SoC 厂商在列表中没有前缀，则必须新建一个。</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>SoC 目录名不必与 SoC 名称一致，甚至可以在一个目录中定义多个 SoC。在 Zephyr 中，SoC 通常组织在公共 SoC 家族或 SoC 系列目录树下的子文件夹中。</p>
+</div>
+<p>SoC 目录结构应如下所示：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>soc/&lt;VENDOR&gt;/&lt;soc-name&gt;
+├── soc.yml
+├── soc.h
+├── CMakeLists.txt
+├── Kconfig
+├── Kconfig.soc
+└── Kconfig.defconfig
+</pre></div>
+</div>
+<p>将 <code class="docutils literal notranslate"><span class="pre">&lt;soc-name&gt;</span></code> 替换为你的 SoC 名称。</p>
+<p>必需的文件有：</p>
+<ol class="arabic simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">soc.yml</span></code>：描述 SoC 高层元数据的 YAML 文件，例如：</p>
+<ul class="simple">
+<li><p>SoC 名称：SoC 的名称</p></li>
+<li><p>CPU 集群：如果 SoC 包含一个或多个集群，则列出这些 CPU 集群</p></li>
+<li><p>SoC 系列：该 SoC 所属的 SoC 系列</p></li>
+<li><p>SoC 家族：该系列所属的 SoC 家族</p></li>
+</ul>
+</li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">soc.h</span></code>：可用于描述 SoC 或提供 SoC 配置宏的头文件。Zephyr 中的驱动、子系统、开发板及其他源代码经常会包含 <code class="file docutils literal notranslate"><span class="pre">soc.h</span></code>。</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">Kconfig.soc</span></code>：SoC 的基础配置，以 <code class="docutils literal notranslate"><span class="pre">config</span> <span class="pre">SOC_&lt;soc-name&gt;</span></code> 的形式定义 Kconfig SoC 符号，并将 SoC 名称提供给 Kconfig 的 <code class="docutils literal notranslate"><span class="pre">SOC</span></code> 设置。如果 <code class="docutils literal notranslate"><span class="pre">soc.yml</span></code> 描述了 SoC 家族和系列，则它们也必须在此文件中定义。不得 select SoC 目录树之外的 Kconfig 设置。要选择通用的 Zephyr Kconfig 设置，必须使用 <code class="file docutils literal notranslate"><span class="pre">Kconfig</span></code> 文件。</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code>：由 Zephyr 构建系统加载的 CMake 文件。此 CMake 文件可以定义以该 SoC 为构建目标时要使用的额外包含路径和/或源文件。此外还必须定义要使用的基础链接器脚本。</p></li>
+</ol>
+<p>可选的文件有：</p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">Kconfig</span></code>、<code class="file docutils literal notranslate"><span class="pre">Kconfig.defconfig</span></code>：<a class="reference internal" href="../../build/kconfig/index.html#kconfig"><span class="std std-ref">配置系统（Kconfig）</span></a> 格式的软件配置。它们用于选择架构和可用的外设。</p></li>
+</ul>
+</section>
+<section id="write-your-soc-yaml">
+<h2>编写 SoC YAML<a class="headerlink" href="#write-your-soc-yaml" title="链接到此标题。"></a></h2>
+<p>SoC YAML 文件从高层描述 SoC 家族、SoC 系列和 SoC。</p>
+<p>详细配置（例如硬件描述和配置）在设备树和 Kconfig 中完成。</p>
+<p>仅包含一个 SoC 的简单 SoC YAML 文件骨架如下：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">socs</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;soc1&gt;</span>
+</pre></div>
+</div>
+<p>SoC 文件夹中可以存放多个 SoC。例如，如果它们属于同一家族或系列，建议将这些 SoC 放在一个公共目录树中。公共文件夹中的多个 SoC 和 SoC 系列可以在 <code class="file docutils literal notranslate"><span class="pre">soc.yml</span></code> 文件中这样描述：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">family</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;family-name&gt;</span>
+<span class="w">    </span><span class="nt">series</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;series-1-name&gt;</span>
+<span class="w">        </span><span class="nt">socs</span><span class="p">:</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;soc1&gt;</span>
+<span class="w">            </span><span class="nt">cpuclusters</span><span class="p">:</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;coreA&gt;</span>
+<span class="w">              </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;coreB&gt;</span>
+<span class="w">                </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="w">          </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;soc2&gt;</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;series-2-name&gt;</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+</pre></div>
+</div>
+</section>
+<section id="write-your-soc-devicetree">
+<h2>编写 SoC 设备树<a class="headerlink" href="#write-your-soc-devicetree" title="链接到此标题。"></a></h2>
+<p>SoC 设备树包含文件位于 <code class="file docutils literal notranslate"><span class="pre">&lt;zephyr-repo&gt;/dts</span></code> 文件夹下对应的 <code class="file docutils literal notranslate"><span class="pre">&lt;ARCH&gt;/&lt;VENDOR&gt;</span></code> 中。</p>
+<p>SoC 的 <code class="file docutils literal notranslate"><span class="pre">dts/&lt;ARCH&gt;/&lt;VENDOR&gt;/&lt;soc&gt;.dtsi</span></code> 以设备树源（DTS）格式描述 SoC 硬件，所有使用该 SoC 的开发板都必须包含它。</p>
+<p>如果存在更高层的 <code class="file docutils literal notranslate"><span class="pre">&lt;arch&gt;.dtsi</span></code> 文件，那么一个不错的起点是在你的 <code class="file docutils literal notranslate"><span class="pre">&lt;soc&gt;.dtsi</span></code> 中包含该文件。</p>
+<p>一般来说，<code class="file docutils literal notranslate"><span class="pre">&lt;soc&gt;.dtsi</span></code> 应如下所示：</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="cm"> </span><span class="cpf">&lt;arch&gt;/&lt;arch&gt;.dtsi</span>
+
+<span class="nf">/</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nf">chosen</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="cm">/* common chosen settings for your SoC */</span>
+<span class="w">        </span><span class="p">};</span>
+
+<span class="w">        </span><span class="nf">cpus</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kr">#address-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="na">m</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                </span><span class="kr">#size-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="na">n</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">                </span><span class="nf">cpu</span><span class="o">@</span><span class="mi">0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kr">device_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"cpu"</span><span class="p">;</span>
+<span class="w">                </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"&lt;compatibles&gt;"</span><span class="p">;</span>
+<span class="w">                </span><span class="cm">/* ... your CPU definitions ... */</span>
+<span class="w">        </span><span class="p">};</span>
+
+<span class="w">        </span><span class="nf">soc</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="cm">/* Your SoC definitions and peripherals */</span>
+<span class="w">                </span><span class="cm">/* such as ram, clock, buses, peripherals. */</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition hint">
+<p class="admonition-title">提示</p>
+<p>为了让文件系统结构更清晰，可以将多个 <code class="file docutils literal notranslate"><span class="pre">&lt;VENDOR&gt;/&lt;soc&gt;.dtsi</span></code> 文件组织在子目录中。例如按 SoC 系列组织，如 <code class="file docutils literal notranslate"><span class="pre">&lt;VENDOR&gt;/&lt;SERIES&gt;/&lt;soc&gt;.dtsi</span></code>。</p>
+</div>
+<section id="multiple-cpu-clusters">
+<h3>多个 CPU 集群<a class="headerlink" href="#multiple-cpu-clusters" title="链接到此标题。"></a></h3>
+<p>设备树反映的是硬件。一个 CPU 集群可用的内存空间和外设可能与另一个 CPU 集群大不相同，因此每个 CPU 集群通常都有自己的 <code class="file docutils literal notranslate"><span class="pre">.dtsi</span></code> 文件。</p>
+<p>CPU 集群的 <code class="file docutils literal notranslate"><span class="pre">.dtsi</span></code> 文件应遵循 <code class="file docutils literal notranslate"><span class="pre">&lt;soc&gt;_&lt;cluster&gt;.dtsi</span></code> 命名规则。<code class="file docutils literal notranslate"><span class="pre">&lt;soc&gt;_&lt;cluster&gt;.dtsi</span></code> 文件的内容与不含 CPU 集群的 SoC <code class="file docutils literal notranslate"><span class="pre">.dtsi</span></code> 类似。</p>
+</section>
+</section>
+<section id="write-kconfig-files">
+<h2>编写 Kconfig 文件<a class="headerlink" href="#write-kconfig-files" title="链接到此标题。"></a></h2>
+<p>Zephyr 使用 Kconfig 语言配置软件特性。在为你的 SoC 编译 Zephyr 应用程序之前，SoC 需要提供一些 Kconfig 设置。</p>
+<p>设置 Kconfig 配置值的方法详见 <a class="reference internal" href="../../build/kconfig/setting.html#setting-configuration-values"><span class="std std-ref">设置 Kconfig 配置值</span></a>。</p>
+<p>SoC 目录中有一个必需的 Kconfig 文件，以及两个可选文件：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>soc/&lt;vendor&gt;/&lt;your soc&gt;
+├── Kconfig.soc
+├── Kconfig
+└── Kconfig.defconfig
+</pre></div>
+</div>
+<dl>
+<dt><code class="file docutils literal notranslate"><span class="pre">Kconfig.soc</span></code></dt><dd><p>一个共享的 Kconfig 文件，可以同时被 Zephyr Kconfig 树和 sysbuild Kconfig 树引入（source）。</p>
+<p>此文件在 Kconfig 树中选择 SoC 家族和系列，以及其他可能与 SoC 相关的 Kconfig 设置，某些情况下还包括 SOC_PART_NUMBER。此文件不得 select 可复用 Kconfig SoC 树之外的任何内容。</p>
+<p><code class="file docutils literal notranslate"><span class="pre">Kconfig.soc</span></code> 可能如下所示：</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span><span class="k">config</span><span class="w"> </span>SOC_FAMILY_&lt;SOC_FAMILY_NAME&gt;
+<span class="w">        </span><span class="nb">bool</span>
+
+<span class="k">config</span><span class="w"> </span>SOC_SERIES_&lt;SOC_SERIES_NAME&gt;
+<span class="w">        </span><span class="nb">bool</span>
+<span class="w">        </span><span class="k">select</span><span class="w"> </span>SOC_FAMILY_&lt;SOC_FAMILY_NAME&gt;
+
+<span class="k">config</span><span class="w"> </span>SOC_&lt;SOC_NAME&gt;
+<span class="w">        </span><span class="nb">bool</span>
+<span class="w">        </span><span class="k">select</span><span class="w"> </span>SOC_SERIES_&lt;SOC_SERIES_NAME&gt;
+
+<span class="k">config</span><span class="w"> </span>SOC_FAMILY
+<span class="w">        </span><span class="k">default</span><span class="w"> </span><span class="s2">"&lt;soc_family_name&gt;"</span><span class="w"> </span><span class="k">if</span><span class="w"> </span>SOC_FAMILY_&lt;SOC_FAMILY_NAME&gt;
+
+<span class="k">config</span><span class="w"> </span>SOC_SERIES
+<span class="w">        </span><span class="k">default</span><span class="w"> </span><span class="s2">"&lt;soc_series_name&gt;"</span><span class="w"> </span><span class="k">if</span><span class="w"> </span>SOC_SERIES_&lt;SOC_SERIES_NAME&gt;
+
+<span class="k">config</span><span class="w"> </span>SOC
+<span class="w">        </span><span class="k">default</span><span class="w"> </span><span class="s2">"&lt;soc_name&gt;"</span><span class="w"> </span><span class="k">if</span><span class="w"> </span>SOC_&lt;SOC_NAME&gt;
+</pre></div>
+</div>
+<p>注意，<code class="docutils literal notranslate"><span class="pre">SOC_NAME</span></code> 是 SoC 名称的纯大写形式，<code class="docutils literal notranslate"><span class="pre">SOC_SERIES_NAME</span></code> 是 SoC 系列名称的纯大写形式，<code class="docutils literal notranslate"><span class="pre">SOC_FAMILY_NAME</span></code> 是 SoC 家族名称的纯大写形式。如果这些字段没有出现在 <code class="file docutils literal notranslate"><span class="pre">soc.yml</span></code> 文件中，那么它们也不应出现在 <code class="file docutils literal notranslate"><span class="pre">Kconfig.soc</span></code> 文件中。</p>
+<p>Kconfig 的 <code class="docutils literal notranslate"><span class="pre">SOC</span></code>、<code class="docutils literal notranslate"><span class="pre">SOC_SERIES</span></code> 和 <code class="docutils literal notranslate"><span class="pre">SOC_FAMILY</span></code> 设置在全局范围内定义为字符串，因此 <code class="file docutils literal notranslate"><span class="pre">Kconfig.soc</span></code> 文件只应定义默认的字符串值，而不应定义类型。注意，这些字符串值必须与 <code class="file docutils literal notranslate"><span class="pre">soc.yml</span></code> 文件中使用的值一致。</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>构建系统支持 <code class="docutils literal notranslate"><span class="pre">soc_name</span></code>、<code class="docutils literal notranslate"><span class="pre">soc_series_name</span></code> 和 <code class="docutils literal notranslate"><span class="pre">soc_family_mame</span></code> 的任意大小写形式，但如果提交开发板以纳入 Zephyr 本身，它们必须是 Kconfig 名称的纯小写形式</p>
+</div>
+<dl>
+<dt><code class="file docutils literal notranslate"><span class="pre">Kconfig</span></code></dt><dd><p>由 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/soc/Kconfig">soc/Kconfig</a> 包含。</p>
+<p>此文件可以添加当前 SoC 特有的 Kconfig 设置。</p>
+<p><code class="file docutils literal notranslate"><span class="pre">Kconfig</span></code> 通常会使用 <code class="docutils literal notranslate"><span class="pre">HAS_&lt;support&gt;</span></code> 形式的设置来表明支持某种硬件。</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span><span class="k">config</span><span class="w"> </span>SOC_&lt;SOC_NAME&gt;
+<span class="w">        </span><span class="k">select</span><span class="w"> </span>ARM
+<span class="w">        </span><span class="k">select</span><span class="w"> </span>CPU_HAS_FPU
+</pre></div>
+</div>
+<p>如果设置名称与 Zephyr 中已有的某个 Kconfig 设置相同，并且只修改该设置的默认值，则应改用 <code class="file docutils literal notranslate"><span class="pre">Kconfig.defconfig</span></code>。</p>
+</dd>
+<dt><code class="file docutils literal notranslate"><span class="pre">Kconfig.defconfig</span></code></dt><dd><p>Kconfig 选项的 SoC 特定默认值。</p>
+<p>并非所有 SoC 都有 <code class="file docutils literal notranslate"><span class="pre">Kconfig.defconfig</span></code> 文件。</p>
+<p>整个文件应放在一对 <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">SOC_&lt;SOC_NAME&gt;</span></code> / <code class="docutils literal notranslate"><span class="pre">endif</span></code> 或 <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">SOC_SERIES_&lt;SERIES_NAME&gt;</span></code> / <code class="docutils literal notranslate"><span class="pre">endif</span></code> 之间，如下所示：</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="w"> </span>SOC_&lt;SOC_NAME&gt;
+
+<span class="k">config</span><span class="w"> </span>NUM_IRQS
+<span class="w">        </span><span class="k">default</span><span class="w"> </span><span class="mi">32</span>
+
+<span class="k">endif</span><span class="w"> </span><span class="c1"># SOC_&lt;SOC_NAME&gt;</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<section id="id2">
+<h3>多个 CPU 集群<a class="headerlink" href="#id2" title="链接到此标题。"></a></h3>
+<p>CPU 集群必须在 <code class="file docutils literal notranslate"><span class="pre">Kconfig.soc</span></code> 文件中提供额外的 Kconfig 设置。其形式通常为 <code class="docutils literal notranslate"><span class="pre">SOC_&lt;SOC_NAME&gt;_&lt;CLUSTER&gt;</span></code>，因此对于具有 <code class="docutils literal notranslate"><span class="pre">clusterA</span></code> 和 <code class="docutils literal notranslate"><span class="pre">clusterB</span></code> 两个集群的 <code class="docutils literal notranslate"><span class="pre">soc1</span></code>，内容如下：</p>
+<p>定义了 CPU 集群的 SoC</p>
+<blockquote>
+<div><div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span><span class="k">config</span><span class="w"> </span>SOC_SOC1_CLUSTERA
+<span class="w">        </span><span class="nb">bool</span>
+<span class="w">        </span><span class="k">select</span><span class="w"> </span>SOC_SOC1
+
+<span class="k">config</span><span class="w"> </span>SOC_SOC1_CLUSTERB
+<span class="w">        </span><span class="nb">bool</span>
+<span class="w">        </span><span class="k">select</span><span class="w"> </span>SOC_SOC1
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 12月 11, 2025.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

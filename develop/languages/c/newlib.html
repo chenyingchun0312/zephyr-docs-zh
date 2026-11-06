@@ -1,0 +1,333 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Newlib &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/develop/languages/c/newlib.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" />
+    <link rel="next" title="Picolibc" href="picolibc.html" />
+    <link rel="prev" title="Minimal libc" href="minimal_libc.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">使用 Zephyr 进行开发</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../getting_started/index.html">入门指南</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../beyond-GSG.html">入门指南之外</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../env_vars.html">环境变量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../application/index.html">应用程序开发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../debug/index.html">调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/index.html">API 状态与准则</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">编程语言支持</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">C 语言支持</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="index.html#language-standards">语言标准</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="index.html#standard-library">标准库</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="common_libc.html">通用 C 库代码</a></li>
+<li class="toctree-l5"><a class="reference internal" href="minimal_libc.html">Minimal libc</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">Newlib</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#types-of-newlib">Newlib 的类型</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#formatted-output">格式化输出</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#dynamic-memory-management">动态内存管理</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="picolibc.html">Picolibc</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="index.html#formatted-output">格式化输出</a></li>
+<li class="toctree-l4"><a class="reference internal" href="index.html#dynamic-memory-management">动态内存管理</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../cpp/index.html">C++ 语言支持</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../rust/index.html">Rust 语言支持</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../optimizations/index.html">优化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../flash_debug/index.html">烧录与硬件调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html">模块（外部项目）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../west/index.html">West（Zephyr 的元工具）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../twister/index.html">测试运行器（Twister）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../test/index.html">测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sca/index.html">静态代码分析（SCA）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../toolchains/index.html">工具链</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tools/index.html">工具与 IDE</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">使用 Zephyr 进行开发</a> &raquo;</li>
+  
+     <li><a href="../index.html">编程语言支持</a> &raquo;</li>
+  
+     <li><a href="index.html">C 语言支持</a> &raquo;</li>
+  
+  <li>Newlib</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="newlib">
+<span id="c-library-newlib"></span><h1>Newlib<a class="headerlink" href="#newlib" title="链接到此标题。"></a></h1>
+<p><a class="reference external" href="https://sourceware.org/newlib/">Newlib</a> 是为嵌入式系统编写的完整 C 库实现。它是一个独立的开源项目，并未以源代码形式包含在 Zephyr 中。<a class="reference internal" href="../../toolchains/zephyr_sdk.html#toolchain-zephyr-sdk"><span class="std std-ref">Zephyr SDK</span></a> 为每种支持的架构提供了预编译的库（<code class="file docutils literal notranslate"><span class="pre">libc.a</span></code> 和 <code class="file docutils literal notranslate"><span class="pre">libm.a</span></code>）。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>其他第三方工具链（例如 <a class="reference internal" href="../../toolchains/gnu_arm_embedded.html#toolchain-gnuarmemb"><span class="std std-ref">GNU Arm Embedded</span></a>）也以预编译库的形式捆绑了 Newlib。</p>
+</div>
+<p>Zephyr 实现了 Newlib 中 C 标准库函数所调用的“API 钩子”函数。这些钩子函数实现于 <code class="file docutils literal notranslate"><span class="pre">lib/libc/newlib/libc-hooks.c</span></code>，负责将库内部的系统调用转换为等效的 Zephyr API 调用。</p>
+<section id="types-of-newlib">
+<h2>Newlib 的类型<a class="headerlink" href="#types-of-newlib" title="链接到此标题。"></a></h2>
+<p><a class="reference internal" href="../../toolchains/zephyr_sdk.html#toolchain-zephyr-sdk"><span class="std std-ref">Zephyr SDK</span></a> 中包含的 Newlib 有两个版本：'full' 变体和 'nano' 变体。</p>
+<section id="full-newlib">
+<h3>Full Newlib<a class="headerlink" href="#full-newlib" title="链接到此标题。"></a></h3>
+<p>Newlib full 变体（<code class="file docutils literal notranslate"><span class="pre">libc.a</span></code> 和 <code class="file docutils literal notranslate"><span class="pre">libm.a</span></code>）是 Zephyr SDK 中功能最全的 Newlib 变体，几乎支持所有标准 C 库特性。它针对性能进行了优化（性能优先于代码大小），其资源占用比 nano 变体大得多。</p>
+<p>在应用程序配置文件中选中 <a class="reference internal" href="../../../kconfig.html#CONFIG_NEWLIB_LIBC" title="CONFIG_NEWLIB_LIBC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NEWLIB_LIBC</span></code></a> 并取消选中 <a class="reference internal" href="../../../kconfig.html#CONFIG_NEWLIB_LIBC_NANO" title="CONFIG_NEWLIB_LIBC_NANO"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NEWLIB_LIBC_NANO</span></code></a>，即可启用该变体。</p>
+</section>
+<section id="nano-newlib">
+<h3>Nano Newlib<a class="headerlink" href="#nano-newlib" title="链接到此标题。"></a></h3>
+<p>Newlib nano 变体（<code class="file docutils literal notranslate"><span class="pre">libc_nano.a</span></code> 和 <code class="file docutils literal notranslate"><span class="pre">libm_nano.a</span></code>）是 Newlib 针对大小优化的版本，支持 full 变体支持的所有特性，但不支持 C99 中引入的新格式说明符，例如 <code class="docutils literal notranslate"><span class="pre">char</span></code>、<code class="docutils literal notranslate"><span class="pre">long</span> <span class="pre">long</span></code> 类型的格式说明符（即 <code class="docutils literal notranslate"><span class="pre">%hhX</span></code> 和 <code class="docutils literal notranslate"><span class="pre">%llX</span></code>）。</p>
+<p>在应用程序配置文件中选中 <a class="reference internal" href="../../../kconfig.html#CONFIG_NEWLIB_LIBC" title="CONFIG_NEWLIB_LIBC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NEWLIB_LIBC</span></code></a> 和 <a class="reference internal" href="../../../kconfig.html#CONFIG_NEWLIB_LIBC_NANO" title="CONFIG_NEWLIB_LIBC_NANO"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NEWLIB_LIBC_NANO</span></code></a>，即可启用该变体。</p>
+<p>注意，Newlib nano 变体并非适用于所有架构。nano 变体是否可用由 <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HAS_NEWLIB_LIBC_NANO</span></code> 指定。</p>
+</section>
+</section>
+<section id="formatted-output">
+<h2>格式化输出<a class="headerlink" href="#formatted-output" title="链接到此标题。"></a></h2>
+<p>Newlib 支持所有标准 C 格式化输入和输出函数，包括 <code class="docutils literal notranslate"><span class="pre">printf</span></code>、<code class="docutils literal notranslate"><span class="pre">fprintf</span></code>、<code class="docutils literal notranslate"><span class="pre">sprintf</span></code> 和 <code class="docutils literal notranslate"><span class="pre">sscanf</span></code>。</p>
+<p>Newlib 的格式化输入输出函数实现支持 C 标准定义的所有格式说明符，但有以下例外：</p>
+<ul class="simple">
+<li><p>浮点格式说明符（例如 <code class="docutils literal notranslate"><span class="pre">%f</span></code>）需要启用 <a class="reference internal" href="../../../kconfig.html#CONFIG_NEWLIB_LIBC_FLOAT_PRINTF" title="CONFIG_NEWLIB_LIBC_FLOAT_PRINTF"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NEWLIB_LIBC_FLOAT_PRINTF</span></code></a> 和 <a class="reference internal" href="../../../kconfig.html#CONFIG_NEWLIB_LIBC_FLOAT_SCANF" title="CONFIG_NEWLIB_LIBC_FLOAT_SCANF"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NEWLIB_LIBC_FLOAT_SCANF</span></code></a>。</p></li>
+<li><p>Newlib nano 变体不支持 C99 格式说明符（即用于 <code class="docutils literal notranslate"><span class="pre">char</span></code> 的 <code class="docutils literal notranslate"><span class="pre">%hhX</span></code>、用于 <code class="docutils literal notranslate"><span class="pre">long</span> <span class="pre">long</span></code> 的 <code class="docutils literal notranslate"><span class="pre">%llX</span></code>、用于 <code class="docutils literal notranslate"><span class="pre">intmax_t</span></code> 的 <code class="docutils literal notranslate"><span class="pre">%jX</span></code>、用于 <code class="docutils literal notranslate"><span class="pre">size_t</span></code> 的 <code class="docutils literal notranslate"><span class="pre">%zX</span></code>、用于 <code class="docutils literal notranslate"><span class="pre">ptrdiff_t</span></code> 的 <code class="docutils literal notranslate"><span class="pre">%tX</span></code>）。</p></li>
+</ul>
+</section>
+<section id="dynamic-memory-management">
+<h2>动态内存管理<a class="headerlink" href="#dynamic-memory-management" title="链接到此标题。"></a></h2>
+<p>Newlib 实现了一个内部堆分配器，用于管理标准动态内存管理接口函数（例如 <code class="xref c c-func docutils literal notranslate"><span class="pre">malloc()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">free()</span></code>）所使用的内存块。</p>
+<p>Newlib 实现的内部堆分配器可能因所用 Newlib 类型的不同而不同。例如，Zephyr SDK 中 Full Newlib（<code class="file docutils literal notranslate"><span class="pre">libc.a</span></code> 和 <code class="file docutils literal notranslate"><span class="pre">libm.a</span></code>）实现的堆分配器会向操作系统申请更大的内存块，其最低内存需求也比 Nano Newlib（<code class="file docutils literal notranslate"><span class="pre">libc_nano.a</span></code> 和 <code class="file docutils literal notranslate"><span class="pre">libm_nano.a</span></code>）高得多。</p>
+<p>Newlib 动态内存管理函数与 Zephyr 侧 libc 钩子之间唯一的接口是 <code class="xref c c-func docutils literal notranslate"><span class="pre">sbrk()</span></code> 函数，Newlib 用它来管理为其内部堆分配器预留的内存池大小。</p>
+<p><code class="file docutils literal notranslate"><span class="pre">libc-hooks.c</span></code> 中实现的 <code class="xref c c-func docutils literal notranslate"><span class="pre">_sbrk()</span></code> 钩子函数处理来自 Newlib 的内存池大小变更请求，并在系统内存不足时返回错误，从而确保 Newlib 内部堆分配器的内存池大小不会超过可用内存空间。</p>
+<p>启用用户空间时，Newlib 内部堆分配器的内存池会被放在一个名为 <code class="docutils literal notranslate"><span class="pre">z_malloc_partition</span></code> 的专用内存分区中，用户模式线程可以访问该分区。</p>
+<p>Newlib 堆可用的内存空间大小取决于系统配置：</p>
+<ul class="simple">
+<li><p>启用 MMU（选中 <a class="reference internal" href="../../../kconfig.html#CONFIG_MMU" title="CONFIG_MMU"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MMU</span></code></a>）时，为 Newlib 堆预留的内存空间大小取 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_free_get()</span></code> 函数返回的空闲内存空间大小与 <a class="reference internal" href="../../../kconfig.html#CONFIG_NEWLIB_LIBC_MAX_MAPPED_REGION_SIZE" title="CONFIG_NEWLIB_LIBC_MAX_MAPPED_REGION_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NEWLIB_LIBC_MAX_MAPPED_REGION_SIZE</span></code></a> 中的较小者。</p></li>
+<li><p>启用 MPU 且 MPU 要求分区大小和地址按 2 的幂对齐（<a class="reference internal" href="../../../kconfig.html#CONFIG_NEWLIB_LIBC_ALIGNED_HEAP_SIZE" title="CONFIG_NEWLIB_LIBC_ALIGNED_HEAP_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NEWLIB_LIBC_ALIGNED_HEAP_SIZE</span></code></a> 设置为非零值）时，为 Newlib 堆预留的内存空间大小由 <a class="reference internal" href="../../../kconfig.html#CONFIG_NEWLIB_LIBC_ALIGNED_HEAP_SIZE" title="CONFIG_NEWLIB_LIBC_ALIGNED_HEAP_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NEWLIB_LIBC_ALIGNED_HEAP_SIZE</span></code></a> 设定。</p></li>
+<li><p>否则，为 Newlib 堆预留的内存空间大小等于 SRAM 区域中空闲（未分配）内存的大小。</p></li>
+</ul>
+<p>Newlib 实现的标准动态内存管理接口函数是线程安全的，可以被多个线程同时调用。</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 11月 15, 2023.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

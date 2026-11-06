@@ -1,0 +1,343 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NVMe &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/storage/disk/nvme.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" />
+    <link rel="next" title="VirtIO 块设备" href="virtio_blk.html" />
+    <link rel="prev" title="磁盘访问" href="access.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">服务</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../connectivity/index.html">连接</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">存储与配置</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="access.html">磁盘访问</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="access.html#overview">概述</a></li>
+<li class="toctree-l4"><a class="reference internal" href="access.html#initializing-disks">初始化磁盘</a></li>
+<li class="toctree-l4"><a class="reference internal" href="access.html#sd-card-support">SD 卡支持</a></li>
+<li class="toctree-l4"><a class="reference internal" href="access.html#emmc-device-support">eMMC 设备支持</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="access.html#emulated-block-device-on-flash-partition-support">支持基于 Flash 分区的模拟块设备</a><ul class="current">
+<li class="toctree-l5 current"><a class="reference internal" href="access.html#nvme-disk-support">NVMe 磁盘支持</a><ul class="current">
+<li class="toctree-l6 current"><a class="current reference internal" href="#">NVMe</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="access.html#virtio-block-device-support">VirtIO 块设备支持</a></li>
+<li class="toctree-l4"><a class="reference internal" href="access.html#disk-access-api-configuration-options">磁盘访问 API 配置选项</a></li>
+<li class="toctree-l4"><a class="reference internal" href="access.html#api-reference">API 参考</a></li>
+<li class="toctree-l4"><a class="reference internal" href="access.html#disk-driver-configuration-options">磁盘驱动配置选项</a></li>
+<li class="toctree-l4"><a class="reference internal" href="access.html#disk-driver-interface">磁盘驱动接口</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../fcb/fcb.html">Flash 循环缓冲区（FCB）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../file_system/index.html">文件系统</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../flash_map/flash_map.html">Flash 映射（Flash map）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../nvmem/index.html">非易失性存储器（NVMEM）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../nvs/nvs.html">非易失性存储（NVS）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../retention/index.html">保留系统（Retention System）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../secure_storage/index.html">安全存储</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../settings/index.html">设置（Settings）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stream/stream_flash.html">流式 Flash（Stream Flash）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../zms/zms.html">Zephyr 存储器存储（ZMS）</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../index.html">存储与配置</a> &raquo;</li>
+  
+     <li><a href="access.html">磁盘访问</a> &raquo;</li>
+  
+  <li>NVMe</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="nvme">
+<span id="disk-nvme"></span><h1>NVMe<a class="headerlink" href="#nvme" title="链接到此标题。"></a></h1>
+<p>NVMe 是 PCIe 总线上用于暴露存储设备的标准化逻辑设备接口。</p>
+<p>Zephyr 支持 NVMe 控制器和磁盘。磁盘可以通过其暴露的 <a class="reference internal" href="access.html#disk-access-api"><span class="std std-ref">磁盘访问 API</span></a> 访问，从而可以通过 <a class="reference internal" href="../file_system/index.html#file-system-api"><span class="std std-ref">文件系统 API</span></a> 使用。</p>
+<section id="driver-design">
+<h2>驱动设计<a class="headerlink" href="#driver-design" title="链接到此标题。"></a></h2>
+<p>该驱动分为 3 个主要部分：</p>
+<ul class="simple">
+<li><p>NVMe 控制器：<a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/drivers/disk/nvme/nvme_controller.c">drivers/disk/nvme/nvme_controller.c</a></p></li>
+<li><p>NVMe 命令：<a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/drivers/disk/nvme/nvme_cmd.c">drivers/disk/nvme/nvme_cmd.c</a></p></li>
+<li><p>NVMe 命名空间：<a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/drivers/disk/nvme/nvme_namespace.c">drivers/disk/nvme/nvme_namespace.c</a></p></li>
+</ul>
+<p>其中，NVMe 控制器是设备驱动的根，设备驱动实例就是针对它创建的。注意，DTS 描述的也仅仅是 NVMe 控制器，而不包括它的任何命名空间（磁盘）。NVMe 命令是与控制器及其暴露的命名空间进行通信的通用逻辑。最后，NVMe 命名空间部分专门处理实际的命名空间，进而使应用程序能够通过磁盘访问 API（<a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/drivers/disk/nvme/nvme_disk.c">drivers/disk/nvme/nvme_disk.c</a>）访问每个命名空间。</p>
+<p>如果控制器暴露了不止 1 个命名空间（磁盘），可以通过调整配置选项 CONFIG_NVME_MAX_NAMESPACES（见下文）来增加内置支持的命名空间数量。</p>
+<p>每个暴露的磁盘通过其相关的 disk_info 结构体以名称区分，该名称继承自对应的命名空间。因此，磁盘名称遵循 NVMe 的命名方式 nvme&lt;k&gt;n&lt;n&gt;，其中 k 是控制器编号，n 是命名空间编号。大多数情况下，如果系统中只插入了一块 NVMe 磁盘，看到的暴露磁盘就是 'nvme0n0'。</p>
+</section>
+<section id="nvme-configuration">
+<h2>NVMe 配置<a class="headerlink" href="#nvme-configuration" title="链接到此标题。"></a></h2>
+<section id="dts">
+<h3>DTS<a class="headerlink" href="#dts" title="链接到此标题。"></a></h3>
+<p>任何暴露 NVMe 磁盘的开发板都应提供一个 DTS 覆盖文件，以便在 Zephyr 中使用该磁盘</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="cm"> </span><span class="cpf">&lt;zephyr/dt-bindings/pcie/pcie.h&gt;</span>
+<span class="nf">/</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nf">pcie0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nl">nvme0</span><span class="p">:</span><span class="w"> </span><span class="nf">nvme0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"nvme-controller"</span><span class="p">;</span>
+<span class="w">            </span><span class="n">vendor-id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="na">VENDOR_ID</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">            </span><span class="n">device-id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="na">DEVICE_ID</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">            </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"okay"</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>其中 VENDOR_ID 和 DEVICE_ID 取自所暴露的 NVMe 控制器。</p>
+</section>
+<section id="options">
+<h3>选项<a class="headerlink" href="#options" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_NVME" title="CONFIG_NVME"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NVME</span></code></a></p></li>
+</ul>
+<p>注意，NVME 要求目标平台支持 PCIe 多向量 MSI-X 才能工作。</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_NVME_MAX_NAMESPACES" title="CONFIG_NVME_MAX_NAMESPACES"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NVME_MAX_NAMESPACES</span></code></a></p></li>
+</ul>
+</section>
+</section>
+<section id="important-note-for-users">
+<h2>用户须知<a class="headerlink" href="#important-note-for-users" title="链接到此标题。"></a></h2>
+<p>NVMe 规范要求数据缓冲区位于双字（4 字节）对齐的地址上。对于在用户进程之下管理虚拟内存和动态分配的高级操作系统来说，这不是问题；但在 Zephyr 中，一旦缓冲区地址直接映射到物理内存，这就可能成为问题。</p>
+<p>因此，目前需要由用户确保传给 <code class="xref c c-func docutils literal notranslate"><span class="pre">disk_access_read()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">disk_access_write()</span></code> 的缓冲区地址是双字对齐的。</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 5月 08, 2024.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

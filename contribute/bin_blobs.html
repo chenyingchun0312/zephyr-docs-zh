@@ -1,0 +1,382 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>二进制 blob &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/contribute/bin_blobs.html" />
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../_static/translations.js?v=540d3cec"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="项目与治理" href="../project/index.html" />
+    <link rel="prev" title="贡献外部组件" href="external.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">为 Zephyr 做贡献</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="index.html#general-guidelines">通用指南</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#documentation">文档</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html#dealing-with-external-components">处理外部组件</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="external.html">贡献外部组件</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">二进制 blob</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#software-license">软件许可证</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#hosting">托管</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fetching-blobs">获取 blob</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tainting">污染（tainting）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#allowed-types">允许的类型</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#precompiled-library-specific-requirements">针对预编译库的要求</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#interface-header-files">接口头文件</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#allowed-dependencies">允许的依赖</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#toolchain-requirements">工具链要求</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#limited-scope">有限的范围</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#support-and-maintenance">支持与维护</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#submission-and-review-process">提交和评审流程</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#need-help-along-the-way">需要帮助？</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="index.html">为 Zephyr 做贡献</a> &raquo;</li>
+  
+  <li>二进制 blob</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="binary-blobs">
+<span id="bin-blobs"></span><h1>二进制 blob<a class="headerlink" href="#binary-blobs" title="链接到此标题。"></a></h1>
+<p>对于一个支持多种架构和众多不同 IC 系列的操作系统来说，某些功能如果没有以二进制形式分发的可执行代码的帮助，可能就无法使用。二进制 blob（简称 blob）是包含二进制格式的专有机器码或数据的文件，例如没有以 OSI 批准的许可证发布相应源代码的文件。</p>
+<p>Zephyr 支持通过其内置机制下载和使用第三方二进制 blob，但有一些重要的注意事项，将在以下各节中介绍。需要特别指出的是，本节中的所有信息仅适用于 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr">上游（原版）Zephyr</a>。</p>
+<p>在 Zephyr 的分叉（fork）或第三方发行版中，对二进制 blob 的支持没有任何限制（也许许可证兼容性除外）。实际上，Zephyr 的构建系统支持与 blob 相关的任意使用场景，包括链接库、将镜像烧录到目标设备等。因此，如果用户无法满足本页所述的要求，可以自由地创建使用二进制 blob 的、基于 Zephyr 的下游软件。</p>
+<section id="software-license">
+<h2>软件许可证<a class="headerlink" href="#software-license" title="链接到此标题。"></a></h2>
+<p>大多数二进制 blob 以专有许可证分发，这些许可证的性质和条件差别很大。由厂商在 blob 提交过程中指定许可证。blob 厂商可以要求用户在获取和安装 blob 时进行点击确认或执行其他类似 EULA 的流程。</p>
+</section>
+<section id="hosting">
+<h2>托管<a class="headerlink" href="#hosting" title="链接到此标题。"></a></h2>
+<p>blob 必须托管在互联网上，并由第三方基础设施管理。两个可能的例子是由各硬件厂商管理的 Git 仓库和 Web 服务器。</p>
+<p>Zephyr 项目不会在其 Git 仓库或任何其他地方托管二进制 blob。</p>
+</section>
+<section id="fetching-blobs">
+<h2>获取 blob<a class="headerlink" href="#fetching-blobs" title="链接到此标题。"></a></h2>
+<p>blob 通过 <a class="reference internal" href="../develop/west/zephyr-cmds.html#west-blobs"><span class="std std-ref">west blobs</span></a> 命令从官方第三方来源获取。</p>
+<p>blob 本身必须在由各自厂商维护的独立 Zephyr <a class="reference internal" href="../develop/modules.html#modules"><span class="std std-ref">模块仓库</span></a> 中所包含的 <a class="reference internal" href="../develop/modules.html#modules-bin-blobs"><span class="std std-ref">module.yml</span></a> 文件里指定。这意味着，要在上游 Zephyr 发行版中加入对某个二进制 blob 的引用，必须先有一个模块仓库，或者在提交过程中创建一个。</p>
+<p>每个可获取的 blob 都必须在相应的 <code class="file docutils literal notranslate"><span class="pre">module.yml</span></code> 文件中单独标识。blob 的规格说明必须包含：</p>
+<ul class="simple">
+<li><p>对 blob 本身的概要描述</p></li>
+<li><p>版本信息</p></li>
+<li><p>对厂商所提供文档的引用</p></li>
+<li><p>blob 的 <a class="reference internal" href="#bin-blobs-types"><span class="std std-ref">类型</span></a>，必须是允许的类型之一</p></li>
+<li><p>blob 的校验和，<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">blobs</span></code> 会在下载后对其进行检查。这是为了保证可复现性，并在 blob 变化时能够使用 Git 和 west 对问题进行二分查找（bisect）</p></li>
+<li><p>适用于该 blob 的许可证文本或对该文本的引用，采用 SPDX 格式</p></li>
+</ul>
+<p>关于这些字段更正式的定义，请参阅 <a class="reference internal" href="../develop/modules.html#modules-bin-blobs"><span class="std std-ref">相应章节</span></a>。</p>
+<p><a class="reference internal" href="../develop/west/zephyr-cmds.html#west-blobs"><span class="std std-ref">west blobs</span></a> 命令可用于列出可用 blob 的元数据，以及从用户选定的模块中获取 blob。</p>
+<p><code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">blobs</span></code> 命令只获取和存储二进制 blob 本身。任何配套代码，包括 blob 的接口头文件，都必须位于相应的模块仓库中。</p>
+</section>
+<section id="tainting">
+<h2>污染（tainting）<a class="headerlink" href="#tainting" title="链接到此标题。"></a></h2>
+<p>包含二进制 blob 会污染 Zephyr 构建。污染的定义源自 <a class="reference external" href="https://www.kernel.org/doc/html/latest/admin-guide/tainted-kernels.html">Linux 内核</a>；在 Zephyr 中，被污染的镜像是指其中包含二进制 blob 的镜像。</p>
+<p>污染状态将通过以下方式告知用户：</p>
+<ul class="simple">
+<li><p>一个或多个 Kconfig 选项 <code class="docutils literal notranslate"><span class="pre">TAINT_BLOBS_*</span></code> 会被设为 <code class="docutils literal notranslate"><span class="pre">y</span></code></p></li>
+<li><p>Zephyr 构建系统会在配置阶段发出警告。可以通过 Kconfig 禁用该警告</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">spdx</span></code> 生成的 SBOM 会列出链接到镜像中的 blob（参见 <a class="reference internal" href="../develop/west/zephyr-cmds.html#west-spdx-blobs"><span class="std std-ref">预构建库</span></a>）</p></li>
+<li><p>内核默认的致命错误处理程序也会明确打印内核的污染状态</p></li>
+<li><p>启动横幅会打印内核的污染状态</p></li>
+</ul>
+</section>
+<section id="allowed-types">
+<span id="bin-blobs-types"></span><h2>允许的类型<a class="headerlink" href="#allowed-types" title="链接到此标题。"></a></h2>
+<p>Zephyr 接受以下二进制 blob 类型：</p>
+<ul class="simple">
+<li><p>预编译库：以预编译二进制形式分发的硬件支持库，通常用于 SoC 外设。例如无线外设的支持库</p></li>
+<li><p>固件镜像：包含协处理器或从 CPU 可执行代码的镜像。它可以是完整的，也可以是部分的（通常是增量或补丁数据），一般由主 CPU 复制到 RAM 或 Flash 存储器中。例如运行 Bluetooth LE 控制器的内核所用的固件</p></li>
+<li><p>其他二进制数据文件。例如预训练的神经网络模型数据</p></li>
+</ul>
+<p>不接受通过专有库提供的与硬件无关的功能。例如，以静态归档形式分发的专有且与硬件无关的 TCP/IP 协议栈会被拒绝。</p>
+<p>注意，blob 属于可接受的类型并不意味着项目会无条件接受它；任何 blob 都可能因其他原因而在逐案审查中被拒绝（参见下文针对库的要求）。如有分歧，由 TSC 裁定某个 blob 是否属于上述类型之一。</p>
+</section>
+<section id="precompiled-library-specific-requirements">
+<h2>针对预编译库的要求<a class="headerlink" href="#precompiled-library-specific-requirements" title="链接到此标题。"></a></h2>
+<p>本节包含专门针对预编译库 blob 的其他要求。</p>
+<p>任何希望提交预编译库的人都必须声明该库满足这些要求。如果之后发现某个 blob 不满足这些要求，项目可以将其从上游发行版中移除。</p>
+<section id="interface-header-files">
+<h3>接口头文件<a class="headerlink" href="#interface-header-files" title="链接到此标题。"></a></h3>
+<p>预编译库必须附带一个或多个定义该库接口的头文件，这些头文件须以 OSI 批准的非 copyleft 许可证分发。</p>
+</section>
+<section id="allowed-dependencies">
+<h3>允许的依赖<a class="headerlink" href="#allowed-dependencies" title="链接到此标题。"></a></h3>
+<p>本节定义了库 blob 要求构建系统提供的外部符号的相关要求。</p>
+<ul class="simple">
+<li><p>blob 不得直接依赖 Zephyr API。换句话说，必须能够在完全没有 Zephyr 源代码的情况下构建该二进制文件。这是出于松耦合和可维护性的需要，因为 Zephyr API 可能会发生变化，而并非所有项目维护者都能修改这类 blob</p></li>
+<li><p>如果预编译库中的代码需要 Zephyr（或一般意义上的 RTOS）提供的功能，可以随库一起提供一个操作系统抽象层（也称移植层）的实现。该操作系统抽象层的实现必须是源代码形式，以 OSI 批准的许可证发布，并使用 Doxygen 编写文档。</p></li>
+</ul>
+</section>
+<section id="toolchain-requirements">
+<h3>工具链要求<a class="headerlink" href="#toolchain-requirements" title="链接到此标题。"></a></h3>
+<p>预编译库 blob 必须采用与 Zephyr 项目支持的工具链兼容、并且能够由其链接的数据格式。这是出于可维护性和可用性的需要。不过，使用这类库可能需要特殊的编译器和/或链接器标志。例如，移植层可能需要特殊标志，静态归档可能需要使用特定的链接器标志。</p>
+</section>
+<section id="limited-scope">
+<h3>有限的范围<a class="headerlink" href="#limited-scope" title="链接到此标题。"></a></h3>
+<p>允许任意库 blob 存在降低上游 Zephyr 软件发行版开源程度的风险。举个极端的例子，如果某个目标平台的 zephyr 内核时钟驱动只是包装一个库 blob 的移植层，那么仅使用开源软件将无法启动该目标平台。</p>
+<p>为降低这一风险，上游库 blob 的范围受到限制。项目维护者定义了一个开源测试套件，上游目标平台必须仅使用主线发行版及其模块中包含的开源软件就能通过该测试套件。该开源测试套件目前包括：</p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">samples/philosophers</span></code></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">tests/kernel</span></code></p></li>
+</ul>
+<p>该测试套件的范围可能会随时间扩大。其目标是为一个最小功能集指定测试，任何获得上游 Zephyr 支持的目标平台都必须通过开源软件支持该功能集。</p>
+<p>如果某个硬件目标平台无法通过该测试套件，项目可由发布团队酌情决定移除对它的支持。</p>
+</section>
+</section>
+<section id="support-and-maintenance">
+<h2>支持与维护<a class="headerlink" href="#support-and-maintenance" title="链接到此标题。"></a></h2>
+<p>Zephyr 项目不负责所贡献二进制 blob 的维护和支持。因此，由 Zephyr 项目发布团队酌情逐案决定：</p>
+<ul class="simple">
+<li><p>在 zephyr 仓库问题跟踪器上报告的、需要使用 blob 才能复现的 GitHub issue，可能不会被视为 bug</p></li>
+<li><p>此类 issue 可能会以超出 Zephyr 项目范围为由被关闭</p></li>
+</ul>
+<p>这并不意味着需要 blob 才能复现的 issue 会不经调查就被关闭。例如，该 issue 可能暴露了 Zephyr 中某条代码路径的 bug，而这条路径在没有 blob 的情况下很难或无法触发。项目维护者可以接受并尝试解决此类 issue。</p>
+<p>然而，需要保留一定的灵活性，因为项目维护者可能无法判断某个 issue 是由 Zephyr 的 bug 还是 blob 本身引起的，也可能因缺少硬件等原因而无法复现该 bug。</p>
+<p>blob 必须有指定的维护者，他们必须及时响应用户的问题报告，并提供 blob 更新来解决问题。如果维护者缺乏响应或支持，Zephyr 项目发布团队可酌情随时从 <code class="file docutils literal notranslate"><span class="pre">zephyr/west.yml</span></code> 中移除引用这些 blob 的模块修订版本。这是为了让项目能够控制代码腐化（bit-rot）、安全问题等。</p>
+<p>提议集成二进制 blob 的提交者必须承诺在可预见的未来维护该 blob 的集成。</p>
+<p>关于持续集成，项目的 CI 基础设施 <strong>不会</strong> 获取二进制 blob。该基础设施会构建测试和示例并可选择执行它们，以防止回归和问题进入代码库。这既包括在新建 GitHub PR（拉取请求）时运行的 CI，也包括 CI 基础设施的任何其他定期执行。</p>
+</section>
+<section id="submission-and-review-process">
+<span id="blobs-process"></span><h2>提交和评审流程<a class="headerlink" href="#submission-and-review-process" title="链接到此标题。"></a></h2>
+<p>要在项目中加入对二进制 blob 的引用，应通过标准的 PR（拉取请求）工作流提交，不需要技术指导委员会（TSC）批准。维护者和评审者负责确保所有与 blob 相关的提交符合 <a class="reference internal" href="#bin-blobs"><span class="std std-ref">二进制 blob</span></a> 中定义的成文标准。</p>
+<p>首次集成二进制 blob 的 PR 应包含有关这些 blob 及其所提供功能的详细信息。该 PR 应提供以下信息以便于评审：</p>
+<ul class="simple">
+<li><p>二进制 blob 的来源。</p></li>
+<li><p>blob 的类型（预编译库、固件镜像）。</p></li>
+<li><p>将引用这些 blob 的 Zephyr 模块。</p></li>
+<li><p>简要描述这些 blob 的作用。</p></li>
+<li><p>这些 blob 依赖哪些其他组件（如果有的话）？</p></li>
+<li><p>这些 blob 所使用的分发许可证。</p></li>
+</ul>
+<p>如果首次集成的 PR 获得了相应的批准，即可集成这些二进制 blob。对于任何技术分歧，适用标准的 <a class="reference internal" href="contributor_expectations.html#pr-technical-escalation"><span class="std std-ref">PR 升级处理流程</span></a>。</p>
+<p>之后对二进制 blob 的更新遵循 <a class="reference internal" href="../develop/modules.html#modules-changes"><span class="std std-ref">模块更新流程</span></a>。</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 10月 26, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,493 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GPIO 键盘矩阵 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/input/gpio-kbd.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="实时 I/O（RTIO）" href="../rtio/index.html" />
+    <link rel="prev" title="输入" href="index.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">服务</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../connectivity/index.html">连接</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../io.html">输入/输出</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../console.html">控制台</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">输入</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="index.html#input-events">输入事件</a></li>
+<li class="toctree-l4"><a class="reference internal" href="index.html#input-devices">输入设备</a></li>
+<li class="toctree-l4"><a class="reference internal" href="index.html#application-api">应用程序 API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="index.html#hid-code-mapping">HID 码映射</a></li>
+<li class="toctree-l4"><a class="reference internal" href="index.html#general-purpose-drivers">通用驱动</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="index.html#detailed-driver-documentation">驱动详细文档</a><ul class="current">
+<li class="toctree-l5 current"><a class="current reference internal" href="#">GPIO 键盘矩阵</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#base-use-case-no-isolation-diodes-interrupt-capable-gpios">基本用例：无隔离二极管，GPIO 支持中断</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#isolation-diodes">隔离二极管</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#gpio-with-no-interrupt-support">不支持中断的 GPIO</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#gpio-multiplexer">GPIO 多路复用器</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#row-and-column-gpio-selection">行和列 GPIO 的选择</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#bit-row-support">16 位行支持</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#actual-key-mask-configuration">实际按键掩码配置</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#keymap-configuration">键位映射配置</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#keyboard-matrix-shell-commands">键盘矩阵 shell 命令</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#keyboard-matrix-library">键盘矩阵库</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="index.html#api-reference">API 参考</a></li>
+<li class="toctree-l4"><a class="reference internal" href="index.html#input-event-definitions">输入事件定义</a></li>
+<li class="toctree-l4"><a class="reference internal" href="index.html#analog-axis-api-reference">模拟轴 API 参考</a></li>
+<li class="toctree-l4"><a class="reference internal" href="index.html#touchscreen-api-reference">触摸屏 API 参考</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../rtio/index.html">实时 I/O（RTIO）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../formatted_output.html">格式化输出</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../io.html">输入/输出</a> &raquo;</li>
+  
+     <li><a href="index.html">输入</a> &raquo;</li>
+  
+  <li>GPIO 键盘矩阵</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="gpio-keyboard-matrix">
+<span id="gpio-kbd"></span><h1>GPIO 键盘矩阵<a class="headerlink" href="#gpio-keyboard-matrix" title="链接到此标题。"></a></h1>
+<p><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">gpio-kbd-matrix</span></code> 驱动支持多种键盘矩阵硬件配置，并提供许多选项来调整其行为。本文概述一些常见的硬件配置，以及驱动如何支持它们。</p>
+<p>以下所有配置的惯例是：驱动从行 GPIO（输入）读取，并通过列 GPIO（输出）进行选择。</p>
+<section id="base-use-case-no-isolation-diodes-interrupt-capable-gpios">
+<h2>基本用例：无隔离二极管，GPIO 支持中断<a class="headerlink" href="#base-use-case-no-isolation-diodes-interrupt-capable-gpios" title="链接到此标题。"></a></h2>
+<p>这是消费级键盘上的常见配置，使用薄膜开关和柔性电路板，没有隔离二极管，需要鬼键（ghosting）检测（默认已启用）。</p>
+<figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="../../_images/no-diodes.svg"><img alt="../../_images/no-diodes.svg" src="../../_images/no-diodes.svg" style="width: 50%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">一个 3x3 矩阵，无二极管</span><a class="headerlink" href="#id1" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<p>系统必须支持 GPIO 中断，并且能够同时在所有行 GPIO 上启用中断。</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">kbd-matrix</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">     </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"gpio-kbd-matrix"</span><span class="p">;</span>
+<span class="w">     </span><span class="n">row-gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">(</span><span class="na">GPIO_PULL_UP</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="na">GPIO_ACTIVE_LOW</span><span class="p">)</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">                 </span><span class="o">&lt;&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="na">GPIO_PULL_UP</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="na">GPIO_ACTIVE_LOW</span><span class="p">)</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">                 </span><span class="o">&lt;&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">(</span><span class="na">GPIO_PULL_UP</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="na">GPIO_ACTIVE_LOW</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">     </span><span class="n">col-gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="na">GPIO_ACTIVE_LOW</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">                 </span><span class="o">&lt;&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="na">GPIO_ACTIVE_LOW</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">                 </span><span class="o">&lt;&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="na">GPIO_ACTIVE_LOW</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>在此配置下，所有按键释放后，矩阵扫描库进入空闲模式，键盘矩阵线程只有在有按键被按下时才会唤醒。</p>
+<p>当前未被选中的列所对应的 GPIO 被配置为高阻模式。这意味着行状态可能需要一段时间才能稳定，以免在从一列切换到下一列时误读按键状态。可以通过修改 <code class="docutils literal notranslate"><span class="pre">settle-time-us</span></code> 属性来调整稳定时间。</p>
+</section>
+<section id="isolation-diodes">
+<h2>隔离二极管<a class="headerlink" href="#isolation-diodes" title="链接到此标题。"></a></h2>
+<p>如果矩阵的每个按键都有隔离二极管，则可以：</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>禁用鬼键检测，从而可以检测任意按键组合</p></li>
+<li><p>将驱动配置为把未选中列的 GPIO 驱动到非活动状态而不是高阻态，这样可以缩短稳定时间（可能缩短到 0），并使用效率更高的整端口 GPIO 读取 API（如果 GPIO 引脚是连续的，会自动使用）</p></li>
+</ul>
+</div></blockquote>
+<p>二极管方向从行到列的矩阵，必须在行上使用上拉，并使用低电平有效的列。</p>
+<figure class="align-center" id="id2">
+<a class="reference internal image-reference" href="../../_images/diodes-rc.svg"><img alt="../../_images/diodes-rc.svg" src="../../_images/diodes-rc.svg" style="width: 50%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">一个带有行到列隔离二极管的 3x3 矩阵。</span><a class="headerlink" href="#id2" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">kbd-matrix</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">     </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"gpio-kbd-matrix"</span><span class="p">;</span>
+<span class="w">     </span><span class="n">row-gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">(</span><span class="na">GPIO_PULL_UP</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="na">GPIO_ACTIVE_LOW</span><span class="p">)</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">                 </span><span class="o">&lt;&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="na">GPIO_PULL_UP</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="na">GPIO_ACTIVE_LOW</span><span class="p">)</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">                 </span><span class="o">&lt;&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">(</span><span class="na">GPIO_PULL_UP</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="na">GPIO_ACTIVE_LOW</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">     </span><span class="n">col-gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="na">GPIO_ACTIVE_LOW</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">                 </span><span class="o">&lt;&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="na">GPIO_ACTIVE_LOW</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">                 </span><span class="o">&lt;&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="na">GPIO_ACTIVE_LOW</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">     </span><span class="n">col-drive-inactive</span><span class="p">;</span>
+<span class="w">     </span><span class="n">settle-time-us</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">     </span><span class="n">no-ghostkey-check</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>二极管方向从列到行的矩阵，必须在行上使用下拉，并使用高电平有效的列。</p>
+<figure class="align-center" id="id3">
+<a class="reference internal image-reference" href="../../_images/diodes-cr.svg"><img alt="../../_images/diodes-cr.svg" src="../../_images/diodes-cr.svg" style="width: 50%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">一个带有列到行隔离二极管的 3x3 矩阵。</span><a class="headerlink" href="#id3" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">kbd-matrix</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">     </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"gpio-kbd-matrix"</span><span class="p">;</span>
+<span class="w">     </span><span class="n">row-gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="p">(</span><span class="na">GPIO_PULL_DOWN</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="na">GPIO_ACTIVE_HIGH</span><span class="p">)</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">                 </span><span class="o">&lt;&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="na">GPIO_PULL_DOWN</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="na">GPIO_ACTIVE_HIGH</span><span class="p">)</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">                 </span><span class="o">&lt;&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="p">(</span><span class="na">GPIO_PULL_DOWN</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="na">GPIO_ACTIVE_HIGH</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">     </span><span class="n">col-gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="na">GPIO_ACTIVE_HIGH</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">                 </span><span class="o">&lt;&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="na">GPIO_ACTIVE_HIGH</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">                 </span><span class="o">&lt;&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="na">GPIO_ACTIVE_HIGH</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">     </span><span class="n">col-drive-inactive</span><span class="p">;</span>
+<span class="w">     </span><span class="n">settle-time-us</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">     </span><span class="n">no-ghostkey-check</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</section>
+<section id="gpio-with-no-interrupt-support">
+<h2>不支持中断的 GPIO<a class="headerlink" href="#gpio-with-no-interrupt-support" title="链接到此标题。"></a></h2>
+<p>有些 GPIO 控制器在 GPIO 中断方面有限制，可能不支持同时在所有行 GPIO 上启用中断。</p>
+<p>这种情况下，可以将驱动配置为完全不使用中断，而是在空闲时选中所有列并持续轮询行 GPIO；如果引脚是连续的，这只需一次 GPIO API 操作。</p>
+<p>将 <code class="docutils literal notranslate"><span class="pre">idle-mode</span></code> 属性设置为 <code class="docutils literal notranslate"><span class="pre">poll</span></code> 即可启用此配置：</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">kbd-matrix</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">     </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"gpio-kbd-matrix"</span><span class="p">;</span>
+<span class="w">     </span><span class="p">...</span>
+<span class="w">     </span><span class="n">idle-mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"poll"</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</section>
+<section id="gpio-multiplexer">
+<h2>GPIO 多路复用器<a class="headerlink" href="#gpio-multiplexer" title="链接到此标题。"></a></h2>
+<p>在更极端的情况下，例如列使用了多路复用器、无法同时选中所有列时，可以将驱动配置为持续扫描。</p>
+<p>为此，将 <code class="docutils literal notranslate"><span class="pre">idle-mode</span></code> 设置为 <code class="docutils literal notranslate"><span class="pre">scan</span></code>，并将 <code class="docutils literal notranslate"><span class="pre">poll-timeout-ms</span></code> 设置为 <code class="docutils literal notranslate"><span class="pre">0</span></code>。</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">kbd-matrix</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">     </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"gpio-kbd-matrix"</span><span class="p">;</span>
+<span class="w">     </span><span class="p">...</span>
+<span class="w">     </span><span class="n">poll-timeout-ms</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">     </span><span class="n">idle-mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"scan"</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</section>
+<section id="row-and-column-gpio-selection">
+<h2>行和列 GPIO 的选择<a class="headerlink" href="#row-and-column-gpio-selection" title="链接到此标题。"></a></h2>
+<p>如果行 GPIO 是连续的且位于同一个 GPIO 控制器上，驱动会自动切换 API，从整个 GPIO 端口读取，而不是逐个引脚读取。当 GPIO 不是内存映射的时候（例如位于 I2C 或 SPI 端口扩展器上），这一点特别有用，因为它能大幅减少相应总线上的传输次数。</p>
+<p>列 GPIO 同样如此，但前提是矩阵配置了 <code class="docutils literal notranslate"><span class="pre">col-drive-inactive</span></code>，因此只适用于带有隔离二极管的矩阵。</p>
+</section>
+<section id="bit-row-support">
+<h2>16 位行支持<a class="headerlink" href="#bit-row-support" title="链接到此标题。"></a></h2>
+<p>驱动默认使用 8 位数据类型存储行状态，这将矩阵的行数限制为 8。启用 <a class="reference internal" href="../../kconfig.html#CONFIG_INPUT_KBD_MATRIX_16_BIT_ROW" title="CONFIG_INPUT_KBD_MATRIX_16_BIT_ROW"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_INPUT_KBD_MATRIX_16_BIT_ROW</span></code></a> 选项可将其增加到 16。</p>
+</section>
+<section id="actual-key-mask-configuration">
+<h2>实际按键掩码配置<a class="headerlink" href="#actual-key-mask-configuration" title="链接到此标题。"></a></h2>
+<p>如果按键矩阵不完整，可以使用 <code class="docutils literal notranslate"><span class="pre">actual-key-mask</span></code> 属性指定实际存在的按键映射。这样可以在鬼键检测之前过滤矩阵状态，去掉不存在的按键，从而有可能允许原本会被鬼键检测阻止的按键组合。</p>
+<p>例如，对于一个缺少一个按键的 3x3 矩阵：</p>
+<figure class="align-center" id="id4">
+<a class="reference internal image-reference" href="../../_images/no-sw4.svg"><img alt="../../_images/no-sw4.svg" src="../../_images/no-sw4.svg" style="width: 50%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">一个缺少一个按键的 3x3 矩阵。</span><a class="headerlink" href="#id4" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">kbd-matrix</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">     </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"gpio-kbd-matrix"</span><span class="p">;</span>
+<span class="w">     </span><span class="p">...</span>
+<span class="w">     </span><span class="n">actual-key-mask</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x07</span><span class="w"> </span><span class="mh">0x05</span><span class="w"> </span><span class="mh">0x07</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>例如，这样就可以检测到同时按下 <code class="docutils literal notranslate"><span class="pre">Sw1</span></code>、<code class="docutils literal notranslate"><span class="pre">SW2</span></code> 和 <code class="docutils literal notranslate"><span class="pre">SW4</span></code>，而不会触发防鬼键机制。</p>
+<p>启用 <a class="reference internal" href="../../kconfig.html#CONFIG_INPUT_KBD_ACTUAL_KEY_MASK_DYNAMIC" title="CONFIG_INPUT_KBD_ACTUAL_KEY_MASK_DYNAMIC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_INPUT_KBD_ACTUAL_KEY_MASK_DYNAMIC</span></code></a> 后，可以使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">input_kbd_matrix_actual_key_mask_set()</span></code> API 在运行时更改实际按键掩码。</p>
+</section>
+<section id="keymap-configuration">
+<h2>键位映射配置<a class="headerlink" href="#keymap-configuration" title="链接到此标题。"></a></h2>
+<p>键盘矩阵设备会上报一系列 x/y/touch 事件。可以使用 <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">input-keymap</span></code> 驱动将它们映射为普通按键事件。</p>
+<p>例如，下面的配置设置了一个 <code class="docutils literal notranslate"><span class="pre">keymap</span></code> 设备，它以 x/y/touch 事件作为输入，并输出相应的按键事件：</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">kbd</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="w">    </span><span class="nf">keymap</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"input-keymap"</span><span class="p">;</span>
+<span class="w">        </span><span class="n">keymap</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span>
+<span class="w">            </span><span class="na">MATRIX_KEY</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="na">INPUT_KEY_1</span><span class="p">)</span>
+<span class="w">            </span><span class="na">MATRIX_KEY</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="na">INPUT_KEY_2</span><span class="p">)</span>
+<span class="w">            </span><span class="na">MATRIX_KEY</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="na">INPUT_KEY_3</span><span class="p">)</span>
+<span class="w">            </span><span class="na">MATRIX_KEY</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="na">INPUT_KEY_4</span><span class="p">)</span>
+<span class="w">            </span><span class="na">MATRIX_KEY</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="na">INPUT_KEY_5</span><span class="p">)</span>
+<span class="w">            </span><span class="na">MATRIX_KEY</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="na">INPUT_KEY_6</span><span class="p">)</span>
+<span class="w">            </span><span class="na">MATRIX_KEY</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="na">INPUT_KEY_7</span><span class="p">)</span>
+<span class="w">            </span><span class="na">MATRIX_KEY</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="na">INPUT_KEY_8</span><span class="p">)</span>
+<span class="w">            </span><span class="na">MATRIX_KEY</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="na">INPUT_KEY_9</span><span class="p">)</span>
+<span class="w">        </span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">row-size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">col-size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">3</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">input_keymap</span></dt>
+</dl>
+
+</section>
+<section id="keyboard-matrix-shell-commands">
+<h2>键盘矩阵 shell 命令<a class="headerlink" href="#keyboard-matrix-shell-commands" title="链接到此标题。"></a></h2>
+<p>shell 命令 <code class="docutils literal notranslate"><span class="pre">kbd_matrix_state_dump</span></code> 可用于测试任何使用键盘矩阵库实现的键盘矩阵驱动的功能。启用该命令后，每当矩阵状态变化时都会记录其状态；禁用后，会打印所有已检测到的按键的或掩码，可用于设置 <code class="docutils literal notranslate"><span class="pre">actual-key-mask</span></code> 属性。</p>
+<p>可以通过 <a class="reference internal" href="../../kconfig.html#CONFIG_INPUT_SHELL_KBD_MATRIX_STATE" title="CONFIG_INPUT_SHELL_KBD_MATRIX_STATE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_INPUT_SHELL_KBD_MATRIX_STATE</span></code></a> 启用该命令。</p>
+<p>用法示例：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>device<span class="w"> </span>list
+<span class="go">devices:</span>
+<span class="go">- kbd-matrix (READY)</span>
+<span class="gp">uart:~$ </span>input<span class="w"> </span>kbd_matrix_state_dump<span class="w"> </span>kbd-matrix
+<span class="go">Keyboard state logging enabled for kbd-matrix</span>
+<span class="go">[00:01:41.678,466] &lt;inf&gt; input: kbd-matrix state [01 -- -- --] (1)</span>
+<span class="go">[00:01:41.784,912] &lt;inf&gt; input: kbd-matrix state [-- -- -- --] (0)</span>
+<span class="go">...</span>
+<span class="go">press more buttons</span>
+<span class="go">...</span>
+<span class="gp">uart:~$ </span>input<span class="w"> </span>kbd_matrix_state_dump<span class="w"> </span>off
+<span class="go">Keyboard state logging disabled</span>
+<span class="go">[00:01:47.967,651] &lt;inf&gt; input: kbd-matrix key-mask [07 05 07 --] (8)</span>
+</pre></div>
+</div>
+</section>
+<section id="keyboard-matrix-library">
+<h2>键盘矩阵库<a class="headerlink" href="#keyboard-matrix-library" title="链接到此标题。"></a></h2>
+<p>GPIO 键盘矩阵驱动基于一个通用的键盘矩阵库，该库实现了扫描延迟、消抖、空闲模式等核心功能，可复用于实现其他键盘矩阵驱动（可能是应用程序特定的驱动）。</p>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">input_kbd_matrix</span></dt>
+</dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 8月 19, 2025.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

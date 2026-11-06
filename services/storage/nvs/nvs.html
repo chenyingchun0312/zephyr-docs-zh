@@ -1,0 +1,371 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>非易失性存储（NVS） &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/storage/nvs/nvs.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" />
+    <link rel="next" title="保留系统（Retention System）" href="../retention/index.html" />
+    <link rel="prev" title="非易失性存储器（NVMEM）" href="../nvmem/index.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">服务</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../connectivity/index.html">连接</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">存储与配置</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../disk/access.html">磁盘访问</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../fcb/fcb.html">Flash 循环缓冲区（FCB）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../file_system/index.html">文件系统</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../flash_map/flash_map.html">Flash 映射（Flash map）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../nvmem/index.html">非易失性存储器（NVMEM）</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">非易失性存储（NVS）</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#flash-wear">Flash 磨损</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#calculating-expected-device-lifetime">计算预期设备寿命</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#flash-write-block-size-migration">Flash 写入块大小迁移</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sample">示例</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#troubleshooting">故障排除</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api-reference">API 参考</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../retention/index.html">保留系统（Retention System）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../secure_storage/index.html">安全存储</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../settings/index.html">设置（Settings）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stream/stream_flash.html">流式 Flash（Stream Flash）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../zms/zms.html">Zephyr 存储器存储（ZMS）</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../index.html">存储与配置</a> &raquo;</li>
+  
+  <li>非易失性存储（NVS）</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="non-volatile-storage-nvs">
+<span id="nvs-api"></span><h1>非易失性存储（NVS）<a class="headerlink" href="#non-volatile-storage-nvs" title="链接到此标题。"></a></h1>
+<p>以 id-数据对形式表示的元素，使用以 FIFO 方式管理的循环缓冲区存储在 Flash 中。Flash 区域被划分为多个扇区。元素会被追加到一个扇区中，直到该扇区的存储空间耗尽，然后准备（擦除）Flash 区域中的一个新扇区以供使用。在擦除扇区之前，会检查使用中的扇区里是否存在相应的标识符-数据对，如果不存在，则复制该 id-数据对。</p>
+<p>id 是一个 16 位无符号数。NVS 确保对于每个已使用的 id，Flash 中始终至少存储有一个 id-数据对。</p>
+<p>NVS 支持存储二进制数据块（blob）、字符串、整数、长整数，以及它们的任意组合。</p>
+<p>每个元素在 Flash 中存储为元数据（8 字节）和数据。元数据写入一个从 NVS 扇区末尾开始的表中，数据则从扇区开头起依次写入。元数据包括：id、数据在扇区中的偏移量、数据长度、part（未使用）以及一个 CRC。该 CRC 仅针对元数据计算，只用于确保写入已完成。元素的实际数据可以由另一个（可选的）CRC-32 保护。使用 <a class="reference internal" href="../../../kconfig.html#CONFIG_NVS_DATA_CRC" title="CONFIG_NVS_DATA_CRC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NVS_DATA_CRC</span></code></a> 配置项可启用数据部分的 CRC。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>仅在读取元素的全部数据时才会检查数据 CRC。部分读取时不会检查数据 CRC，因为它存储在元素数据区的末尾。</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>在原先不带数据 CRC 的已有 NVS 内容上启用数据 CRC 功能，会使所有现有数据失效。</p>
+</div>
+<p>向 NVS 写入数据时，总是先写入数据，再写入元数据。在初始化期间，已写入 Flash 但没有元数据的数据会被忽略。</p>
+<p>在初始化期间，NVS 会校验存储在 Flash 中的数据，如果遇到错误，会忽略元数据缺失或不正确的所有数据。</p>
+<p>NVS 在向 Flash 写入数据之前会检查 id-数据对。如果 id-数据对未发生变化，则不会对 Flash 执行写入。</p>
+<p>为了防止 Flash 区域被频繁擦除，保留足够的空闲空间非常重要。NVS 有一种保护机制，可避免在空闲空间有限时陷入无休止的 Flash 页擦除循环。检测到这种循环时，NVS 会返回没有更多可用空间。</p>
+<p>对于 NVS，文件系统的声明方式如下：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">nvs_fs</span><span class="w"> </span><span class="n">fs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="p">.</span><span class="n">flash_device</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">NVS_FLASH_DEVICE</span><span class="p">,</span>
+<span class="p">.</span><span class="n">sector_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">NVS_SECTOR_SIZE</span><span class="p">,</span>
+<span class="p">.</span><span class="n">sector_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">NVS_SECTOR_COUNT</span><span class="p">,</span>
+<span class="p">.</span><span class="n">offset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">NVS_STORAGE_OFFSET</span><span class="p">,</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>其中</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">NVS_FLASH_DEVICE</span></code> 是对将要使用的 Flash 设备的引用，该设备必须处于可用状态。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NVS_SECTOR_SIZE</span></code> 是扇区大小，它必须是 Flash 擦除页大小的倍数，并且是 2 的幂。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NVS_SECTOR_COUNT</span></code> 是扇区数量，至少为 2，始终会保留一个扇区为空，以便复制现有数据。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NVS_STORAGE_OFFSET</span></code> 是存储区在 Flash 中的偏移量。</p></li>
+</ul>
+<section id="flash-wear">
+<h2>Flash 磨损<a class="headerlink" href="#flash-wear" title="链接到此标题。"></a></h2>
+<p>向 Flash 写入数据时，研究 Flash 磨损非常重要。Flash 的寿命有限，由 Flash 可被擦除的次数决定。Flash 每次擦除一页，页大小由硬件决定。例如，nRF51822 设备的页大小为 1024 字节，每页大约可以擦除 20,000 次。</p>
+<section id="calculating-expected-device-lifetime">
+<h3>计算预期设备寿命<a class="headerlink" href="#calculating-expected-device-lifetime" title="链接到此标题。"></a></h3>
+<p>假设我们使用一个 4 字节的状态变量，它每分钟变化一次，并且需要在重启后恢复。NVS 定义的 sector_size 等于页大小（1024 字节），并定义了 2 个扇区。</p>
+<p>每次写入该状态变量需要 12 字节的 Flash 存储空间：8 字节用于元数据，4 字节用于数据。存储数据时，第一个扇区将在 1024/12 = 85.33 分钟后写满。再过 85.33 分钟，第二个扇区也会写满。此时，由于只使用了两个扇区，第一个扇区将被重新用于存储，它会在系统运行 171 分钟后被擦除。按预期设备寿命为 20,000 次写入计算，两个扇区每 171 分钟写入一轮，设备大约可以使用 171 * 20,000 分钟，即约 6.5 年。</p>
+<p>更一般地，设</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">NS</span></code> 为每分钟的存储请求次数，</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DS</span></code> 为数据大小（字节），</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SECTOR_SIZE</span></code> 为扇区大小（字节），</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">PAGE_ERASES</span></code> 为页可被擦除的次数，</p></li>
+</ul>
+<p>则预期设备寿命（以分钟为单位）可按如下公式计算:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>SECTOR_COUNT * SECTOR_SIZE * PAGE_ERASES / (NS * (DS+8)) minutes
+</pre></div>
+</div>
+<p>从这个公式也可以清楚地看出，如果预期寿命太短该怎么办：增大 <code class="docutils literal notranslate"><span class="pre">SECTOR_COUNT</span></code> 或 <code class="docutils literal notranslate"><span class="pre">SECTOR_SIZE</span></code>。</p>
+</section>
+</section>
+<section id="flash-write-block-size-migration">
+<h2>Flash 写入块大小迁移<a class="headerlink" href="#flash-write-block-size-migration" title="链接到此标题。"></a></h2>
+<p>在 DFU 过程中，NVS 所使用的 Flash 驱动可能会改变其支持的最小写入块大小。只要物理 ATE 大小不变，NVS 在 Flash 中的镜像就保持兼容。特别地，允许在 1、2、4、8 字节写入块大小之间迁移。</p>
+</section>
+<section id="sample">
+<h2>示例<a class="headerlink" href="#sample" title="链接到此标题。"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">samples/subsys/kvss/nvs</span></code> 中提供了一个演示如何使用 NVS 的示例。</p>
+</section>
+<section id="troubleshooting">
+<h2>故障排除<a class="headerlink" href="#troubleshooting" title="链接到此标题。"></a></h2>
+<dl class="simple">
+<dt>使用 NVS 时出现 MPU 故障，或返回 <code class="docutils literal notranslate"><span class="pre">-ETIMEDOUT</span></code> 错误</dt><dd><p>NVS 可以使用 SoC 的内部 Flash。启用 MPU 时，Flash 驱动需要对 Flash 存储器具有 MPU RWX 访问权限，这通过 <a class="reference internal" href="../../../kconfig.html#CONFIG_MPU_ALLOW_FLASH_WRITE" title="CONFIG_MPU_ALLOW_FLASH_WRITE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MPU_ALLOW_FLASH_WRITE</span></code></a> 配置。如果禁用此选项，当 NVS 应用程序访问 SoC 内部 Flash 且它是唯一运行的线程时，就会发生 MPU 故障。在多线程应用程序中，其他线程可能会截获该故障，此时 NVS API 会返回 <code class="docutils literal notranslate"><span class="pre">-ETIMEDOUT</span></code> 错误。</p>
+</dd>
+</dl>
+</section>
+<section id="api-reference">
+<h2>API 参考<a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<p>NVS 子系统 API 由 <code class="docutils literal notranslate"><span class="pre">nvs.h</span></code> 提供：</p>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">nvs_data_structures</span></dt>
+</dl>
+
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">nvs_high_level_api</span></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/subsys/kvss/nvs/README.html#nvs" title="使用 NVS API 在 Flash 中存储和读取数据。">Non-Volatile Storage (NVS)</a></span><span class="code-sample-description">使用 NVS API 在 Flash 中存储和读取数据。</span></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 1月 31, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

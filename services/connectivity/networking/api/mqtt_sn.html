@@ -1,0 +1,422 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MQTT-SN &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/connectivity/networking/api/mqtt_sn.html" />
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../../search.html" />
+    <link rel="next" title="开放充电点协议（OCPP）" href="ocpp.html" />
+    <link rel="prev" title="MQTT" href="mqtt.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html">
+            
+              <img src="../../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">服务</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">连接</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">网络</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../overview.html">概述</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../net-stack-architecture.html">网络协议栈架构</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../net_config_guide.html">网络配置指南</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../networking_with_host.html">与主机系统联网</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../network_monitoring.html">监视网络流量</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../network_tracing.html">网络跟踪</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../conformance/index.html">使用 TTCN-3 进行协议一致性测试</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="index.html">网络 API</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="apis.html">网络 API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="buf_mgmt.html">网络数据包管理</a></li>
+<li class="toctree-l5"><a class="reference internal" href="net_tech.html">网络技术</a></li>
+<li class="toctree-l5 current"><a class="reference internal" href="protocols.html">协议</a><ul class="current">
+<li class="toctree-l6"><a class="reference internal" href="coap.html">CoAP</a></li>
+<li class="toctree-l6"><a class="reference internal" href="coap_client.html">CoAP 客户端</a></li>
+<li class="toctree-l6"><a class="reference internal" href="coap_server.html">CoAP 服务器</a></li>
+<li class="toctree-l6"><a class="reference internal" href="coap_oscore.html">OSCORE 支持（<strong>RFC 8613</strong>）</a></li>
+<li class="toctree-l6"><a class="reference internal" href="ftp_client.html">FTP 客户端</a></li>
+<li class="toctree-l6"><a class="reference internal" href="http_client.html">HTTP 客户端</a></li>
+<li class="toctree-l6"><a class="reference internal" href="http_server.html">HTTP 服务器</a></li>
+<li class="toctree-l6"><a class="reference internal" href="lwm2m.html">轻量级 M2M（LwM2M）</a></li>
+<li class="toctree-l6"><a class="reference internal" href="mcp.html">MCP 服务器</a></li>
+<li class="toctree-l6"><a class="reference internal" href="mqtt.html">MQTT</a></li>
+<li class="toctree-l6 current"><a class="current reference internal" href="#">MQTT-SN</a></li>
+<li class="toctree-l6"><a class="reference internal" href="ocpp.html">开放充电点协议（OCPP）</a></li>
+<li class="toctree-l6"><a class="reference internal" href="rtp.html">RTP</a></li>
+<li class="toctree-l6"><a class="reference internal" href="tftp.html">TFTP</a></li>
+<li class="toctree-l6"><a class="reference internal" href="latmon.html">Latmon 网络服务</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="quic.html">QUIC 传输接口</a></li>
+<li class="toctree-l5"><a class="reference internal" href="system_mgmt.html">网络系统管理</a></li>
+<li class="toctree-l5"><a class="reference internal" href="tsn.html">时间敏感网络</a></li>
+<li class="toctree-l5"><a class="reference internal" href="zperf.html">zperf：网络流量生成器</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../conn_mgr/index.html">连接管理器</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../dsa.html">分布式交换架构（DSA）</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../bluetooth/index.html">Bluetooth</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../usb/index.html">USB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../canbus/index.html">控制器局域网（CAN）总线协议</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lora_lorawan/index.html">LoRa 和 LoRaWAN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modbus/index.html">Modbus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modem/index.html">调制解调器模块</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../../index.html">连接</a> &raquo;</li>
+  
+     <li><a href="../index.html">网络</a> &raquo;</li>
+  
+     <li><a href="index.html">网络 API</a> &raquo;</li>
+  
+     <li><a href="protocols.html">协议</a> &raquo;</li>
+  
+  <li>MQTT-SN</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="mqtt-sn">
+<span id="mqtt-sn-socket-interface"></span><h1>MQTT-SN<a class="headerlink" href="#mqtt-sn" title="链接到此标题。"></a></h1>
+<nav class="contents local" id="id1">
+<ul class="simple">
+<li><p><a class="reference internal" href="#overview" id="id2">概述</a></p></li>
+<li><p><a class="reference internal" href="#sample-usage" id="id3">使用示例</a></p></li>
+<li><p><a class="reference internal" href="#deviations-from-the-standard" id="id4">与标准的差异</a></p></li>
+<li><p><a class="reference internal" href="#api-reference" id="id5">API 参考</a></p></li>
+</ul>
+</nav>
+<section id="overview">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">概述</a><a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>MQTT-SN 是知名的 MQTT 协议的一个变体，请参见 <a class="reference internal" href="mqtt.html#mqtt-socket-interface"><span class="std std-ref">MQTT</span></a>。</p>
+<p>与 MQTT 不同，MQTT-SN 不需要 TCP 传输，而是被设计为可以在任何基于消息的传输上使用。它最初主要是针对 ZigBee 设计的，但 Bluetooth、UDP 甚至 UART 等其他传输同样可以使用。</p>
+<p>Zephyr 提供了一个基于 BSD 套接字 API 构建的 MQTT-SN 客户端库。可以通过 Kconfig 选项 <a class="reference internal" href="../../../../kconfig.html#CONFIG_MQTT_SN_LIB" title="CONFIG_MQTT_SN_LIB"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MQTT_SN_LIB</span></code></a> 启用该库，它可以按客户端单独配置，支持 MQTT-SN 1.2 版。Zephyr 的 MQTT-SN 实现可以与任何基于消息的传输配合使用，并且已内置了对 UDP 的支持。</p>
+<p>MQTT-SN 客户端需要连接到一个 MQTT-SN 网关。这些网关负责在 MQTT-SN 和 MQTT 之间进行转换。Eclipse Paho 项目提供了一个 MQTT-SN 网关实现，此外也有其他实现可用。<a class="reference external" href="https://www.eclipse.org/paho/index.php?page=components/mqtt-sn-transparent-gateway/index.php">https://www.eclipse.org/paho/index.php?page=components/mqtt-sn-transparent-gateway/index.php</a></p>
+<p>MQTT-SN 规范 v1.2 可在此处找到：<a class="reference external" href="https://www.oasis-open.org/committees/download.php/66091/MQTT-SN_spec_v1.2.pdf">https://www.oasis-open.org/committees/download.php/66091/MQTT-SN_spec_v1.2.pdf</a></p>
+</section>
+<section id="sample-usage">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">使用示例</a><a class="headerlink" href="#sample-usage" title="链接到此标题。"></a></h2>
+<p>要创建 MQTT-SN 客户端，需要定义一个客户端上下文结构体和缓冲区：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Buffers for MQTT client. */</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">rx_buffer</span><span class="p">[</span><span class="mi">256</span><span class="p">];</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">tx_buffer</span><span class="p">[</span><span class="mi">256</span><span class="p">];</span>
+
+<span class="cm">/* MQTT-SN client context */</span>
+<span class="k">static</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">mqtt_sn_client</span><span class="w"> </span><span class="n">client</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>应用程序中可以创建多个 MQTT-SN 客户端实例并独立管理。此外，还需要一个用于传输的结构体。该库已经自带了一个 UDP 的示例实现。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* MQTT Broker address information. */</span>
+<span class="k">static</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">mqtt_sn_transport</span><span class="w"> </span><span class="n">tp</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>MQTT-SN 库会通过回调把特定事件通知给客户端。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">evt_cb</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">mqtt_sn_client</span><span class="w"> </span><span class="o">*</span><span class="n">client</span><span class="p">,</span>
+<span class="w">                   </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">mqtt_sn_evt</span><span class="w"> </span><span class="o">*</span><span class="n">evt</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">   </span><span class="k">switch</span><span class="p">(</span><span class="n">evt</span><span class="o">-&gt;</span><span class="n">type</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="p">{</span>
+<span class="w">      </span><span class="cm">/* Handle events here. */</span>
+<span class="w">   </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>可能的事件列表请参见 <a class="reference internal" href="#mqtt-sn-api-reference"><span class="std std-ref">API 参考</span></a>。</p>
+<p>客户端上下文结构体在使用前需要进行初始化和设置。下面是 UDP 传输的配置示例：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">mqtt_sn_data</span><span class="w"> </span><span class="n">client_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MQTT_SN_DATA_STRING_LITERAL</span><span class="p">(</span><span class="s">"ZEPHYR"</span><span class="p">);</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">net_sockaddr_in</span><span class="w"> </span><span class="n">gateway</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+
+<span class="kt">uint8_t</span><span class="w"> </span><span class="n">tx_buf</span><span class="p">[</span><span class="mi">256</span><span class="p">];</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="n">rx_buf</span><span class="p">[</span><span class="mi">256</span><span class="p">];</span>
+
+<span class="n">mqtt_sn_transport_udp_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tp</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">net_sockaddr</span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">gateway</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">((</span><span class="n">gateway</span><span class="p">)));</span>
+
+<span class="n">mqtt_sn_client_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">client</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">client_id</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">tp</span><span class="p">.</span><span class="n">tp</span><span class="p">,</span><span class="w"> </span><span class="n">evt_cb</span><span class="p">,</span><span class="w"> </span><span class="n">tx_buf</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">tx_buf</span><span class="p">),</span><span class="w"> </span><span class="n">rx_buf</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">rx_buf</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>完成配置后，必须定义要连接的网关的网络地址。MQTT-SN 协议提供了通过通告或搜索机制发现网关的功能。用户至少应执行以下步骤之一，为该库定义一个网关：</p>
+<ul class="simple">
+<li><p>调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">mqtt_sn_add_gw()</span></code> 函数手动定义网关地址。</p></li>
+<li><p>等待 <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">MQTT_SN_EVT_ADVERTISE</span></code>。</p></li>
+<li><p>调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">mqtt_sn_search()</span></code> 函数并等待 <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">MQTT_SN_EVT_GWINFO</span></code> 回调。务必定期调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">mqtt_sn_input()</span></code> 函数以处理传入的消息。</p></li>
+</ul>
+<p><code class="xref c c-func docutils literal notranslate"><span class="pre">mqtt_sn_search()</span></code> 函数调用示例：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mqtt_sn_search</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mqtt_client</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="n">k_sleep</span><span class="p">(</span><span class="n">K_SECONDS</span><span class="p">(</span><span class="mi">10</span><span class="p">));</span>
+<span class="n">err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mqtt_sn_input</span><span class="p">(</span><span class="o">&amp;</span><span class="n">mqtt_client</span><span class="p">);</span>
+<span class="n">__ASSERT</span><span class="p">(</span><span class="n">err</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s">"mqtt_sn_search() failed %d"</span><span class="p">,</span><span class="w"> </span><span class="n">err</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>定义或找到网关地址后，MQTT-SN 客户端就可以连接到网关。调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">mqtt_sn_connect()</span></code> 函数，它会发送一条 <code class="docutils literal notranslate"><span class="pre">CONNECT</span></code> MQTT-SN 消息。应用程序应定期调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">mqtt_sn_input()</span></code> 函数处理收到的响应。如果应用程序知道没有收到任何数据（例如使用 Bluetooth 时），则不必调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">mqtt_sn_input()</span></code>。注意，如果传输结构体包含一个与 <code class="xref c c-func docutils literal notranslate"><span class="pre">poll()</span></code> 兼容的函数指针，那么 <code class="xref c c-func docutils literal notranslate"><span class="pre">mqtt_sn_input()</span></code> 是非阻塞函数。如果连接成功，会通过回调函数向应用程序通知 <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">MQTT_SN_EVT_CONNECTED</span></code>。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mqtt_sn_connect</span><span class="p">(</span><span class="o">&amp;</span><span class="n">client</span><span class="p">,</span><span class="w"> </span><span class="nb">false</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">);</span>
+<span class="n">__ASSERT</span><span class="p">(</span><span class="n">err</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s">"mqtt_sn_connect() failed %d"</span><span class="p">,</span><span class="w"> </span><span class="n">err</span><span class="p">);</span>
+
+<span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">mqtt_sn_input</span><span class="p">(</span><span class="o">&amp;</span><span class="n">client</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">connected</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">mqtt_sn_publish</span><span class="p">(</span><span class="o">&amp;</span><span class="n">client</span><span class="p">,</span><span class="w"> </span><span class="n">MQTT_SN_QOS_0</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">topic_p</span><span class="p">,</span><span class="w"> </span><span class="nb">false</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">pubdata</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">k_sleep</span><span class="p">(</span><span class="n">K_MSEC</span><span class="p">(</span><span class="mi">500</span><span class="p">));</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>在上面的代码片段中，先连接网关，再发布消息。如果连接在 MQTT 层失败或发生超时，连接会被中止并返回错误。</p>
+<p>连接建立后，应用程序需要定期调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">mqtt_input()</span></code> 函数处理传入数据。而连接的维持则通过一个 k_work 工作项自动完成。如果收到 MQTT 消息，MQTT 回调函数会被调用，并通知相应的事件。</p>
+<p>可以通过调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">mqtt_sn_disconnect()</span></code> 函数关闭连接，但这对传输没有影响。如果想关闭传输（例如套接字），请调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">mqtt_sn_client_deinit()</span></code>，它也会对传输进行反初始化。</p>
+<p>Zephyr 提供了使用 MQTT-SN 客户端 API 的示例代码。更多信息请参见 <a class="reference internal" href="../../../../samples/net/mqtt_sn_publisher/README.html#mqtt-sn-publisher" title="向 MQTT-SN 网关发送 MQTT-SN PUBLISH 消息。">MQTT-SN publisher</a>。</p>
+</section>
+<section id="deviations-from-the-standard">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">与标准的差异</a><a class="headerlink" href="#deviations-from-the-standard" title="链接到此标题。"></a></h2>
+<p>该库尚不支持协议的某些部分。</p>
+<ul class="simple">
+<li><p>转发器封装（Forwarder Encapsulation）</p></li>
+</ul>
+</section>
+<section id="api-reference">
+<span id="mqtt-sn-api-reference"></span><h2><a class="toc-backref" href="#id5" role="doc-backlink">API 参考</a><a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">mqtt_sn_socket</span></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/mqtt_sn_publisher/README.html#mqtt-sn-publisher" title="向 MQTT-SN 网关发送 MQTT-SN PUBLISH 消息。">MQTT-SN publisher</a></span><span class="code-sample-description">向 MQTT-SN 网关发送 MQTT-SN PUBLISH 消息。</span></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 4月 15, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

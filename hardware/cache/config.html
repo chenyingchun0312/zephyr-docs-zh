@@ -1,0 +1,295 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>缓存控制配置 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/hardware/cache/config.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="缓存基础" href="guide.html" />
+    <link rel="prev" title="缓存" href="index.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">硬件支持</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../arch/index.html">架构相关指南</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../barriers/index.html">屏障 API</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">缓存</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">缓存控制配置</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cache-api">缓存 API</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="guide.html">缓存基础</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../emulator/index.html">Zephyr 的设备仿真器/模拟器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../emulator/bus_emulators.html">外部总线及总线所连外设的仿真器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../firmware/index.html">固件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../peripherals/index.html">外设</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pinctrl/index.html">引脚控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../porting/index.html">移植</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../virtualization/index.html">虚拟化</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">硬件支持</a> &raquo;</li>
+  
+     <li><a href="index.html">缓存</a> &raquo;</li>
+  
+  <li>缓存控制配置</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="cache-control-configuration">
+<span id="cache-config"></span><h1>缓存控制配置<a class="headerlink" href="#cache-control-configuration" title="链接到此标题。"></a></h1>
+<p>本文是关于 Zephyr 缓存接口以及缓存控制器相关 Kconfig 选项的概要指南。API 参考资料见 <a class="reference internal" href="#cache-api"><span class="std std-ref">缓存 API</span></a>。</p>
+<p>Zephyr 提供了多个 Kconfig 选项，用于控制缓存控制器的实现方式和控制方式。</p>
+<ul>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_CPU_HAS_DCACHE" title="CONFIG_CPU_HAS_DCACHE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CPU_HAS_DCACHE</span></code></a> / <a class="reference internal" href="../../kconfig.html#CONFIG_CPU_HAS_ICACHE" title="CONFIG_CPU_HAS_ICACHE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CPU_HAS_ICACHE</span></code></a>：当 CPU 确实支持数据缓存或指令缓存时，应在 SoC / 平台层面选中这些隐藏选项。缓存控制器可以集成在 CPU 核心中，也可以是提供了驱动的外部缓存控制器。</p>
+<p>这些选项的目的是记录一项可用的硬件特性，无论我们是否打算在 Zephyr 中支持和使用缓存控制，都应设置它们。</p>
+</li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_DCACHE" title="CONFIG_DCACHE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_DCACHE</span></code></a> / <a class="reference internal" href="../../kconfig.html#CONFIG_ICACHE" title="CONFIG_ICACHE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ICACHE</span></code></a>：当 Zephyr 中存在且能正常工作的数据缓存或指令缓存支持时，必须选中这些选项。注意，即使禁用了这些选项，缓存仍可能根据硬件默认设置而处于启用状态。</p>
+<p>所有与缓存控制相关的代码路径都必须根据这些符号有条件地启用。设置该符号时，即认为缓存已启用并在使用中。</p>
+<p>这些符号并不说明向用户公开的实际 API 接口。例如，使用数据缓存的平台可以启用 <a class="reference internal" href="../../kconfig.html#CONFIG_DCACHE" title="CONFIG_DCACHE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_DCACHE</span></code></a> 符号，并在某些平台相关代码中调用 HAL 导出的函数来启用和管理数据缓存。</p>
+</li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_CACHE_MANAGEMENT" title="CONFIG_CACHE_MANAGEMENT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CACHE_MANAGEMENT</span></code></a>：当通过标准 API 向用户公开缓存操作时（见 <a class="reference internal" href="#cache-api"><span class="std std-ref">缓存 API</span></a>），必须选中此选项。</p>
+<p>启用此选项时，我们假定所有缓存函数都已在架构代码或外部缓存控制器驱动中实现。</p>
+</li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_MEM_ATTR" title="CONFIG_MEM_ATTR"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MEM_ATTR</span></code></a>：此选项允许用户（使用 <a class="reference internal" href="../../services/mem_mgmt/index.html#mem-mgmt-api"><span class="std std-ref">内存区域属性</span></a>）指定内存中的一块固定区域，内核初始化完成后该区域将禁用缓存。</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_NOCACHE_MEMORY" title="CONFIG_NOCACHE_MEMORY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NOCACHE_MEMORY</span></code></a>：此选项允许用户使用 <code class="docutils literal notranslate"><span class="pre">__nocache</span></code> 将单个全局变量指定为不缓存。这会指示链接器将所有带有该标记的变量放入内存中一个特殊的 <code class="docutils literal notranslate"><span class="pre">nocache</span></code> 区域，并由 MPU 驱动将该区域配置为不缓存。</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ARCH_CACHE" title="CONFIG_ARCH_CACHE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARCH_CACHE</span></code></a>/<a class="reference internal" href="../../kconfig.html#CONFIG_EXTERNAL_CACHE" title="CONFIG_EXTERNAL_CACHE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_EXTERNAL_CACHE</span></code></a>：<code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CACHE_TYPE</span></code> 的两个互斥选项，用于决定缓存操作是在架构层实现，还是通过带有驱动的外部缓存控制器实现。</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ARCH_CACHE" title="CONFIG_ARCH_CACHE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARCH_CACHE</span></code></a>：缓存 API 由架构代码实现</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_EXTERNAL_CACHE" title="CONFIG_EXTERNAL_CACHE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_EXTERNAL_CACHE</span></code></a>：缓存 API 由支持外部缓存控制器的驱动实现。此时驱动必须照常放在 <code class="file docutils literal notranslate"><span class="pre">drivers/cache/</span></code> 目录中</p></li>
+</ul>
+</li>
+</ul>
+<section id="cache-api">
+<span id="id1"></span><h2>缓存 API<a class="headerlink" href="#cache-api" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">cache_interface</span></dt>
+</dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 4月 24, 2025.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

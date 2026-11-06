@@ -1,0 +1,408 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="演示异步 API 的用法" name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>UART ASYNC API &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/samples/drivers/uart/async_api/README.html" />
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../../search.html" />
+    <link rel="next" title="UART echo" href="../echo_bot/README.html" />
+    <link rel="prev" title="通用异步收发器（UART）" href="../README.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html">
+            
+              <img src="../../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">示例与演示</a><ul class="current">
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../application_development/application_development.html">Application Development</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../arch/index.html">Architecture-dependent Samples</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../basic/basic.html">Basic</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../bluetooth/bluetooth.html">Bluetooth</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../boards/boards.html">Boards</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../cpp/cpp.html">C++</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../data_structures/data_structures.html">Data Structures</a></li>
+<li class="toctree-l2 current"><a class="category-link reference internal" href="../../drivers.html">Drivers</a><ul class="current">
+<li class="toctree-l3"><a class="category-link reference internal" href="../../w1/README.html">1-Wire</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../ethernet/index.html">Ethernet</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../fpga/index.html">FPGA</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../firmware/index.html">Firmware Samples</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../gpio/index.html">General Purpose I/O (GPIO)</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../haptics/README.html">Haptics</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../i2s/README.html">I2S</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../i2c/README.html">Inter-Integrated Circuit (I2C) Bus</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../ipm/README.html">Inter-Processor Mailbox (IPM)</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../interrupt_controller/index.html">Interrupt controller</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../led/index.html">Light-Emitting Diode (LED)</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../lora/index.html">LoRa</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../lin/index.html">Local Interconnect Network (LIN)</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../misc/README.html">Miscellaneous</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../modem/index.html">Modem</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../mspi/index.html">Multi-bit SPI Bus (MSPI)</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../opamp/index.html">OPAMP</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../otp/index.html">One Time Programmable (OTP) memory</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../pwm/index.html">PWM</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../pulse_io/index.html">Pulse IO</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../spi/index.html">SPI</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../stepper/index.html">Stepper</a></li>
+<li class="toctree-l3 current"><a class="category-link reference internal" href="../README.html">Universal Asynchronous Receiver-Transmitter (UART)</a><ul class="current">
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../native_tty/README.html" title="使用原生 TTY 驱动在两个 UART 转 USB 桥接适配器之间收发数据。">Native TTY UART</a></li>
+<li class="toctree-l4 current"><a class="code-sample-link current reference internal" href="#" title="演示异步 API 的用法">UART ASYNC API</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../echo_bot/README.html" title="从控制台读取数据并回显。">UART echo</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../passthrough/README.html" title="在控制台与另一个 UART 接口之间直接传递数据。">UART Passthrough</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../virtualization/index.html">Virtualization</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../adc/adc_sequence/README.html" title="使用序列从 ADC 通道读取模拟输入。">Analog-to-Digital Converter (ADC) sequence sample</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../adc/adc_dt/README.html" title="从 ADC 通道读取模拟输入。">Analog-to-Digital Converter (ADC) with devicetree</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../spi_flash_at45/README.html" title="使用 AT45 系列 DataFlash 驱动通过 SPI 与 Flash 存储器交互。">AT45 DataFlash driver</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../audio/codec/README.html" title="麦克风到扬声器回环。">audio codec</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../auxdisplay_digits/README.html" title="向辅助显示屏输出递增的数字。">Auxiliary digits display</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../auxdisplay/README.html" title="向辅助显示屏输出 &quot;Hello  World&quot;。">Auxiliary display</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../buzzer/tone/README.html" title="Play a short beep and a few tones through the buzzer device aliased as buzzer0.">Buzzer Tone</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../charger/README.html" title="使用充电器驱动 API 为电池充电。">Charger</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../clock_monitor/check_freq/README.html" title="持续将时钟与可编程的频率阈值进行比较。">Clock Monitor Frequency Check</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../clock_monitor/measure_freq/README.html" title="测量一次时钟频率并打印结果。">Clock Monitor Frequency Meter</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../can/babbling/README.html" title="模拟一个“喋喋不休”的 CAN 节点。">Controller Area Network (CAN) babbling node</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../can/counter/README.html" title="发送和接收 CAN 消息。">Controller Area Network (CAN) counter</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../counter/alarm/README.html" title="使用计数器 API 实现闹钟应用程序。">Counter Alarm</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../crypto/README.html" title="使用加密 API 执行各种加密/解密操作。">Crypto</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../crc/README.html" title="使用 CRC 驱动 API 计算并验证 CRC 校验和。">Cyclic Redundancy Check Drivers (CRC)</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../dali/README.html" title="让连接到 DALI 总线的 LED 控制器闪烁。">Digital Addressable Lighting Interface (DALI)</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../audio/dmic/README.html" title="使用不同配置执行 PDM 传输。">Digital Microphone (DMIC)</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../dac/README.html" title="使用 DAC 驱动 API 生成模拟锯齿波信号。">Digital-to-Analog Converter (DAC)</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../display/README.html" title="在显示设备上绘制基本矩形。">Display</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../eeprom/README.html" title="在 EEPROM 中保存启动计数值。">EEPROM</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../espi/README.html" title="使用 eSPI 连接从设备并交换虚拟线数据包。">Enhanced Serial Peripheral Interface (eSPI)</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../biometrics/fingerprint/README.html" title="Demonstrate fingerprint sensor enrollment, verification, identification, and template management using the biometric driver API.">Fingerprint sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../flash_shell/README.html" title="使用 shell 命令探查 Flash 设备。">Flash shell</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../fuel_gauge/README.html" title="使用电量计 API 访问电量计属性并获取电量信息。">Fuel Gauge</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../adc/adc_stream/README.html" title="使用流（stream）从 ADC 获取数据。">Generic ADC stream</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../gnss/README.html" title="连接 GNSS 设备以获取时间、导航数据和卫星信息。">GNSS</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../hash_bench/README.html" title="测量加密哈希 API 实现的吞吐量和 CPU 负载。">Hash HW benchmark</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../lcd_hd44780/README.html" title="使用 GPIO 引脚控制基于 HD44780 的 LCD 显示屏。">HD44780 LCD controller</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../ht16k33/README.html" title="控制最多 128 个连接到 HT16K33 LED 驱动芯片的 LED，并记录键盘扫描事件。">HT16K33 LED driver with keyscan</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../hwspinlock/README.html" title="Demonstrate cross-core synchronization using the HWSPINLOCK API together with the MBOX API.">HWSPINLOCK</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../spi_flash/README.html" title="使用 Flash API 与 SPI NOR 串行 Flash 存储设备交互。">JEDEC SPI-NOR flash</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../jesd216/README.html" title="使用 JESD216 Flash API 从兼容的串行存储设备中提取信息。">JESD216 flash</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../clock_control_litex/README.html" title="使用 LiteX 时钟控制驱动生成多个时钟信号。">LiteX clock control driver</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../mbox/README.html" title="使用 MBOX API 实现处理器间邮箱通信。">MBOX</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../mbox_data/README.html" title="使用 MBOX API 进行带数据的处理器间邮箱通信。">MBOX Data</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../memc/README.html" title="读写外部存储器">Memory controller (MEMC) driver</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../mfd_charger/README.html" title="使用充电器、电量计和稳压器子系统演示多功能设备。">Multi-Function Device (MFD) with Charger, Fuel Gauge, and Regulators</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../soc_flash_nrf/README.html" title="使用 Flash API 与 SoC Flash 交互。">nRF SoC Internal Storage</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../peci/README.html" title="使用 PECI 监视 CPU 温度。">PECI interface</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../ps2/README.html" title="与 PS/2 鼠标通信。">PS/2 interface</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../psi5/README.html" title="使用 PSI5（外设传感器接口）驱动。">PSI5 interface</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../rtc/README.html" title="设置和读取实时时钟的日期/时间。">Real-Time Clock (RTC)</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../sent/README.html" title="使用 SENT（单边沿半字节传输）驱动。">SENT interface</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../smbus/README.html" title="使用 shell 命令与 SMBus 外设交互。">SMBus shell</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../spi_bitbang/README.html" title="使用 bitbang SPI 驱动与外设通信。">SPI bitbang</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../timeaware_gpio/README.html" title="同步时钟。">Time-aware GPIO</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../watchdog/README.html" title="使用看门狗驱动 API，在开发板陷入无限循环时将其复位。">Watchdog</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../hello_world/README.html">Hello World</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../kernel/index.html">内核与调度器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/index.html">外部模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../net/net.html">网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../philosophers/README.html">Dining Philosophers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../psa/index.html">PSA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../regulator/index.html">稳压器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../sensor/sensor.html"><span class="xref std std-ref">传感器</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../shields/shields.html">扩展板（shield）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../subsys/subsys.html">子系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../synchronization/README.html">Basic Synchronization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../sysbuild/sysbuild.html">Sysbuild</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tfm_integration/tfm_integration.html">TF-M 集成</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../userspace/index.html">用户空间</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../sample_definition_and_criteria.html">示例的定义与标准</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../../index.html">示例与演示</a> &raquo;</li>
+  
+     <li><a href="../../drivers.html">驱动</a> &raquo;</li>
+  
+     <li><a href="../README.html">通用异步收发器（UART）</a> &raquo;</li>
+  
+  <li>UART ASYNC API</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="uart_async">
+<h1>UART ASYNC API<a class="headerlink" href="#uart_async" title="链接到此标题。"></a></h1>
+<p>
+                <a href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0//samples\drivers\uart\async_api\README.rst/.." class="btn btn-info fa fa-github"
+                    target="_blank" style="text-align: center;">
+                    Browse source code on GitHub
+                </a>
+                </p>
+<section id="overview">
+<h2>概述<a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>本示例通过一个简单的数据包发送程序演示如何使用 UART 串口驱动的异步 API。</p>
+<p>每隔 5 秒，生成 1 到 4 个数据负载并排队等待发送。每隔一个 5 秒周期，通过异步 API 启用接收。</p>
+<p>默认使用通常用于 Zephyr shell 的 UART 外设，因此几乎所有开发板都应受支持。</p>
+</section>
+<section id="building-and-running">
+<h2>构建与运行<a class="headerlink" href="#building-and-running" title="链接到此标题。"></a></h2>
+<p>按如下方式构建并烧录本示例，将 <code class="docutils literal notranslate"><span class="pre">nrf52840dk/nrf52840</span></code> 换成你的开发板：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>nrf52840dk/nrf52840<span class="w"> </span>samples/drivers/uart/async_api
+west<span class="w"> </span>flash
+</pre></div>
+</div>
+<section id="sample-output">
+<h3>示例输出<a class="headerlink" href="#sample-output" title="链接到此标题。"></a></h3>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Loop 0: Packet: 0</span>
+<span class="go">Loop 0: Packet: 1</span>
+<span class="go">Loop 0: Packet: 2</span>
+<span class="go">[00:00:05.001,919] &lt;inf&gt; sample: Loop 0: Sending 3 packets</span>
+<span class="go">[00:00:05.002,008] &lt;inf&gt; sample: RX is now enabled</span>
+<span class="go">Loop 1: Packet: 0</span>
+<span class="go">[00:00:10.002,086] &lt;inf&gt; sample: Loop 1: Sending 1 packets</span>
+<span class="go">[00:00:10.002,138] &lt;inf&gt; sample: RX is now disabled</span>
+<span class="go">Loop 2: Packet: 0</span>
+<span class="go">Loop 2: Packet: 1</span>
+<span class="go">[00:00:15.002,215] &lt;inf&gt; sample: Loop 2: Sending 2 packets</span>
+<span class="go">[00:00:15.002,293] &lt;inf&gt; sample: RX is now enabled</span>
+<span class="go">[00:00:15.009,010] &lt;inf&gt; sample: RX_RDY</span>
+<span class="go">                              68 65 6c 6c 6f 0a                                |hello.</span>
+<span class="go">Loop 3: Packet: 0</span>
+<span class="go">Loop 3: Packet: 1</span>
+<span class="go">Loop 3: Packet: 2</span>
+<span class="go">[00:00:20.002,343] &lt;inf&gt; sample: Loop 3: Sending 3 packets</span>
+<span class="go">[00:00:20.002,424] &lt;inf&gt; sample: RX is now disabled</span>
+</pre></div>
+</div>
+<p>注意，由于 UART 发送是直接触发的，而日志写入通常会延迟几秒，因此这些发送会出现在串口日志中循环开头的 <code class="docutils literal notranslate"><span class="pre">LOG_INF</span></code> 消息 <strong>之前</strong></p>
+</section>
+</section>
+<section id="see-also">
+<h2>See also<a class="headerlink" href="#see-also" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">uart_interface</span></dt>
+</dl>
+
+</section>
+</section>
+<script type="application/ld+json">
+                {"@context": "http://schema.org", "@type": "SoftwareSourceCode", "name": "UART ASYNC API", "description": "\u6f14\u793a\u5f02\u6b65 API \u7684\u7528\u6cd5", "codeSampleType": "full", "codeRepository": "https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0//samples\\drivers\\uart\\async_api\\README.rst"}
+                </script>
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 4月 16, 2025.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

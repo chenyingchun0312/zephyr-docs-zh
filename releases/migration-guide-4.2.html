@@ -1,0 +1,804 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>迁移到 Zephyr v4.2.0 的指南 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/releases/migration-guide-4.2.html" />
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../_static/translations.js?v=540d3cec"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../index.html">Docs / Latest</a> &raquo;</li>
+  
+  <li>迁移到 Zephyr v4.2.0 的指南</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="migration-guide-to-zephyr-v4-2-0">
+<span id="migration-4-2"></span><h1>迁移到 Zephyr v4.2.0 的指南<a class="headerlink" href="#migration-guide-to-zephyr-v4-2-0" title="链接到此标题。"></a></h1>
+<p>本文档介绍将应用程序从 Zephyr v4.1.0 迁移到 Zephyr v4.2.0 时所需的更改。</p>
+<p>其他更改（与应用程序迁移无直接关系）请参阅 <a class="reference internal" href="release-notes-4.2.html#zephyr-4-2"><span class="std std-ref">发布说明</span></a>。</p>
+<nav class="contents local" id="id1">
+<ul class="simple">
+<li><p><a class="reference internal" href="#build-system" id="id2">构建系统</a></p></li>
+<li><p><a class="reference internal" href="#kernel" id="id3">内核</a></p></li>
+<li><p><a class="reference internal" href="#boards" id="id4">开发板</a></p></li>
+<li><p><a class="reference internal" href="#device-drivers-and-devicetree" id="id5">设备驱动与设备树</a></p>
+<ul>
+<li><p><a class="reference internal" href="#audio" id="id6">Audio</a></p></li>
+<li><p><a class="reference internal" href="#counter" id="id7">Counter</a></p></li>
+<li><p><a class="reference internal" href="#dai" id="id8">DAI</a></p></li>
+<li><p><a class="reference internal" href="#dma" id="id9">DMA</a></p></li>
+<li><p><a class="reference internal" href="#devicetree" id="id10">设备树</a></p></li>
+<li><p><a class="reference internal" href="#display" id="id11">显示</a></p></li>
+<li><p><a class="reference internal" href="#eeprom" id="id12">EEPROM</a></p></li>
+<li><p><a class="reference internal" href="#enhanced-serial-peripheral-interface-espi" id="id13">增强型串行外设接口（eSPI）</a></p></li>
+<li><p><a class="reference internal" href="#entropy" id="id14">熵源</a></p></li>
+<li><p><a class="reference internal" href="#ethernet" id="id15">以太网</a></p></li>
+<li><p><a class="reference internal" href="#flash" id="id16">Flash</a></p></li>
+<li><p><a class="reference internal" href="#gpio" id="id17">GPIO</a></p></li>
+<li><p><a class="reference internal" href="#i2s" id="id18">I2S</a></p></li>
+<li><p><a class="reference internal" href="#led" id="id19">LED</a></p></li>
+<li><p><a class="reference internal" href="#mfd" id="id20">MFD</a></p></li>
+<li><p><a class="reference internal" href="#misc" id="id21">杂项</a></p></li>
+<li><p><a class="reference internal" href="#modem" id="id22">调制解调器</a></p></li>
+<li><p><a class="reference internal" href="#regulator" id="id23">稳压器</a></p></li>
+<li><p><a class="reference internal" href="#spi" id="id24">SPI</a></p></li>
+<li><p><a class="reference internal" href="#sensors" id="id25">传感器</a></p></li>
+<li><p><a class="reference internal" href="#serial" id="id26">串口</a></p></li>
+<li><p><a class="reference internal" href="#stepper" id="id27">步进电机</a></p></li>
+<li><p><a class="reference internal" href="#timer" id="id28">定时器</a></p></li>
+<li><p><a class="reference internal" href="#video" id="id29">视频</a></p></li>
+<li><p><a class="reference internal" href="#watchdog" id="id30">看门狗</a></p></li>
+<li><p><a class="reference internal" href="#qspi-ospi-xspi" id="id31">qSPI/oSPI/xSPI</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#bluetooth" id="id32">Bluetooth</a></p>
+<ul>
+<li><p><a class="reference internal" href="#bluetooth-audio" id="id33">Bluetooth 音频</a></p></li>
+<li><p><a class="reference internal" href="#bluetooth-classic" id="id34">经典 Bluetooth</a></p></li>
+<li><p><a class="reference internal" href="#bluetooth-hci" id="id35">Bluetooth HCI</a></p></li>
+<li><p><a class="reference internal" href="#bluetooth-host" id="id36">Bluetooth 主机（Host）</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#networking" id="id37">网络</a></p>
+<ul>
+<li><p><a class="reference internal" href="#lwm2m" id="id38">LwM2M</a></p></li>
+<li><p><a class="reference internal" href="#openthread" id="id39">OpenThread</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#other-subsystems" id="id40">其他子系统</a></p>
+<ul>
+<li><p><a class="reference internal" href="#modbus" id="id41">Modbus</a></p></li>
+<li><p><a class="reference internal" href="#state-machine-framework" id="id42">状态机框架</a></p></li>
+<li><p><a class="reference internal" href="#hawkbit" id="id43">hawkBit</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#modules" id="id44">模块</a></p>
+<ul>
+<li><p><a class="reference internal" href="#cmsis" id="id45">CMSIS</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#architectures" id="id46">架构</a></p></li>
+</ul>
+</nav>
+<section id="build-system">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">构建系统</a><a class="headerlink" href="#build-system" title="链接到此标题。"></a></h2>
+<ul class="simple">
+<li><p>对 HWMv1 的支持已被移除，任何 HWMv1 格式的树外开发板或 SoC 都必须迁移到 <a class="reference internal" href="../hardware/porting/board_porting.html#hw-model-v2"><span class="std std-ref">HWMv2</span></a>，才能在 Zephyr v4.2 及以后的版本中使用。</p></li>
+</ul>
+</section>
+<section id="kernel">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">内核</a><a class="headerlink" href="#kernel" title="链接到此标题。"></a></h2>
+</section>
+<section id="boards">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">开发板</a><a class="headerlink" href="#boards" title="链接到此标题。"></a></h2>
+<ul class="simple">
+<li><p>所有基于 Nordic IC、默认使用 Nordic 命令行工具 <code class="docutils literal notranslate"><span class="pre">nrfjprog</span></code> 进行烧录的开发板，现已改为默认使用新的 nRF Util（<code class="docutils literal notranslate"><span class="pre">nrfutil</span></code>）工具。这意味着你可能需要 <a class="reference external" href="https://www.nordicsemi.com/Products/Development-tools/nrf-util">安装 nRF Util</a>；如果你希望继续使用 <code class="docutils literal notranslate"><span class="pre">nrfjprog</span></code>，可以在调用 west 时指定运行器：<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">flash</span> <span class="pre">-r</span> <span class="pre">nrfjprog</span></code>。nRF Util 的完整文档请参阅 <a class="reference external" href="https://docs.nordicsemi.com/bundle/nrfutil/page/README.html">此处</a>。</p></li>
+<li><p>所有基于 nRF54L 系列 Nordic IC 的开发板，现在默认在烧录时不擦除内部存储的任何部分。如果你想恢复以前的默认行为，即擦除待烧录固件将要写入的页，可以在调用 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">flash</span></code> 时将新的命令行开关 <code class="docutils literal notranslate"><span class="pre">--erase-mode</span></code> 设置为 <code class="docutils literal notranslate"><span class="pre">ranges</span></code>。请注意，nRF54L 器件上的 RRAM 在物理上并不分页，分页只是人为提供的，页大小为 4096 字节，目的是让 nRF52 软件更容易过渡到 nRF54L 器件。</p></li>
+<li><p>配置选项 <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NATIVE_POSIX_SLOWDOWN_TO_REAL_TIME</span></code> 已被弃用，改用 <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NATIVE_SIM_SLOWDOWN_TO_REAL_TIME</span></code>。</p></li>
+<li><p>设备树绑定 <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,native-posix-cpu</span></code> 已被弃用，改用 <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,native-sim-cpu</span></code>。</p></li>
+<li><p>Zephyr 现在支持 <a class="reference internal" href="../boards/others/neorv32/doc/index.html#neorv32">NEORV32</a> 的 1.11.6 版本。NEORV32 处理器（SoC）的实现需要更新到该版本，才能与 Zephyr v4.2.0 兼容。</p></li>
+<li><p><a class="reference internal" href="../boards/others/neorv32/doc/index.html#neorv32">NEORV32</a> 现在通过开发板变体来对应 NEORV32 处理器（SoC）模板。原来的 <code class="docutils literal notranslate"><span class="pre">neorv32</span></code> 开发板目标现在名为 <code class="docutils literal notranslate"><span class="pre">neorv32/neorv32/up5kdemo</span></code>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">arduino_uno_r4_minima</span></code>、<code class="docutils literal notranslate"><span class="pre">arduino_uno_r4_wifi</span></code> 和 <code class="docutils literal notranslate"><span class="pre">mikroe_clicker_ra4m1</span></code> 已迁移到新的基于 FSP 的配置。虽然功能上没有重大变化，但设备树结构做了大幅修改。以下设备树绑定现已被移除：<code class="docutils literal notranslate"><span class="pre">renesas,ra-gpio</span></code>、<code class="docutils literal notranslate"><span class="pre">renesas,ra-uart-sci</span></code>、<code class="docutils literal notranslate"><span class="pre">renesas,ra-pinctrl</span></code>、<code class="docutils literal notranslate"><span class="pre">renesas,ra-clock-generation-circuit</span></code> 和 <code class="docutils literal notranslate"><span class="pre">renesas,ra-interrupt-controller-unit</span></code>。请改用以下替代项： - <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">renesas,ra-gpio-ioport</span></code> - <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">renesas,ra-sci-uart</span></code> - <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">renesas,ra-pinctrl-pfs</span></code> - <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">renesas,ra-cgc-pclk-block</span></code></p></li>
+<li><p>Nucleo WBA52CG 开发板（<code class="docutils literal notranslate"><span class="pre">nucleo_wba52cg</span></code>）已不再受支持，因为它处于 NRND（Not Recommended for New Design，不推荐用于新设计）状态，且 STM32CubeWBA 从 1.1.0 版本（2023 年 7 月）起也不再支持它。建议迁移到 <a class="reference internal" href="../boards/st/nucleo_wba55cg/doc/nucleo_wba55cg.html#nucleo_wba55cg">Nucleo WBA55CG</a>（<code class="docutils literal notranslate"><span class="pre">nucleo_wba55cg</span></code>），迁移无需任何改动。</p></li>
+<li><p>Espressif 开发板 <code class="docutils literal notranslate"><span class="pre">esp32_devkitc_wroom</span></code> 和 <code class="docutils literal notranslate"><span class="pre">esp32_devkitc_wrover</span></code> 的功能几乎完全相同。两者的差异已由 Kconfig 选项覆盖，因此这两个开发板已合并为 <code class="docutils literal notranslate"><span class="pre">esp32_devkitc</span></code>。</p></li>
+<li><p>STM32 开发板现在应通过包含 <code class="docutils literal notranslate"><span class="pre">openocd-stm32.board.cmake</span></code>（而不是 <code class="docutils literal notranslate"><span class="pre">openocd.board.cmake</span></code>）来添加 OpenOCD 编程支持。<code class="docutils literal notranslate"><span class="pre">openocd-stm32.board.cmake</span></code> 文件在默认 OpenOCD 运行器的基础上扩展了厂商特定的配置，例如 STM32 整片擦除命令。</p></li>
+<li><p>STM32N6570-DK 开发板的默认变体（<code class="docutils literal notranslate"><span class="pre">stm32n6570_dk/stm32n657xx</span></code>）现在应作为链式加载的应用程序，并且应使用 <code class="docutils literal notranslate"><span class="pre">--sysbuild</span></code> 构建。原来的默认变体会将应用程序构建为第一阶段引导加载程序（First Stage BootLoader）运行，现在作为一个专用变体（<code class="docutils literal notranslate"><span class="pre">stm32n6570_dk/stm32n657xx/fsbl</span></code>）提供，必须显式选择。有关这些变体的更多信息，请参阅开发板文档。</p></li>
+<li><p>内嵌 TF-M BL2 引导阶段的 STM32 开发板（<code class="docutils literal notranslate"><span class="pre">b_u585i_iot02a//ns</span></code>、<code class="docutils literal notranslate"><span class="pre">nucleo_l552ze_q//ns</span></code> 和 <code class="docutils literal notranslate"><span class="pre">stm32l562e_dk//ns</span></code>）不再像以前那样在 BL2 中内嵌硬件加密加速器驱动，而是改为依赖 Mbed TLS 的软件实现。这与升级到 TF-M v2.2 有关。TF-M 仍然支持硬件加密加速器，但仅限于运行时安全固件。</p></li>
+</ul>
+</section>
+<section id="device-drivers-and-devicetree">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">设备驱动与设备树</a><a class="headerlink" href="#device-drivers-and-devicetree" title="链接到此标题。"></a></h2>
+<section id="audio">
+<h3><a class="toc-backref" href="#id6" role="doc-backlink">Audio</a><a class="headerlink" href="#audio" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">cirrus,cs43l22</span></code> 的绑定文件已重命名，使其名称与 compatible 字符串一致。</p></li>
+</ul>
+</section>
+<section id="counter">
+<h3><a class="toc-backref" href="#id7" role="doc-backlink">Counter</a><a class="headerlink" href="#counter" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">counter_native_posix</span></code> 已重命名为 <code class="docutils literal notranslate"><span class="pre">counter_native_sim</span></code>，其 Kconfig 选项和设备树绑定也随之重命名。<code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,native-posix-counter</span></code> 已被弃用，改用 <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,native-sim-counter</span></code>；<code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_COUNTER_NATIVE_POSIX</span></code> 及其相关选项已被弃用，改用 <a class="reference internal" href="../kconfig.html#CONFIG_COUNTER_NATIVE_SIM" title="CONFIG_COUNTER_NATIVE_SIM"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_COUNTER_NATIVE_SIM</span></code></a>（<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/86616">GitHub #86616</a>）。</p></li>
+</ul>
+</section>
+<section id="dai">
+<h3><a class="toc-backref" href="#id8" role="doc-backlink">DAI</a><a class="headerlink" href="#dai" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p>设备树属性 <code class="docutils literal notranslate"><span class="pre">dai_id</span></code> 已重命名为 <code class="docutils literal notranslate"><span class="pre">dai-id</span></code>。</p></li>
+<li><p>设备树属性 <code class="docutils literal notranslate"><span class="pre">afe_name</span></code> 已重命名为 <code class="docutils literal notranslate"><span class="pre">afe-name</span></code>。</p></li>
+<li><p>设备树属性 <code class="docutils literal notranslate"><span class="pre">agent_disable</span></code> 已重命名为 <code class="docutils literal notranslate"><span class="pre">agent-disable</span></code>。</p></li>
+<li><p>设备树属性 <code class="docutils literal notranslate"><span class="pre">ch_num</span></code> 已重命名为 <code class="docutils literal notranslate"><span class="pre">ch-num</span></code>。</p></li>
+<li><p>设备树属性 <code class="docutils literal notranslate"><span class="pre">mono_invert</span></code> 已重命名为 <code class="docutils literal notranslate"><span class="pre">mono-invert</span></code>。</p></li>
+<li><p>设备树属性 <code class="docutils literal notranslate"><span class="pre">quad_ch</span></code> 已重命名为 <code class="docutils literal notranslate"><span class="pre">quad-ch</span></code>。</p></li>
+<li><p>设备树属性 <code class="docutils literal notranslate"><span class="pre">int_odd</span></code> 已重命名为 <code class="docutils literal notranslate"><span class="pre">int-odd</span></code>。</p></li>
+</ul>
+</section>
+<section id="dma">
+<h3><a class="toc-backref" href="#id9" role="doc-backlink">DMA</a><a class="headerlink" href="#dma" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p>设备树属性 <code class="docutils literal notranslate"><span class="pre">nxp,a_on</span></code> 已重命名为 <code class="docutils literal notranslate"><span class="pre">nxp,a-on</span></code>。</p></li>
+<li><p>设备树属性 <code class="docutils literal notranslate"><span class="pre">dma_channels</span></code> 已重命名为 <code class="docutils literal notranslate"><span class="pre">dma-channels</span></code>。</p></li>
+<li><p>Xilinx DMA 控制器的绑定文件已重命名，改用正确的厂商前缀（<code class="docutils literal notranslate"><span class="pre">xlnx</span></code> 而不是 <code class="docutils literal notranslate"><span class="pre">xilinx</span></code>），并与其 compatible 字符串保持一致。</p></li>
+</ul>
+</section>
+<section id="devicetree">
+<h3><a class="toc-backref" href="#id10" role="doc-backlink">设备树</a><a class="headerlink" href="#devicetree" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p>原先位于 dts/common 中的许多厂商特定和架构特定文件已移动到更具体的位置。因此，任何通过 <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;common/some_file.dtsi&gt;</span></code> 包含 Zephyr 树中文件的 dts 文件，都需要改为直接 <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;some_file.dtsi&gt;</span></code>。</p></li>
+<li><p>Silicon Labs Series 2 的 SoC 级 dts 文件已按器件超家族（superfamily）重新组织到各个子目录中。因此，使用 Series 2 SoC 的开发板的 dts 文件需要将包含语句从 <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;silabs/some_soc.dtsi&gt;</span></code> 改为 <code class="docutils literal notranslate"><span class="pre">#include</span> <span class="pre">&lt;silabs/xg2[1-9]/some_soc.dtsi&gt;</span></code>。</p></li>
+<li><p>当 <code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_ENUM_HAS_VALUE</span></code> 和 <code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_INST_ENUM_HAS_VALUE</span></code> 宏用于数组时，现在会检查所有值，而不仅仅是第一个值。</p></li>
+<li><p>设备树和绑定中的属性名称使用连字符（<code class="docutils literal notranslate"><span class="pre">-</span></code>）作为分隔符，取代此前使用的所有下划线（<code class="docutils literal notranslate"><span class="pre">_</span></code>）。对于本地代码，可以运行 <code class="docutils literal notranslate"><span class="pre">scripts/utils/migrate_bindings_style.py</span></code> 脚本，将绑定中的属性名称迁移为使用连字符。</p></li>
+</ul>
+</section>
+<section id="display">
+<h3><a class="toc-backref" href="#id11" role="doc-backlink">显示</a><a class="headerlink" href="#display" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p>在 STM32 器件上，LTDC 驱动（<code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">st,stm32-ltdc</span></code>）的 RGB565 格式 <code class="docutils literal notranslate"><span class="pre">PIXEL_FORMAT_RGB565</span></code> 已替换为 <code class="docutils literal notranslate"><span class="pre">PIXEL_FORMAT_BGR565</span></code>，以匹配 Zephyr 期望的格式。此变更确保显示和视频采集示例都能正常工作。</p></li>
+</ul>
+</section>
+<section id="eeprom">
+<h3><a class="toc-backref" href="#id12" role="doc-backlink">EEPROM</a><a class="headerlink" href="#eeprom" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">ti,tmp116-eeprom</span></code> 已重命名为 <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">ti,tmp11x-eeprom</span></code>，因为它同时支持 tmp117 和 tmp119。</p></li>
+</ul>
+</section>
+<section id="enhanced-serial-peripheral-interface-espi">
+<h3><a class="toc-backref" href="#id13" role="doc-backlink">增强型串行外设接口（eSPI）</a><a class="headerlink" href="#enhanced-serial-peripheral-interface-espi" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p>设备树属性 <code class="docutils literal notranslate"><span class="pre">io_girq</span></code> 已重命名为 <code class="docutils literal notranslate"><span class="pre">io-girq</span></code>。</p></li>
+<li><p>设备树属性 <code class="docutils literal notranslate"><span class="pre">vw_girqs</span></code> 已重命名为 <code class="docutils literal notranslate"><span class="pre">vw-girqs</span></code>。</p></li>
+<li><p>设备树属性 <code class="docutils literal notranslate"><span class="pre">pc_girq</span></code> 已重命名为 <code class="docutils literal notranslate"><span class="pre">pc-girq</span></code>。</p></li>
+<li><p>设备树属性 <code class="docutils literal notranslate"><span class="pre">poll_timeout</span></code> 已重命名为 <code class="docutils literal notranslate"><span class="pre">poll-timeout</span></code>。</p></li>
+<li><p>设备树属性 <code class="docutils literal notranslate"><span class="pre">poll_interval</span></code> 已重命名为 <code class="docutils literal notranslate"><span class="pre">poll-interval</span></code>。</p></li>
+<li><p>设备树属性 <code class="docutils literal notranslate"><span class="pre">consec_rd_timeout</span></code> 已重命名为 <code class="docutils literal notranslate"><span class="pre">consec-rd-timeout</span></code>。</p></li>
+<li><p>设备树属性 <code class="docutils literal notranslate"><span class="pre">sus_chk_delay</span></code> 已重命名为 <code class="docutils literal notranslate"><span class="pre">sus-chk-delay</span></code>。</p></li>
+<li><p>设备树属性 <code class="docutils literal notranslate"><span class="pre">sus_rsm_interval</span></code> 已重命名为 <code class="docutils literal notranslate"><span class="pre">sus-rsm-interval</span></code>。</p></li>
+</ul>
+</section>
+<section id="entropy">
+<h3><a class="toc-backref" href="#id14" role="doc-backlink">熵源</a><a class="headerlink" href="#entropy" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">fake_entropy_native_posix</span></code> 已重命名为 <code class="docutils literal notranslate"><span class="pre">fake_entropy_native_sim</span></code>，其 Kconfig 选项和设备树绑定也随之重命名。<code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,native-posix-rng</span></code> 已被弃用，改用 <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,native-sim-rng</span></code>；<code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FAKE_ENTROPY_NATIVE_POSIX</span></code> 及其相关选项已被弃用，改用 <a class="reference internal" href="../kconfig.html#CONFIG_FAKE_ENTROPY_NATIVE_SIM" title="CONFIG_FAKE_ENTROPY_NATIVE_SIM"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FAKE_ENTROPY_NATIVE_SIM</span></code></a>（<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/86615">GitHub #86615</a>）。</p></li>
+</ul>
+</section>
+<section id="ethernet">
+<h3><a class="toc-backref" href="#id15" role="doc-backlink">以太网</a><a class="headerlink" href="#ethernet" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p>Kconfig 选项 <code class="docutils literal notranslate"><span class="pre">ETH_STM32_HAL_MII</span></code> 已被移除（<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/86074">GitHub #86074</a>）。PHY 接口类型现在通过设备树中的 <code class="docutils literal notranslate"><span class="pre">phy-connection-type</span></code> 属性选择。</p></li>
+<li><p><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">st,stm32-ethernet</span></code> 驱动现在要求在设备树中将 <code class="docutils literal notranslate"><span class="pre">phy-handle</span></code> phandle 设置为对应的 PHY 节点（<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/87593">GitHub #87593</a>）。</p></li>
+<li><p>Kconfig 选项 <code class="docutils literal notranslate"><span class="pre">ETH_STM32_HAL_PHY_ADDRESS</span></code>、<code class="docutils literal notranslate"><span class="pre">ETH_STM32_CARRIER_CHECK</span></code>、<code class="docutils literal notranslate"><span class="pre">ETH_STM32_CARRIER_CHECK_RX_IDLE_TIMEOUT_MS</span></code>、<code class="docutils literal notranslate"><span class="pre">ETH_STM32_AUTO_NEGOTIATION_ENABLE</span></code>、<code class="docutils literal notranslate"><span class="pre">ETH_STM32_SPEED_10M</span></code>、<code class="docutils literal notranslate"><span class="pre">ETH_STM32_MODE_HALFDUPLEX</span></code> 已被移除，因为已不再需要；驱动现在使用以太网 PHY API 与 PHY 驱动通信，由 PHY 驱动负责配置 PHY 设置（<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/87593">GitHub #87593</a>）。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ethernet_native_posix</span></code> 已重命名为 <code class="docutils literal notranslate"><span class="pre">ethernet_native_tap</span></code>，其 Kconfig 选项也随之重命名：<code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ETH_NATIVE_POSIX</span></code> 及其相关选项已被弃用，改用 <a class="reference internal" href="../kconfig.html#CONFIG_ETH_NATIVE_TAP" title="CONFIG_ETH_NATIVE_TAP"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ETH_NATIVE_TAP</span></code></a>（<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/86578">GitHub #86578</a>）。</p></li>
+<li><p>NuMaker 以太网驱动 <code class="docutils literal notranslate"><span class="pre">eth_numaker.c</span></code> 现在支持 <code class="docutils literal notranslate"><span class="pre">gen_random_mac</span></code>，EMAC 数据 Flash 功能已被移除（<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/87953">GitHub #87953</a>）。</p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/net/ethernet.h">include/zephyr/net/ethernet.h</a> 中的枚举 <code class="docutils literal notranslate"><span class="pre">ETHERNET_DSA_MASTER_PORT</span></code> 和 <code class="docutils literal notranslate"><span class="pre">ETHERNET_DSA_SLAVE_PORT</span></code> 已分别重命名为 <code class="docutils literal notranslate"><span class="pre">ETHERNET_DSA_CONDUIT_PORT</span></code> 和 <code class="docutils literal notranslate"><span class="pre">ETHERNET_DSA_USER_PORT</span></code>。</p></li>
+<li><p>表示以太网速率的枚举已重命名，使其更加独立于所用的介质。<code class="docutils literal notranslate"><span class="pre">LINK_HALF_10BASE_T</span></code>、<code class="docutils literal notranslate"><span class="pre">LINK_FULL_10BASE_T</span></code>、<code class="docutils literal notranslate"><span class="pre">LINK_HALF_100BASE_T</span></code>、<code class="docutils literal notranslate"><span class="pre">LINK_FULL_100BASE_T</span></code>、<code class="docutils literal notranslate"><span class="pre">LINK_HALF_1000BASE_T</span></code>、<code class="docutils literal notranslate"><span class="pre">LINK_FULL_1000BASE_T</span></code>、<code class="docutils literal notranslate"><span class="pre">LINK_FULL_2500BASE_T</span></code> 和 <code class="docutils literal notranslate"><span class="pre">LINK_FULL_5000BASE_T</span></code> 已分别重命名为 <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">LINK_HALF_10BASE</span></code>、<code class="xref c c-enumerator docutils literal notranslate"><span class="pre">LINK_FULL_10BASE</span></code>、<code class="xref c c-enumerator docutils literal notranslate"><span class="pre">LINK_HALF_100BASE</span></code>、<code class="xref c c-enumerator docutils literal notranslate"><span class="pre">LINK_FULL_100BASE</span></code>、<code class="xref c c-enumerator docutils literal notranslate"><span class="pre">LINK_HALF_1000BASE</span></code>、<code class="xref c c-enumerator docutils literal notranslate"><span class="pre">LINK_FULL_1000BASE</span></code>、<code class="xref c c-enumerator docutils literal notranslate"><span class="pre">LINK_FULL_2500BASE</span></code> 和 <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">LINK_FULL_5000BASE</span></code>。<code class="docutils literal notranslate"><span class="pre">ETHERNET_LINK_10BASE_T</span></code>、<code class="docutils literal notranslate"><span class="pre">ETHERNET_LINK_100BASE_T</span></code>、<code class="docutils literal notranslate"><span class="pre">ETHERNET_LINK_1000BASE_T</span></code>、<code class="docutils literal notranslate"><span class="pre">ETHERNET_LINK_2500BASE_T</span></code> 和 <code class="docutils literal notranslate"><span class="pre">ETHERNET_LINK_5000BASE_T</span></code> 已分别重命名为 <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">ETHERNET_LINK_10BASE</span></code>、<code class="xref c c-enumerator docutils literal notranslate"><span class="pre">ETHERNET_LINK_100BASE</span></code>、<code class="xref c c-enumerator docutils literal notranslate"><span class="pre">ETHERNET_LINK_1000BASE</span></code>、<code class="xref c c-enumerator docutils literal notranslate"><span class="pre">ETHERNET_LINK_2500BASE</span></code> 和 <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">ETHERNET_LINK_5000BASE</span></code>（<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/87194">GitHub #87194</a>）。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ETHERNET_CONFIG_TYPE_LINK</span></code>、<code class="docutils literal notranslate"><span class="pre">ETHERNET_CONFIG_TYPE_DUPLEX</span></code>、<code class="docutils literal notranslate"><span class="pre">ETHERNET_CONFIG_TYPE_AUTO_NEG</span></code> 以及相关的 <code class="docutils literal notranslate"><span class="pre">NET_REQUEST_ETHERNET_SET_LINK</span></code>、<code class="docutils literal notranslate"><span class="pre">NET_REQUEST_ETHERNET_SET_DUPLEX</span></code>、<code class="docutils literal notranslate"><span class="pre">NET_REQUEST_ETHERNET_SET_AUTO_NEGOTIATION</span></code> 已被移除。应改为结合使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">phy_configure_link()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">net_eth_get_phy()</span></code> 来配置链路（<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/90652">GitHub #90652</a>）。</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">phy_configure_link()</span></code> 新增了 <code class="docutils literal notranslate"><span class="pre">flags</span></code> 参数。将其设置为 <code class="docutils literal notranslate"><span class="pre">0</span></code> 可保持原有行为（<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/91354">GitHub #91354</a>）。</p></li>
+</ul>
+</section>
+<section id="flash">
+<h3><a class="toc-backref" href="#id16" role="doc-backlink">Flash</a><a class="headerlink" href="#flash" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p>文件 <code class="docutils literal notranslate"><span class="pre">flash_hp_ra.h</span></code> 已重命名为 <code class="docutils literal notranslate"><span class="pre">soc_flash_renesas_ra_hp.h</span></code>。</p></li>
+<li><p>文件 <code class="docutils literal notranslate"><span class="pre">flash_hp_ra.c</span></code> 已重命名为 <code class="docutils literal notranslate"><span class="pre">soc_flash_renesas_ra_hp.c</span></code>。</p></li>
+<li><p>文件 <code class="docutils literal notranslate"><span class="pre">flash_hp_ra_ex_op.c</span></code> 已重命名为 <code class="docutils literal notranslate"><span class="pre">soc_flash_renesas_ra_hp_ex_op.c</span></code>。</p></li>
+<li><p>Flash HP Renesas RA 双 bank 模式 Kconfig 符号 <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_DUAL_BANK_MODE</span></code> 已被移除。</p></li>
+<li><p>Flash HP Renesas RA Kconfig 符号 <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_RA_FLASH_HP</span></code> 已重命名为 <a class="reference internal" href="../kconfig.html#CONFIG_SOC_FLASH_RENESAS_RA_HP" title="CONFIG_SOC_FLASH_RENESAS_RA_HP"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SOC_FLASH_RENESAS_RA_HP</span></code></a>。</p></li>
+<li><p>Flash HP Renesas RA 写保护 Kconfig 符号 <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FLASH_RA_WRITE_PROTECT</span></code> 已重命名为 <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FLASH_RENESAS_RA_HP_WRITE_PROTECT</span></code>。</p></li>
+<li><p>文件 <code class="docutils literal notranslate"><span class="pre">renesas,ra-nv-flash.yaml</span></code> 已拆分为 <code class="docutils literal notranslate"><span class="pre">renesas,ra-nv-code-flash.yaml</span></code> 和 <code class="docutils literal notranslate"><span class="pre">renesas,ra-nv-data-flash.yaml</span></code> 两个文件。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">compatible</span></code> 已从 <code class="docutils literal notranslate"><span class="pre">renesas,ra-nv-flash</span></code> 拆分为 <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">renesas,ra-nv-code-flash.yaml</span></code> 和 <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">renesas,ra-nv-data-flash.yaml</span></code>。</p></li>
+</ul>
+</section>
+<section id="gpio">
+<h3><a class="toc-backref" href="#id17" role="doc-backlink">GPIO</a><a class="headerlink" href="#gpio" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p>为了支持引脚数量较多的 RP2350B，Raspberry Pi GPIO 的配置方式已经更改。<code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">raspberrypi,rpi-gpio</span></code> 原有的功能已迁移到 <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">raspberrypi,rpi-gpio-port</span></code>，<code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">raspberrypi,rpi-gpio</span></code> 现在仅作为占位和映射节点保留。相关标签也已一并更改，因此常规使用无需任何改动。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">arduino-nano-header-r3</span></code> 已重命名为 <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">arduino-nano-header</span></code>。原因是 R3 源自 Arduino UNO R3，该版本相对之前的版本更改了连接器，与 Arduino Nano 无关。</p></li>
+<li><p>文件 <code class="docutils literal notranslate"><span class="pre">include/zephyr/dt-bindings/gpio/nordic-npm1300-gpio.h</span></code> 已移动到 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/dt-bindings/gpio/nordic-npm13xx-gpio.h">include/zephyr/dt-bindings/gpio/nordic-npm13xx-gpio.h</a>，并且宏定义中所有的 <code class="docutils literal notranslate"><span class="pre">NPM1300</span></code> 都已重命名为 <code class="docutils literal notranslate"><span class="pre">NPM13XX</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CONFIG_GPIO_NPM1300</span></code> 已重命名为 <a class="reference internal" href="../kconfig.html#CONFIG_GPIO_NPM13XX" title="CONFIG_GPIO_NPM13XX"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_GPIO_NPM13XX</span></code></a>，<code class="docutils literal notranslate"><span class="pre">CONFIG_GPIO_NPM1300_INIT_PRIORITY</span></code> 已重命名为 <a class="reference internal" href="../kconfig.html#CONFIG_GPIO_NPM13XX_INIT_PRIORITY" title="CONFIG_GPIO_NPM13XX_INIT_PRIORITY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_GPIO_NPM13XX_INIT_PRIORITY</span></code></a></p></li>
+</ul>
+</section>
+<section id="i2s">
+<h3><a class="toc-backref" href="#id18" role="doc-backlink">I2S</a><a class="headerlink" href="#i2s" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">nxp,mcux-i2s</span></code> 驱动新增了属性 <code class="docutils literal notranslate"><span class="pre">mclk-output</span></code>。设置此属性可以</p></li>
+<li><p>将 MCLK 信号配置为输出。旧版本驱动使用宏</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">I2S_OPT_BIT_CLK_SLAVE</span></code> 来配置 MCLK 信号方向。（<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/88554">GitHub #88554</a>）</p></li>
+</ul>
+</section>
+<section id="led">
+<h3><a class="toc-backref" href="#id19" role="doc-backlink">LED</a><a class="headerlink" href="#led" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CONFIG_LED_NPM1300</span></code> 已重命名为 <a class="reference internal" href="../kconfig.html#CONFIG_LED_NPM13XX" title="CONFIG_LED_NPM13XX"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LED_NPM13XX</span></code></a></p></li>
+</ul>
+</section>
+<section id="mfd">
+<h3><a class="toc-backref" href="#id20" role="doc-backlink">MFD</a><a class="headerlink" href="#mfd" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p>文件 <code class="docutils literal notranslate"><span class="pre">include/zephyr/drivers/mfd/npm1300.h</span></code> 已移动到 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/drivers/mfd/npm13xx.h">include/zephyr/drivers/mfd/npm13xx.h</a>，并且枚举和函数名中所有的 <code class="docutils literal notranslate"><span class="pre">npm1300</span></code>/<code class="docutils literal notranslate"><span class="pre">NPM1300</span></code> 都已重命名为 <code class="docutils literal notranslate"><span class="pre">npm13xx</span></code>/<code class="docutils literal notranslate"><span class="pre">NPM13XX</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CONFIG_MFD_NPM1300</span></code> 已重命名为 <a class="reference internal" href="../kconfig.html#CONFIG_MFD_NPM13XX" title="CONFIG_MFD_NPM13XX"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MFD_NPM13XX</span></code></a>，<code class="docutils literal notranslate"><span class="pre">CONFIG_MFD_NPM1300_INIT_PRIORITY</span></code> 已重命名为 <a class="reference internal" href="../kconfig.html#CONFIG_MFD_NPM13XX_INIT_PRIORITY" title="CONFIG_MFD_NPM13XX_INIT_PRIORITY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MFD_NPM13XX_INIT_PRIORITY</span></code></a></p></li>
+</ul>
+</section>
+<section id="misc">
+<h3><a class="toc-backref" href="#id21" role="doc-backlink">杂项</a><a class="headerlink" href="#misc" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p>文件 <code class="docutils literal notranslate"><span class="pre">drivers/memc/memc_nxp_flexram.h</span></code> 已移动到 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/drivers/misc/flexram/nxp_flexram.h">include/zephyr/drivers/misc/flexram/nxp_flexram.h</a>，以便可以通过 <code class="docutils literal notranslate"><span class="pre">&lt;zephyr/drivers/misc/flexram/nxp_flexram.h&gt;</span></code> 包含该文件。使用此驱动时不再需要修改 CMakeList.txt 来添加包含路径。</p></li>
+<li><p>所有以 memc_flexram_* 为命名空间的内容（包括 Kconfig 选项和 C API）都已改为仅以 flexram_* 命名。</p></li>
+<li><p>要启用 Ethos-U NPU 驱动，请选择 <code class="docutils literal notranslate"><span class="pre">CONFIG_ETHOS_U</span></code>，而不是 <code class="docutils literal notranslate"><span class="pre">CONFIG_ARM_ETHOS_U</span></code>。</p></li>
+<li><p>所有前缀为 <code class="docutils literal notranslate"><span class="pre">CONFIG_ARM_ETHOS_U_</span></code> 的配置都应重命名为以 <code class="docutils literal notranslate"><span class="pre">CONFIG_ETHOS_U_</span></code> 为前缀。</p></li>
+</ul>
+</section>
+<section id="modem">
+<h3><a class="toc-backref" href="#id22" role="doc-backlink">调制解调器</a><a class="headerlink" href="#modem" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p>Kconfig 选项 <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MODEM_CELLULAR_CMUX_MAX_FRAME_SIZE</span></code> 已被移除，改用 <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MODEM_CMUX_WORK_BUFFER_SIZE</span></code> 和 <a class="reference internal" href="../kconfig.html#CONFIG_MODEM_CMUX_MTU" title="CONFIG_MODEM_CMUX_MTU"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MODEM_CMUX_MTU</span></code></a>。</p></li>
+</ul>
+</section>
+<section id="regulator">
+<h3><a class="toc-backref" href="#id23" role="doc-backlink">稳压器</a><a class="headerlink" href="#regulator" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p>文件 <code class="docutils literal notranslate"><span class="pre">include/zephyr/dt-bindings/regulator/npm1300.h</span></code> 已移动到 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/dt-bindings/regulator/npm13xx.h">include/zephyr/dt-bindings/regulator/npm13xx.h</a>，并且宏定义中所有的 <code class="docutils literal notranslate"><span class="pre">NPM1300</span></code> 都已重命名为 <code class="docutils literal notranslate"><span class="pre">NPM13XX</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CONFIG_REGULATOR_NPM1300</span></code> 已重命名为 <a class="reference internal" href="../kconfig.html#CONFIG_REGULATOR_NPM13XX" title="CONFIG_REGULATOR_NPM13XX"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_REGULATOR_NPM13XX</span></code></a>，<code class="docutils literal notranslate"><span class="pre">CONFIG_REGULATOR_NPM1300_COMMON_INIT_PRIORITY</span></code> 已重命名为 <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">REGULATOR_NPM13XX_COMMON_INIT_PRIORITY</span></code>，<code class="docutils literal notranslate"><span class="pre">CONFIG_REGULATOR_NPM1300_INIT_PRIORITY</span></code> 已重命名为 <a class="reference internal" href="../kconfig.html#CONFIG_REGULATOR_NPM13XX_INIT_PRIORITY" title="CONFIG_REGULATOR_NPM13XX_INIT_PRIORITY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_REGULATOR_NPM13XX_INIT_PRIORITY</span></code></a></p></li>
+<li><p><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">nordic,npm1300-regulator</span></code> 的 BUCK 和 LDO 节点 GPIO 属性现在以不带 GPIO 控制器的整数数组形式指定，因此不再要求必须存在并启用 <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">nordic,npm1300-gpio</span></code> 节点才能通过 GPIO 控制输出电源轨。例如，<code class="docutils literal notranslate"><span class="pre">enable-gpios</span> <span class="pre">=</span> <span class="pre">&lt;&amp;pmic_gpios</span> <span class="pre">3</span> <span class="pre">GPIO_ACTIVE_LOW&gt;;</span></code> 现在应写为 <code class="docutils literal notranslate"><span class="pre">enable-gpio-config</span> <span class="pre">=</span> <span class="pre">&lt;3</span> <span class="pre">GPIO_ACTIVE_LOW&gt;;</span></code>。</p></li>
+</ul>
+</section>
+<section id="spi">
+<h3><a class="toc-backref" href="#id24" role="doc-backlink">SPI</a><a class="headerlink" href="#spi" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CONFIG_SPI_MCUX_LPSPI</span></code> 已重命名为 <a class="reference internal" href="../kconfig.html#CONFIG_SPI_NXP_LPSPI" title="CONFIG_SPI_NXP_LPSPI"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SPI_NXP_LPSPI</span></code></a>，该驱动的所有子配置也做了类似的重命名，包括 <a class="reference internal" href="../kconfig.html#CONFIG_SPI_NXP_LPSPI_DMA" title="CONFIG_SPI_NXP_LPSPI_DMA"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SPI_NXP_LPSPI_DMA</span></code></a> 和 <a class="reference internal" href="../kconfig.html#CONFIG_SPI_NXP_LPSPI_CPU" title="CONFIG_SPI_NXP_LPSPI_CPU"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SPI_NXP_LPSPI_CPU</span></code></a>。</p></li>
+<li><p>设备树属性 <code class="docutils literal notranslate"><span class="pre">port_sel</span></code> 已重命名为 <code class="docutils literal notranslate"><span class="pre">port-sel</span></code>。</p></li>
+<li><p>设备树属性 <code class="docutils literal notranslate"><span class="pre">chip_select</span></code> 已重命名为 <code class="docutils literal notranslate"><span class="pre">chip-select</span></code>。</p></li>
+<li><p><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">andestech,atcspi200</span></code> 的绑定文件已重命名，使其名称与 compatible 字符串一致。</p></li>
+</ul>
+</section>
+<section id="sensors">
+<h3><a class="toc-backref" href="#id25" role="doc-backlink">传感器</a><a class="headerlink" href="#sensors" title="链接到此标题。"></a></h3>
+<ul>
+<li><p>厂商前缀 <code class="docutils literal notranslate"><span class="pre">ltr</span></code> 已重命名为 <code class="docutils literal notranslate"><span class="pre">liteon</span></code>，相应地，<code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">ltr,f216a</span></code> 已替换为 <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">liteon,ltrf216a</span></code>。选项 <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">DT_HAS_LTR_F216A_ENABLED</span></code> 已替换为 <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">DT_HAS_LITEON_LTRF216A_ENABLED</span></code>（<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/85453">GitHub #85453</a>）</p></li>
+<li><p><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">ti,tmp116</span></code> 已重命名为 <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">ti,tmp11x</span></code>，因为它同时支持 tmp116、tmp117 和 tmp119。</p></li>
+<li><p><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">meas,ms5837</span></code> 已替换为 <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">meas,ms5837-30ba</span></code> 和 <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">meas,ms5837-02ba</span></code>。要使用这两个变体之一，还需要同时使用 status 属性。</p></li>
+<li><p><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">we,wsen-itds</span></code> 驱动已重命名为 <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">we,wsen-itds-2533020201601</span></code>。设备树可按如下方式配置：</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="nf">i2c0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">  </span><span class="nf">itds:itds-2533020201601</span><span class="o">@</span><span class="mi">19</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"we,wsen-itds-2533020201601"</span><span class="p">;</span>
+<span class="w">    </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x19</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">odr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"400"</span><span class="p">;</span>
+<span class="w">    </span><span class="n">op-mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"high-perf"</span><span class="p">;</span>
+<span class="w">    </span><span class="n">power-mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"normal"</span><span class="p">;</span>
+<span class="w">    </span><span class="n">events-interrupt-gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">gpio1</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="na">GPIO_ACTIVE_HIGH</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">drdy-interrupt-gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">gpio1</span><span class="w"> </span><span class="mi">2</span><span class="w"> </span><span class="na">GPIO_ACTIVE_HIGH</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">  </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</li>
+<li><p><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">raspberrypi,pico-temp.yaml</span></code> 的绑定文件已重命名，使其名称与 compatible 字符串一致。</p></li>
+<li><p>文件 <code class="docutils literal notranslate"><span class="pre">include/zephyr/drivers/sensor/npm1300_charger.h</span></code> 已移动到 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/drivers/sensor/npm13xx_charger.h">include/zephyr/drivers/sensor/npm13xx_charger.h</a>，并且枚举中所有的 <code class="docutils literal notranslate"><span class="pre">NPM1300</span></code> 都已重命名为 <code class="docutils literal notranslate"><span class="pre">NPM13XX</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CONFIG_NPM1300_CHARGER</span></code> 已重命名为 <a class="reference internal" href="../kconfig.html#CONFIG_NPM13XX_CHARGER" title="CONFIG_NPM13XX_CHARGER"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NPM13XX_CHARGER</span></code></a></p></li>
+</ul>
+</section>
+<section id="serial">
+<h3><a class="toc-backref" href="#id26" role="doc-backlink">串口</a><a class="headerlink" href="#serial" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">uart_native_posix</span></code> 已重命名为 <code class="docutils literal notranslate"><span class="pre">uart_native_pty</span></code>，其 Kconfig 选项和设备树绑定也随之重命名。<code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,native-posix-uart</span></code> 已被弃用，改用 <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,native-pty-uart</span></code>；<code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_UART_NATIVE_POSIX</span></code> 及其相关选项已被弃用，改用 <a class="reference internal" href="../kconfig.html#CONFIG_UART_NATIVE_PTY" title="CONFIG_UART_NATIVE_PTY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_UART_NATIVE_PTY</span></code></a>。选项 <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NATIVE_UART_0</span></code> 已替换为 <a class="reference internal" href="../kconfig.html#CONFIG_UART_NATIVE_PTY_0" title="CONFIG_UART_NATIVE_PTY_0"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_UART_NATIVE_PTY_0</span></code></a>，不过现在也可以在运行时通过命令行选项 <code class="docutils literal notranslate"><span class="pre">--&lt;uart_name&gt;_stdinout</span></code> 选择让 UART 连接到进程的 stdin/stdout，而不是连接到 PTY。<code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NATIVE_UART_AUTOATTACH_DEFAULT_CMD</span></code> 已替换为 <a class="reference internal" href="../kconfig.html#CONFIG_UART_NATIVE_PTY_AUTOATTACH_DEFAULT_CMD" title="CONFIG_UART_NATIVE_PTY_AUTOATTACH_DEFAULT_CMD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_UART_NATIVE_PTY_AUTOATTACH_DEFAULT_CMD</span></code></a>。<code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_UART_NATIVE_WAIT_PTS_READY_ENABLE</span></code> 已被弃用，它所启用的功能现在始终启用，因为该功能没有任何副作用。<code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_UART_NATIVE_POSIX_PORT_1_ENABLE</span></code> 已被弃用，该选项现在不起任何作用。用户应当按需要的原生 PTY UART 实例数量，实例化相应数量的 <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,native-pty-uart</span></code> 节点。（<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/86739">GitHub #86739</a>）</p></li>
+</ul>
+</section>
+<section id="stepper">
+<h3><a class="toc-backref" href="#id27" role="doc-backlink">步进电机</a><a class="headerlink" href="#stepper" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p>函数 <code class="docutils literal notranslate"><span class="pre">stepper_enable(const</span> <span class="pre">struct</span> <span class="pre">device</span> <span class="pre">*</span> <span class="pre">dev,</span> <span class="pre">bool</span> <span class="pre">enable)</span></code> 已重构为 <code class="xref c c-func docutils literal notranslate"><span class="pre">stepper_enable()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">stepper_disable()</span></code>。</p></li>
+</ul>
+</section>
+<section id="timer">
+<h3><a class="toc-backref" href="#id28" role="doc-backlink">定时器</a><a class="headerlink" href="#timer" title="链接到此标题。"></a></h3>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">native_posix_timer</span></code> 已重命名为 <code class="docutils literal notranslate"><span class="pre">native_sim_timer</span></code>，因此其 Kconfig 选项 <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NATIVE_POSIX_TIMER</span></code> 已被弃用，改用 <a class="reference internal" href="../kconfig.html#CONFIG_NATIVE_SIM_TIMER" title="CONFIG_NATIVE_SIM_TIMER"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NATIVE_SIM_TIMER</span></code></a>（<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/86612">GitHub #86612</a>）。</p></li>
+<li><p><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">andestech,machine-timer</span></code>、<code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">neorv32-machine-timer</span></code>、<code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">telink,machine-timer</span></code>、<code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">lowrisc,machine-timer</span></code>、<code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">niosv-machine-timer</span></code> 和 <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">scr,machine-timer</span></code> 已统一为 <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">riscv,machine-timer</span></code>。</p>
+<p>现在必须使用 <code class="docutils literal notranslate"><span class="pre">reg</span></code> 和 <code class="docutils literal notranslate"><span class="pre">reg-names</span></code> 属性显式指定 <code class="docutils literal notranslate"><span class="pre">MTIME</span></code> 和 <code class="docutils literal notranslate"><span class="pre">MTIMECMP</span></code> 两个寄存器的地址。<code class="docutils literal notranslate"><span class="pre">reg-names</span></code> 属性现在是 <strong>必需的</strong>，其中列出的名称必须与 <code class="docutils literal notranslate"><span class="pre">reg</span></code> 中的各个条目一一对应。（<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/84175">GitHub #84175</a> 和 <a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/89847">GitHub #89847</a>）</p>
+<p>示例：</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nl">mtimer</span><span class="p">:</span><span class="w"> </span><span class="nf">timer</span><span class="o">@</span><span class="mi">d1000000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"riscv,machine-timer"</span><span class="p">;</span>
+<span class="w">    </span><span class="n">interrupts-extended</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">cpu0_intc</span><span class="w"> </span><span class="mi">7</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0xd1000000</span><span class="w"> </span><span class="mh">0x8</span>
+<span class="w">           </span><span class="mh">0xd1000008</span><span class="w"> </span><span class="mh">0x8</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="kr">reg</span><span class="o">-</span><span class="n">names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"mtime"</span><span class="p">,</span><span class="w"> </span><span class="s">"mtimecmp"</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</li>
+<li><p>现在可以在 cpus DTS 组中使用 <code class="docutils literal notranslate"><span class="pre">timebase-frequency</span></code> 属性来提供 <a class="reference internal" href="../kconfig.html#CONFIG_SYS_CLOCK_HW_CYCLES_PER_SEC" title="CONFIG_SYS_CLOCK_HW_CYCLES_PER_SEC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SYS_CLOCK_HW_CYCLES_PER_SEC</span></code></a> 的值，而不必直接设置该值：<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/91296">GitHub #91296</a></p></li>
+</ul>
+</section>
+<section id="video">
+<h3><a class="toc-backref" href="#id29" role="doc-backlink">视频</a><a class="headerlink" href="#video" title="链接到此标题。"></a></h3>
+<ul>
+<li><p>8 位 RAW Bayer 格式 BGGR8 / GBRG8 / GRBG8 / RGGB8 已重命名，在前面加上了 S 前缀：</p>
+<p><code class="docutils literal notranslate"><span class="pre">VIDEO_PIX_FMT_BGGR8</span></code> 变为 <code class="xref c c-macro docutils literal notranslate"><span class="pre">VIDEO_PIX_FMT_SBGGR8</span></code> <code class="docutils literal notranslate"><span class="pre">VIDEO_PIX_FMT_GBRG8</span></code> 变为 <code class="xref c c-macro docutils literal notranslate"><span class="pre">VIDEO_PIX_FMT_SGBRG8</span></code> <code class="docutils literal notranslate"><span class="pre">VIDEO_PIX_FMT_GRBG8</span></code> 变为 <code class="xref c c-macro docutils literal notranslate"><span class="pre">VIDEO_PIX_FMT_SGRBG8</span></code> <code class="docutils literal notranslate"><span class="pre">VIDEO_PIX_FMT_RGGB8</span></code> 变为 <code class="xref c c-macro docutils literal notranslate"><span class="pre">VIDEO_PIX_FMT_SRGGB8</span></code></p>
+</li>
+<li><p>在 STM32 器件上，DCMI 驱动（<code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">st,stm32-dcmi</span></code>）现在依赖基于端点（endpoint）的 video-interfaces.yaml 绑定来获取传感器接口属性（例如总线宽度和同步信号）。此外，<code class="docutils literal notranslate"><span class="pre">capture-rate</span></code> 属性已被帧间隔 API <code class="xref c c-func docutils literal notranslate"><span class="pre">video_set_frmival()</span></code> 取代。参见（<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/89627">GitHub #89627</a>）。</p></li>
+<li><p><code class="xref c c-enum docutils literal notranslate"><span class="pre">video_endpoint_id</span></code> 已被移除，它不再是任何视频 API 的参数。</p></li>
+<li><p>新增了 <code class="xref c c-enum docutils literal notranslate"><span class="pre">video_buf_type</span></code>。它是以下视频 API 的必需参数：<code class="xref c c-func docutils literal notranslate"><span class="pre">set_stream()</span></code>、<code class="xref c c-func docutils literal notranslate"><span class="pre">video_stream_start()</span></code>、<code class="xref c c-func docutils literal notranslate"><span class="pre">video_stream_stop()</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">video_format.pitch</span></code> 现在改为由驱动显式设置，此前这项工作需要由应用程序完成。这一更新使应用程序能够针对各个驱动正确分配缓冲区大小。现有应用程序不会因此变更而出错，但可以按照提交 <code class="docutils literal notranslate"><span class="pre">33dcbe37cfd3593e8c6e9cfd218dd31fdd533598</span></code> 中对示例所做的修改进行简化。</p></li>
+<li><p>使用 <a class="reference internal" href="../boards/native/native_sim/doc/index.html#native_sim"><span class="xref zephyr zephyr-board">原生模拟器</span></a> 的示例和项目现在需要指定 <code class="docutils literal notranslate"><span class="pre">--snippet</span></code> <a class="reference internal" href="../snippets/video-sw-generator/README.html#snippet-video-sw-generator"><span class="std std-ref">video-sw-generator</span></a> 才能正确构建。</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">video_query_ctrl()</span></code> 现在只接受一个 <code class="xref c c-struct docutils literal notranslate"><span class="pre">video_ctrl_query</span></code> 参数，该结构体现在包含一个 <code class="docutils literal notranslate"><span class="pre">video_ctrl_query.dev</span></code> 字段，用于指定并回读被查询的设备（<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/91265">GitHub #91265</a>）。</p></li>
+</ul>
+</section>
+<section id="watchdog">
+<h3><a class="toc-backref" href="#id30" role="doc-backlink">看门狗</a><a class="headerlink" href="#watchdog" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CONFIG_WDT_NPM1300</span></code> 已重命名为 <a class="reference internal" href="../kconfig.html#CONFIG_WDT_NPM13XX" title="CONFIG_WDT_NPM13XX"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_WDT_NPM13XX</span></code></a>，<code class="docutils literal notranslate"><span class="pre">CONFIG_WDT_NPM1300_INIT_PRIORITY</span></code> 已重命名为 <a class="reference internal" href="../kconfig.html#CONFIG_WDT_NPM13XX_INIT_PRIORITY" title="CONFIG_WDT_NPM13XX_INIT_PRIORITY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_WDT_NPM13XX_INIT_PRIORITY</span></code></a></p></li>
+</ul>
+</section>
+<section id="qspi-ospi-xspi">
+<h3><a class="toc-backref" href="#id31" role="doc-backlink">qSPI/oSPI/xSPI</a><a class="headerlink" href="#qspi-ospi-xspi" title="链接到此标题。"></a></h3>
+<ul>
+<li><p>在 STM32 器件上，外部存储器在设备树中的大小和地址描述现已拆分为两个独立的属性，以符合规范建议。</p>
+<p>例如，以下外部 Flash 描述 <code class="docutils literal notranslate"><span class="pre">reg</span> <span class="pre">=</span> <span class="pre">&lt;0x70000000</span> <span class="pre">DT_SIZE_M(64)&gt;;</span> <span class="pre">/*</span> <span class="pre">512</span> <span class="pre">Mbits</span> <span class="pre">/</span></code> 改为 <code class="docutils literal notranslate"><span class="pre">reg</span> <span class="pre">=</span> <span class="pre">&lt;0&gt;;</span></code> <code class="docutils literal notranslate"><span class="pre">size</span> <span class="pre">=</span> <span class="pre">&lt;DT_SIZE_M(512)&gt;;</span> <span class="pre">/</span> <span class="pre">512</span> <span class="pre">Mbits</span> <span class="pre">*/</span></code>。</p>
+<p>请注意，该属性给出的是存储器件的实际大小，单位为位（bit）。以前的映射地址信息现在在 SoC dtsi 层级的 xspi、ospi 或 qspi 节点中描述。</p>
+</li>
+</ul>
+</section>
+</section>
+<section id="bluetooth">
+<h2><a class="toc-backref" href="#id32" role="doc-backlink">Bluetooth</a><a class="headerlink" href="#bluetooth" title="链接到此标题。"></a></h2>
+<section id="bluetooth-audio">
+<h3><a class="toc-backref" href="#id33" role="doc-backlink">Bluetooth 音频</a><a class="headerlink" href="#bluetooth-audio" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CONFIG_BT_CSIP_SET_MEMBER_NOTIFIABLE</span></code> 已重命名为 <a class="reference internal" href="../kconfig.html#CONFIG_BT_CSIP_SET_MEMBER_SIRK_NOTIFIABLE" title="CONFIG_BT_CSIP_SET_MEMBER_SIRK_NOTIFIABLE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_CSIP_SET_MEMBER_SIRK_NOTIFIABLE</span></code></a>。（<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/86763">GitHub #86763</a>）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">bt_csip_set_member_get_sirk</span></code> 已被移除。请使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">bt_csip_set_member_get_info()</span></code> 获取 SIRK（以及其他信息）。（<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/86996">GitHub #86996</a>）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BT_AUDIO_CONTEXT_TYPE_PROHIBITED</span></code> 已重命名为 <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">BT_AUDIO_CONTEXT_TYPE_NONE</span></code>。（<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/89506">GitHub #89506</a>）</p></li>
+</ul>
+</section>
+<section id="bluetooth-classic">
+<h3><a class="toc-backref" href="#id34" role="doc-backlink">经典 Bluetooth</a><a class="headerlink" href="#bluetooth-classic" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p>结构体 <code class="xref c c-struct docutils literal notranslate"><span class="pre">bt_hfp_ag_cb</span></code> 中 HFP AG 回调 <code class="docutils literal notranslate"><span class="pre">sco_disconnected</span></code> 的参数已改为 SCO 连接对象 <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">bt_conn</span> <span class="pre">*sco_conn</span></code> 和 SCO 连接的断开原因 <code class="docutils literal notranslate"><span class="pre">uint8_t</span> <span class="pre">reason</span></code>。</p></li>
+</ul>
+</section>
+<section id="bluetooth-hci">
+<h3><a class="toc-backref" href="#id35" role="doc-backlink">Bluetooth HCI</a><a class="headerlink" href="#bluetooth-hci" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p>通过 HCI 驱动接口传递的缓冲区类型，现在以 H:4 编码的前缀字节形式作为缓冲区负载本身的一部分来表示。bt_buf_set_type() 和 bt_buf_get_type() 函数已被弃用，但仍可使用，只是每个缓冲区只能调用一次。</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">bt_hci_cmd_create()</span></code> 函数已被弃用，应改用新的 <code class="xref c c-func docutils literal notranslate"><span class="pre">bt_hci_cmd_alloc()</span></code> 函数。新函数不接受任何参数，因为命令发送函数已更新为自行完成命令头编码。</p></li>
+</ul>
+</section>
+<section id="bluetooth-host">
+<h3><a class="toc-backref" href="#id36" role="doc-backlink">Bluetooth 主机（Host）</a><a class="headerlink" href="#bluetooth-host" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/bluetooth/conn.h">include/zephyr/bluetooth/conn.h</a> 中的符号 <code class="docutils literal notranslate"><span class="pre">BT_LE_CS_TONE_ANTENNA_CONFIGURATION_INDEX_&lt;NUMBER&gt;</span></code> 已重命名为 <code class="docutils literal notranslate"><span class="pre">BT_LE_CS_TONE_ANTENNA_CONFIGURATION_A&lt;NUMBER&gt;_B&lt;NUMBER&gt;</span></code>。</p></li>
+<li><p>ISO 数据路径不再自动建立，应用程序必须分别调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">bt_iso_setup_data_path()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">bt_iso_remove_data_path()</span></code> 来显式建立和移除数据路径。（<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/75549">GitHub #75549</a>）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">BT_ISO_CHAN_TYPE_CONNECTED</span></code> 已拆分为 <code class="docutils literal notranslate"><span class="pre">BT_ISO_CHAN_TYPE_CENTRAL</span></code> 和 <code class="docutils literal notranslate"><span class="pre">BT_ISO_CHAN_TYPE_PERIPHERAL</span></code>，以更好地描述 ISO 通道的类型，因为不同角色的行为可能不同。现有对 <code class="docutils literal notranslate"><span class="pre">BT_ISO_CHAN_TYPE_CONNECTED</span></code> 的使用或检查，都可以替换为这两者的 <code class="docutils literal notranslate"><span class="pre">||</span></code>。（<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/75549">GitHub #75549</a>）</p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/bluetooth/gatt.h">include/zephyr/bluetooth/gatt.h</a> 中的 <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">_bt_gatt_ccc</span></code> 已重命名为结构体 <code class="xref c c-struct docutils literal notranslate"><span class="pre">bt_gatt_ccc_managed_user_data</span></code>。（<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/88652">GitHub #88652</a>）</p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/bluetooth/gatt.h">include/zephyr/bluetooth/gatt.h</a> 中的宏 <code class="docutils literal notranslate"><span class="pre">BT_GATT_CCC_INITIALIZER</span></code> 已重命名为 <code class="xref c c-macro docutils literal notranslate"><span class="pre">BT_GATT_CCC_MANAGED_USER_DATA_INIT</span></code>。（<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/88652">GitHub #88652</a>）</p></li>
+<li><p>Kconfig 选项 <code class="docutils literal notranslate"><span class="pre">CONFIG_BT_ISO_TX_FRAG_COUNT</span></code> 已被移除，因为它完全未被使用。对它的任何使用都可以直接删除。（<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/89836">GitHub #89836</a>）</p></li>
+</ul>
+</section>
+</section>
+<section id="networking">
+<h2><a class="toc-backref" href="#id37" role="doc-backlink">网络</a><a class="headerlink" href="#networking" title="链接到此标题。"></a></h2>
+<ul>
+<li><p>结构体 <code class="docutils literal notranslate"><span class="pre">net_linkaddr_storage</span></code> 已重命名为结构体 <code class="xref c c-struct docutils literal notranslate"><span class="pre">net_linkaddr</span></code>，原来的结构体 <code class="docutils literal notranslate"><span class="pre">net_linkaddr</span></code> 已被移除。结构体 <code class="xref c c-struct docutils literal notranslate"><span class="pre">net_linkaddr</span></code> 现在包含用于存储链路地址的空间，而不是一个指向链路地址的指针。这样可以避免在克隆结构体 <code class="xref c c-struct docutils literal notranslate"><span class="pre">net_pkt</span></code> 时可能出现的悬空指针。对于 IEEE 802.15.4，这会使结构体 <code class="xref c c-struct docutils literal notranslate"><span class="pre">net_pkt</span></code> 的大小增加 4 个字节，而对于以太网等其他网络技术则不会增加大小。请注意，任何直接使用结构体 <code class="xref c c-struct docutils literal notranslate"><span class="pre">net_linkaddr</span></code> 并包含诸如 <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">(lladdr-&gt;addr</span> <span class="pre">==</span> <span class="pre">NULL)</span></code> 之类检查的代码将无法再按预期工作（因为 addr 不再是指针）；如果代码要检查链路地址是否未设置，必须改为 <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">(lladdr-&gt;len</span> <span class="pre">==</span> <span class="pre">0)</span></code>。</p></li>
+<li><p>TLS 凭据类型 <code class="docutils literal notranslate"><span class="pre">TLS_CREDENTIAL_SERVER_CERTIFICATE</span></code> 已重命名为更通用的 <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">TLS_CREDENTIAL_PUBLIC_CERTIFICATE</span></code>，以更好地反映该凭据类型的用途。</p></li>
+<li><p>MQTT 公共 API 函数 <code class="xref c c-func docutils literal notranslate"><span class="pre">mqtt_disconnect()</span></code> 已更改。该函数现在额外接受一个 <code class="docutils literal notranslate"><span class="pre">param</span></code> 参数以支持 MQTT 5.0。该参数是可选的，在旧版本 MQTT 中不使用，MQTT 3.1.1 用户应传入 NULL 作为参数。</p></li>
+<li><p>不再支持 <code class="docutils literal notranslate"><span class="pre">AF_PACKET/SOCK_RAW/IPPROTO_RAW</span></code> 套接字组合，因为 <code class="docutils literal notranslate"><span class="pre">AF_PACKET</span></code> 套接字只应接受 IEEE 802.3 协议号。作为替代，可以根据实际用例使用 <code class="docutils literal notranslate"><span class="pre">AF_PACKET/SOCK_DGRAM/ETH_P_ALL</span></code> 或 <code class="docutils literal notranslate"><span class="pre">AF_INET(6)/SOCK_RAW/IPPROTO_IP</span></code> 套接字。</p></li>
+<li><p>HTTP 服务器现在会遵循所配置的 <code class="docutils literal notranslate"><span class="pre">_concurrent</span></code> 和 <code class="docutils literal notranslate"><span class="pre">_backlog</span></code> 值。请检查是否为 <code class="xref c c-macro docutils literal notranslate"><span class="pre">HTTP_SERVICE_DEFINE_EMPTY</span></code>、<code class="xref c c-macro docutils literal notranslate"><span class="pre">HTTPS_SERVICE_DEFINE_EMPTY</span></code>、<code class="xref c c-macro docutils literal notranslate"><span class="pre">HTTP_SERVICE_DEFINE</span></code> 和 <code class="xref c c-macro docutils literal notranslate"><span class="pre">HTTPS_SERVICE_DEFINE</span></code> 提供了合适的值。</p></li>
+<li><p><a class="reference internal" href="../kconfig.html#CONFIG_NET_ZPERF" title="CONFIG_NET_ZPERF"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_ZPERF</span></code></a> 默认不再包含服务器支持。要使用服务器命令，请启用 <a class="reference internal" href="../kconfig.html#CONFIG_NET_ZPERF_SERVER" title="CONFIG_NET_ZPERF_SERVER"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_ZPERF_SERVER</span></code></a>。如果不需要服务器支持，可以考虑减小 <a class="reference internal" href="../kconfig.html#CONFIG_ZVFS_POLL_MAX" title="CONFIG_ZVFS_POLL_MAX"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZVFS_POLL_MAX</span></code></a>。</p></li>
+<li><p>L2 Wi-Fi shell 现在为大多数命令提供了接口选项，为适应这一变化，部分现有选项已重命名。下表汇总了这些变化：</p>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>命令</p></td>
+<td><p>旧选项</p></td>
+<td><p>新选项</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">wifi</span> <span class="pre">connect</span></code>
+<code class="docutils literal notranslate"><span class="pre">wifi</span> <span class="pre">ap</span> <span class="pre">enable</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">-i</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">-g</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">wifi</span> <span class="pre">twt</span> <span class="pre">setup</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">-i</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">-p</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">wifi</span> <span class="pre">ap</span> <span class="pre">config</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">-i</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">-t</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">wifi</span> <span class="pre">mode</span></code>
+<code class="docutils literal notranslate"><span class="pre">wifi</span> <span class="pre">channel</span></code>
+<code class="docutils literal notranslate"><span class="pre">wifi</span> <span class="pre">packet_filter</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">--if-index</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">--iface</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><p>HTTP 客户端响应回调 <code class="xref c c-type docutils literal notranslate"><span class="pre">http_response_cb_t</span></code> 的签名已更改。回调函数现在返回 <code class="docutils literal notranslate"><span class="pre">int</span></code> 而不是 <code class="docutils literal notranslate"><span class="pre">void</span></code>，这使应用程序可以中止 HTTP 连接。现有应用程序需要更新其响应回调的实现。要保持当前行为，只需在回调中返回 0。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">net_mgmt</span></code> 事件处理函数 <code class="xref c c-type docutils literal notranslate"><span class="pre">net_mgmt_event_handler_t</span></code> 和请求处理函数 <code class="xref c c-type docutils literal notranslate"><span class="pre">net_mgmt_request_handler_t</span></code> 的 API 签名已更改。管理事件类型从 <code class="docutils literal notranslate"><span class="pre">uint32_t</span></code> 改为 <code class="docutils literal notranslate"><span class="pre">uint64_t</span></code>。这一变更使事件编号值可以是位掩码而不是枚举值，层代码仍然是枚举值。如有需要，可以在请求或事件处理函数中使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">NET_MGMT_LAYER_CODE</span></code> 和 <code class="xref c c-macro docutils literal notranslate"><span class="pre">NET_MGMT_GET_COMMAND</span></code> 从实际事件值中获取层代码和管理事件命令。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">net_mgmt</span></code> 类型套接字的套接字选项不能再直接使用网络管理事件类型，因为这些类型现在是 <code class="docutils literal notranslate"><span class="pre">uint64_t</span></code>，而套接字选项期望的是普通的 32 位整数值。因此新增了 <code class="docutils literal notranslate"><span class="pre">SO_NET_MGMT_ETHERNET_SET_QAV_PARAM</span></code> 和 <code class="docutils literal notranslate"><span class="pre">SO_NET_MGMT_ETHERNET_GET_QAV_PARAM</span></code> 套接字选项，用于取代之前使用的 <code class="docutils literal notranslate"><span class="pre">NET_REQUEST_ETHERNET_SET_QAV_PARAM</span></code> 和 <code class="docutils literal notranslate"><span class="pre">NET_REQUEST_ETHERNET_GET_QAV_PARAM</span></code> 选项。</p></li>
+<li><p>DNS 服务器解析器配置函数 <code class="xref c c-func docutils literal notranslate"><span class="pre">dns_resolve_reconfigure()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">dns_resolve_reconfigure_with_interfaces()</span></code> 现在要求用户提供 DNS 服务器信息的来源。例如，当 DNS 服务器信息通过 DHCPv4 获得时，需要指定 <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">DNS_SOURCE_DHCPV4</span></code>。</p></li>
+</ul>
+<section id="lwm2m">
+<h3><a class="toc-backref" href="#id38" role="doc-backlink">LwM2M</a><a class="headerlink" href="#lwm2m" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p>加速度计对象：按照加速度计对象规范，可选资源 Y 值、Z 值、最小量程值、最大量程值现在可以按需使用。使用这些资源的用户现在需要提供读取缓冲区。</p></li>
+</ul>
+</section>
+<section id="openthread">
+<h3><a class="toc-backref" href="#id39" role="doc-backlink">OpenThread</a><a class="headerlink" href="#openthread" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p>Zephyr 中的 OpenThread 协议栈集成经过了一次大规模重构。其实现已从 Zephyr 网络层（<code class="docutils literal notranslate"><span class="pre">subsys/net/l2/openthread/</span></code>）移到了一个专用模块（<code class="docutils literal notranslate"><span class="pre">modules/openthread/</span></code>）中。</p></li>
+<li><p>OpenThread 现在是 Zephyr 中的一个独立模块，可以独立于 Zephyr 网络协议栈（L2 和 IEEE802.15.4 适配层）使用。这带来了新的用例，例如应用程序直接将 OpenThread 与自己的 IEEE802.15.4 驱动一起使用，或者不需要完整的 Zephyr 网络协议栈。</p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/net/openthread.h">include/zephyr/net/openthread.h</a> 文件中的大多数函数已被弃用。这些已弃用的 API 仍可使用以保持向后兼容，但新应用程序应使用 OpenThread 模块提供的新 API。以下列表汇总了这些变化：</p>
+<ul>
+<li><p>互斥量处理：</p>
+<ul>
+<li><p>以前：</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">openthread_api_mutex_lock</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">openthread_api_mutex_try_lock</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">openthread_api_mutex_unlock</span></code></p></li>
+</ul>
+</li>
+<li><p>现在使用：</p>
+<ul>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">openthread_mutex_lock()</span></code></p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">openthread_mutex_try_lock()</span></code></p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">openthread_mutex_unlock()</span></code></p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>启动 OpenThread：</p>
+<ul>
+<li><p>以前：<code class="docutils literal notranslate"><span class="pre">openthread_start</span></code></p></li>
+<li><p>现在使用：<code class="xref c c-func docutils literal notranslate"><span class="pre">openthread_run()</span></code></p></li>
+</ul>
+</li>
+<li><p>回调注册：</p>
+<ul>
+<li><p>以前：</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">openthread_state_changed_cb_register</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">openthread_state_changed_cb_unregister</span></code></p></li>
+</ul>
+</li>
+<li><p>现在使用：</p>
+<ul>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">openthread_state_changed_callback_register()</span></code></p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">openthread_state_changed_callback_unregister()</span></code></p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>回调结构体：</p>
+<ul>
+<li><p>以前：<code class="docutils literal notranslate"><span class="pre">openthread_state_changed_cb</span></code></p></li>
+<li><p>现在使用：<code class="xref c c-struct docutils literal notranslate"><span class="pre">openthread_state_changed_callback</span></code></p></li>
+</ul>
+</li>
+<li><p>以下 <code class="xref c c-struct docutils literal notranslate"><span class="pre">openthread_context</span></code> 结构体字段已被弃用，新代码中不得再使用：</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">instance</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">api_lock</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">work_q</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">api_work</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">state_change_cbs</span></code></p></li>
+</ul>
+</li>
+<li><p>以前没有的新函数：</p>
+<ul>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">openthread_init()</span></code>：初始化 OpenThread 协议栈。</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">openthread_stop()</span></code>：停止并禁用 OpenThread 协议栈。</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">openthread_set_receive_cb()</span></code>：设置 OpenThread 协议栈的接收回调。</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">subsys/net/l2/openthread/Kconfig</span></code> 中与 OpenThread 相关的 Kconfig 选项已移动到 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/modules/openthread/Kconfig">modules/openthread/Kconfig</a>。所有 Kconfig 选项保持不变，你仍然可以像以前一样使用它们，但如需修改，请在 menuconfig 或 guiconfig 中使用新的路径。</p></li>
+<li><p>如果启用了 Kconfig 选项 <a class="reference internal" href="../kconfig.html#CONFIG_NET_L2_OPENTHREAD" title="CONFIG_NET_L2_OPENTHREAD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_L2_OPENTHREAD</span></code></a>，Zephyr 的 L2 层将使用新的 OpenThread 模块 API 作为后端。L2 层不再自行实现 OpenThread，而是将实现委托给该模块。</p></li>
+<li><p>对于通过 Zephyr 网络协议栈使用 OpenThread 的现有应用程序：</p>
+<ul>
+<li><p>你的应用程序应当可以继续工作，因为旧 API 为保持兼容仍然可用。不过，建议迁移到新 API 并使用新的模块化结构，以适应未来的变化。</p></li>
+<li><p>在配置工具中，将所有对 OpenThread Kconfig 选项的引用更新为使用新路径（<code class="docutils literal notranslate"><span class="pre">modules/openthread/Kconfig</span></code>）。</p></li>
+</ul>
+</li>
+<li><p>对于使用 <code class="xref c c-struct docutils literal notranslate"><span class="pre">openthread_context</span></code> 或其他已弃用 API 的应用程序：</p>
+<ul>
+<li><p>开始迁移到新 API。已弃用的 API 将在未来的版本中移除。</p></li>
+<li><p>避免直接使用 <code class="xref c c-struct docutils literal notranslate"><span class="pre">openthread_context</span></code> 及其相关字段，请改用新的初始化和回调注册函数。</p></li>
+</ul>
+</li>
+<li><p>对于新应用程序，或不通过 Zephyr L2 使用 OpenThread 的应用程序：</p>
+<ul>
+<li><p>使用新的初始化（<code class="xref c c-func docutils literal notranslate"><span class="pre">openthread_init()</span></code>）、运行（<code class="xref c c-func docutils literal notranslate"><span class="pre">openthread_run()</span></code>）和回调注册 API（<code class="xref c c-func docutils literal notranslate"><span class="pre">openthread_state_change_callback_register()</span></code>）。</p></li>
+<li><p>如果你的用例允许，现在可以直接使用 OpenThread，而无需启用 Zephyr 的 L2 层或 IEEE802.15.4 层。</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="other-subsystems">
+<h2><a class="toc-backref" href="#id40" role="doc-backlink">其他子系统</a><a class="headerlink" href="#other-subsystems" title="链接到此标题。"></a></h2>
+<section id="modbus">
+<h3><a class="toc-backref" href="#id41" role="doc-backlink">Modbus</a><a class="headerlink" href="#modbus" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p><code class="xref c c-struct docutils literal notranslate"><span class="pre">modbus_serial_param</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">client_stop_bits</span></code> 字段已重命名为 <code class="docutils literal notranslate"><span class="pre">stop_bits</span></code>。该设置在客户端和服务器模式下均有效。</p></li>
+<li><p>自定义停止位设置默认处于禁用状态，应通过 <a class="reference internal" href="../kconfig.html#CONFIG_MODBUS_NONCOMPLIANT_SERIAL_MODE" title="CONFIG_MODBUS_NONCOMPLIANT_SERIAL_MODE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MODBUS_NONCOMPLIANT_SERIAL_MODE</span></code></a> 启用。</p></li>
+</ul>
+</section>
+<section id="state-machine-framework">
+<h3><a class="toc-backref" href="#id42" role="doc-backlink">状态机框架</a><a class="headerlink" href="#state-machine-framework" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">smf_set_handled()</span></code> 已被移除。</p></li>
+<li><p>状态运行动作现在返回 <code class="xref c c-enum docutils literal notranslate"><span class="pre">smf_state_result</span></code> 值而不是 void，返回码决定事件是传递给父状态的运行动作，还是已被处理。完全处理了事件的运行动作应返回 <code class="xref c c-enum docutils literal notranslate"><span class="pre">SMF_EVENT_HANDLED</span></code>，将处理传递给父状态的运行动作应返回 <code class="xref c c-enum docutils literal notranslate"><span class="pre">SMF_EVENT_PROPAGATE</span></code>。</p></li>
+<li><p>扁平状态机会忽略返回值；从技术上讲，返回 <code class="xref c c-enum docutils literal notranslate"><span class="pre">SMF_EVENT_HANDLED</span></code> 最为准确。</p></li>
+</ul>
+</section>
+<section id="hawkbit">
+<h3><a class="toc-backref" href="#id43" role="doc-backlink">hawkBit</a><a class="headerlink" href="#hawkbit" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p>启用 <a class="reference internal" href="../kconfig.html#CONFIG_HAWKBIT_CUSTOM_DEVICE_ID" title="CONFIG_HAWKBIT_CUSTOM_DEVICE_ID"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HAWKBIT_CUSTOM_DEVICE_ID</span></code></a> 时，device_id 前面将不再自动加上 <a class="reference internal" href="../kconfig.html#CONFIG_BOARD" title="CONFIG_BOARD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BOARD</span></code></a>。如有需要，用户应当自行编写回调，在前面加上开发板名称。</p></li>
+</ul>
+</section>
+</section>
+<section id="modules">
+<h2><a class="toc-backref" href="#id44" role="doc-backlink">模块</a><a class="headerlink" href="#modules" title="链接到此标题。"></a></h2>
+<section id="cmsis">
+<h3><a class="toc-backref" href="#id45" role="doc-backlink">CMSIS</a><a class="headerlink" href="#cmsis" title="链接到此标题。"></a></h3>
+<ul>
+<li><p>Cortex-M 开发板/SoC 现在需要 <code class="docutils literal notranslate"><span class="pre">CMSIS_6</span></code> 模块才能正确构建（取代原来的 CMSIS 5.9.0 模块 <code class="docutils literal notranslate"><span class="pre">cmsis</span></code>）。如果要构建 Cortex-M 开发板，请先执行 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">update</span></code>，确保在运行 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> 或其他命令之前 <code class="docutils literal notranslate"><span class="pre">CMSIS_6</span></code> 模块可用。</p>
+<p>通过本地副本或通过 <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZEPHYR_CMSIS_MODULE_DIR</span></code> 使用旧 <code class="docutils literal notranslate"><span class="pre">cmsis</span></code> 模块的开发板、SoC 或模块，需要迁移到 <code class="docutils literal notranslate"><span class="pre">CMSIS_6</span></code> 模块，该模块可通过 <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZEPHYR_CMSIS_6_MODULE_DIR</span></code> 配置访问。</p>
+<p>注意：对于 Cortex-A 和 Cortex-R 目标，Zephyr 将继续使用旧的 <code class="docutils literal notranslate"><span class="pre">cmsis</span></code> 模块。</p>
+</li>
+</ul>
+</section>
+</section>
+<section id="architectures">
+<h2><a class="toc-backref" href="#id46" role="doc-backlink">架构</a><a class="headerlink" href="#architectures" title="链接到此标题。"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../kconfig.html#CONFIG_SRAM_VECTOR_TABLE" title="CONFIG_SRAM_VECTOR_TABLE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SRAM_VECTOR_TABLE</span></code></a> 已从 <code class="docutils literal notranslate"><span class="pre">zephyr/Kconfig.zephyr</span></code> 移动到 <code class="docutils literal notranslate"><span class="pre">zephyr/arch/Kconfig</span></code>，并添加了对 <a class="reference internal" href="../kconfig.html#CONFIG_XIP" title="CONFIG_XIP"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_XIP</span></code></a>、<code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARCH_HAS_VECTOR_TABLE_RELOCATION</span></code> 和 <a class="reference internal" href="../kconfig.html#CONFIG_ROMSTART_RELOCATION_ROM" title="CONFIG_ROMSTART_RELOCATION_ROM"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ROMSTART_RELOCATION_ROM</span></code></a> 的依赖，以支持将向量表重定位到 RAM 中。</p></li>
+<li><p><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_DEBUG_INFO</span></code> 已重命名为 <a class="reference internal" href="../kconfig.html#CONFIG_X86_DEBUG_INFO" title="CONFIG_X86_DEBUG_INFO"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_X86_DEBUG_INFO</span></code></a>，以更好地反映其用途。该选项现在仅适用于 x86 架构。</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 5月 30, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,27 @@
+var group__reset__controller__stm32 =
+[
+    [ "stm32-common.h", "stm32-common_8h.html", null ],
+    [ "stm32c0_reset.h", "stm32c0__reset_8h.html", null ],
+    [ "stm32c5_reset.h", "stm32c5__reset_8h.html", null ],
+    [ "stm32f0_1_3_reset.h", "stm32f0__1__3__reset_8h.html", null ],
+    [ "stm32f2_4_7_reset.h", "stm32f2__4__7__reset_8h.html", null ],
+    [ "stm32g0_reset.h", "stm32g0__reset_8h.html", null ],
+    [ "stm32g4_l4_5_reset.h", "stm32g4__l4__5__reset_8h.html", null ],
+    [ "stm32h5_reset.h", "stm32h5__reset_8h.html", null ],
+    [ "stm32h7_reset.h", "stm32h7__reset_8h.html", null ],
+    [ "stm32h7rs_reset.h", "stm32h7rs__reset_8h.html", null ],
+    [ "stm32l0_reset.h", "stm32l0__reset_8h.html", null ],
+    [ "stm32l1_reset.h", "stm32l1__reset_8h.html", null ],
+    [ "stm32mp13_reset.h", "stm32mp13__reset_8h.html", null ],
+    [ "stm32mp1_reset.h", "stm32mp1__reset_8h.html", null ],
+    [ "stm32mp2_reset.h", "stm32mp2__reset_8h.html", null ],
+    [ "stm32n6_reset.h", "stm32n6__reset_8h.html", null ],
+    [ "stm32u0_reset.h", "stm32u0__reset_8h.html", null ],
+    [ "stm32u3_reset.h", "stm32u3__reset_8h.html", null ],
+    [ "stm32u5_reset.h", "stm32u5__reset_8h.html", null ],
+    [ "stm32wb0_reset.h", "stm32wb0__reset_8h.html", null ],
+    [ "stm32wb_l_reset.h", "stm32wb__l__reset_8h.html", null ],
+    [ "stm32wba_reset.h", "stm32wba__reset_8h.html", null ],
+    [ "stm32wl3_reset.h", "stm32wl3__reset_8h.html", null ],
+    [ "STM32_RESET", "group__reset__controller__stm32.html#ga6a12a4b8c042157a88ddf7da442c137c", null ]
+];

@@ -1,0 +1,581 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="在 Arm Ethos-U NPU 上使用经过优化的 TFLite 模型运行推理。" name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TensorFlow Lite for Microcontrollers on Arm(R) Ethos(TM)-U55, U65, and U85 NPUs &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/samples/modules/tflite-micro/tflm_ethosu/README.html" />
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../../search.html" />
+    <link rel="next" title="网络" href="../../../net/net.html" />
+    <link rel="prev" title="Magic Wand" href="../magic_wand/README.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html">
+            
+              <img src="../../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1 current"><a class="category-link reference internal" href="../../../index.html">Samples and Demos</a><ul class="current">
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../boards/96boards/index.html">96Boards</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../boards/96boards/argonkey/index.html">96Boards ArgonKey</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../drivers/adc/index.html">ADC</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../boards/adi/index.html">ADI</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../boards/amd/index.html">AMD</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../application_development/application_development.html">Application Development</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../arch/index.html">Architecture-dependent Samples</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../drivers/audio/index.html">Audio</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/authentication/authentication.html">Authentication</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../boards/bbc/index.html">BBC</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../boards/bbc/microbit/microbit.html">BBC micro:bit</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../basic/basic.html">Basic</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/bindesc/bindesc.html">Binary Descriptor</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../drivers/biometrics/index.html">Biometrics</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../bluetooth/bluetooth.html">Bluetooth</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../bluetooth/audio/index.html">Bluetooth Audio</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../boards/boards.html">Boards</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../drivers/buzzer/index.html">Buzzer</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../cpp/cpp.html">C++</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/portability/cmsis_rtos_v1/cmsis_rtos_v1.html">CMSIS RTOS v1</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/portability/cmsis_rtos_v2/cmsis_rtos_v2.html">CMSIS RTOS v2</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../cmsis_dsp/cmsis_dsp.html">CMSIS-DSP</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/cpu_freq/cpu_freq.html">CPU Freq</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../drivers/clock_monitor/index.html">Clock Monitor</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/console/console.html">Console</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../drivers/can/index.html">Controller Area Network (CAN)</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/canbus/canbus.html">Controller Area Network (CAN) Bus</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../drivers/counter/index.html">Counter</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../data_structures/data_structures.html">Data Structures</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/debug/index.html">Debug</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/display/display.html">Display</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../drivers/drivers.html">Drivers</a></li>
+<li class="toctree-l2 current"><a class="category-link reference internal" href="../../index.html">External modules</a><ul class="current">
+<li class="toctree-l3"><a class="category-link reference internal" href="../../lvgl/lvgl.html">LVGL</a></li>
+<li class="toctree-l3 current"><a class="category-link reference internal" href="../tflite-micro.html">TensorFlow Lite for Microcontrollers</a><ul class="current">
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../hello_world/README.html" title="使用 TensorFlow Lite for Microcontrollers 复现正弦波。">Hello World</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../magic_wand/README.html" title="Recognize gestures from an accelerometer using TensorFlow Lite for Microcontrollers and a 20KB neural network.">Magic Wand</a></li>
+<li class="toctree-l4 current"><a class="code-sample-link current reference internal" href="#" title="在 Arm Ethos-U NPU 上使用经过优化的 TFLite 模型运行推理。">TensorFlow Lite for Microcontrollers on Arm(R) Ethos(TM)-U55, U65, and U85 NPUs</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../cmsis_dsp/moving_average/README.html" title="使用 CMSIS-DSP 库计算信号的移动平均值。">CMSIS-DSP moving average</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../nanopb/README.html" title="使用 nanopb 模块序列化和反序列化结构化数据。">Nanopb</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/fs/fs.html">File Systems</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/input/input.html">Input</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/ipc/ipc.html">Inter-Processor Communication (IPC)</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../net/cloud/README.html">IoT Cloud</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../kernel/index.html">Kernel and Scheduler</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/kvss/kvss.html">Key-Value Storage Systems</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/llext/llext.html">Linkable Loadable Extensions (LLEXT)</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/lorawan/lorawan.html">LoRaWAN</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/logging/logging.html">Logging</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../net/mcp/mcp.html">MCP (Model Context Protocol)</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/pmci/mctp/mctp.html">MCTP</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/mgmt/mgmt.html">Management</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/modbus/modbus.html">Modbus</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../net/ethernet/README.html">Network Ethernet</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../net/net.html">Networking</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/pmci/index.html">PMCI</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/portability/posix/posix.html">POSIX API</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../psa/index.html">PSA</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/portability/portability.html">Portability</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/pm/index.html">Power Management</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/profiling/profiling.html">Profiling</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/rtio/rtio.html">Real Time I/O (RTIO)</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../regulator/index.html">Regulator</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/sensing/sensing.html">Sensing</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../sensor/sensor.html">Sensors</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/shell/shell.html">Shell</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../shields/shields.html">Shields</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/smf/smf.html">State Machine Framework</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/subsys.html">Subsystems</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../sysbuild/sysbuild.html">Sysbuild</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../tfm_integration/tfm_integration.html">TF-M Integration</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../userspace/index.html">Userspace</a></li>
+<li class="toctree-l2"><a class="code-sample-link reference internal" href="../../../synchronization/README.html" title="操作基本的内核同步原语。">Basic Synchronization</a></li>
+<li class="toctree-l2"><a class="code-sample-link reference internal" href="../../../philosophers/README.html" title="使用 Zephyr 内核服务实现哲学家就餐问题的解决方案。">Dining Philosophers</a></li>
+<li class="toctree-l2"><a class="code-sample-link reference internal" href="../../../hello_world/README.html" title="向控制台打印 &quot;Hello World&quot;。">Hello World</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../../index.html">示例与演示</a> &raquo;</li>
+  
+     <li><a href="../../index.html">外部模块</a> &raquo;</li>
+  
+     <li><a href="../tflite-micro.html">TensorFlow Lite for Microcontrollers</a> &raquo;</li>
+  
+  <li>TensorFlow Lite for Microcontrollers on Arm(R) Ethos(TM)-U55, U65, and U85 NPUs</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="tflite-ethosu">
+<h1>TensorFlow Lite for Microcontrollers on Arm(R) Ethos(TM)-U55, U65, and U85 NPUs<a class="headerlink" href="#tflite-ethosu" title="链接到此标题。"></a></h1>
+<p>
+                <a href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0//samples\modules\tflite-micro\tflm_ethosu\README.rst/.." class="btn btn-info fa fa-github"
+                    target="_blank" style="text-align: center;">
+                    Browse source code on GitHub
+                </a>
+                </p>
+<section id="overview">
+<h2>概述<a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>本示例应用程序演示如何使用 TFLM 框架和 Arm Ethos-U NPU 运行推理。</p>
+<p>本示例应用程序运行一个从 <a class="reference external" href="https://github.com/ARM-software/ML-zoo">Arm model zoo</a> 下载的模型。该模型随后使用 <a class="reference external" href="https://gitlab.arm.com/artificial-intelligence/ethos-u/ethos-u-vela">Vela 编译器</a> 进行了优化。</p>
+<p>Vela 以一个 tflite 文件为输入，输出另一个 tflite 文件，其中 Arm Ethos-U NPU 支持的算子已被替换为 Ethos-U 自定义算子。理想情况下，整个网络会被替换为单个 Ethos-U 自定义算子。</p>
+</section>
+<section id="generating-vela-compiled-model">
+<h2>生成经 Vela 编译的模型<a class="headerlink" href="#generating-vela-compiled-model" title="链接到此标题。"></a></h2>
+<p>按照以下步骤生成经 Vela 编译的模型以及测试输入/输出数据。本示例使用 <a class="reference external" href="https://github.com/Arm-Examples/ML-zoo/tree/master/models/keyword_spotting/cnn_small/model_package_tf/model_archive/TFLite/tflite_int8">keyword_spotting_cnn_small_int8</a> 模型：</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>默认的 Vela 编译模型面向 MPS3 目标上的 Arm Ethos-U55 NPU 和 128 MAC。由于一个模型可能多达数百 KB，请不要尝试为其他目标向代码库中添加更多模型。</p>
+</div>
+<ol class="arabic">
+<li><p>从 <a class="reference external" href="https://github.com/Arm-Examples/ML-zoo/tree/master/models/keyword_spotting/cnn_small/model_package_tf/model_archive/TFLite/tflite_int8">keyword_spotting_cnn_small_int8</a> 下载以下文件：</p>
+<ul class="simple">
+<li><p>cnn_s_quantized.tflite</p></li>
+<li><p>testing_input/input/0.npy</p></li>
+<li><p>testing_output/identity/0.npy</p></li>
+</ul>
+</li>
+<li><p>使用 Vela 针对 Arm Ethos-U NPU 优化模型</p>
+<p>假定目标为 Arm Ethos-U55 NPU 和 128 MAC：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>vela<span class="w"> </span>cnn_s_quantized.tflite<span class="w"> </span><span class="se">\</span>
+--output-dir<span class="w"> </span>.<span class="w"> </span><span class="se">\</span>
+--accelerator-config<span class="w"> </span>ethos-u55-128<span class="w"> </span><span class="se">\</span>
+--system-config<span class="w"> </span>Ethos_U55_High_End_Embedded<span class="w"> </span><span class="se">\</span>
+--memory-mode<span class="w"> </span>Shared_Sram
+</pre></div>
+</div>
+</li>
+<li><p>删除不需要的文件头</p>
+<p><code class="docutils literal notranslate"><span class="pre">testing_input/input/0.npy</span></code> 和 <code class="docutils literal notranslate"><span class="pre">testing_output/0.npy</span></code> 带有 128 字节的文件头。要与本示例集成，必须删除这些文件头。</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>dd<span class="w"> </span><span class="k">if</span><span class="o">=</span>testing_input/input/0.npy<span class="w"> </span><span class="nv">of</span><span class="o">=</span>testing_input/input/0_no-header.npy<span class="w"> </span><span class="nv">bs</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="nv">skip</span><span class="o">=</span><span class="m">128</span>
+<span class="gp">$ </span>dd<span class="w"> </span><span class="k">if</span><span class="o">=</span>testing_output/identity/0.npy<span class="w"> </span><span class="nv">of</span><span class="o">=</span>testing_output/identity/0_no-header.npy<span class="w"> </span><span class="nv">bs</span><span class="o">=</span><span class="m">1</span><span class="w"> </span><span class="nv">skip</span><span class="o">=</span><span class="m">128</span>
+</pre></div>
+</div>
+</li>
+<li><p>转换为 C 数组</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>xxd<span class="w"> </span>-c<span class="w"> </span><span class="m">16</span><span class="w"> </span>-i<span class="w"> </span>cnn_s_quantized.tflite<span class="w"> </span>cnn_s_quantized.tflite.h
+<span class="gp">$ </span>xxd<span class="w"> </span>-c<span class="w"> </span><span class="m">16</span><span class="w"> </span>-i<span class="w"> </span>cnn_s_quantized_vela.tflite<span class="w"> </span>cnn_s_quantized_vela.tflite.h
+<span class="gp">$ </span>xxd<span class="w"> </span>-c<span class="w"> </span><span class="m">16</span><span class="w"> </span>-i<span class="w"> </span>testing_input/input/0_no-header.npy<span class="w"> </span>testing_input/input/0_no-header.npy.h
+<span class="gp">$ </span>xxd<span class="w"> </span>-c<span class="w"> </span><span class="m">16</span><span class="w"> </span>-i<span class="w"> </span>testing_output/identity/0_no-header.npy<span class="w"> </span>testing_output/identity/0_no-header.npy.h
+</pre></div>
+</div>
+</li>
+<li><p>与本示例同步</p>
+<p>将以下文件同步到本示例的 <code class="docutils literal notranslate"><span class="pre">keyword_spotting_cnn_small_int8</span></code> 目录：</p>
+<ul class="simple">
+<li><p>cnn_s_quantized_vela.tflite.h &gt; model.h</p></li>
+<li><p>testing_input/input/0_no-header.npy.h &gt; input.h</p></li>
+<li><p>testing_output/identity/0_no-header.npy.h &gt; output.h</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>要运行未经 Vela 编译的模型（<code class="docutils literal notranslate"><span class="pre">CONFIG_TAINT_BLOBS_TFLM_ETHOSU=n</span></code>），请改为同步 <code class="docutils literal notranslate"><span class="pre">cnn_s_quantized.tflite.h</span></code>。</p>
+</div>
+</li>
+</ol>
+</section>
+<section id="building-and-running">
+<h2>构建与运行<a class="headerlink" href="#building-and-running" title="链接到此标题。"></a></h2>
+<p>将 tflite-micro 模块添加到 West 清单（manifest）中并拉取：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">west config manifest.project-filter -- +tflite-micro</span>
+<span class="go">west update</span>
+</pre></div>
+</div>
+<p>本应用程序可以在任何支持 Arm Ethos-U NPU 的平台上构建并运行，例如 Corstone(TM)-300 或 Corstone-320。</p>
+<section id="run-target-prerequisites">
+<h3>运行目标的前提条件<a class="headerlink" href="#run-target-prerequisites" title="链接到此标题。"></a></h3>
+<p>使用 CMake <code class="docutils literal notranslate"><span class="pre">run</span></code> 目标（<code class="docutils literal notranslate"><span class="pre">-t</span> <span class="pre">run</span></code>）时，请为你的平台设置 FVP 二进制文件路径；对于 Arm Ethos-U85 NPU，还需将 NPU 配置传给命令行：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># Arm Ethos-U55/U65 NPU (Corstone-300 FVP)</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">ARMFVP_BIN_PATH</span><span class="o">=</span>/path/to/FVP_Corstone_SSE-300_&lt;ver&gt;/models/Linux64_GCC-&lt;gcc&gt;/
+
+<span class="c1"># Arm Ethos-U85 (Corstone-320 FVP)</span>
+<span class="nb">export</span><span class="w"> </span><span class="nv">ARMFVP_BIN_PATH</span><span class="o">=</span>/path/to/FVP_Corstone_SSE-320_&lt;ver&gt;/models/Linux64_GCC-&lt;gcc&gt;/
+<span class="nb">export</span><span class="w"> </span><span class="nv">ARMFVP_EXTRA_FLAGS</span><span class="o">=</span><span class="s1">'-C;mps4_board.subsystem.ethosu.num_macs=2048'</span><span class="w">  </span><span class="c1"># match chosen ETHOS_U85_* Kconfig</span>
+</pre></div>
+</div>
+</section>
+<section id="build-and-run-on-the-fvp">
+<h3>在 FVP 上构建并运行<a class="headerlink" href="#build-and-run-on-the-fvp" title="链接到此标题。"></a></h3>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>mps3/corstone300/fvp<span class="w"> </span>samples/modules/tflite-micro/tflm_ethosu<span class="w"> </span>--<span class="w"> </span>-DCONFIG_SAMPLE_TFLM_ETHOSU_MEM_MODE_SHARED_SRAM<span class="o">=</span>y
+-DCONFIG_ETHOS_U55_128<span class="o">=</span>y
+west<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>run
+</pre></div>
+</div>
+</section>
+</section>
+<section id="vela-memory-modes-and-overlays">
+<h2>Vela 内存模式与覆盖文件<a class="headerlink" href="#vela-memory-modes-and-overlays" title="链接到此标题。"></a></h2>
+<p>Vela 支持多种 Arm Ethos NPU 内存放置模式。本示例在构建时通过 <code class="docutils literal notranslate"><span class="pre">CONFIG_SAMPLE_TFLM_ETHOSU_MEM_MODE_*</span></code> 复现这些模式：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CONFIG_SAMPLE_TFLM_ETHOSU_MEM_MODE_SHARED_SRAM</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CONFIG_SAMPLE_TFLM_ETHOSU_MEM_MODE_DEDICATED_SRAM</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CONFIG_SAMPLE_TFLM_ETHOSU_MEM_MODE_SRAM_ONLY</span></code></p></li>
+</ul>
+<p><strong>Board overlays</strong></p>
+<p>使用覆盖文件将 TensorFlow Lite 缓冲区放到相应的内存区域：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">boards/mps3_corstone300_fvp.sram_only.overlay</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">boards/mps4_corstone320_fvp.sram_only.overlay</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">boards/mps3_corstone300_fvp.dedicated_sram.overlay</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">boards/mps4_corstone320_fvp.dedicated_sram.overlay</span></code></p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">Dedicated_Sram</span></code> 还要求在覆盖文件中声明一个 <code class="docutils literal notranslate"><span class="pre">ETHOSU_FAST</span></code> 区域。</p>
+<p><strong>Example builds</strong></p>
+<p>Shared_Sram（默认）：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>mps3/corstone300/fvp<span class="w"> </span>samples/modules/tflite-micro/tflm_ethosu<span class="w"> </span>--<span class="w"> </span>-DCONFIG_SAMPLE_TFLM_ETHOSU_MEM_MODE_SHARED_SRAM<span class="o">=</span>y
+-DCONFIG_ETHOS_U55_128<span class="o">=</span>y
+west<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>run
+</pre></div>
+</div>
+<p>Sram_Only（Corstone-300 上的 Arm Ethos-U65 NPU）：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>mps3/corstone300/fvp<span class="w"> </span>samples/modules/tflite-micro/tflm_ethosu<span class="w"> </span>--<span class="w"> </span>-DCONFIG_SAMPLE_TFLM_ETHOSU_MEM_MODE_SRAM_ONLY<span class="o">=</span>y
+-DCONFIG_ETHOS_U65_256<span class="o">=</span>y
+-DDTC_OVERLAY_FILE<span class="o">=</span>boards/mps3_corstone300_fvp.sram_only.overlay
+west<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>run
+</pre></div>
+</div>
+<p>Dedicated_Sram（Corstone-320 上的 Arm Ethos-U85 NPU）：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>mps4/corstone320/fvp<span class="w"> </span>samples/modules/tflite-micro/tflm_ethosu<span class="w"> </span>--<span class="w"> </span>-DCONFIG_SAMPLE_TFLM_ETHOSU_MEM_MODE_DEDICATED_SRAM<span class="o">=</span>y
+-DCONFIG_ETHOS_U85_2048<span class="o">=</span>y
+-DDTC_OVERLAY_FILE<span class="o">=</span>boards/mps4_corstone320_fvp.dedicated_sram.overlay
+west<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>run
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<ul class="simple">
+<li><p>Arm Ethos-U55 NPU 不支持 <strong>Dedicated_Sram</strong>。</p></li>
+<li><p>确保模型的 Vela 模式与所选的构建模式一致。</p></li>
+</ul>
+</div>
+</section>
+<section id="memory-regions">
+<h2>内存区域<a class="headerlink" href="#memory-regions" title="链接到此标题。"></a></h2>
+<p>Arm Ethos-U NPU 命令流使用 <strong>区域索引</strong>（0-3）对内存区域寻址，这些索引对应 NPU 配置中的 <code class="docutils literal notranslate"><span class="pre">REGIONCFG</span></code> 值。Vela 在编译模型时分配这些索引，HAL 再根据 NPU 型号将每个索引映射到物理 AXI 接口或 MEM_ATTR 条目。</p>
+<p><strong>本示例使用的映射</strong> 由所选的 <code class="docutils literal notranslate"><span class="pre">CONFIG_SAMPLE_TFLM_ETHOSU_MEM_MODE_*</span></code> 选项定义。下表列出了本示例的 CMake 和 Kconfig 逻辑实现的区域索引分配：</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>模式</p></th>
+<th class="head"><p>权重（weights）</p></th>
+<th class="head"><p>暂存区（scratch）</p></th>
+<th class="head"><p>fast_scratch</p></th>
+<th class="head"><p>cmd_stream</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Shared_Sram</p></td>
+<td><p>3</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>3</p></td>
+</tr>
+<tr class="row-odd"><td><p>Dedicated_Sram</p></td>
+<td><p>3</p></td>
+<td><p>3</p></td>
+<td><p>0</p></td>
+<td><p>3</p></td>
+</tr>
+<tr class="row-even"><td><p>Sram_Only</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>0</p></td>
+</tr>
+</tbody>
+</table>
+<p>这些索引值在构建时通过 <code class="docutils literal notranslate"><span class="pre">zephyr_compile_definitions()</span></code> 以 <code class="docutils literal notranslate"><span class="pre">NPU_REGIONCFG_n</span></code> 和 <code class="docutils literal notranslate"><span class="pre">NPU_QCONFIG</span></code> 宏的形式应用，确保 HAL 和驱动使用一致的区域配置：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">NPU_REGIONCFG_0</span></code>：权重</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NPU_REGIONCFG_1</span></code>：暂存区</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NPU_REGIONCFG_2</span></code>：快速暂存区</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">NPU_QCONFIG</span></code>：命令流区域</p></li>
+</ul>
+<p>这些索引按如下方式映射到硬件接口：</p>
+<p><strong>Architectural mapping</strong></p>
+<ul class="simple">
+<li><p><strong>Arm Ethos-U55/U65 NPU：</strong> 区域 0-1 路由到 AXI0（片上 SRAM），2-3 路由到 AXI1（外部存储器）。该映射由架构固定。</p></li>
+<li><p><strong>Arm Ethos-U85 NPU：</strong> 区域 0-3 选择可编程的 <code class="docutils literal notranslate"><span class="pre">MEM_ATTR[0-3]</span></code> 条目。默认情况下，HAL 将 MEM_ATTR[0-1] 配置为映射到 SRAM，将 MEM_ATTR[2-3] 配置为映射到外部 DDR。如果系统使用自定义的内存拓扑，可以覆盖这些默认值。</p></li>
+</ul>
+<p>使用 <strong>Dedicated_Sram</strong> 时，请确保设备树覆盖文件中存在 <code class="docutils literal notranslate"><span class="pre">ETHOSU_FAST</span></code> 节点，为 NPU 的 fast_scratch 区域提供有效的内存区域。</p>
+</section>
+<section id="configuring-pmu-events-via-cmake">
+<h2>通过 CMake 配置 PMU 事件<a class="headerlink" href="#configuring-pmu-events-via-cmake" title="链接到此标题。"></a></h2>
+<p>如果启用了 <code class="docutils literal notranslate"><span class="pre">CONFIG_SAMPLE_TFLM_ETHOSU_PMU</span></code>，示例会报告每次推理的 PMU 计数器。可以通过设置 <code class="docutils literal notranslate"><span class="pre">ETHOSU_PMU_EVENT_0..3</span></code>（如果支持，还有 4-7）覆盖要计数的事件。</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>mps3/corstone300/fvp<span class="w"> </span>samples/modules/tflite-micro/tflm_ethosu<span class="w"> </span>--<span class="w"> </span>-DCONFIG_SAMPLE_TFLM_ETHOSU_MEM_MODE_SHARED_SRAM<span class="o">=</span>y
+-DCONFIG_SAMPLE_TFLM_ETHOSU_PMU<span class="o">=</span>y
+-DETHOSU_PMU_EVENT_0<span class="o">=</span>ETHOSU_PMU_AXI0_RD_DATA_BEAT_RECEIVED
+-DETHOSU_PMU_EVENT_1<span class="o">=</span>ETHOSU_PMU_AXI1_RD_DATA_BEAT_RECEIVED
+west<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>run
+</pre></div>
+</div>
+</section>
+<section id="pmu-report-format">
+<h2>PMU 报告格式<a class="headerlink" href="#pmu-report-format" title="链接到此标题。"></a></h2>
+<p>启用后，示例会在每次推理后打印一份简短的 PMU 报告：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Ethos-U PMU report:
+ethosu_pmu_cycle_cntr : 134869
+ethosu_pmu_cntr0 : 133577
+ethosu_pmu_cntr1 : 0
+ethosu_pmu_cntr2 : 111744
+ethosu_pmu_cntr3 : 0
+# (if supported, counters 4..7 are also printed.)
+</pre></div>
+</div>
+</section>
+<section id="timing-adapters-ta">
+<h2>时序适配器（TA）<a class="headerlink" href="#timing-adapters-ta" title="链接到此标题。"></a></h2>
+<p>时序适配器（Timing Adapter）可以在受支持的平台（FVP 或 FPGA）上模拟内存带宽和延迟限制。使用 <code class="docutils literal notranslate"><span class="pre">-DDTC_OVERLAY_FILE=...</span></code> 显式应用 TA 覆盖文件。TA 覆盖文件可以与任意 Vela 内存模式组合使用，以研究时序的影响。</p>
+<p>完整的 TA 文档请参阅 <a class="reference external" href="https://gitlab.arm.com/artificial-intelligence/ethos-u/ml-embedded-evaluation-kit/-/blob/main/docs/sections/timing_adapters.md">Evaluation Kit 文档</a>。</p>
+<section id="ta-overlay-with-sram-only-corstone-320">
+<h3>TA 覆盖文件搭配 Sram_Only（Corstone-320）<a class="headerlink" href="#ta-overlay-with-sram-only-corstone-320" title="链接到此标题。"></a></h3>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>mps4/corstone320/fvp<span class="w"> </span>samples/modules/tflite-micro/tflm_ethosu<span class="w"> </span>--<span class="w"> </span>-DCONFIG_SAMPLE_TFLM_ETHOSU_MEM_MODE_SRAM_ONLY<span class="o">=</span>y
+-DCONFIG_ETHOS_U85_2048<span class="o">=</span>y
+-DDTC_OVERLAY_FILE<span class="o">=</span><span class="s2">"boards/mps4_corstone320_fvp.ta.overlay;boards/mps4_corstone320_fvp.sram_only.overlay"</span>
+west<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>run
+</pre></div>
+</div>
+</section>
+<section id="ta-overlay-only-corstone-300">
+<h3>仅使用 TA 覆盖文件（Corstone-300）<a class="headerlink" href="#ta-overlay-only-corstone-300" title="链接到此标题。"></a></h3>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>mps3/corstone300/fvp<span class="w"> </span>samples/modules/tflite-micro/tflm_ethosu<span class="w"> </span>--<span class="w"> </span>-DCONFIG_SAMPLE_TFLM_ETHOSU_MEM_MODE_SHARED_SRAM<span class="o">=</span>y
+-DCONFIG_ETHOS_U55_128<span class="o">=</span>y
+-DDTC_OVERLAY_FILE<span class="o">=</span>boards/mps3_corstone300_fvp.ta.overlay
+west<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>run
+</pre></div>
+</div>
+</section>
+</section>
+<section id="trademarks">
+<h2>商标<a class="headerlink" href="#trademarks" title="链接到此标题。"></a></h2>
+<p>Arm、Ethos 和 Corstone 是 Arm Limited（或其子公司或关联公司）在美国和/或其他地区的注册商标或商标。</p>
+<p>TensorFlow、TensorFlow 徽标及任何相关标志是 Google Inc. 的商标。</p>
+</section>
+</section>
+<script type="application/ld+json">
+                {"@context": "http://schema.org", "@type": "SoftwareSourceCode", "name": "TensorFlow Lite for Microcontrollers on Arm(R) Ethos(TM)-U55, U65, and U85 NPUs", "description": "\u5728 Arm Ethos-U NPU \u4e0a\u4f7f\u7528\u7ecf\u8fc7\u4f18\u5316\u7684 TFLite \u6a21\u578b\u8fd0\u884c\u63a8\u7406\u3002", "codeSampleType": "full", "codeRepository": "https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0//samples\\modules\\tflite-micro\\tflm_ethosu\\README.rst"}
+                </script>
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 3月 10, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

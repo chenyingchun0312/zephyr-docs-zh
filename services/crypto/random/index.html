@@ -1,0 +1,446 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>随机数生成 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/crypto/random/index.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" />
+    <link rel="next" title="密码学 API" href="../api/index.html" />
+    <link rel="prev" title="PSA Crypto" href="../psa_crypto.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">服务</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../connectivity/index.html">连接</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../power_management.html">电源管理</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../security.html">安全</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">密码学</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../psa_crypto.html">PSA Crypto</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">随机数生成</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#overview">概述</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#api-usage">API 用法</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#non-cryptographic-random-numbers">非密码学随机数</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#cryptographically-secure-random-numbers">密码学安全的随机数</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#kconfig-options">Kconfig 选项</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#general-options">通用选项</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#non-cryptographic-random-generator-selection">非密码学随机数生成器的选择</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#cryptographically-secure-random-generator-selection">密码学安全随机数生成器的选择</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#devicetree-configuration">设备树配置</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#api-reference">API 参考</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../api/index.html">密码学 API</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../authentication/index.html">身份认证</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../jwt/index.html">JSON Web 令牌（JWT）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tfm/index.html">Trusted Firmware-M (TF-M)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../uuid/index.html">UUID</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../../security.html">安全</a> &raquo;</li>
+  
+     <li><a href="../index.html">密码学</a> &raquo;</li>
+  
+  <li>随机数生成</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="random-number-generation">
+<span id="random-api"></span><h1>随机数生成<a class="headerlink" href="#random-number-generation" title="链接到此标题。"></a></h1>
+<section id="overview">
+<h2>概述<a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>随机数 API 子系统同时提供密码学安全和非密码学安全的随机数生成 API。使用哪种随机数 API 取决于对随机数的密码学要求。非密码学 API 返回随机值的速度快得多，因此只要不需要密码学安全的随机值，就应优先使用它们。</p>
+<ul class="simple">
+<li><p>对于非密码学用途，例如随机化延迟、打乱数据或一般的随机化，请使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">sys_rand_get()</span></code> 及相关函数。这些函数速度更快，但不适合安全应用。</p></li>
+<li><p>对于密码学用途，例如生成加密密钥、nonce、初始化向量，或任何必须让攻击者无法预测的数据，请使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">sys_csrand_get()</span></code>。</p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>切勿将非密码学随机数函数（<code class="xref c c-func docutils literal notranslate"><span class="pre">sys_rand_get()</span></code>、<code class="xref c c-func docutils literal notranslate"><span class="pre">sys_rand8_get()</span></code>、<code class="xref c c-func docutils literal notranslate"><span class="pre">sys_rand16_get()</span></code>、<code class="xref c c-func docutils literal notranslate"><span class="pre">sys_rand32_get()</span></code>、<code class="xref c c-func docutils literal notranslate"><span class="pre">sys_rand64_get()</span></code>）用于安全敏感的操作。这些函数不提供密码学安全的随机数。</p>
+</div>
+<p>随机数 API 声明在 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/random/random.h">include/zephyr/random/random.h</a> 中。<code class="xref c c-func docutils literal notranslate"><span class="pre">sys_rand_get()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">sys_csrand_get()</span></code> 是系统调用，启用 <a class="reference internal" href="../../../kconfig.html#CONFIG_USERSPACE" title="CONFIG_USERSPACE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USERSPACE</span></code></a> 后可从用户模式线程调用。</p>
+</section>
+<section id="api-usage">
+<h2>API 用法<a class="headerlink" href="#api-usage" title="链接到此标题。"></a></h2>
+<section id="non-cryptographic-random-numbers">
+<h3>非密码学随机数<a class="headerlink" href="#non-cryptographic-random-numbers" title="链接到此标题。"></a></h3>
+<p>以下函数提供非密码学安全的随机数：</p>
+<ul class="simple">
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">sys_rand_get()</span></code> - 用随机字节填充缓冲区</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">sys_rand8_get()</span></code> - 获取一个 8 位随机值</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">sys_rand16_get()</span></code> - 获取一个 16 位随机值</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">sys_rand32_get()</span></code> - 获取一个 32 位随机值</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">sys_rand64_get()</span></code> - 获取一个 64 位随机值</p></li>
+</ul>
+<p>用法示例：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/random/random.h&gt;</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">example_random_usage</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">buffer</span><span class="p">[</span><span class="mi">16</span><span class="p">];</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">random_value</span><span class="p">;</span>
+
+<span class="w">    </span><span class="cm">/* Fill buffer with random bytes */</span>
+<span class="w">    </span><span class="n">sys_rand_get</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">buffer</span><span class="p">));</span>
+
+<span class="w">    </span><span class="cm">/* Get a single random 32-bit value */</span>
+<span class="w">    </span><span class="n">random_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sys_rand32_get</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="cryptographically-secure-random-numbers">
+<h3>密码学安全的随机数<a class="headerlink" href="#cryptographically-secure-random-numbers" title="链接到此标题。"></a></h3>
+<p>对于密码学用途，请使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">sys_csrand_get()</span></code>：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/random/random.h&gt;</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">generate_encryption_key</span><span class="p">(</span><span class="kt">uint8_t</span><span class="w"> </span><span class="o">*</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">key_len</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sys_csrand_get</span><span class="p">(</span><span class="n">key</span><span class="p">,</span><span class="w"> </span><span class="n">key_len</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ret</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="cm">/* Handle error - entropy source may have failed */</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p><code class="xref c c-func docutils literal notranslate"><span class="pre">sys_csrand_get()</span></code> 成功时返回 0，熵源出错时返回 <code class="docutils literal notranslate"><span class="pre">-EIO</span></code>。生成密码学材料时务必检查返回值。</p>
+</div>
+</section>
+</section>
+<section id="kconfig-options">
+<span id="random-kconfig"></span><h2>Kconfig 选项<a class="headerlink" href="#kconfig-options" title="链接到此标题。"></a></h2>
+<p>所有配置选项都位于 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/subsys/random/Kconfig">subsys/random/Kconfig</a> 中。</p>
+<section id="general-options">
+<h3>通用选项<a class="headerlink" href="#general-options" title="链接到此标题。"></a></h3>
+<dl>
+<dt><a class="reference internal" href="../../../kconfig.html#CONFIG_TEST_RANDOM_GENERATOR" title="CONFIG_TEST_RANDOM_GENERATOR"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TEST_RANDOM_GENERATOR</span></code></a></dt><dd><p>用于测试。此选项允许使用非随机的数字生成器，并允许随机数 API 返回并非真正随机的值。它应由测试、示例等应用程序级配置选择，切勿用于生产环境。</p>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>此选项仅用于在缺少硬件熵支持的平台上进行测试。启用此选项时生成的随机数是可预测的，不适合任何安全敏感的用途。</p>
+</div>
+</dd>
+</dl>
+</section>
+<section id="non-cryptographic-random-generator-selection">
+<h3>非密码学随机数生成器的选择<a class="headerlink" href="#non-cryptographic-random-generator-selection" title="链接到此标题。"></a></h3>
+<p>Kconfig choice <code class="docutils literal notranslate"><span class="pre">RNG_GENERATOR_CHOICE</span></code> 选择 <code class="xref c c-func docutils literal notranslate"><span class="pre">sys_rand_get()</span></code> 背后所用的生成器。要在开发板或 SoC 配置文件中覆盖默认值：</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span><span class="k">choice</span><span class="w"> </span>RNG_GENERATOR_CHOICE
+<span class="w">        </span><span class="k">default</span><span class="w"> </span>XOSHIRO_RANDOM_GENERATOR
+<span class="k">endchoice</span>
+</pre></div>
+</div>
+<p>可用的生成器：</p>
+<dl>
+<dt><a class="reference internal" href="../../../kconfig.html#CONFIG_ENTROPY_DEVICE_RANDOM_GENERATOR" title="CONFIG_ENTROPY_DEVICE_RANDOM_GENERATOR"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ENTROPY_DEVICE_RANDOM_GENERATOR</span></code></a></dt><dd><p>直接使用硬件熵驱动生成随机数。它提供高质量的随机数，但可能比伪随机方案慢。当硬件熵源的性能足以满足应用程序的需求时，请选择此选项。</p>
+</dd>
+<dt><a class="reference internal" href="../../../kconfig.html#CONFIG_XOSHIRO_RANDOM_GENERATOR" title="CONFIG_XOSHIRO_RANDOM_GENERATOR"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_XOSHIRO_RANDOM_GENERATOR</span></code></a></dt><dd><p>使用 Xoshiro128++ 伪随机数生成器，其种子来自硬件熵源。这是一种快速的通用 PRNG，具有 128 位状态，可通过所有标准随机性测试。</p>
+<p>对于大多数需要快速非密码学随机数的应用程序，推荐选择此项。</p>
+</dd>
+<dt><a class="reference internal" href="../../../kconfig.html#CONFIG_ARM64_RANDOM_GENERATOR" title="CONFIG_ARM64_RANDOM_GENERATOR"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARM64_RANDOM_GENERATOR</span></code></a></dt><dd><p>在支持的平台上，使用 ARM64 <code class="docutils literal notranslate"><span class="pre">FEAT_RNG</span></code> 扩展中的 <code class="docutils literal notranslate"><span class="pre">RNDR</span></code> 指令。指令失败时的重试行为可通过 <a class="reference internal" href="../../../kconfig.html#CONFIG_ARM64_RANDOM_GENERATOR_MAX_RETRIES" title="CONFIG_ARM64_RANDOM_GENERATOR_MAX_RETRIES"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARM64_RANDOM_GENERATOR_MAX_RETRIES</span></code></a> 和 <a class="reference internal" href="../../../kconfig.html#CONFIG_ARM64_RANDOM_GENERATOR_RETRY_WAIT_USEC" title="CONFIG_ARM64_RANDOM_GENERATOR_RETRY_WAIT_USEC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARM64_RANDOM_GENERATOR_RETRY_WAIT_USEC</span></code></a> 调整。</p>
+</dd>
+<dt><a class="reference internal" href="../../../kconfig.html#CONFIG_TIMER_RANDOM_GENERATOR" title="CONFIG_TIMER_RANDOM_GENERATOR"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TIMER_RANDOM_GENERATOR</span></code></a></dt><dd><p>使用系统定时器生成伪随机数。该生成器产生的值是可预测的，<strong>仅用于</strong> 在没有硬件熵支持的平台上 <strong>进行测试</strong>。其初始状态可通过 <a class="reference internal" href="../../../kconfig.html#CONFIG_TIMER_RANDOM_INITIAL_STATE" title="CONFIG_TIMER_RANDOM_INITIAL_STATE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TIMER_RANDOM_INITIAL_STATE</span></code></a> 设置。</p>
+<p>需要启用 <a class="reference internal" href="../../../kconfig.html#CONFIG_TEST_RANDOM_GENERATOR" title="CONFIG_TEST_RANDOM_GENERATOR"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TEST_RANDOM_GENERATOR</span></code></a>。</p>
+</dd>
+</dl>
+</section>
+<section id="cryptographically-secure-random-generator-selection">
+<h3>密码学安全随机数生成器的选择<a class="headerlink" href="#cryptographically-secure-random-generator-selection" title="链接到此标题。"></a></h3>
+<p>Kconfig choice <code class="docutils literal notranslate"><span class="pre">CSPRNG_GENERATOR_CHOICE</span></code> 选择密码学安全随机数生成所用的来源。</p>
+<p>要在开发板或 SoC 配置文件中覆盖默认值：</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span><span class="k">choice</span><span class="w"> </span>CSPRNG_GENERATOR_CHOICE
+<span class="w">        </span><span class="k">default</span><span class="w"> </span>PSA_CSPRNG_GENERATOR
+<span class="k">endchoice</span>
+</pre></div>
+</div>
+<p>可用的生成器：</p>
+<dl>
+<dt><a class="reference internal" href="../../../kconfig.html#CONFIG_HARDWARE_DEVICE_CS_GENERATOR" title="CONFIG_HARDWARE_DEVICE_CS_GENERATOR"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HARDWARE_DEVICE_CS_GENERATOR</span></code></a></dt><dd><p>直接使用硬件熵驱动作为密码学安全随机数的来源。当硬件随机数生成器已通过密码学用途的认证或验证时，请选择此项。</p>
+</dd>
+<dt><a class="reference internal" href="../../../kconfig.html#CONFIG_PSA_CSPRNG_GENERATOR" title="CONFIG_PSA_CSPRNG_GENERATOR"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PSA_CSPRNG_GENERATOR</span></code></a></dt><dd><p>使用 PSA Crypto API 的安全随机数生成功能，在可用时它可能会进一步使用硬件熵源。它需要 <a class="reference internal" href="../../../kconfig.html#CONFIG_PSA_CRYPTO" title="CONFIG_PSA_CRYPTO"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PSA_CRYPTO</span></code></a>，即构建中必须包含 Mbed TLS 或 TF-M 等 PSA Crypto 提供者。</p>
+</dd>
+<dt><a class="reference internal" href="../../../kconfig.html#CONFIG_TEST_CSPRNG_GENERATOR" title="CONFIG_TEST_CSPRNG_GENERATOR"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TEST_CSPRNG_GENERATOR</span></code></a></dt><dd><p>将对 <code class="xref c c-func docutils literal notranslate"><span class="pre">sys_csrand_get()</span></code> 的调用转交给 <code class="xref c c-func docutils literal notranslate"><span class="pre">sys_rand_get()</span></code>。这样就可以在没有硬件熵支持的平台上测试需要 CSPRNG 的库。</p>
+<p>需要启用 <a class="reference internal" href="../../../kconfig.html#CONFIG_TEST_RANDOM_GENERATOR" title="CONFIG_TEST_RANDOM_GENERATOR"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TEST_RANDOM_GENERATOR</span></code></a>。</p>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>此选项 <strong>不提供任何密码学安全性</strong>。仅用于测试。</p>
+</div>
+</dd>
+</dl>
+<p>如果应用程序只在平台确实能够提供时才需要密码学安全的随机数，可以启用 <a class="reference internal" href="../../../kconfig.html#CONFIG_CSPRNG_NEEDED" title="CONFIG_CSPRNG_NEEDED"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CSPRNG_NEEDED</span></code></a>，然后检查 <a class="reference internal" href="../../../kconfig.html#CONFIG_CSPRNG_ENABLED" title="CONFIG_CSPRNG_ENABLED"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CSPRNG_ENABLED</span></code></a>；只有构建中包含适合生成密码学安全随机数的熵驱动时，后者才会被设置。</p>
+</section>
+</section>
+<section id="devicetree-configuration">
+<h2>设备树配置<a class="headerlink" href="#devicetree-configuration" title="链接到此标题。"></a></h2>
+<p>随机数子系统使用 <code class="docutils literal notranslate"><span class="pre">zephyr,entropy</span></code> chosen 节点来确定硬件熵设备：</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">/</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nf">chosen</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">zephyr</span><span class="p">,</span><span class="n">entropy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rng</span><span class="p">;</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>如果平台带有硬件随机数生成器，请确保开发板的设备树正确指定了该 chosen 节点。熵驱动 API 请参见 <a class="reference internal" href="../../../hardware/peripherals/entropy.html#entropy-api"><span class="std std-ref">熵</span></a>。如果平台没有熵驱动，则只能使用测试生成器，且需要启用 <a class="reference internal" href="../../../kconfig.html#CONFIG_TEST_RANDOM_GENERATOR" title="CONFIG_TEST_RANDOM_GENERATOR"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TEST_RANDOM_GENERATOR</span></code></a>。</p>
+</section>
+<section id="api-reference">
+<h2>API 参考<a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">random_api</span></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/cloud/aws_iot_mqtt/README.html#aws-iot-mqtt" title="连接 AWS IoT Core 并使用 MQTT 发布消息。">AWS IoT Core MQTT</a></span><span class="code-sample-description">连接 AWS IoT Core 并使用 MQTT 发布消息。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/cloud/mqtt_azure/README.html#mqtt-azure" title="连接 Azure IoT Hub 并使用 MQTT 发布消息。">Microsoft Azure IoT Hub MQTT</a></span><span class="code-sample-description">连接 Azure IoT Hub 并使用 MQTT 发布消息。</span></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 10月 27, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

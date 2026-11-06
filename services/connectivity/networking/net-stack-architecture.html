@@ -1,0 +1,378 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>网络协议栈架构 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/connectivity/networking/net-stack-architecture.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" />
+    <link rel="next" title="网络数据包处理统计" href="net_pkt_processing_stats.html" />
+    <link rel="prev" title="概述" href="overview.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">服务</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">连接</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">网络</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="overview.html">概述</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">网络协议栈架构</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="net_pkt_processing_stats.html">网络数据包处理统计</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#high-level-overview-of-the-network-stack">网络协议栈的高层概览</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#network-data-flow">网络数据流</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#data-receiving-rx">数据接收（RX）</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#data-sending-tx">数据发送（TX）</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#network-packet-processing-statistics">网络数据包处理统计</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="net_config_guide.html">网络配置指南</a></li>
+<li class="toctree-l4"><a class="reference internal" href="networking_with_host.html">与主机系统联网</a></li>
+<li class="toctree-l4"><a class="reference internal" href="network_monitoring.html">监视网络流量</a></li>
+<li class="toctree-l4"><a class="reference internal" href="network_tracing.html">网络跟踪</a></li>
+<li class="toctree-l4"><a class="reference internal" href="conformance/index.html">使用 TTCN-3 进行协议一致性测试</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/index.html">网络 API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="conn_mgr/index.html">连接管理器</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dsa.html">分布式交换架构（DSA）</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../bluetooth/index.html">Bluetooth</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../usb/index.html">USB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../canbus/index.html">控制器局域网（CAN）总线协议</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lora_lorawan/index.html">LoRa 和 LoRaWAN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modbus/index.html">Modbus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modem/index.html">调制解调器模块</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../index.html">连接</a> &raquo;</li>
+  
+     <li><a href="index.html">网络</a> &raquo;</li>
+  
+  <li>网络协议栈架构</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="network-stack-architecture">
+<span id="id1"></span><h1>网络协议栈架构<a class="headerlink" href="#network-stack-architecture" title="链接到此标题。"></a></h1>
+<div class="toctree-wrapper compound">
+</div>
+<p>Zephyr 网络协议栈是专为 Zephyr OS 设计的原生网络协议栈。它由多个层组成，每一层都为其他层提供特定的服务。网络协议栈的功能可以通过 Kconfig 选项进行高度配置。</p>
+<nav class="contents local" id="id2">
+<ul class="simple">
+<li><p><a class="reference internal" href="#high-level-overview-of-the-network-stack" id="id6">网络协议栈的高层概览</a></p></li>
+<li><p><a class="reference internal" href="#network-data-flow" id="id7">网络数据流</a></p>
+<ul>
+<li><p><a class="reference internal" href="#data-receiving-rx" id="id8">数据接收（RX）</a></p></li>
+<li><p><a class="reference internal" href="#data-sending-tx" id="id9">数据发送（TX）</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#network-packet-processing-statistics" id="id10">网络数据包处理统计</a></p></li>
+</ul>
+</nav>
+<section id="high-level-overview-of-the-network-stack">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">网络协议栈的高层概览</a><a class="headerlink" href="#high-level-overview-of-the-network-stack" title="链接到此标题。"></a></h2>
+<figure class="align-center align-default" id="id3">
+<img alt="网络协议栈架构概览" src="../../../_images/zephyr_netstack_overview.svg" />
+<figcaption>
+<p><span class="caption-text">网络协议栈概览</span><a class="headerlink" href="#id3" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<p>网络协议栈是分层的，由以下部分组成：</p>
+<ul>
+<li><p><strong>网络应用程序。</strong> 网络应用程序可以使用提供的应用层协议库，也可以直接访问 <a class="reference internal" href="api/sockets.html#bsd-sockets-interface"><span class="std std-ref">BSD 套接字 API</span></a>，以建立网络连接、发送或接收数据以及关闭连接。应用程序还可以使用 <a class="reference internal" href="api/net_mgmt.html#net-mgmt-interface"><span class="std std-ref">网络管理 API</span></a> 配置网络并设置相关参数，例如网络链路选项、启动扫描（如适用）、监听网络配置事件等。<a class="reference internal" href="api/net_if.html#net-if-interface"><span class="std std-ref">网络接口 API</span></a> 可用于为网络接口设置 IP 地址、关闭网络接口等。</p></li>
+<li><p><strong>网络协议。</strong> 这部分提供各种协议的实现，例如</p>
+<ul class="simple">
+<li><p>应用层网络协议，如 CoAP、LwM2M 和 MQTT。相关信息参见 <a class="reference internal" href="api/protocols.html#net-protocols"><span class="std std-ref">应用协议章节</span></a>。</p></li>
+<li><p>核心网络协议，如 IPv6、IPv4、UDP、TCP、ICMPv4 和 ICMPv6。可以通过 <a class="reference internal" href="api/sockets.html#bsd-sockets-interface"><span class="std std-ref">BSD 套接字 API</span></a> 使用这些协议。</p></li>
+</ul>
+</li>
+<li><p><strong>网络接口抽象。</strong> 这部分提供所有网络接口共有的功能，例如关闭网络接口等。系统中可以有多个网络接口。详情参见 <a class="reference internal" href="api/net_if.html#net-if-interface"><span class="std std-ref">网络接口概述</span></a>。</p></li>
+<li><p><strong>L2 网络技术。</strong> 这部分提供一套通用 API，用于向实际的网络设备发送数据和从中接收数据。详情参见 <a class="reference internal" href="api/net_l2.html#net-l2-interface"><span class="std std-ref">L2 概述</span></a>。</p>
+<p>这些网络技术包括 <a class="reference internal" href="api/ethernet.html#ethernet-interface"><span class="std std-ref">以太网</span></a>、<a class="reference internal" href="api/ieee802154.html#ieee802154-interface"><span class="std std-ref">IEEE 802.15.4</span></a>、<a class="reference internal" href="../bluetooth/api/index.html#bluetooth-api"><span class="std std-ref">Bluetooth</span></a>、<a class="reference internal" href="../../../hardware/peripherals/can/controller.html#can-api"><span class="std std-ref">CANBUS</span></a> 等。</p>
+<p>其中部分技术支持 IPv6 报头压缩（6Lo），详情参见 <span class="target" id="index-4"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc6282.html"><strong>RFC 6282</strong></a>。又如，IPv4 的 ARP（<span class="target" id="index-5"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc826.html"><strong>RFC 826</strong></a>）由 <a class="reference internal" href="api/ethernet.html#ethernet-interface"><span class="std std-ref">以太网组件</span></a> 处理。</p>
+</li>
+<li><p><strong>网络设备驱动。</strong> 实际的底层设备驱动负责网络数据包的物理发送和接收。</p></li>
+</ul>
+</section>
+<section id="network-data-flow">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">网络数据流</a><a class="headerlink" href="#network-data-flow" title="链接到此标题。"></a></h2>
+<p>应用程序通常由一个或多个执行应用逻辑的 <a class="reference internal" href="../../../kernel/services/threads/index.html#threads-v2"><span class="std std-ref">线程</span></a> 组成。使用 <a class="reference internal" href="api/sockets.html#bsd-sockets-interface"><span class="std std-ref">BSD 套接字 API</span></a> 时，会发生以下过程。</p>
+<figure class="align-center align-default" id="id4">
+<img alt="网络 RX 数据流" src="../../../_images/zephyr_netstack_overview-rx_sequence.svg" />
+<figcaption>
+<p><span class="caption-text">网络 RX 数据流</span><a class="headerlink" href="#id4" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<section id="data-receiving-rx">
+<h3><a class="toc-backref" href="#id8" role="doc-backlink">数据接收（RX）</a><a class="headerlink" href="#data-receiving-rx" title="链接到此标题。"></a></h3>
+<ol class="arabic simple">
+<li><p>设备驱动接收到一个网络数据包。</p></li>
+<li><p>设备驱动分配足够的网络缓冲区来存储接收到的数据。网络数据包被放入相应的 RX 队列（由 <a class="reference internal" href="../../../kernel/services/data_passing/fifos.html#fifos-v2"><span class="std std-ref">k_fifo</span></a> 实现）。默认情况下系统中只有一个接收队列，但最多可以有 8 个接收队列。这些队列以不同的优先级处理传入的数据包，详情参见 <a class="reference internal" href="api/traffic-class.html#traffic-class-support"><span class="std std-ref">流量分类</span></a>。由于设备驱动运行在中断上下文中，必须尽快完成处理，接收队列也起到了分离数据处理流水线（下半部）的作用。</p></li>
+<li><p>随后网络数据包被传递给相应的 L2 驱动。L2 驱动可以检查数据包是否正确，并在需要时修改数据包，例如剥离 L2 报头和帧校验序列等。</p></li>
+<li><p>数据包由网络接口处理。如果启用了 <a class="reference internal" href="../../../kconfig.html#CONFIG_NET_STATISTICS" title="CONFIG_NET_STATISTICS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_STATISTICS</span></code></a>，会收集网络统计信息。</p></li>
+<li><p>然后数据包被传递给 L3 处理。如果数据包基于 IP，L3 层会检查它是否为正确的 IPv6 或 IPv4 数据包。</p></li>
+<li><p>接着，套接字处理程序找到该网络数据包所属的活动套接字，并将其放入该套接字的队列，从而将网络代码与应用程序分离。通常应用程序运行在用户空间上下文中，而网络协议栈运行在内核上下文中。</p></li>
+<li><p>然后应用程序接收数据，并按需处理。应用程序应已使用 <a class="reference internal" href="api/sockets.html#bsd-sockets-interface"><span class="std std-ref">BSD 套接字 API</span></a> 创建了用于接收数据的套接字。</p></li>
+</ol>
+<figure class="align-center align-default" id="id5">
+<img alt="网络 TX 数据流" src="../../../_images/zephyr_netstack_overview-tx_sequence.svg" />
+<figcaption>
+<p><span class="caption-text">网络 TX 数据流</span><a class="headerlink" href="#id5" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="data-sending-tx">
+<h3><a class="toc-backref" href="#id9" role="doc-backlink">数据发送（TX）</a><a class="headerlink" href="#data-sending-tx" title="链接到此标题。"></a></h3>
+<ol class="arabic simple">
+<li><p>应用程序发送数据时应使用 <a class="reference internal" href="api/sockets.html#bsd-sockets-interface"><span class="std std-ref">BSD 套接字 API</span></a>。</p></li>
+<li><p>应用程序数据被准备好发送到内核空间，然后复制到内部的 net_buf 结构中。</p></li>
+<li><p>根据套接字类型，在数据前面添加协议报头。例如，如果套接字是 UDP 套接字，则构造一个 UDP 报头并放在数据前面。</p></li>
+<li><p>对于 UDP 或 TCP 数据包，会向网络数据包添加 IP 报头。</p></li>
+<li><p>网络协议栈会检查网络数据包的网络接口是否已正确设置，并在数据排队等待发送之前确保该网络接口已启用。</p></li>
+<li><p>然后网络数据包被分类并放入相应的发送队列（由 <a class="reference internal" href="../../../kernel/services/data_passing/fifos.html#fifos-v2"><span class="std std-ref">k_fifo</span></a> 实现）。默认情况下系统中只有一个发送队列，但最多可以有 8 个发送队列。这些队列以不同的优先级处理要发送的数据包，详情参见 <a class="reference internal" href="api/traffic-class.html#traffic-class-support"><span class="std std-ref">流量分类</span></a>。发送数据包分类完成后，由相应的 L2 层模块检查数据包。L2 模块会对数据做额外检查，并为网络数据包创建所需的 L2 报头。如果一切正常，数据会交给网络设备驱动发送出去。</p></li>
+<li><p>设备驱动将数据包发送到网络。</p></li>
+</ol>
+<p>注意，在 TX 和 RX 数据路径中，队列（<a class="reference internal" href="../../../kernel/services/data_passing/fifos.html#fifos-v2"><span class="std std-ref">k_fifo</span></a>）构成了分离点，数据在这些点上从一个 <a class="reference internal" href="../../../kernel/services/threads/index.html#threads-v2"><span class="std std-ref">线程</span></a> 传递到另一个线程。这些 <a class="reference internal" href="../../../kernel/services/threads/index.html#threads-v2"><span class="std std-ref">线程</span></a> 可能运行在不同的上下文中（<a class="reference internal" href="../../../kernel/services/index.html#kernel-api"><span class="std std-ref">内核</span></a> 与 <a class="reference internal" href="../../../kernel/usermode/index.html#usermode-api"><span class="std std-ref">用户空间</span></a>），并具有不同的 <a class="reference internal" href="../../../kernel/services/scheduling/index.html#scheduling-v2"><span class="std std-ref">优先级</span></a>。</p>
+</section>
+</section>
+<section id="network-packet-processing-statistics">
+<h2><a class="toc-backref" href="#id10" role="doc-backlink">网络数据包处理统计</a><a class="headerlink" href="#network-packet-processing-statistics" title="链接到此标题。"></a></h2>
+<p>关于网络处理统计信息，请参见 <a class="reference internal" href="net_pkt_processing_stats.html#net-pkt-processing-stats"><span class="std std-ref">此处</span></a>。</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 8月 14, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

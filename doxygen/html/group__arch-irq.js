@@ -1,0 +1,28 @@
+var group__arch_irq =
+[
+    [ "ARCH_EXCEPT", "group__arch-irq.html#ga8d3604770d7735d229e7d2fef4ff590a", null ],
+    [ "ARCH_IRQ_CONNECT", "group__arch-irq.html#gab3ab80b9bcef30a3109d6c7cecf941f6", null ],
+    [ "ARCH_IRQ_DIRECT_CONNECT", "group__arch-irq.html#ga875f2b1ca924721fe3854796bd96c2db", null ],
+    [ "ARCH_ISR_DIRECT_DECLARE", "group__arch-irq.html#ga5279598e93dd914614a2ae52557be1a5", null ],
+    [ "ARCH_ISR_DIRECT_FOOTER", "group__arch-irq.html#gaa7c471213fa28b3685f153ea2a72cf9d", null ],
+    [ "ARCH_ISR_DIRECT_HEADER", "group__arch-irq.html#ga6c6d57983c066fe8ab21a78f86f7adb3", null ],
+    [ "ARCH_ISR_DIRECT_PM", "group__arch-irq.html#ga491cb79acec18c83b9a61b0b45dfab69", null ],
+    [ "ARCH_PCIE_IRQ_CONNECT", "group__arch-irq.html#gaf6abdfe089e423aa209f7ad4b8934022", null ],
+    [ "arch_cpu_irqs_are_enabled", "group__arch-irq.html#gab7c91d90ed8ccfce15c8bd040496f9ac", null ],
+    [ "arch_irq_allocate", "group__arch-irq.html#gaac8f60e7dfc5ce3222372798e96316ae", null ],
+    [ "arch_irq_clear_pending", "group__arch-irq.html#ga6f5e4f7795c23586b13c5f6eaecac54d", null ],
+    [ "arch_irq_connect_dynamic", "group__arch-irq.html#gaa4d733913e12a12e104dc4781cca7308", null ],
+    [ "arch_irq_disable", "group__arch-irq.html#ga216d692e87bfba955a60f8e570e127df", null ],
+    [ "arch_irq_disconnect_dynamic", "group__arch-irq.html#ga41483a9fc1090d96d066e107a74ee38c", null ],
+    [ "arch_irq_enable", "group__arch-irq.html#gaa278d630653b33cb339621d725ed295a", null ],
+    [ "arch_irq_get_active", "group__arch-irq.html#gae2a76360ce4ddcd461c06602ef16ba32", null ],
+    [ "arch_irq_is_enabled", "group__arch-irq.html#ga3bd8e963a124421bb372dab4bdc6cd83", null ],
+    [ "arch_irq_is_pending", "group__arch-irq.html#gaa45f7cc9823e3a3b5f760ffc02323516", null ],
+    [ "arch_irq_is_used", "group__arch-irq.html#ga5c85d7bf54a83190ed27587dc5a01de5", null ],
+    [ "arch_irq_lock", "group__arch-irq.html#ga25bca3069cb999b6d4f924b87bf7de38", null ],
+    [ "arch_irq_set_pending", "group__arch-irq.html#gaad2c939389164d483a472d4f6d201ce0", null ],
+    [ "arch_irq_set_used", "group__arch-irq.html#ga5f0942bd035c50c9d2d91ada472f37c4", null ],
+    [ "arch_irq_unlock", "group__arch-irq.html#gaa2b2745d8e99b8730b44805f4d3bbf05", null ],
+    [ "arch_irq_unlocked", "group__arch-irq.html#ga1b827afafc622d412962f568b78726dc", null ],
+    [ "arch_is_in_isr", "group__arch-irq.html#ga1dda03646da3989f08a3bad1b258c691", null ]
+];

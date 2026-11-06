@@ -1,0 +1,380 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>数字麦克风（DMIC） &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/hardware/peripherals/audio/dmic.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" />
+    <link rel="next" title="Inter-IC Sound（I2S）总线" href="i2s.html" />
+    <link rel="prev" title="音频编解码器" href="codec.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">硬件支持</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../arch/index.html">架构相关指南</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../barriers/index.html">屏障 API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cache/index.html">缓存</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../emulator/index.html">Zephyr 的设备仿真器/模拟器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../emulator/bus_emulators.html">外部总线及总线所连外设的仿真器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../firmware/index.html">固件</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">外设</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../analog.html">模拟</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">音频</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="codec.html">音频编解码器</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">数字麦克风（DMIC）</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#overview">概述</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#key-concepts">关键概念</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#typical-application-flow">典型的应用程序流程</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#buffering">缓冲</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#shell-commands">Shell 命令</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#configuration-options">配置选项</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#api-reference">API 参考</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="i2s.html">Inter-IC Sound（I2S）总线</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dai.html">数字音频接口（DAI）</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../communication.html">通信</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../display.html">显示</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gpio_input.html">GPIO 与输入</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../memory_storage.html">存储器与存储</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../power.html">电源</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sensors.html">传感器</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../motion_actuation.html">运动与执行</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_diagnostics.html">系统与诊断</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../timing.html">定时</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../pinctrl/index.html">引脚控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../porting/index.html">移植</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../virtualization/index.html">虚拟化</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">硬件支持</a> &raquo;</li>
+  
+     <li><a href="../index.html">外设</a> &raquo;</li>
+  
+     <li><a href="index.html">音频</a> &raquo;</li>
+  
+  <li>数字麦克风（DMIC）</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="digital-microphone-dmic">
+<span id="audio-dmic-api"></span><h1>数字麦克风（DMIC）<a class="headerlink" href="#digital-microphone-dmic" title="链接到此标题。"></a></h1>
+<section id="overview">
+<h2>概述<a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>音频 DMIC 接口用于访问数字麦克风。</p>
+<p>数字麦克风通常输出 PDM（脉冲密度调制，Pulse Density Modulation）比特流，而不是模拟音频。PDM 使用 1 位的高速率信号，以一段时间内 1 和 0 的密度来表示音频幅度。</p>
+<p>由于应用程序通常使用的是 PCM（脉冲编码调制，Pulse Code Modulation）采样而不是原始 PDM 数据，DMIC 控制器会把麦克风数据流转换为 PCM 音频。这一转换包括滤波和抽取：滤波去除被整形到 PDM 数据流中的高频噪声，抽取则把比特流速率降低到所需的 PCM 采样率。</p>
+<p>从 Zephyr 的角度看，DMIC 设备是一种音频采集外设。应用程序配置麦克风和控制器，启动采集，然后从驱动读取 PCM 缓冲区。</p>
+</section>
+<section id="key-concepts">
+<h2>关键概念<a class="headerlink" href="#key-concepts" title="链接到此标题。"></a></h2>
+<p>DMIC API 把配置分为三部分，与采集路径一一对应：</p>
+<ol class="arabic simple">
+<li><p>在 PDM 侧如何驱动麦克风；</p></li>
+<li><p>如何排列输入的 PDM 通道；</p></li>
+<li><p>如何把转换后的 PCM 采样交付给应用程序。</p></li>
+</ol>
+<p>这三部分组合在 <code class="xref c c-struct docutils literal notranslate"><span class="pre">dmic_cfg</span></code> 中，并传递给 <code class="xref c c-func docutils literal notranslate"><span class="pre">dmic_configure()</span></code>。</p>
+<dl class="simple">
+<dt><strong>PDM I/O 配置</strong>（<code class="xref c c-member docutils literal notranslate"><span class="pre">dmic_cfg.io</span></code>）</dt><dd><p>描述麦克风接口的电气和时序要求，例如支持的 PDM 时钟频率范围、占空比，以及控制器特定的信号极性设置。</p>
+</dd>
+<dt><strong>通道配置</strong>（<code class="xref c c-member docutils literal notranslate"><span class="pre">dmic_cfg.channel</span></code>）</dt><dd><p>告诉驱动在 PCM 输出中，每个逻辑音频通道对应哪个物理 PDM 控制器以及左或右麦克风通路。它还声明了应用程序要使用的通道数和数据流数。</p>
+</dd>
+<dt><strong>PCM 数据流配置</strong>（<code class="xref c c-member docutils literal notranslate"><span class="pre">dmic_cfg.streams</span></code>）</dt><dd><p>定义驱动交付的 PCM 数据，包括采样率、采样位宽、块大小，以及为每个已启用数据流分配接收缓冲区所用的 <code class="xref c c-struct docutils literal notranslate"><span class="pre">k_mem_slab</span></code>。</p>
+</dd>
+</dl>
+<section id="typical-application-flow">
+<h3>典型的应用程序流程<a class="headerlink" href="#typical-application-flow" title="链接到此标题。"></a></h3>
+<p>DMIC API 的典型用法如下：</p>
+<ol class="arabic simple">
+<li><p>获取 DMIC 设备，通常从设备树获取。</p></li>
+<li><p>在 <code class="xref c c-struct docutils literal notranslate"><span class="pre">dmic_cfg</span></code> 结构体中填入 I/O、通道和数据流设置。关于如何定义 DMIC 用来存放接收到的 PCM 数据的内存缓冲区，详见下文 <a class="reference internal" href="#dmic-buffering"><span class="std std-ref">缓冲</span></a> 一节。</p></li>
+<li><p>调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">dmic_configure()</span></code>，传入该配置结构体。</p></li>
+<li><p>使用 <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">DMIC_TRIGGER_START</span></code> 调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">dmic_trigger()</span></code> 启动采集。</p></li>
+<li><p>使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">dmic_read()</span></code> 获取 PCM 数据。</p></li>
+<li><p>根据需要使用其他触发命令停止、暂停或复位采集。</p></li>
+</ol>
+</section>
+<section id="buffering">
+<span id="dmic-buffering"></span><h3>缓冲<a class="headerlink" href="#buffering" title="链接到此标题。"></a></h3>
+<p>接收到的 PCM 数据通过驱动所拥有的缓冲区返回。应用程序通过每个已配置 PCM 数据流所引用的 <code class="xref c c-struct docutils literal notranslate"><span class="pre">k_mem_slab</span></code> 提供底层内存。</p>
+<p>常见做法是静态声明该内存块（slab）：</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">为 PCM 接收缓冲区静态声明内存块（slab）</span><a class="headerlink" href="#id1" title="链接到此段代码"></a></div>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="w"> </span><span class="n">K_MEM_SLAB_DEFINE_STATIC</span><span class="p">(</span><span class="n">mem_slab</span><span class="p">,</span>
+<span class="w">                          </span><span class="n">SAMPLES_PER_BUFFER</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">int16_t</span><span class="p">),</span>
+<span class="w">                          </span><span class="n">BUFFER_COUNT</span><span class="p">,</span>
+<span class="w">                          </span><span class="k">sizeof</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="p">));</span>
+</pre></div>
+</div>
+</div>
+<p>在此示例中，每个 slab 块存放一个 PCM 缓冲区，<code class="docutils literal notranslate"><span class="pre">BUFFER_COUNT</span></code> 设置在应用程序使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">dmic_read()</span></code> 读取之前，内部最多可排队多少个缓冲区。</p>
+</section>
+</section>
+<section id="shell-commands">
+<h2>Shell 命令<a class="headerlink" href="#shell-commands" title="链接到此标题。"></a></h2>
+<p>启用 <a class="reference internal" href="../../../kconfig.html#CONFIG_AUDIO_DMIC_SHELL" title="CONFIG_AUDIO_DMIC_SHELL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_AUDIO_DMIC_SHELL</span></code></a> 后，可以使用一组 <code class="docutils literal notranslate"><span class="pre">dmic</span></code> 命令。借助这些命令，无需编写专门的应用程序即可交互式地从 DMIC 设备采集音频。</p>
+<p>每个子命令的第一个参数是 DMIC 设备名称，其后可选地跟随音频采集参数（采样率、通道数和 PCM 采样位宽）。</p>
+<p>可用的子命令如下：</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">dmic</span> <span class="pre">read</span> <span class="pre">&lt;device&gt;</span> <span class="pre">[&lt;count&gt;</span> <span class="pre">[&lt;rate_hz&gt;</span> <span class="pre">[&lt;channels&gt;</span> <span class="pre">[&lt;pcm_width&gt;]]]]</span></code></dt><dd><p>采集 <code class="docutils literal notranslate"><span class="pre">count</span></code> 个音频块，并打印每个通道的峰值电平。<code class="docutils literal notranslate"><span class="pre">count</span></code> 默认为 5；每个块为 50 ms 的音频。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">dmic</span> <span class="pre">vu</span> <span class="pre">&lt;device&gt;</span> <span class="pre">[&lt;rate_hz&gt;</span> <span class="pre">[&lt;channels&gt;</span> <span class="pre">[&lt;pcm_width&gt;]]]</span></code></dt><dd><p>显示实时的彩色电平表，带峰值保持和削波指示，每个通道一个条形。按任意键前持续运行。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">dmic</span> <span class="pre">dump</span> <span class="pre">&lt;device&gt;</span> <span class="pre">[&lt;seconds&gt;</span> <span class="pre">[&lt;rate_hz&gt;</span> <span class="pre">[&lt;channels&gt;</span> <span class="pre">[&lt;pcm_width&gt;]]]]</span></code></dt><dd><p>采集 <code class="docutils literal notranslate"><span class="pre">seconds</span></code> 秒的音频，并以 base64 编码的原始 PCM 形式打印出来，同时给出在主机上解码和回放所需的命令。默认时长为 2 秒。</p>
+</dd>
+</dl>
+<p>内置帮助（例如 <code class="docutils literal notranslate"><span class="pre">dmic</span> <span class="pre">read</span> <span class="pre">--help</span></code>）会列出各参数及其默认值。</p>
+</section>
+<section id="configuration-options">
+<h2>配置选项<a class="headerlink" href="#configuration-options" title="链接到此标题。"></a></h2>
+<p>相关配置选项：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_AUDIO_DMIC" title="CONFIG_AUDIO_DMIC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_AUDIO_DMIC</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_AUDIO_DMIC_SHELL" title="CONFIG_AUDIO_DMIC_SHELL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_AUDIO_DMIC_SHELL</span></code></a></p></li>
+</ul>
+</section>
+<section id="api-reference">
+<h2>API 参考<a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">audio_dmic_interface</span></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/drivers/audio/dmic/README.html#dmic" title="使用不同配置执行 PDM 传输。">Digital Microphone (DMIC)</a></span><span class="code-sample-description">使用不同配置执行 PDM 传输。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/shields/x_nucleo_iks02a1/microphone/README.html#x-nucleo-iks02a1-mic" title="使用 X-NUCLEO-IKS02A1 扩展板上的数字 MEMS 麦克风采集音频。">X-NUCLEO-IKS02A1 shield - MEMS microphone</a></span><span class="code-sample-description">使用 X-NUCLEO-IKS02A1 扩展板上的数字 MEMS 麦克风采集音频。</span></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 6月 11, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,1099 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>设备树绑定语法 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/build/dts/bindings-syntax.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="上游绑定的规则" href="bindings-upstream.html" />
+    <link rel="prev" title="设备树绑定简介" href="bindings-intro.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">构建与配置系统</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../cmake/index.html">构建系统（CMake）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cmake-ref/index.html">CMake 参考</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">设备树</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="index.html#devicetree-guide">设备树指南</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="intro.html">设备树简介</a></li>
+<li class="toctree-l4"><a class="reference internal" href="design.html">设计目标</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="bindings.html">设备树绑定</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="bindings-intro.html">设备树绑定简介</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">设备树绑定语法</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#top-level-keys">顶层键</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#title">标题</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#description">描述</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#compatible">Compatible</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#properties">属性</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#child-binding">子绑定（child-binding）</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#bus">总线（bus）</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#on-bus">所在总线（on-bus）</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#class">类（class）</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#examples">示例</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#specifier-cell-names-cells">说明符单元名称（*-cells）</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#include">Include</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#nexus-nodes-and-maps">Nexus 节点和映射</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="bindings-upstream.html">上游绑定的规则</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="api-usage.html">从 C/C++ 访问设备树</a></li>
+<li class="toctree-l4"><a class="reference internal" href="phandles.html">phandle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="zephyr-user-node.html"><code class="docutils literal notranslate"><span class="pre">/zephyr,user</span></code> 节点</a></li>
+<li class="toctree-l4"><a class="reference internal" href="howtos.html">设备树 HOWTO</a></li>
+<li class="toctree-l4"><a class="reference internal" href="troubleshooting.html">设备树故障排除</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dt-vs-kconfig.html">设备树与 Kconfig 的对比</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#devicetree-reference">设备树参考</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../kconfig/index.html">配置系统（Kconfig）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../snippets/index.html">代码片段（snippet）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../zephyr_cmake_package.html">Zephyr CMake 包</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sysbuild/index.html">Sysbuild（系统构建）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../version/index.html">应用程序版本管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../flashing/index.html">烧录</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../signing/index.html">对二进制文件签名</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">构建与配置系统</a> &raquo;</li>
+  
+     <li><a href="index.html">设备树</a> &raquo;</li>
+  
+     <li><a href="bindings.html">设备树绑定</a> &raquo;</li>
+  
+  <li>设备树绑定语法</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="devicetree-bindings-syntax">
+<span id="dt-bindings-file-syntax"></span><h1>设备树绑定语法<a class="headerlink" href="#devicetree-bindings-syntax" title="链接到此标题。"></a></h1>
+<p>本页介绍 Zephyr 绑定格式的语法。Zephyr 绑定文件是 YAML 文件。简介页面中给出了一个 <a class="reference internal" href="bindings-intro.html#dt-bindings-simple-example"><span class="std std-ref">简单示例</span></a>。</p>
+<nav class="contents local" id="contents">
+<p class="topic-title">目录</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#top-level-keys" id="id1">顶层键</a></p></li>
+<li><p><a class="reference internal" href="#title" id="id2">标题</a></p></li>
+<li><p><a class="reference internal" href="#description" id="id3">描述</a></p></li>
+<li><p><a class="reference internal" href="#compatible" id="id4">Compatible</a></p></li>
+<li><p><a class="reference internal" href="#properties" id="id5">属性</a></p>
+<ul>
+<li><p><a class="reference internal" href="#property-entry-syntax" id="id6">属性条目语法</a></p></li>
+<li><p><a class="reference internal" href="#example-property-definitions" id="id7">属性定义示例</a></p></li>
+<li><p><a class="reference internal" href="#required" id="id8">required</a></p></li>
+<li><p><a class="reference internal" href="#type" id="id9">type</a></p></li>
+<li><p><a class="reference internal" href="#deprecated" id="id10">deprecated</a></p></li>
+<li><p><a class="reference internal" href="#default" id="id11">default</a></p></li>
+<li><p><a class="reference internal" href="#enum" id="id12">enum</a></p></li>
+<li><p><a class="reference internal" href="#min-and-max" id="id13">min 和 max</a></p></li>
+<li><p><a class="reference internal" href="#min-len-and-max-len" id="id14">min-len 和 max-len</a></p></li>
+<li><p><a class="reference internal" href="#const" id="id15">const</a></p></li>
+<li><p><a class="reference internal" href="#specifier-space" id="id16">specifier-space</a></p></li>
+<li><p><a class="reference internal" href="#dependency-mode" id="id17">dependency-mode</a></p>
+<ul>
+<li><p><a class="reference internal" href="#possible-values" id="id18">可选值</a></p></li>
+<li><p><a class="reference internal" href="#using-dependency-mode" id="id19">使用 dependency-mode</a></p></li>
+<li><p><a class="reference internal" href="#default-behavior" id="id20">默认行为</a></p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#child-binding" id="id21">子绑定（child-binding）</a></p></li>
+<li><p><a class="reference internal" href="#bus" id="id22">总线（bus）</a></p></li>
+<li><p><a class="reference internal" href="#on-bus" id="id23">所在总线（on-bus）</a></p></li>
+<li><p><a class="reference internal" href="#class" id="id24">类（class）</a></p></li>
+<li><p><a class="reference internal" href="#examples" id="id25">示例</a></p></li>
+<li><p><a class="reference internal" href="#specifier-cell-names-cells" id="id26">说明符单元名称（*-cells）</a></p></li>
+<li><p><a class="reference internal" href="#include" id="id27">Include</a></p></li>
+<li><p><a class="reference internal" href="#nexus-nodes-and-maps" id="id28">Nexus 节点和映射</a></p></li>
+</ul>
+</nav>
+<section id="top-level-keys">
+<h2><a class="toc-backref" href="#id1" role="doc-backlink">顶层键</a><a class="headerlink" href="#top-level-keys" title="链接到此标题。"></a></h2>
+<p>绑定文件的顶层将键映射到值。顶层键如下所示：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># When the description text is too long, this field can</span>
+<span class="c1"># be used to improve readability, e.g.:</span>
+<span class="c1">#</span>
+<span class="c1"># title: Binding the device's hardware model.</span>
+<span class="c1">#</span>
+<span class="c1"># description |</span>
+<span class="c1">#   A piece of content with 20 lines.</span>
+<span class="c1">#   ...</span>
+<span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Concise title for the long description [optional]</span>
+
+<span class="c1"># A high level description of the device the binding applies to:</span>
+<span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">   </span><span class="no">This is the Vendomatic company's foo-device.</span>
+
+<span class="w">   </span><span class="no">Descriptions which span multiple lines (like this) are OK,</span>
+<span class="w">   </span><span class="no">and are encouraged for complex bindings.</span>
+
+<span class="w">   </span><span class="no">See https://yaml-multiline.info/ for formatting help.</span>
+
+<span class="c1"># You can include definitions from other bindings using this syntax:</span>
+<span class="nt">include</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">other.yaml</span>
+
+<span class="c1"># Used to match nodes to this binding:</span>
+<span class="nt">compatible</span><span class="p">:</span><span class="w"> </span><span class="s">"manufacturer,foo-device"</span>
+
+<span class="nt">properties</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># Requirements for and descriptions of the properties that this</span>
+<span class="w">  </span><span class="c1"># binding's nodes need to satisfy go here.</span>
+
+<span class="nt">child-binding</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># You can constrain the children of the nodes matching this binding</span>
+<span class="w">  </span><span class="c1"># using this key.</span>
+
+<span class="c1"># If the node describes bus hardware, like an SPI bus controller</span>
+<span class="c1"># on an SoC, use 'bus:' to say which one, like this:</span>
+<span class="nt">bus</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">spi</span>
+
+<span class="c1"># If the node instead appears as a device on a bus, like an external</span>
+<span class="c1"># SPI memory chip, use 'on-bus:' to say what type of bus, like this.</span>
+<span class="c1"># Like 'compatible', this key also influences the way nodes match</span>
+<span class="c1"># bindings.</span>
+<span class="nt">on-bus</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">spi</span>
+
+<span class="nt">examples</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># You can put a sample node here showing how to use the binding.</span>
+<span class="w">  </span><span class="c1"># - |</span>
+<span class="w">  </span><span class="c1">#  ...</span>
+<span class="w">  </span><span class="c1"># or</span>
+<span class="w">  </span><span class="c1"># - ...</span>
+
+<span class="nt">foo-cells</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># "Specifier" cell names for the 'foo' domain go here; example 'foo'</span>
+<span class="w">  </span><span class="c1"># values are 'gpio', 'pwm', and 'dma'. See below for more information.</span>
+</pre></div>
+</div>
+<p>以下各节将解释这些键。</p>
+</section>
+<section id="title">
+<span id="dt-bindings-title"></span><h2><a class="toc-backref" href="#id2" role="doc-backlink">标题</a><a class="headerlink" href="#title" title="链接到此标题。"></a></h2>
+<p>被绑定设备的简短描述，<em>可选</em>，通常是硬件型号。其格式通常应为“厂商 系列 型号”。如果使用了缩写，应在括号中写出全称。命名应尽可能与厂商数据手册保持一致。</p>
+<p>标题不应超过 100 个字符，较长的描述应使用 description 字段。标题中不应使用“binding”“schema”或“driver”等词，因为所有内容都是绑定。</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">title</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Acme Foo UART (Universal Asynchronous Receiver/Transmitter)</span>
+</pre></div>
+</div>
+</section>
+<section id="description">
+<span id="dt-bindings-description"></span><h2><a class="toc-backref" href="#id3" role="doc-backlink">描述</a><a class="headerlink" href="#description" title="链接到此标题。"></a></h2>
+<p>此处填写节点硬件的自由格式描述，也可以放置数据手册的链接，或示例节点或属性。</p>
+</section>
+<section id="compatible">
+<span id="dt-bindings-compatible"></span><h2><a class="toc-backref" href="#id4" role="doc-backlink">Compatible</a><a class="headerlink" href="#compatible" title="链接到此标题。"></a></h2>
+<p>此键用于按照 <a class="reference internal" href="bindings-intro.html#dt-binding-compat"><span class="std std-ref">设备树绑定简介</span></a> 中所述的方式将节点与该绑定匹配。在绑定文件中应形如：</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="c1"># Note the comma-separated vendor prefix and device name</span>
+<span class="nt">compatible</span><span class="p">:</span><span class="w"> </span><span class="s">"manufacturer,device"</span>
+</pre></div>
+</div>
+<p>下面的设备树节点会与上述绑定匹配：</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">device</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">     </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"manufacturer,device"</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>假设没有任何绑定带有 <code class="docutils literal notranslate"><span class="pre">compatible:</span> <span class="pre">&quot;manufacturer,device-v2&quot;</span></code>，那么下面的节点也会与之匹配：</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">device-2</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"manufacturer,device-v2"</span><span class="p">,</span><span class="w"> </span><span class="s">"manufacturer,device"</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>节点 <code class="docutils literal notranslate"><span class="pre">compatible</span></code> 属性中的各个值会依次尝试。<a class="reference internal" href="bindings-intro.html#dt-binding-compat"><span class="std std-ref">绑定</span></a> 由（<a class="reference internal" href="#dt-bindings-compatible"><span class="std std-ref">compatible</span></a>，<a class="reference internal" href="#dt-bindings-on-bus"><span class="std std-ref">on-bus</span></a>）二元组唯一标识，其中 <a class="reference internal" href="#dt-bindings-on-bus"><span class="std std-ref">on-bus</span></a> 可以不指定。指定了 <a class="reference internal" href="#dt-bindings-on-bus"><span class="std std-ref">on-bus</span></a> 的绑定优先于未指定的绑定。使用第一个匹配的绑定。</p>
+<p>对于下面的设备：</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">spi-bus</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nf">device-3</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"manufacturer,device"</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>以下两个绑定可以共存，并按如下顺序匹配：</p>
+<p><code class="docutils literal notranslate"><span class="pre">manufacturer,device-spi.yaml</span></code></p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">compatible</span><span class="p">:</span><span class="w"> </span><span class="s">"manufacturer,device"</span>
+<span class="nt">on-bus</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">spi</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">manufacturer,device.yaml</span></code></p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">compatible</span><span class="p">:</span><span class="w"> </span><span class="s">"manufacturer,device"</span>
+</pre></div>
+</div>
+<p>下面的绑定可以共存，但不会匹配。</p>
+<p><code class="docutils literal notranslate"><span class="pre">manufacturer,device-i2c.yaml</span></code></p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">compatible</span><span class="p">:</span><span class="w"> </span><span class="s">"manufacturer,device"</span>
+<span class="nt">on-bus</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">i2c</span>
+</pre></div>
+</div>
+<p>如果为某个 compatible 找到多个匹配的绑定，则会报错。</p>
+<p><code class="docutils literal notranslate"><span class="pre">manufacturer</span></code> 前缀标识设备厂商。可接受的厂商前缀列表请参见 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/dts/bindings/vendor-prefixes.txt">dts/bindings/vendor-prefixes.txt</a>。<code class="docutils literal notranslate"><span class="pre">device</span></code> 部分通常取自数据手册。</p>
+<p>有些绑定适用于没有特定厂商的一类通用设备，这种情况下没有厂商前缀。例如 <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">gpio-leds</span></code> compatible，它通常用于描述连接到 GPIO 的开发板 LED。</p>
+</section>
+<section id="properties">
+<span id="dt-bindings-properties"></span><h2><a class="toc-backref" href="#id5" role="doc-backlink">属性</a><a class="headerlink" href="#properties" title="链接到此标题。"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">properties:</span></code> 键描述与该绑定匹配的节点所包含的属性。例如，UART 外设的绑定可能类似下面这样：</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">compatible</span><span class="p">:</span><span class="w"> </span><span class="s">"manufacturer,serial"</span>
+
+<span class="nt">properties</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">reg</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">array</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">UART peripheral MMIO register space</span>
+<span class="w">    </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">current-speed</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">current baud rate</span>
+<span class="w">    </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</pre></div>
+</div>
+<p>在本例中，compatible 为 <code class="docutils literal notranslate"><span class="pre">&quot;manufacturer,serial&quot;</span></code> 的节点必须包含名为 <code class="docutils literal notranslate"><span class="pre">current-speed</span></code> 的属性，且该属性的值必须是单个整数。同样，该节点还必须包含 <code class="docutils literal notranslate"><span class="pre">reg</span></code> 属性。</p>
+<p>构建系统使用绑定为 DTS 文件中出现的设备树属性生成 C 宏。关于如何在源代码中通过这些宏获取属性值，可以在 <a class="reference internal" href="api-usage.html#dt-from-c"><span class="std std-ref">从 C/C++ 访问设备树</span></a> 中了解更多。一般来说，构建系统只为匹配绑定的 <code class="docutils literal notranslate"><span class="pre">properties:</span></code> 键中列出的属性生成宏。绑定中未提及的属性通常会被构建系统忽略。</p>
+<p>唯一的例外是，构建系统总会为标准属性生成宏，例如 <a class="reference internal" href="intro-syntax-structure.html#dt-important-props"><span class="std std-ref">reg</span></a>，其含义由设备树规范定义。无论节点是否有匹配的绑定，都会如此。</p>
+<section id="property-entry-syntax">
+<h3><a class="toc-backref" href="#id6" role="doc-backlink">属性条目语法</a><a class="headerlink" href="#property-entry-syntax" title="链接到此标题。"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">properties:</span></code> 中的属性条目按以下语法书写：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>&lt;property name&gt;:
+  required: &lt;true | false&gt;
+  type: &lt;string | int | boolean | array | uint8-array | string-array |
+         phandle | phandles | phandle-array | path | compound&gt;
+  deprecated: &lt;true | false&gt;
+  default: &lt;default&gt;
+  description: &lt;description of the property&gt;
+  enum:
+    - &lt;item1&gt;
+    - &lt;item2&gt;
+    ...
+    - &lt;itemN&gt;
+  const: &lt;string | int | array | uint8-array | string-array&gt;
+  min: &lt;int&gt;
+  max: &lt;int&gt;
+  min-len: &lt;int&gt;
+  max-len: &lt;int&gt;
+  specifier-space: &lt;space-name&gt;
+  dependency-mode: &lt;normal | reverse | ignore | child-ignore&gt;
+</pre></div>
+</div>
+</section>
+<section id="example-property-definitions">
+<span id="dt-bindings-example-properties"></span><h3><a class="toc-backref" href="#id7" role="doc-backlink">属性定义示例</a><a class="headerlink" href="#example-property-definitions" title="链接到此标题。"></a></h3>
+<p>下面是更多示例。</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">    </span><span class="c1"># Describes a property like 'current-speed = &lt;115200&gt;;'. We pretend that</span>
+<span class="w">    </span><span class="c1"># it's obligatory for the example node and set 'required: true'.</span>
+<span class="w">    </span><span class="nt">current-speed</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span>
+<span class="w">        </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Initial baud rate for bar-device</span>
+
+<span class="w">    </span><span class="c1"># Describes an optional property like 'keys = "foo", "bar";'</span>
+<span class="w">    </span><span class="nt">keys</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string-array</span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Keys for bar-device</span>
+
+<span class="w">    </span><span class="c1"># Describes an optional property like 'maximum-speed = "full-speed";'</span>
+<span class="w">    </span><span class="c1"># the enum specifies known values that the string property may take</span>
+<span class="w">    </span><span class="nt">maximum-speed</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Configures USB controllers to work up to a specific speed.</span>
+<span class="w">        </span><span class="nt">enum</span><span class="p">:</span>
+<span class="w">           </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"low-speed"</span>
+<span class="w">           </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"full-speed"</span>
+<span class="w">           </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"high-speed"</span>
+<span class="w">           </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"super-speed"</span>
+
+<span class="w">    </span><span class="c1"># Describes an optional property like 'resolution = &lt;16&gt;;'</span>
+<span class="w">    </span><span class="c1"># the enum specifies known values that the int property may take</span>
+<span class="w">    </span><span class="nt">resolution</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span>
+<span class="w">      </span><span class="nt">enum</span><span class="p">:</span>
+<span class="w">       </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">8</span>
+<span class="w">       </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">16</span>
+<span class="w">       </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">24</span>
+<span class="w">       </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">32</span>
+
+<span class="w">    </span><span class="c1"># Describes a required property '#address-cells = &lt;1&gt;';  the const</span>
+<span class="w">    </span><span class="c1"># specifies that the value for the property is expected to be the value 1</span>
+<span class="w">    </span><span class="s">"#address-cells"</span><span class="p p-Indicator">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span>
+<span class="w">        </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">        </span><span class="nt">const</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+
+<span class="w">    </span><span class="nt">int-with-default</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span>
+<span class="w">        </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">123</span>
+<span class="w">        </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Value for int register, default is power-up configuration.</span>
+
+<span class="w">    </span><span class="nt">array-with-default</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">array</span>
+<span class="w">        </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">1</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">2</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">3</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="c1"># Same as 'array-with-default = &lt;1 2 3&gt;'</span>
+
+<span class="w">    </span><span class="nt">string-with-default</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string</span>
+<span class="w">        </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="s">"foo"</span>
+
+<span class="w">    </span><span class="nt">string-array-with-default</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">string-array</span>
+<span class="w">        </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">"foo"</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">"bar"</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="c1"># Same as 'string-array-with-default = "foo", "bar"'</span>
+
+<span class="w">    </span><span class="nt">uint8-array-with-default</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">uint8-array</span>
+<span class="w">        </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">0x12</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">0x34</span><span class="p p-Indicator">]</span><span class="w"> </span><span class="c1"># Same as 'uint8-array-with-default = [12 34]'</span>
+</pre></div>
+</div>
+</section>
+<section id="required">
+<h3><a class="toc-backref" href="#id8" role="doc-backlink">required</a><a class="headerlink" href="#required" title="链接到此标题。"></a></h3>
+<p>在属性定义中添加 <code class="docutils literal notranslate"><span class="pre">required:</span> <span class="pre">true</span></code> 后，如果某个节点与该绑定匹配但不包含该属性，构建就会失败。</p>
+<p>默认设置为 <code class="docutils literal notranslate"><span class="pre">required:</span> <span class="pre">false</span></code>，也就是说，属性默认是可选的。因此，使用 <code class="docutils literal notranslate"><span class="pre">required:</span> <span class="pre">false</span></code> 是多余的，强烈不建议这样写。</p>
+</section>
+<section id="type">
+<h3><a class="toc-backref" href="#id9" role="doc-backlink">type</a><a class="headerlink" href="#type" title="链接到此标题。"></a></h3>
+<p>属性的类型约束其取值。可用的类型如下。关于如何在 DTS 文件中书写各类型的值，请参见 <a class="reference internal" href="intro-syntax-structure.html#dt-writing-property-values"><span class="std std-ref">书写属性值</span></a>。关于 <code class="docutils literal notranslate"><span class="pre">phandle*</span></code> 类型属性的更多信息，请参见 <a class="reference internal" href="phandles.html#dt-phandles"><span class="std std-ref">phandle</span></a>。</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 16.7%" />
+<col style="width: 50.0%" />
+<col style="width: 33.3%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>类型</p></th>
+<th class="head"><p>描述</p></th>
+<th class="head"><p>DTS 示例</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">string</span></code></p></td>
+<td><p>恰好一个字符串</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">status</span> <span class="pre">=</span> <span class="pre">&quot;disabled&quot;;</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">int</span></code></p></td>
+<td><p>恰好一个 32 位值（单元）</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">current-speed</span> <span class="pre">=</span> <span class="pre">&lt;115200&gt;;</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">boolean</span></code></p></td>
+<td><p>标志，为 true 时不带值，为 false 时不出现</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">hw-flow-control;</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">array</span></code></p></td>
+<td><p>零个或多个 32 位值（单元）</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">offsets</span> <span class="pre">=</span> <span class="pre">&lt;0x100</span> <span class="pre">0x200</span> <span class="pre">0x300&gt;;</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">uint8-array</span></code></p></td>
+<td><p>零个或多个十六进制表示的字节（设备树规范中称为“bytestring”）</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">local-mac-address</span> <span class="pre">=</span> <span class="pre">[de</span> <span class="pre">ad</span> <span class="pre">be</span> <span class="pre">ef</span> <span class="pre">12</span> <span class="pre">34];</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">string-array</span></code></p></td>
+<td><p>零个或多个字符串</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">dma-names</span> <span class="pre">=</span> <span class="pre">&quot;tx&quot;,</span> <span class="pre">&quot;rx&quot;;</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">phandle</span></code></p></td>
+<td><p>恰好一个 phandle</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">interrupt-parent</span> <span class="pre">=</span> <span class="pre">&lt;&amp;gic&gt;;</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">phandles</span></code></p></td>
+<td><p>零个或多个 phandle</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pinctrl-0</span> <span class="pre">=</span> <span class="pre">&lt;&amp;usart2_tx_pd5</span> <span class="pre">&amp;usart2_rx_pd6&gt;;</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">phandle-array</span></code></p></td>
+<td><p>由 phandle 和 32 位单元（通常是说明符）组成的列表</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">dmas</span> <span class="pre">=</span> <span class="pre">&lt;&amp;dma0</span> <span class="pre">2&gt;,</span> <span class="pre">&lt;&amp;dma0</span> <span class="pre">3&gt;;</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">path</span></code></p></td>
+<td><p>指向某个节点的路径，以 phandle 路径引用或路径字符串表示</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">zephyr,bt-c2h-uart</span> <span class="pre">=</span> <span class="pre">&amp;uart0;</span></code> 或 <code class="docutils literal notranslate"><span class="pre">foo</span> <span class="pre">=</span> <span class="pre">&quot;/path/to/some/node&quot;;</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">compound</span></code></p></td>
+<td><p>用于更复杂类型的兜底类型（不会生成宏）</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">foo</span> <span class="pre">=</span> <span class="pre">&lt;&amp;label&gt;,</span> <span class="pre">[01</span> <span class="pre">02];</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="deprecated">
+<h3><a class="toc-backref" href="#id10" role="doc-backlink">deprecated</a><a class="headerlink" href="#deprecated" title="链接到此标题。"></a></h3>
+<p>带有 <code class="docutils literal notranslate"><span class="pre">deprecated:</span> <span class="pre">true</span></code> 的属性向用户和工具表明该属性将被逐步淘汰。</p>
+<p>如果设备树中包含被标记为已弃用的属性，工具会报告警告。（对于提交到上游的 PR，<a class="reference internal" href="../../develop/twister/index.html#twister-script"><span class="std std-ref">测试运行器（Twister）</span></a> 会将该警告升级为错误。）</p>
+<p>默认设置为 <code class="docutils literal notranslate"><span class="pre">deprecated:</span> <span class="pre">false</span></code>。因此，使用 <code class="docutils literal notranslate"><span class="pre">deprecated:</span> <span class="pre">false</span></code> 是多余的，强烈不建议这样写。</p>
+</section>
+<section id="default">
+<span id="dt-bindings-default"></span><h3><a class="toc-backref" href="#id11" role="doc-backlink">default</a><a class="headerlink" href="#default" title="链接到此标题。"></a></h3>
+<p>可选的 <code class="docutils literal notranslate"><span class="pre">default:</span></code> 设置给出一个值，当设备树节点中缺少该属性时使用该值。</p>
+<p>例如，对于下面的绑定片段：</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">foo</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span>
+<span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+</pre></div>
+</div>
+<p>如果匹配节点中缺少属性 <code class="docutils literal notranslate"><span class="pre">foo</span></code>，输出结果就如同 DTS 中出现了 <code class="docutils literal notranslate"><span class="pre">foo</span> <span class="pre">=</span> <span class="pre">&lt;3&gt;;</span></code> 一样（只是默认值使用 YAML 数据类型）。</p>
+<p>注意，如果绑定为同一个属性同时声明了 <code class="docutils literal notranslate"><span class="pre">default:</span></code> 和 <code class="docutils literal notranslate"><span class="pre">required:</span> <span class="pre">true</span></code>，会产生警告，因为这两项设置是冗余的：缺少该属性时，<code class="docutils literal notranslate"><span class="pre">required:</span> <span class="pre">true</span></code> 已经会使构建失败，因此默认值永远不会生效。绑定仍然可以用 <code class="docutils literal notranslate"><span class="pre">required:</span> <span class="pre">true</span></code> 覆盖继承来的 <code class="docutils literal notranslate"><span class="pre">default:</span></code>，以强制要求显式赋值；这种用法有明确定义，不会被报告。只通过 <code class="docutils literal notranslate"><span class="pre">include:</span></code> 引入的绑定在构建期间不会被单独加载，因此针对它的警告会在生成文档时出现，而不是在构建应用程序时出现。</p>
+<p>关于上游 Zephyr 绑定中与 <code class="docutils literal notranslate"><span class="pre">default</span></code> 相关的规则，请参见 <a class="reference internal" href="bindings-upstream.html#dt-bindings-default-rules"><span class="std std-ref">默认值规则</span></a>。</p>
+<p>示例请参见 <a class="reference internal" href="#dt-bindings-example-properties"><span class="std std-ref">属性定义示例</span></a>。如果在 <a class="reference internal" href="#dt-bindings-example-properties"><span class="std std-ref">属性定义示例</span></a> 中所用类型以外的任何属性类型上使用 <code class="docutils literal notranslate"><span class="pre">default:</span></code>，都会报错。</p>
+</section>
+<section id="enum">
+<h3><a class="toc-backref" href="#id12" role="doc-backlink">enum</a><a class="headerlink" href="#enum" title="链接到此标题。"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">enum:</span></code> 行后面跟着属性可以取的值的列表。如果 DTS 中的属性值不在绑定的 <code class="docutils literal notranslate"><span class="pre">enum:</span></code> 列表中，就会报错。示例请参见 <a class="reference internal" href="#dt-bindings-example-properties"><span class="std std-ref">属性定义示例</span></a>。</p>
+</section>
+<section id="min-and-max">
+<span id="dt-bindings-min-max"></span><h3><a class="toc-backref" href="#id13" role="doc-backlink">min 和 max</a><a class="headerlink" href="#min-and-max" title="链接到此标题。"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">min:</span></code> 和 <code class="docutils literal notranslate"><span class="pre">max:</span></code> 键约束 <code class="docutils literal notranslate"><span class="pre">type:</span> <span class="pre">int</span></code> 或 <code class="docutils literal notranslate"><span class="pre">type:</span> <span class="pre">array</span></code> 属性的有效取值范围。如果 DTS 中的属性值超出 <code class="docutils literal notranslate"><span class="pre">[min,</span> <span class="pre">max]</span></code> 范围，就会报错。</p>
+<p>这两个键都是可选的且相互独立，可以只指定 <code class="docutils literal notranslate"><span class="pre">min:</span></code>、只指定 <code class="docutils literal notranslate"><span class="pre">max:</span></code>，或两者都指定。它们不能与 <code class="docutils literal notranslate"><span class="pre">enum:</span></code> 用在同一个属性上。</p>
+<p>对于 <code class="docutils literal notranslate"><span class="pre">type:</span> <span class="pre">array</span></code>，数组的每个元素都会根据该范围进行检查。</p>
+<p>示例：</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># A brightness percentage between 0 and 100</span>
+<span class="w">  </span><span class="nt">brightness</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span>
+<span class="w">    </span><span class="nt">min</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
+<span class="w">    </span><span class="nt">max</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LED brightness as a percentage</span>
+
+<span class="w">  </span><span class="c1"># A timeout in milliseconds, with a minimum of 1 ms (no upper bound)</span>
+<span class="w">  </span><span class="nt">timeout-ms</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span>
+<span class="w">    </span><span class="nt">min</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Timeout in milliseconds</span>
+</pre></div>
+</div>
+</section>
+<section id="min-len-and-max-len">
+<span id="dt-bindings-min-len-max-len"></span><h3><a class="toc-backref" href="#id14" role="doc-backlink">min-len 和 max-len</a><a class="headerlink" href="#min-len-and-max-len" title="链接到此标题。"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">min-len:</span></code> 和 <code class="docutils literal notranslate"><span class="pre">max-len:</span></code> 键约束数组类属性（<code class="docutils literal notranslate"><span class="pre">array</span></code>、<code class="docutils literal notranslate"><span class="pre">uint8-array</span></code>、<code class="docutils literal notranslate"><span class="pre">string-array</span></code>、<code class="docutils literal notranslate"><span class="pre">phandles</span></code> 和 <code class="docutils literal notranslate"><span class="pre">phandle-array</span></code>）的元素个数（长度）。如果 DTS 中属性值的长度超出 <code class="docutils literal notranslate"><span class="pre">[min-len,</span> <span class="pre">max-len]</span></code> 范围，就会报错。</p>
+<p>这两个键都是可选的且相互独立，可以只指定 <code class="docutils literal notranslate"><span class="pre">min-len:</span></code>、只指定 <code class="docutils literal notranslate"><span class="pre">max-len:</span></code>，或两者都指定。</p>
+<p>示例：</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># An array of exactly 3 integers</span>
+<span class="w">  </span><span class="nt">coordinates</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">array</span>
+<span class="w">    </span><span class="nt">min-len</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="w">    </span><span class="nt">max-len</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">3D coordinates</span>
+
+<span class="w">  </span><span class="c1"># A list of up to 4 GPIO phandles</span>
+<span class="w">  </span><span class="nt">gpios</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">phandle-array</span>
+<span class="w">    </span><span class="nt">max-len</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">4</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Up to 4 GPIOs</span>
+</pre></div>
+</div>
+</section>
+<section id="const">
+<h3><a class="toc-backref" href="#id15" role="doc-backlink">const</a><a class="headerlink" href="#const" title="链接到此标题。"></a></h3>
+<p>指定属性必须取的常量值。它主要用于为特定硬件约束通用属性的取值。</p>
+</section>
+<section id="specifier-space">
+<span id="dt-bindings-specifier-space"></span><h3><a class="toc-backref" href="#id16" role="doc-backlink">specifier-space</a><a class="headerlink" href="#specifier-space" title="链接到此标题。"></a></h3>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>用此功能以非常规方式为属性命名属于滥用。</p>
+<p>例如，此功能并不适用于这样的情况：把属性命名为 <code class="docutils literal notranslate"><span class="pre">my-pin</span></code>，然后用此功能将其分配到“gpio”说明符空间。引用 GPIO 的属性应使用常规名称，即以 <code class="docutils literal notranslate"><span class="pre">-gpios</span></code> 或 <code class="docutils literal notranslate"><span class="pre">-gpio</span></code> 结尾。</p>
+</div>
+<p>如果存在此属性，它会手动设置与 <code class="docutils literal notranslate"><span class="pre">phandle-array</span></code> 类型属性关联的说明符空间。</p>
+<p>通常，说明符空间隐式地编码在属性名中。类型为 <code class="docutils literal notranslate"><span class="pre">phandle-array</span></code>、名为 <code class="docutils literal notranslate"><span class="pre">foos</span></code> 的属性隐式地具有说明符空间 <code class="docutils literal notranslate"><span class="pre">foo</span></code>。作为特例，<code class="docutils literal notranslate"><span class="pre">*-gpios</span></code> 属性的说明符空间为“gpio”，因此 <code class="docutils literal notranslate"><span class="pre">foo-gpios</span></code> 的说明符空间是“gpio”而不是“foo-gpio”。</p>
+<p>如果遵循这一约定会得到别扭或不合常规的名称，可以使用 <code class="docutils literal notranslate"><span class="pre">specifier-space</span></code> 手动提供一个空间。</p>
+<p>例如：</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">compatible</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="nt">properties</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">bar</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">phandle-array</span>
+<span class="w">    </span><span class="nt">specifier-space</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-custom-space</span>
+</pre></div>
+</div>
+<p>上例中，<code class="docutils literal notranslate"><span class="pre">bar</span></code> 属性的说明符空间被设置为“my-custom-space”。</p>
+<p>然后可以在设备树中这样使用该属性：</p>
+<div class="highlight-DTS notranslate"><div class="highlight"><pre><span></span><span class="nl">controller1</span><span class="p">:</span><span class="w"> </span><span class="nf">custom-controller</span><span class="o">@</span><span class="mi">1000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="o">#</span><span class="n">my-custom-space-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nl">controller2</span><span class="p">:</span><span class="w"> </span><span class="nf">custom-controller</span><span class="o">@</span><span class="mi">2000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="o">#</span><span class="n">my-custom-space-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nf">my-node</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">bar</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">controller1</span><span class="w"> </span><span class="mi">10</span><span class="w"> </span><span class="mi">20</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">controller2</span><span class="w"> </span><span class="mi">30</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>一般来说，应只在隐式说明符空间命名约定行不通的情况下使用此功能。一个合适的例子是 <code class="docutils literal notranslate"><span class="pre">mboxes</span></code> 属性，其说明符空间应为“mbox”，而不是“mboxe”。可以这样书写该属性：</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">mboxes</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">phandle-array</span>
+<span class="w">    </span><span class="nt">specifier-space</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mbox</span>
+</pre></div>
+</div>
+</section>
+<section id="dependency-mode">
+<span id="dt-bindings-dependency-mode"></span><h3><a class="toc-backref" href="#id17" role="doc-backlink">dependency-mode</a><a class="headerlink" href="#dependency-mode" title="链接到此标题。"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">dependency-mode</span></code> 设置控制在 Zephyr 中计算依赖关系图时如何处理 phandle 属性。</p>
+<p>默认情况下，任何 <a class="reference internal" href="api-usage.html#phandle-properties"><span class="std std-ref">phandle 属性</span></a> 都会在包含该属性的节点与其引用的节点之间建立依赖关系。<code class="docutils literal notranslate"><span class="pre">dependency-mode</span></code> 设置允许覆盖这一行为。</p>
+<section id="possible-values">
+<h4><a class="toc-backref" href="#id18" role="doc-backlink">可选值</a><a class="headerlink" href="#possible-values" title="链接到此标题。"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">dependency-mode</span></code> 设置接受以下值：</p>
+<dl>
+<dt><code class="docutils literal notranslate"><span class="pre">normal</span></code> 或未指定</dt><dd><p>默认行为。引用方节点依赖于被引用节点（phandle 所指向的节点）。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">reverse</span></code></dt><dd><p>反转依赖方向。不再是引用方节点依赖被引用节点，而是被引用节点依赖引用方节点。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">ignore</span></code></dt><dd><p>该 phandle 属性不建立依赖关系。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">child-ignore</span></code></dt><dd><p>与 <code class="docutils literal notranslate"><span class="pre">ignore</span></code> 类似，但只有当被引用节点是引用方节点的子节点时才忽略依赖。如果被引用节点不是子节点，则建立正常的依赖关系。</p>
+<p>当 phandle 可能引用子节点（无需依赖）或外部节点（需要依赖）时，使用此值。</p>
+</dd>
+</dl>
+</section>
+<section id="using-dependency-mode">
+<h4><a class="toc-backref" href="#id19" role="doc-backlink">使用 dependency-mode</a><a class="headerlink" href="#using-dependency-mode" title="链接到此标题。"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">dependency-mode</span></code> 设置在绑定文件的属性定义中指定。示例如下：</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">compatible</span><span class="p">:</span><span class="w"> </span><span class="s">"vendor,ethernet-controller"</span>
+
+<span class="nt">properties</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">phy-handle</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">phandle</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">Specifies a reference to a node representing a PHY device.</span>
+<span class="w">    </span><span class="nt">dependency-mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ignore</span>
+</pre></div>
+</div>
+<p>另一个使用 <code class="docutils literal notranslate"><span class="pre">child-ignore</span></code> 的示例：</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">compatible</span><span class="p">:</span><span class="w"> </span><span class="s">"vendor,node-with-optional-phandle"</span>
+
+<span class="nt">properties</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">optional-ref</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">phandle</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">References either a child node or an external device.</span>
+<span class="w">      </span><span class="no">Child node references create no dependency, but external</span>
+<span class="w">      </span><span class="no">device references do.</span>
+<span class="w">    </span><span class="nt">dependency-mode</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">child-ignore</span>
+</pre></div>
+</div>
+<p>使用该绑定的 DTS 示例：</p>
+<div class="highlight-DTS notranslate"><div class="highlight"><pre><span></span><span class="nf">root</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nl">external_dev</span><span class="p">:</span><span class="w"> </span><span class="nf">external-device</span><span class="o">@</span><span class="mi">2000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"vendor,external-device"</span><span class="p">;</span>
+<span class="w">                </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x2000</span><span class="w"> </span><span class="mh">0x100</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+
+<span class="w">        </span><span class="nl">parent_dev</span><span class="p">:</span><span class="w"> </span><span class="nf">parent-device</span><span class="o">@</span><span class="mi">1000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"vendor,node-with-optional-phandle"</span><span class="p">;</span>
+<span class="w">                </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x1000</span><span class="w"> </span><span class="mh">0x100</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                </span><span class="n">optional-ref</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">internal_child</span><span class="o">&gt;</span><span class="p">;</span><span class="w"> </span><span class="cm">/* child: ignored dependency */</span>
+
+<span class="w">                </span><span class="nl">internal_child</span><span class="p">:</span><span class="w"> </span><span class="nf">internal-device</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"vendor,internal-device"</span><span class="p">;</span>
+<span class="w">                </span><span class="p">};</span>
+<span class="w">        </span><span class="p">};</span>
+
+<span class="w">        </span><span class="nl">peer_dev</span><span class="p">:</span><span class="w"> </span><span class="nf">peer-device</span><span class="o">@</span><span class="mi">3000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"vendor,node-with-optional-phandle"</span><span class="p">;</span>
+<span class="w">                </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x3000</span><span class="w"> </span><span class="mh">0x100</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                </span><span class="n">optional-ref</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">external_dev</span><span class="o">&gt;</span><span class="p">;</span><span class="w"> </span><span class="cm">/* external: normal dependency */</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</section>
+<section id="default-behavior">
+<h4><a class="toc-backref" href="#id20" role="doc-backlink">默认行为</a><a class="headerlink" href="#default-behavior" title="链接到此标题。"></a></h4>
+<p>如果未指定 <code class="docutils literal notranslate"><span class="pre">dependency-mode</span></code>，其默认值为 <code class="docutils literal notranslate"><span class="pre">normal</span></code>，表示引用方节点依赖于被引用节点。</p>
+</section>
+</section>
+</section>
+<section id="child-binding">
+<span id="dt-bindings-child"></span><h2><a class="toc-backref" href="#id21" role="doc-backlink">子绑定（child-binding）</a><a class="headerlink" href="#child-binding" title="链接到此标题。"></a></h2>
+<p>当一个节点的所有子节点共享相同的属性时，可以使用 <code class="docutils literal notranslate"><span class="pre">child-binding</span></code>。每个子节点都将 <code class="docutils literal notranslate"><span class="pre">child-binding</span></code> 的内容作为其绑定，不过如果子节点上显式写有 <code class="docutils literal notranslate"><span class="pre">compatible</span> <span class="pre">=</span> <span class="pre">...</span></code> 并且为其找到了绑定，则以后者为准。</p>
+<p>以下面这样的 PWM LED 节点的绑定为例，其中要求子节点具有 <code class="docutils literal notranslate"><span class="pre">pwms</span></code> 属性：</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">pwmleds</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"pwm-leds"</span><span class="p">;</span>
+
+<span class="w">        </span><span class="nf">red_pwm_led</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">pwms</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">pwm3</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="mi">15625000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="w">        </span><span class="nf">green_pwm_led</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">pwms</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">pwm3</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="mi">15625000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="w">        </span><span class="cm">/* ... */</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>绑定如下所示：</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">compatible</span><span class="p">:</span><span class="w"> </span><span class="s">"pwm-leds"</span>
+
+<span class="nt">child-binding</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">LED that uses PWM</span>
+
+<span class="w">  </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">pwms</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">phandle-array</span>
+<span class="w">      </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">child-binding</span></code> 也可以递归使用。例如，下面的绑定：</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">compatible</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span>
+
+<span class="nt">child-binding</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">child-binding</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">properties</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">my-property</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span>
+<span class="w">        </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</pre></div>
+</div>
+<p>会应用于以下 DTS 中的 <code class="docutils literal notranslate"><span class="pre">grandchild</span></code> 节点：</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">parent</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"foo"</span><span class="p">;</span>
+<span class="w">        </span><span class="nf">child</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nf">grandchild</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">my-property</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">123</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                </span><span class="p">};</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</section>
+<section id="bus">
+<span id="dt-bindings-bus"></span><h2><a class="toc-backref" href="#id22" role="doc-backlink">总线（bus）</a><a class="headerlink" href="#bus" title="链接到此标题。"></a></h2>
+<p>如果节点是总线控制器，请在绑定中使用 <code class="docutils literal notranslate"><span class="pre">bus:</span></code> 说明总线类型。例如，SoC 上 SPI 外设的绑定如下所示：</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">compatible</span><span class="p">:</span><span class="w"> </span><span class="s">"manufacturer,spi-peripheral"</span>
+<span class="nt">bus</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">spi</span>
+<span class="c1"># ...</span>
+</pre></div>
+</div>
+<p>绑定中存在此键，就告诉构建系统：与该绑定匹配的任何节点，其子节点都位于这种类型的总线上。</p>
+<p>这进而会影响使用 <code class="docutils literal notranslate"><span class="pre">on-bus:</span></code> 为子节点匹配绑定的方式。</p>
+<p>对于支持多种协议（例如 I3C 和 I2C）的单一总线，绑定中的 <code class="docutils literal notranslate"><span class="pre">bus:</span></code> 可以取一个列表作为值：</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">compatible</span><span class="p">:</span><span class="w"> </span><span class="s">"manufacturer,i3c-controller"</span>
+<span class="nt">bus</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">i3c</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">i2c</span><span class="p p-Indicator">]</span>
+<span class="c1"># ...</span>
+</pre></div>
+</div>
+</section>
+<section id="on-bus">
+<span id="dt-bindings-on-bus"></span><h2><a class="toc-backref" href="#id23" role="doc-backlink">所在总线（on-bus）</a><a class="headerlink" href="#on-bus" title="链接到此标题。"></a></h2>
+<p>如果节点是位于某条总线上的设备，请在绑定中使用 <code class="docutils literal notranslate"><span class="pre">on-bus:</span></code> 说明总线类型。</p>
+<p>例如，外部 SPI 存储芯片的绑定应包含这一行：</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">on-bus</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">spi</span>
+</pre></div>
+</div>
+<p>基于 I2C 的温度传感器的绑定应包含这一行：</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">on-bus</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">i2c</span>
+</pre></div>
+</div>
+<p>为节点查找绑定时，构建系统会检查父节点的绑定是否包含 <code class="docutils literal notranslate"><span class="pre">bus:</span> <span class="pre">&lt;bus</span> <span class="pre">type&gt;</span></code>。如果包含，则只考虑具有匹配的 <code class="docutils literal notranslate"><span class="pre">on-bus:</span> <span class="pre">&lt;bus</span> <span class="pre">type&gt;</span></code> 的绑定以及未显式指定 <code class="docutils literal notranslate"><span class="pre">on-bus</span></code> 的绑定。显式指定了 <code class="docutils literal notranslate"><span class="pre">on-bus:</span> <span class="pre">&lt;bus</span> <span class="pre">type&gt;</span></code> 的绑定会先于未显式指定 <code class="docutils literal notranslate"><span class="pre">on-bus</span></code> 的绑定被搜索。对节点 <code class="docutils literal notranslate"><span class="pre">compatible</span></code> 属性中的每一项，依次重复该搜索。</p>
+<p>此功能使同一设备可以根据其所在的总线使用不同的绑定。例如，考虑一个 compatible 为 <code class="docutils literal notranslate"><span class="pre">manufacturer,sensor</span></code> 的传感器设备，它既可以通过 I2C 使用，也可以通过 SPI 使用。</p>
+<p>因此，该传感器节点在设备树中既可能作为 SPI 控制器的子节点出现，也可能作为 I2C 控制器的子节点出现，如下所示：</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">spi-bus</span><span class="o">@</span><span class="mi">0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">   </span><span class="cm">/* ... some compatible with 'bus: spi', etc. ... */</span>
+
+<span class="w">   </span><span class="nf">sensor</span><span class="o">@</span><span class="mi">0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">       </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"manufacturer,sensor"</span><span class="p">;</span>
+<span class="w">       </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">       </span><span class="cm">/* ... */</span>
+<span class="w">   </span><span class="p">};</span>
+<span class="p">};</span>
+
+<span class="nf">i2c-bus</span><span class="o">@</span><span class="mi">0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">   </span><span class="cm">/* ... some compatible with 'bus: i2c', etc. ... */</span>
+
+<span class="w">   </span><span class="nf">sensor</span><span class="o">@</span><span class="mi">79</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">       </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"manufacturer,sensor"</span><span class="p">;</span>
+<span class="w">       </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">79</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">       </span><span class="cm">/* ... */</span>
+<span class="w">   </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>尽管这两个传感器节点的 compatible 相同，你也可以编写两个独立的绑定文件分别与之匹配：</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="c1"># manufacturer,sensor-spi.yaml, which matches sensor@0 on the SPI bus:</span>
+<span class="nt">compatible</span><span class="p">:</span><span class="w"> </span><span class="s">"manufacturer,sensor"</span>
+<span class="nt">on-bus</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">spi</span>
+
+<span class="c1"># manufacturer,sensor-i2c.yaml, which matches sensor@79 on the I2C bus:</span>
+<span class="nt">compatible</span><span class="p">:</span><span class="w"> </span><span class="s">"manufacturer,sensor"</span>
+<span class="nt">properties</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">uses-clock-stretching</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">boolean</span>
+<span class="nt">on-bus</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">i2c</span>
+</pre></div>
+</div>
+<p>只有 <code class="docutils literal notranslate"><span class="pre">sensor&#64;79</span></code> 可以具有 <code class="docutils literal notranslate"><span class="pre">use-clock-stretching</span></code> 属性。为 <code class="docutils literal notranslate"><span class="pre">sensor&#64;0</span></code> 查找绑定时，与总线相关的逻辑会忽略 <code class="file docutils literal notranslate"><span class="pre">manufacturer,sensor-i2c.yaml</span></code>。</p>
+</section>
+<section id="class">
+<span id="dt-bindings-class"></span><h2><a class="toc-backref" href="#id24" role="doc-backlink">类（class）</a><a class="headerlink" href="#class" title="链接到此标题。"></a></h2>
+<p>如果与绑定匹配的节点可以用作一个或多个 Zephyr 设备类的设备，请使用 <code class="docutils literal notranslate"><span class="pre">class:</span></code> 声明这些类：</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">compatible</span><span class="p">:</span><span class="w"> </span><span class="s">"manufacturer,adc"</span>
+<span class="nt">class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">adc</span>
+</pre></div>
+</div>
+<p>其值是一个设备类名或名称列表。名称由小写字母、数字、<code class="docutils literal notranslate"><span class="pre">-</span></code> 和 <code class="docutils literal notranslate"><span class="pre">_</span></code> 组成，格式错误或重复的名称会被拒绝。每个名称都应与通过 <code class="xref c c-macro docutils literal notranslate"><span class="pre">DEVICE_API</span></code> 注册的某个设备 API 类（例如 <code class="docutils literal notranslate"><span class="pre">adc</span></code>）相匹配。小写加短横线形式的名称会按照与 compatible 相同的方式转换为小写加下划线形式的 C 记号。</p>
+<p>该键声明节点的驱动 <em>能够</em> 实现哪些设备 API 类；至于实际为节点构建哪个驱动和 API，仍由 Kconfig 决定。列表值适用于驱动可以根据配置实现多个 API 的硬件：</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">compatible</span><span class="p">:</span><span class="w"> </span><span class="s">"manufacturer,rtc"</span>
+<span class="nt">class</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">rtc</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="nv">counter</span><span class="p p-Indicator">]</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">class:</span></code> 通常在设备类的基础绑定（例如 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/dts/bindings/adc/adc-controller.yaml">dts/bindings/adc/adc-controller.yaml</a>）中声明一次，这样每个包含它的绑定都会继承该类。当绑定及其包含的文件都声明了类时，取各值的并集：包含多个类基础绑定的绑定属于所有这些类。</p>
+<p>可以在构建时使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_NODE_HAS_CLASS</span></code> 查询类成员关系，使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_FOREACH_CLASS_STATUS_OKAY</span></code> 遍历，使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_NUM_CLASS_STATUS_OKAY</span></code> 计数，并在 Kconfig 中使用 <code class="docutils literal notranslate"><span class="pre">$(dt_class_enabled,&lt;class</span> <span class="pre">name&gt;)</span></code> 进行测试。</p>
+<p>如果要为绑定无法修改的设备添加类，例如在下游模块中为上游设备分类，可以定义一个更具体的 compatible，使其绑定包含原有绑定并声明该类，然后在节点上同时列出这两个 compatible：</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="c1"># vnd,foo-classed.yaml</span>
+<span class="nt">compatible</span><span class="p">:</span><span class="w"> </span><span class="s">"vnd,foo-classed"</span>
+<span class="nt">include</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">vnd,foo.yaml</span>
+<span class="nt">class</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">xyz</span>
+</pre></div>
+</div>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"vnd,foo-classed"</span><span class="p">,</span><span class="w"> </span><span class="s">"vnd,foo"</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>节点的绑定及其类来自第一个具有绑定的 compatible；驱动会匹配节点的任意一个 compatible，因此原有驱动仍会绑定到该节点。同一个 compatible 有两个绑定会报错，因此无法遮蔽现有的绑定。</p>
+</section>
+<section id="examples">
+<span id="dt-bindings-examples"></span><h2><a class="toc-backref" href="#id25" role="doc-backlink">示例</a><a class="headerlink" href="#examples" title="链接到此标题。"></a></h2>
+<p>如果想为绑定提供一个最小示例，可以这样写：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+
+<span class="nt">properties</span><span class="p">:</span>
+<span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+
+<span class="nt">examples</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">    </span><span class="no">leds {</span>
+<span class="w">      </span><span class="no">compatible = "gpio-leds";</span>
+
+<span class="w">      </span><span class="no">uled: led {</span>
+<span class="w">      </span><span class="no">gpios = &lt;&amp;gpioe 12 GPIO_ACTIVE_HIGH&gt;;</span>
+<span class="w">      </span><span class="no">};</span>
+<span class="w">    </span><span class="no">};</span>
+</pre></div>
+</div>
+</section>
+<section id="specifier-cell-names-cells">
+<span id="dt-bindings-cells"></span><h2><a class="toc-backref" href="#id26" role="doc-backlink">说明符单元名称（*-cells）</a><a class="headerlink" href="#specifier-cell-names-cells" title="链接到此标题。"></a></h2>
+<p>本节介绍如何在绑定中为说明符中的单元命名。这些概念在本指南后面的 <a class="reference internal" href="phandles.html#dt-phandle-arrays"><span class="std std-ref">phandle-array 属性</span></a> 中有详细讨论。</p>
+<p>以某个节点的绑定为例，该节点的 phandle 可能出现在 <code class="docutils literal notranslate"><span class="pre">phandle-array</span></code> 属性中，就像本例中的 PWM 控制器 <code class="docutils literal notranslate"><span class="pre">pwm1</span></code> 和 <code class="docutils literal notranslate"><span class="pre">pwm2</span></code>：</p>
+<div class="highlight-DTS notranslate"><div class="highlight"><pre><span></span><span class="nl">pwm1</span><span class="p">:</span><span class="w"> </span><span class="nf">pwm</span><span class="o">@</span><span class="mi">deadbeef</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"foo,pwm"</span><span class="p">;</span>
+<span class="w">    </span><span class="o">#</span><span class="n">pwm-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nl">pwm2</span><span class="p">:</span><span class="w"> </span><span class="nf">pwm</span><span class="o">@</span><span class="mi">deadbeef</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"bar,pwm"</span><span class="p">;</span>
+<span class="w">    </span><span class="o">#</span><span class="n">pwm-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nf">my-node</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">pwms</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">pwm1</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="mi">2000</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">pwm2</span><span class="w"> </span><span class="mi">3000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>compatible 为 <code class="docutils literal notranslate"><span class="pre">&quot;foo,pwm&quot;</span></code> 和 <code class="docutils literal notranslate"><span class="pre">&quot;bar,pwm&quot;</span></code> 的绑定必须使用 <code class="docutils literal notranslate"><span class="pre">pwm-cells:</span></code> 为 PWM 说明符中出现的单元命名，如下所示：</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="c1"># foo,pwm.yaml</span>
+<span class="nt">compatible</span><span class="p">:</span><span class="w"> </span><span class="s">"foo,pwm"</span>
+<span class="nn">...</span>
+<span class="nt">pwm-cells</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">channel</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">period</span>
+
+<span class="c1"># bar,pwm.yaml</span>
+<span class="nt">compatible</span><span class="p">:</span><span class="w"> </span><span class="s">"bar,pwm"</span>
+<span class="nn">...</span>
+<span class="nt">pwm-cells</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">period</span>
+</pre></div>
+</div>
+<p>节点上还可以出现 <code class="docutils literal notranslate"><span class="pre">*-names</span></code> 属性（例如 <code class="docutils literal notranslate"><span class="pre">pwm-names</span></code>），为每个条目命名。</p>
+<p>这样就可以按名称访问说明符中的单元，例如使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_PWMS_CHANNEL_BY_NAME</span></code> 等 API。</p>
+<p>如果说明符为空（例如 <code class="docutils literal notranslate"><span class="pre">#clock-cells</span> <span class="pre">=</span> <span class="pre">&lt;0&gt;</span></code>），则 <code class="docutils literal notranslate"><span class="pre">*-cells</span></code> 可以省略（推荐），也可以设为空数组。注意，在 YAML 中空数组写作 <code class="docutils literal notranslate"><span class="pre">clock-cells:</span> <span class="pre">[]</span></code> 这样的形式。</p>
+</section>
+<section id="include">
+<span id="dt-bindings-include"></span><h2><a class="toc-backref" href="#id27" role="doc-backlink">Include</a><a class="headerlink" href="#include" title="链接到此标题。"></a></h2>
+<p>绑定可以包含其他文件，从而在绑定之间共享公共的属性定义。为此请使用 <code class="docutils literal notranslate"><span class="pre">include:</span></code> 键，其值可以是字符串或列表。</p>
+<p>最简单的情况下，可以用字符串给出另一个文件的名称来包含它，如下所示：</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">include</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo.yaml</span>
+</pre></div>
+</div>
+<p>如果找到任何名为 <code class="file docutils literal notranslate"><span class="pre">foo.yaml</span></code> 的文件（查找过程请参见 <a class="reference internal" href="bindings-intro.html#dt-where-bindings-are-located"><span class="std std-ref">绑定的存放位置</span></a>），它就会被包含到该绑定中。</p>
+<p>被包含的文件通过简单的递归字典合并并入绑定。构建系统会检查合并后的绑定格式是否正确。可以在任意层级进行包含，包括 <code class="docutils literal notranslate"><span class="pre">child-binding</span></code>，如下所示：</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="c1"># foo.yaml will be merged with content at this level</span>
+<span class="nt">include</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo.yaml</span>
+
+<span class="nt">child-binding</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># bar.yaml will be merged with content at this level</span>
+<span class="w">  </span><span class="nt">include</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bar.yaml</span>
+</pre></div>
+</div>
+<p>如果某个键在绑定及其包含的文件中取值不同，就会报错，但有两个例外：对于某个 <a class="reference internal" href="#dt-bindings-properties"><span class="std std-ref">属性定义</span></a>，被包含文件中为 <code class="docutils literal notranslate"><span class="pre">required:</span> <span class="pre">false</span></code> 时，绑定可以写 <code class="docutils literal notranslate"><span class="pre">required:</span> <span class="pre">true</span></code>（以 <code class="docutils literal notranslate"><span class="pre">required:</span> <span class="pre">true</span></code> 为准，使绑定可以加强被包含文件中的要求）；<code class="docutils literal notranslate"><span class="pre">class:</span></code> 的值按 <a class="reference internal" href="#dt-bindings-class"><span class="std std-ref">类（class）</span></a> 中所述取并集。</p>
+<p>注意，如果被包含文件中为 <code class="docutils literal notranslate"><span class="pre">required:</span> <span class="pre">true</span></code>，而绑定中写 <code class="docutils literal notranslate"><span class="pre">required:</span> <span class="pre">false</span></code> 以削弱要求，则会报错。这样做是为了保持结构清晰。</p>
+<p>文件 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/dts/bindings/base/base.yaml">base.yaml</a> 包含许多常用属性的定义。编写新绑定时，最好先检查 <code class="file docutils literal notranslate"><span class="pre">base.yaml</span></code> 是否已经定义了所需的某些属性，如果是，就包含它。</p>
+<p>注意，可以像下面这样把 base.yaml 中定义的属性设为必需，这里以 <a class="reference internal" href="intro-syntax-structure.html#dt-important-props"><span class="std std-ref">reg</span></a> 为例：</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">reg</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">required</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</pre></div>
+</div>
+<p>这依赖字典合并来补全 <code class="docutils literal notranslate"><span class="pre">reg</span></code> 的其他键，例如 <code class="docutils literal notranslate"><span class="pre">type</span></code>。</p>
+<p>要包含多个文件，可以使用字符串列表：</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">include</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo.yaml</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bar.yaml</span>
+</pre></div>
+</div>
+<p>这会包含文件 <code class="file docutils literal notranslate"><span class="pre">foo.yaml</span></code> 和 <code class="file docutils literal notranslate"><span class="pre">bar.yaml</span></code>。（也可以在 YAML 中把这个列表写成一行：<code class="docutils literal notranslate"><span class="pre">include:</span> <span class="pre">[foo.yaml,</span> <span class="pre">bar.yaml]</span></code>。）</p>
+<p>包含多个文件时，被包含文件中属性上重叠的 <code class="docutils literal notranslate"><span class="pre">required</span></code> 键会进行逻辑或运算。这确保 <code class="docutils literal notranslate"><span class="pre">required:</span> <span class="pre">true</span></code> 总会得到遵守。</p>
+<p>有时，你可能只想包含某个文件中的部分属性定义，而不是全部。这种情况下，<code class="docutils literal notranslate"><span class="pre">include:</span></code> 应为列表，并且可以在列表中放入一个映射来筛选出所需的定义，如下所示：</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">include</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo.yaml</span>
+<span class="w">    </span><span class="nt">property-allowlist</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">i-want-this-one</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">and-this-one</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bar.yaml</span>
+<span class="w">    </span><span class="nt">property-blocklist</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">do-not-include-this-one</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">or-this-one</span>
+</pre></div>
+</div>
+<p>每个映射元素都必须有一个 <code class="docutils literal notranslate"><span class="pre">name</span></code> 键，表示要包含的文件名，还可以有 <code class="docutils literal notranslate"><span class="pre">property-allowlist</span></code> 和 <code class="docutils literal notranslate"><span class="pre">property-blocklist</span></code> 键，用于筛选要包含的属性。</p>
+<p>单个映射元素中不能同时包含 <code class="docutils literal notranslate"><span class="pre">property-allowlist</span></code> 和 <code class="docutils literal notranslate"><span class="pre">property-blocklist</span></code> 键。既没有 <code class="docutils literal notranslate"><span class="pre">property-allowlist</span></code> 也没有 <code class="docutils literal notranslate"><span class="pre">property-blocklist</span></code> 的映射元素是有效的，此时不做额外筛选。</p>
+<p>可以在同一个 <code class="docutils literal notranslate"><span class="pre">include:</span></code> 列表中自由混用字符串和映射：</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">include</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo.yaml</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bar.yaml</span>
+<span class="w">    </span><span class="nt">property-blocklist</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">do-not-include-this-one</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">or-this-one</span>
+</pre></div>
+</div>
+<p>最后，还可以像这样从子绑定中进行筛选：</p>
+<div class="highlight-YAML notranslate"><div class="highlight"><pre><span></span><span class="nt">include</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bar.yaml</span>
+<span class="w">    </span><span class="nt">child-binding</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">property-allowlist</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">child-prop-to-allow</span>
+</pre></div>
+</div>
+</section>
+<section id="nexus-nodes-and-maps">
+<h2><a class="toc-backref" href="#id28" role="doc-backlink">Nexus 节点和映射</a><a class="headerlink" href="#nexus-nodes-and-maps" title="链接到此标题。"></a></h2>
+<p>所有 <code class="docutils literal notranslate"><span class="pre">phandle-array</span></code> 类型的属性都支持通过 <code class="docutils literal notranslate"><span class="pre">*-map</span></code> 属性（例如 <code class="docutils literal notranslate"><span class="pre">gpio-map</span></code>）进行映射，这是由设备树规范定义的。</p>
+<p>例如，这可用于为常见的扩展排针定义连接器节点，例如在带有 Arduino 兼容扩展排针的开发板的设备树中按惯例定义的 <code class="docutils literal notranslate"><span class="pre">arduino_header</span></code> 节点。</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 9月 09, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

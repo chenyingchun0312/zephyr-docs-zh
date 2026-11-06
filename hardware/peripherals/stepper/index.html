@@ -1,0 +1,397 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>步进电机 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/hardware/peripherals/stepper/index.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" />
+    <link rel="next" title="集成的步进运动控制与驱动器" href="integrated_controller_driver.html" />
+    <link rel="prev" title="脉冲宽度调制（PWM）" href="../pwm.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">硬件支持</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../arch/index.html">架构相关指南</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../barriers/index.html">屏障 API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cache/index.html">缓存</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../emulator/index.html">Zephyr 的设备仿真器/模拟器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../emulator/bus_emulators.html">外部总线及总线所连外设的仿真器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../firmware/index.html">固件</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">外设</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../analog.html">模拟</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../audio/index.html">音频</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../communication.html">通信</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../display.html">显示</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gpio_input.html">GPIO 与输入</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../memory_storage.html">存储器与存储</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../power.html">电源</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sensors.html">传感器</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../motion_actuation.html">运动与执行</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../haptics.html">触觉反馈</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../pwm.html">脉冲宽度调制（PWM）</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">步进电机</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#id1">步进 API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#stepper-motion-controller-api">步进运动控制器 API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#device-tree">设备树</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#driver-composition-scenarios">驱动组合场景</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#stepper-motion-controller-api-test-suite">步进运动控制器 API 测试套件</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#sample-output">示例输出</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#api-reference">API 参考</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#stepper-motion-controller-specific-apis">步进运动控制器特定的 API</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#trinamic">Trinamic</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../buzzer.html">蜂鸣器</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../system_diagnostics.html">系统与诊断</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../timing.html">定时</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../pinctrl/index.html">引脚控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../porting/index.html">移植</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../virtualization/index.html">虚拟化</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">硬件支持</a> &raquo;</li>
+  
+     <li><a href="../index.html">外设</a> &raquo;</li>
+  
+     <li><a href="../motion_actuation.html">运动与执行</a> &raquo;</li>
+  
+  <li>步进电机</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="steppers">
+<span id="stepper-api"></span><h1>步进电机<a class="headerlink" href="#steppers" title="链接到此标题。"></a></h1>
+<p>步进驱动子系统由两套设备驱动 API 组成：</p>
+<section id="id1">
+<h2>步进 API<a class="headerlink" href="#id1" title="链接到此标题。"></a></h2>
+<p>步进驱动 API 为步进驱动器提供通用接口。</p>
+<ul class="simple">
+<li><p>使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">stepper_set_micro_step_res()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">stepper_get_micro_step_res()</span></code> 配置 <strong>微步分辨率</strong>。</p></li>
+<li><p>使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">stepper_enable()</span></code> <strong>使能</strong> 步进驱动器。</p></li>
+<li><p>使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">stepper_disable()</span></code> <strong>禁止</strong> 步进驱动器。</p></li>
+<li><p>使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">stepper_set_event_cb()</span></code> 注册 <strong>事件回调</strong>。</p></li>
+</ul>
+</section>
+<section id="stepper-motion-controller-api">
+<h2>步进运动控制器 API<a class="headerlink" href="#stepper-motion-controller-api" title="链接到此标题。"></a></h2>
+<p>步进运动控制器 API 为步进运动控制器提供通用接口。</p>
+<ul class="simple">
+<li><p>使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">stepper_ctrl_set_reference_position()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">stepper_ctrl_get_actual_position()</span></code> 配置以微步为单位的 <strong>参考位置</strong>。</p></li>
+<li><p>使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">stepper_ctrl_set_microstep_interval()</span></code> 设置相邻两步之间以纳秒为单位的 <strong>步间隔</strong></p></li>
+<li><p>使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">stepper_ctrl_move_by()</span></code> <strong>移动</strong> 正负若干微步，即 <strong>相对运动</strong>。</p></li>
+<li><p>使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">stepper_ctrl_move_to()</span></code> <strong>移动到</strong> 特定位置，即 <strong>绝对运动</strong>。</p></li>
+<li><p>使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">stepper_ctrl_run()</span></code> 以 <strong>恒定步间隔</strong> 朝特定方向连续运行，直到检测到停止。</p></li>
+<li><p>使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">stepper_ctrl_stop()</span></code> <strong>停止</strong> 步进电机。</p></li>
+<li><p>使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">stepper_ctrl_is_moving()</span></code> 检查步进电机是否正在 <strong>运动</strong>。</p></li>
+<li><p>使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">stepper_ctrl_set_event_cb()</span></code> 注册 <strong>事件回调</strong>。</p></li>
+</ul>
+</section>
+<section id="device-tree">
+<span id="stepper-device-tree"></span><h2>设备树<a class="headerlink" href="#device-tree" title="链接到此标题。"></a></h2>
+<p>对于步进运动控制器，设备树按设备逐个提供步进驱动器的初始硬件配置。在 Zephyr 中，每个设备都必须指定一个设备树绑定，最好还提供一组硬件配置选项，例如电流设置、加减速曲线参数等。之后即可在开发板设备树中使用这些选项，将步进驱动器配置到其初始状态。</p>
+<section id="driver-composition-scenarios">
+<h3>驱动组合场景<a class="headerlink" href="#driver-composition-scenarios" title="链接到此标题。"></a></h3>
+<p>下面是两种典型场景：</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="integrated_controller_driver.html">集成的步进运动控制与驱动器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="individual_controller_driver.html">独立的步进运动控制器与驱动器</a></li>
+</ul>
+</div>
+</section>
+</section>
+<section id="stepper-motion-controller-api-test-suite">
+<h2>步进运动控制器 API 测试套件<a class="headerlink" href="#stepper-motion-controller-api-test-suite" title="链接到此标题。"></a></h2>
+<p>步进运动控制器 API 测试套件提供一组测试，可用于验证步进运动控制器的功能。</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>&lt;board&gt;<span class="w"> </span>--extra-dtc-overlay<span class="w"> </span>&lt;path/to/board.overlay&gt;<span class="w"> </span>tests/drivers/stepper/stepper_ctrl
+west<span class="w"> </span>flash
+</pre></div>
+</div>
+<section id="sample-output">
+<h3>示例输出<a class="headerlink" href="#sample-output" title="链接到此标题。"></a></h3>
+<p>下面是 h-bridge-stepper-ctrl 测试输出的片段。</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">===================================================================</span>
+<span class="go">TESTSUITE stepper succeeded</span>
+
+<span class="go">------ TESTSUITE SUMMARY START ------</span>
+
+<span class="go">SUITE PASS - 100.00% [stepper_ctrl]: pass = 10, fail = 0, skip = 0, total = 10 duration = 6.869 seconds</span>
+<span class="go"> - PASS - [stepper_ctrl.test_actual_position] duration = 0.001 seconds</span>
+<span class="go"> - PASS - [stepper_ctrl.test_move_by_negative_step_count] duration = 2.207 seconds</span>
+<span class="go"> - PASS - [stepper_ctrl.test_move_by_positive_step_count] duration = 2.202 seconds</span>
+<span class="go"> - PASS - [stepper_ctrl.test_move_to_negative_step_count] duration = 1.106 seconds</span>
+<span class="go"> - PASS - [stepper_ctrl.test_move_to_positive_step_count] duration = 1.102 seconds</span>
+<span class="go"> - PASS - [stepper_ctrl.test_move_zero_steps] duration = 0.006 seconds</span>
+<span class="go"> - PASS - [stepper_ctrl.test_run_negative_direction] duration = 0.115 seconds</span>
+<span class="go"> - PASS - [stepper_ctrl.test_run_positive_direction] duration = 0.124 seconds</span>
+<span class="go"> - PASS - [stepper_ctrl.test_set_micro_step_interval_invalid_zero] duration = 0.002 seconds</span>
+<span class="go"> - PASS - [stepper_ctrl.test_stop] duration = 0.004 seconds</span>
+
+<span class="go">------ TESTSUITE SUMMARY END ------</span>
+
+<span class="go">===================================================================</span>
+<span class="go">PROJECT EXECUTION SUCCESSFUL</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="api-reference">
+<h2>API 参考<a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<p id="stepper-driver-api-reference">所有步进驱动器都应实现的一组通用函数。</p>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">stepper_hw_driver</span></dt>
+</dl>
+
+<p id="stepper-ctrl-api-reference">所有步进运动控制器都应实现的一组通用函数。</p>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">stepper_ctrl</span></dt>
+</dl>
+
+</section>
+<section id="stepper-motion-controller-specific-apis">
+<h2>步进运动控制器特定的 API<a class="headerlink" href="#stepper-motion-controller-specific-apis" title="链接到此标题。"></a></h2>
+<section id="trinamic">
+<h3>Trinamic<a class="headerlink" href="#trinamic" title="链接到此标题。"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">trinamic_stepper_ctrl</span></dt>
+</dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 3月 10, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

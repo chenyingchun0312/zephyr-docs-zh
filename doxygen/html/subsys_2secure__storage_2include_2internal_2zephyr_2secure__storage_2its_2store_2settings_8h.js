@@ -1,0 +1,5 @@
+var subsys_2secure__storage_2include_2internal_2zephyr_2secure__storage_2its_2store_2settings_8h =
+[
+    [ "SECURE_STORAGE_ITS_STORE_SETTINGS_NAME_BUF_SIZE", "subsys_2secure__storage_2include_2internal_2zephyr_2secure__storage_2its_2store_2settings_8h.html#aeb04a9d9f92c3dfae97bf2049729517b", null ],
+    [ "secure_storage_its_store_settings_get_name", "subsys_2secure__storage_2include_2internal_2zephyr_2secure__storage_2its_2store_2settings_8h.html#ab034dcdbc69cad67f1f6eddb561fb099", null ]
+];

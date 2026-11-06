@@ -1,0 +1,342 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>带内纠错码（IBECC） &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/hardware/peripherals/edac/ibecc.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" />
+    <link rel="next" title="核心转储设备" href="../coredump.html" />
+    <link rel="prev" title="错误检测与纠正（EDAC）" href="index.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">硬件支持</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../arch/index.html">架构相关指南</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../barriers/index.html">屏障 API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cache/index.html">缓存</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../emulator/index.html">Zephyr 的设备仿真器/模拟器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../emulator/bus_emulators.html">外部总线及总线所连外设的仿真器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../firmware/index.html">固件</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">外设</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../analog.html">模拟</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../audio/index.html">音频</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../communication.html">通信</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../display.html">显示</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gpio_input.html">GPIO 与输入</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../memory_storage.html">存储器与存储</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../power.html">电源</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sensors.html">传感器</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../motion_actuation.html">运动与执行</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../system_diagnostics.html">系统与诊断</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../hwinfo.html">硬件信息</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../hwspinlock.html">硬件自旋锁（HWSPINLOCK）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../entropy.html">熵</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="index.html">错误检测与纠正（EDAC）</a><ul class="current">
+<li class="toctree-l5 current"><a class="current reference internal" href="#">带内纠错码（IBECC）</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#overview">概述</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#ibecc-configuration">IBECC 配置</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#ibecc-logging">IBECC 日志</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#usage-notes">使用说明</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#configuration-option">配置选项</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="index.html#configuration-option">配置选项</a></li>
+<li class="toctree-l5"><a class="reference internal" href="index.html#api-reference">API 参考</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../coredump.html">核心转储设备</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../crc.html">循环冗余校验（CRC）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../peci.html">平台环境控制接口（PECI）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../dma.html">直接存储器访问（DMA）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../mux.html">多路复用器（MUX）</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../timing.html">定时</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../pinctrl/index.html">引脚控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../porting/index.html">移植</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../virtualization/index.html">虚拟化</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">硬件支持</a> &raquo;</li>
+  
+     <li><a href="../index.html">外设</a> &raquo;</li>
+  
+     <li><a href="../system_diagnostics.html">系统与诊断</a> &raquo;</li>
+  
+     <li><a href="index.html">错误检测与纠正（EDAC）</a> &raquo;</li>
+  
+  <li>带内纠错码（IBECC）</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="in-band-error-correction-code-ibecc">
+<span id="edac-ibecc"></span><h1>带内纠错码（IBECC）<a class="headerlink" href="#in-band-error-correction-code-ibecc" title="链接到此标题。"></a></h1>
+<section id="overview">
+<h2>概述<a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>该机制最初出现在 Intel Elkhart Lake SoC 及后续开发板中，是一种集成了 IBECC 的内存控制器。</p>
+<p>带内纠错码（IBECC，In-Band Error Correction Code）通过提供错误检测和纠正来提高可靠性。IBECC 可以作用于整个物理内存空间，也可以只作用于其中的特定区域。对于不支持带外 ECC 的内存技术，IBECC 十分有用。</p>
+<p>IBECC 会占用 1/32 的内存作为额外开销。这部分内存不可访问，用于存储 ECC 校验子数据。IBECC 将读/写事务转换为两个独立的事务：一个用于实际数据，另一个用于包含 ECC 值的缓存行。</p>
+<p>IBECC 提供一项调试功能，即 IBECC 错误注入，用于调试和验证 IBECC 功能。ECC 错误在写路径上注入，并在读路径上引发 ECC 错误。</p>
+</section>
+<section id="ibecc-configuration">
+<h2>IBECC 配置<a class="headerlink" href="#ibecc-configuration" title="链接到此标题。"></a></h2>
+<p>IBECC 有三种工作模式，可由引导加载程序选择，如下所列：</p>
+<ul class="simple">
+<li><p>OPERATION_MODE = 0x0：将功能模式设置为根据地址范围保护请求</p></li>
+<li><p>OPERATION_MODE = 0x1：将功能模式设置为不保护任何请求并忽略范围检查</p></li>
+<li><p>OPERATION_MODE = 0x2：将功能模式设置为保护所有请求并忽略范围检查</p></li>
+</ul>
+<p>IBECC 工作模式通过 BIOS 或引导加载程序配置。对于工作模式 0，BIOS 还有更多配置选项，例如内存区域。</p>
+<p>由于安全风险较高，量产产品不应启用错误注入功能。错误注入仅在测试时启用。</p>
+</section>
+<section id="ibecc-logging">
+<h2>IBECC 日志<a class="headerlink" href="#ibecc-logging" title="链接到此标题。"></a></h2>
+<p>IBECC 记录以下字段：</p>
+<ul class="simple">
+<li><p>错误地址</p></li>
+<li><p>错误校验子</p></li>
+<li><p>错误类型</p>
+<ul>
+<li><p>可纠正错误（CE）：错误被 IBECC 模块检测到并已纠正。</p></li>
+<li><p>不可纠正错误（UE）：错误被 IBECC 模块检测到，但未被自动纠正。</p></li>
+</ul>
+</li>
+</ul>
+<p>IBECC 驱动向上层应用程序提供错误类型，以便其针对这些内存错误实现所需的处理策略。IBECC 驱动本身不使用错误校验子，而是将其提供给上层应用程序。</p>
+</section>
+<section id="usage-notes">
+<h2>使用说明<a class="headerlink" href="#usage-notes" title="链接到此标题。"></a></h2>
+<p>对不可屏蔽中断（NMI）需要格外小心。NMI 可能在任何时刻到来，即使本地 CPU 已禁用中断。这意味着没有任何锁机制能保护代码不受 NMI 打断。Zephyr 的 IPC 机制普遍以本地 IRQ 锁作为所有上层同步原语的基础。因此，不能与 NMI 共享任何由锁“保护”的数据，因为这种保护不起作用。在 Zephyr API 中，唯一能对 NMI 起作用的同步工具是原子操作层。这同样适用于由 NMI 处理程序调用的回调函数。</p>
+</section>
+<section id="configuration-option">
+<h2>配置选项<a class="headerlink" href="#configuration-option" title="链接到此标题。"></a></h2>
+<p>相关配置选项：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_EDAC_IBECC" title="CONFIG_EDAC_IBECC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_EDAC_IBECC</span></code></a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 3月 21, 2023.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,313 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>签名二进制文件 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/develop/west/sign.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="其他 Zephyr 扩展命令" href="zephyr-cmds.html" />
+    <link rel="prev" title="构建、烧录和调试" href="build-flash-debug.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">使用 Zephyr 进行开发</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/index.html">入门指南</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beyond-GSG.html">入门指南之外</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../env_vars.html">环境变量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../application/index.html">应用程序开发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../debug/index.html">调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/index.html">API 状态与准则</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../languages/index.html">编程语言支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../optimizations/index.html">优化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../flash_debug/index.html">烧录与硬件调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html">模块（外部项目）</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">West（Zephyr 的元工具）</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="install.html">安装 west</a></li>
+<li class="toctree-l3"><a class="reference internal" href="release-notes.html">West 发布说明</a></li>
+<li class="toctree-l3"><a class="reference internal" href="troubleshooting.html">West 故障排除</a></li>
+<li class="toctree-l3"><a class="reference internal" href="basics.html">基础知识</a></li>
+<li class="toctree-l3"><a class="reference internal" href="built-in.html">内置命令</a></li>
+<li class="toctree-l3"><a class="reference internal" href="workspaces.html">工作区</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest.html">West 清单</a></li>
+<li class="toctree-l3"><a class="reference internal" href="config.html">配置</a></li>
+<li class="toctree-l3"><a class="reference internal" href="alias.html">West 别名</a></li>
+<li class="toctree-l3"><a class="reference internal" href="extensions.html">扩展</a></li>
+<li class="toctree-l3"><a class="reference internal" href="build-flash-debug.html">构建、烧录和调试</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">签名二进制文件</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#rimage">rimage</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#silabs-commander">silabs_commander</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="zephyr-cmds.html">其他 Zephyr 扩展命令</a></li>
+<li class="toctree-l3"><a class="reference internal" href="why.html">历史与动机</a></li>
+<li class="toctree-l3"><a class="reference internal" href="without-west.html">不使用 west 使用 Zephyr</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../twister/index.html">测试运行器（Twister）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../test/index.html">测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sca/index.html">静态代码分析（SCA）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../toolchains/index.html">工具链</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tools/index.html">工具与 IDE</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">使用 Zephyr 进行开发</a> &raquo;</li>
+  
+     <li><a href="index.html">West（Zephyr 的元工具）</a> &raquo;</li>
+  
+  <li>签名二进制文件</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="signing-binaries">
+<span id="west-sign"></span><h1>签名二进制文件<a class="headerlink" href="#signing-binaries" title="链接到此标题。"></a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">sign</span></code> <a class="reference internal" href="extensions.html#west-extensions"><span class="std std-ref">扩展</span></a> 命令可以借助外部工具对 Zephyr 应用程序二进制文件进行签名，以供引导加载程序使用。在某些配置中，<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">sign</span></code> 还用于调用一个外部后处理工具，将镜像的最终各组成部分“拼接”在一起。运行 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">sign</span> <span class="pre">-h</span></code> 可获取命令行帮助。</p>
+<section id="rimage">
+<h2>rimage<a class="headerlink" href="#rimage" title="链接到此标题。"></a></h2>
+<p>rimage 的配置方式不依赖 Kconfig 或 CMake，而是依赖 <a class="reference internal" href="config.html#west-config"><span class="std std-ref">west config</span></a>，与 <a class="reference internal" href="build-flash-debug.html#west-building-cmake-config"><span class="std std-ref">永久 CMake 参数</span></a> 类似。</p>
+<p>签名涉及多个层层叠加的“包装”脚本：<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">flash</span></code> 调用 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code>，后者调用 <code class="docutils literal notranslate"><span class="pre">cmake</span></code> 和 <code class="docutils literal notranslate"><span class="pre">ninja</span></code>，它们再调用 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">sign</span></code>，最后由它调用 <code class="docutils literal notranslate"><span class="pre">imgtool</span></code> 或 <a class="reference external" href="https://github.com/thesofproject/rimage">rimage</a>。只要所需的签名参数是默认参数且相当固定，这些间接调用就不成问题。但另一方面，当这些层次并没有抽象出任何东西时，把 <code class="docutils literal notranslate"><span class="pre">imgtool</span></code> 或 <code class="docutils literal notranslate"><span class="pre">rimage</span></code> 的选项穿过所有这些层传递下去，就会引发典型的问题。首先，这通常需要在每一层编写样板代码。要让空白或其他特殊字符的引号转义穿过所有包装层可能很困难。为了调试某个构建期问题而复现底层的 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">sign</span></code> 命令可能非常耗时：至少需要启用并搜索详细构建日志，才能找出到底使用了哪些选项。从构建日志中复制这些选项也不一定可靠：由于环境的细微差异，可能产生不同的结果。最后也是最糟糕的一点：在每一层都添加更多样板代码之前，新的签名功能和选项根本无法使用。</p>
+<p>为避免这些问题，可以在 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">config</span></code> 中设置 <code class="docutils literal notranslate"><span class="pre">rimage</span></code> 参数。下面是一个 <code class="docutils literal notranslate"><span class="pre">workspace/.west/config</span></code> 示例：</p>
+<div class="highlight-ini notranslate"><div class="highlight"><pre><span></span><span class="k">[sign]</span>
+<span class="c1"># Not needed when invoked from CMake</span>
+<span class="na">tool</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">rimage</span>
+
+<span class="k">[rimage]</span>
+<span class="c1"># Quoting is optional and works like in Unix shells</span>
+<span class="c1"># Not needed when rimage can be found in the default PATH</span>
+<span class="na">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"/home/me/zworkspace/build-rimage/rimage"</span>
+
+<span class="c1"># Not needed when using the default development key</span>
+<span class="na">extra-args</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">-i 4 -k 'keys/key argument with space.pem'</span>
+</pre></div>
+</div>
+<p>为了支持引号，这些值会像 <a class="reference internal" href="build-flash-debug.html#west-building-cmake-args"><span class="std std-ref">一次性 CMake 参数</span></a> 中那样由 Python 的 <code class="docutils literal notranslate"><span class="pre">shlex.split()</span></code> 解析。</p>
+<p><code class="docutils literal notranslate"><span class="pre">extra-args</span></code> 会直接传递给 <code class="docutils literal notranslate"><span class="pre">rimage</span></code> 命令。上面的示例与像这样在命令行的 <code class="docutils literal notranslate"><span class="pre">--</span></code> 之后追加这些参数的效果相同：<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">sign</span> <span class="pre">--tool</span> <span class="pre">rimage</span> <span class="pre">--</span> <span class="pre">-i</span> <span class="pre">4</span> <span class="pre">-k</span> <span class="pre">'keys/key</span> <span class="pre">argument</span> <span class="pre">with</span> <span class="pre">space.pem'</span></code>。如果两者同时使用，命令行参数排在最后。</p>
+</section>
+<section id="silabs-commander">
+<h2>silabs_commander<a class="headerlink" href="#silabs-commander" title="链接到此标题。"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">silabs_commander</span></code> 工具用于对 Silicon Labs 设备的二进制文件进行签名、添加 MIC 或加密。当 <code class="docutils literal notranslate"><span class="pre">sign.tool</span></code> 配置设置为 <code class="docutils literal notranslate"><span class="pre">silabs_commander</span></code> 时，可以由 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">sign</span></code> 调用它；当设置了 <code class="docutils literal notranslate"><span class="pre">CONFIG_SIWX91X_SIGN_KEY</span></code> 或 <code class="docutils literal notranslate"><span class="pre">CONFIG_SIWX91X_MIC_KEY</span></code> 时，也可以由 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> 调用它。</p>
+<p>如果设置了 <code class="docutils literal notranslate"><span class="pre">CONFIG_SIWX91X_SIGN_KEY</span></code> 或 <code class="docutils literal notranslate"><span class="pre">CONFIG_SIWX91X_MIC_KEY</span></code> 之一，<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">flash</span></code> 会自动烧录二进制文件的签名版本。</p>
+<p><code class="docutils literal notranslate"><span class="pre">silabs_commander</span></code> 要求主机上安装 <a class="reference external" href="https://www.silabs.com/developer-tools/simplicity-studio/simplicity-commander?tab=downloads">Simplicity Commander</a>。在设备上配置（provisioning）密钥的方法请参阅 <a class="reference external" href="https://www.silabs.com/documents/public/user-guides/ug574-siwx917-soc-manufacturing-utility-user-guide.pdf">UG574 SiWx917 SoC Manufacturing Utility User Guide</a>。</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 6月 25, 2025.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

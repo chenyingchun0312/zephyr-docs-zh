@@ -1,0 +1,510 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CAN Shell &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/hardware/peripherals/can/shell.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" />
+    <link rel="next" title="Inter-Integrated Circuit（I2C）总线" href="../i2c.html" />
+    <link rel="prev" title="CAN 收发器" href="transceiver.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">硬件支持</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../arch/index.html">架构相关指南</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../barriers/index.html">屏障 API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cache/index.html">缓存</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../emulator/index.html">Zephyr 的设备仿真器/模拟器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../emulator/bus_emulators.html">外部总线及总线所连外设的仿真器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../firmware/index.html">固件</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">外设</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../analog.html">模拟</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../audio/index.html">音频</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../communication.html">通信</a><ul class="current">
+<li class="toctree-l4 current"><a class="reference internal" href="index.html">控制器局域网（CAN）</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="controller.html">CAN 控制器</a></li>
+<li class="toctree-l5"><a class="reference internal" href="transceiver.html">CAN 收发器</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">CAN Shell</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#overview">概述</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#inspection">查看</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#configuration">配置</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#receiving">接收</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#sending">发送</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#bus-recovery">总线恢复</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../i2c.html">Inter-Integrated Circuit（I2C）总线</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../i3c.html">改进型 Inter-Integrated Circuit（I3C）总线</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../spi.html">串行外设接口（SPI）总线</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../pcie.html">高速外设组件互连总线（PCIe）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../uart.html">通用异步收发器（UART）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../espi.html">增强型串行外设接口（eSPI）总线</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../mdio.html">管理数据输入/输出（MDIO）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../mspi.html">多位 SPI 总线</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../smbus.html">系统管理总线（SMBus）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../ipm.html">处理器间邮箱（IPM）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../lin.html">局部互联网络（LIN）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../mbox.html">多通道处理器间邮箱（MBOX）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../w1.html">1-Wire 总线</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../pulse_io.html">脉冲 IO</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../display.html">显示</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gpio_input.html">GPIO 与输入</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../memory_storage.html">存储器与存储</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../power.html">电源</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sensors.html">传感器</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../motion_actuation.html">运动与执行</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../system_diagnostics.html">系统与诊断</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../timing.html">定时</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../pinctrl/index.html">引脚控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../porting/index.html">移植</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../virtualization/index.html">虚拟化</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">硬件支持</a> &raquo;</li>
+  
+     <li><a href="../index.html">外设</a> &raquo;</li>
+  
+     <li><a href="../communication.html">通信</a> &raquo;</li>
+  
+     <li><a href="index.html">控制器局域网（CAN）</a> &raquo;</li>
+  
+  <li>CAN Shell</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="can-shell">
+<span id="id1"></span><h1>CAN Shell<a class="headerlink" href="#can-shell" title="链接到此标题。"></a></h1>
+<nav class="contents local" id="id2">
+<ul class="simple">
+<li><p><a class="reference internal" href="#overview" id="id3">概述</a></p></li>
+<li><p><a class="reference internal" href="#inspection" id="id4">查看</a></p></li>
+<li><p><a class="reference internal" href="#configuration" id="id5">配置</a></p></li>
+<li><p><a class="reference internal" href="#receiving" id="id6">接收</a></p></li>
+<li><p><a class="reference internal" href="#sending" id="id7">发送</a></p></li>
+<li><p><a class="reference internal" href="#bus-recovery" id="id8">总线恢复</a></p></li>
+</ul>
+</nav>
+<section id="overview">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">概述</a><a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>CAN shell 为 <a class="reference internal" href="../../../services/shell/index.html#shell-api"><span class="std std-ref">shell</span></a> 模块提供一个带有一组子命令的 <code class="docutils literal notranslate"><span class="pre">can</span></code> 命令。借助它，无需编写专门的应用程序，即可通过交互式界面测试和探索 <a class="reference internal" href="controller.html#can-api"><span class="std std-ref">CAN 控制器</span></a> 驱动 API。也可以在现有应用程序中启用 CAN shell，以便交互式地调试 CAN 问题。</p>
+<p>CAN shell 可以使用大部分 CAN 控制器功能，包括查看、配置、发送和接收 CAN 帧以及总线恢复。</p>
+<p>要启用 CAN shell，必须启用以下 <a class="reference internal" href="../../../build/kconfig/index.html#kconfig"><span class="std std-ref">Kconfig</span></a> 选项：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_SHELL" title="CONFIG_SHELL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SHELL</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_CAN" title="CONFIG_CAN"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CAN</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_CAN_SHELL" title="CONFIG_CAN_SHELL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CAN_SHELL</span></code></a></p></li>
+</ul>
+<p>以下 <a class="reference internal" href="../../../build/kconfig/index.html#kconfig"><span class="std std-ref">Kconfig</span></a> 选项为 <code class="docutils literal notranslate"><span class="pre">can</span></code> 命令启用额外的子命令和功能：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_CAN_FD_MODE" title="CONFIG_CAN_FD_MODE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CAN_FD_MODE</span></code></a> 启用 CAN FD 特有的子命令（例如用于设置 CAN FD 数据阶段的时序）。</p></li>
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_CAN_RX_TIMESTAMP" title="CONFIG_CAN_RX_TIMESTAMP"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CAN_RX_TIMESTAMP</span></code></a> 启用接收 CAN 帧时间戳的打印。</p></li>
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_CAN_STATS" title="CONFIG_CAN_STATS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CAN_STATS</span></code></a> 启用在 <code class="docutils literal notranslate"><span class="pre">can</span> <span class="pre">show</span></code> 子命令中打印 CAN 控制器的各项统计信息。这还要求启用 <a class="reference internal" href="../../../kconfig.html#CONFIG_STATS" title="CONFIG_STATS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_STATS</span></code></a>。</p></li>
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_CAN_MANUAL_RECOVERY_MODE" title="CONFIG_CAN_MANUAL_RECOVERY_MODE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CAN_MANUAL_RECOVERY_MODE</span></code></a> 启用 <code class="docutils literal notranslate"><span class="pre">can</span> <span class="pre">recover</span></code> 子命令。</p></li>
+</ul>
+<p>例如，为 <a class="reference internal" href="../../../boards/nxp/frdm_k64f/doc/index.html#frdm_k64f">FRDM-K64F</a> 构建启用了 CAN shell 和 CAN 统计信息的 <a class="reference internal" href="../../../samples/hello_world/README.html#hello_world" title="向控制台打印 &quot;Hello World&quot;。">Hello World</a> 示例：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>frdm_k64f<span class="w"> </span>samples/hello_world<span class="w"> </span>--<span class="w"> </span>-DCONFIG_SHELL<span class="o">=</span>y<span class="w"> </span>-DCONFIG_CAN<span class="o">=</span>y<span class="w"> </span>-DCONFIG_CAN_SHELL<span class="o">=</span>y<span class="w"> </span>-DCONFIG_STATS<span class="o">=</span>y<span class="w"> </span>-DCONFIG_CAN_STATS<span class="o">=</span>y
+</pre></div>
+</div>
+<p>关于如何连接 shell 并与之交互的一般说明，请参阅 <a class="reference internal" href="../../../services/shell/index.html#shell-api"><span class="std std-ref">shell</span></a> 文档。CAN shell 自带内置帮助（除非禁用了 <a class="reference internal" href="../../../kconfig.html#CONFIG_SHELL_HELP" title="CONFIG_SHELL_HELP"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SHELL_HELP</span></code></a>）。向 <code class="docutils literal notranslate"><span class="pre">can</span></code> 命令或其任一子命令传入 <code class="docutils literal notranslate"><span class="pre">-h</span></code> 或 <code class="docutils literal notranslate"><span class="pre">--help</span></code> 即可打印内置帮助信息。所有子命令的参数都支持 Tab 补全。</p>
+<div class="admonition tip">
+<p class="admonition-title">小技巧</p>
+<p>所有 CAN shell 子命令的第一个参数都是 CAN 控制器的名称，该参数同样支持 Tab 补全。启用 <a class="reference internal" href="../../../kconfig.html#CONFIG_DEVICE_SHELL" title="CONFIG_DEVICE_SHELL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_DEVICE_SHELL</span></code></a> 后，可以使用 <code class="docutils literal notranslate"><span class="pre">device</span> <span class="pre">list</span></code> shell 命令获取所有可用设备的列表。下面的示例均使用设备名 <code class="docutils literal notranslate"><span class="pre">can&#64;0</span></code>。</p>
+</div>
+</section>
+<section id="inspection">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">查看</a><a class="headerlink" href="#inspection" title="链接到此标题。"></a></h2>
+<p>可以使用 <code class="docutils literal notranslate"><span class="pre">can</span> <span class="pre">show</span></code> 子命令查看指定 CAN 控制器的属性，如下所示。这些属性包括 CAN 核心时钟频率、支持的最大位速率、支持的 RX 过滤器数量、能力、当前模式、当前状态、错误计数器、时序限制等：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>can<span class="w"> </span>show<span class="w"> </span>can@0
+<span class="go">core clock:      144000000 Hz</span>
+<span class="go">max bitrate:     5000000 bps</span>
+<span class="go">max std filters: 15</span>
+<span class="go">max ext filters: 15</span>
+<span class="go">capabilities:    normal loopback listen-only fd</span>
+<span class="go">mode:            normal</span>
+<span class="go">state:           stopped</span>
+<span class="go">rx errors:       0</span>
+<span class="go">tx errors:       0</span>
+<span class="go">timing:          sjw 1..128, prop_seg 0..0, phase_seg1 2..256, phase_seg2 2..128, prescaler 1..512</span>
+<span class="go">timing data:     sjw 1..16, prop_seg 0..0, phase_seg1 1..32, phase_seg2 1..16, prescaler 1..32</span>
+<span class="go">transceiver:     passive/none</span>
+<span class="go">statistics:</span>
+<span class="go">  bit errors:    0</span>
+<span class="go">    bit0 errors: 0</span>
+<span class="go">    bit1 errors: 0</span>
+<span class="go">  stuff errors:  0</span>
+<span class="go">  crc errors:    0</span>
+<span class="go">  form errors:   0</span>
+<span class="go">  ack errors:    0</span>
+<span class="go">  rx overruns:   0</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>只有启用 <a class="reference internal" href="../../../kconfig.html#CONFIG_CAN_STATS" title="CONFIG_CAN_STATS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CAN_STATS</span></code></a> 时才会打印统计信息。</p>
+</div>
+</section>
+<section id="configuration">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">配置</a><a class="headerlink" href="#configuration" title="链接到此标题。"></a></h2>
+<p>CAN shell 可以配置 CAN 控制器的模式和时序，并启动和停止 CAN 帧的处理。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>只有在 CAN 控制器停止时才能修改其模式和时序，而停止正是启动后的初始状态。CAN 控制器的初始模式为 <code class="docutils literal notranslate"><span class="pre">normal</span></code>，初始时序根据 <code class="docutils literal notranslate"><span class="pre">bitrate</span></code>、<code class="docutils literal notranslate"><span class="pre">sample-point</span></code>、<code class="docutils literal notranslate"><span class="pre">bitrate-data</span></code> 和 <code class="docutils literal notranslate"><span class="pre">sample-point-data</span></code> 这几个 <a class="reference internal" href="../../../build/dts/index.html#devicetree"><span class="std std-ref">设备树</span></a> 属性设置。</p>
+</div>
+<section id="timing">
+<h3>时序<a class="headerlink" href="#timing" title="链接到此标题。"></a></h3>
+<p>可以使用 <code class="docutils literal notranslate"><span class="pre">can</span> <span class="pre">bitrate</span></code> 子命令配置经典 CAN 位速率或 CAN FD 仲裁阶段位速率，如下所示。位速率以比特每秒为单位指定。</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>can<span class="w"> </span>bitrate<span class="w"> </span>can@0<span class="w"> </span><span class="m">125000</span>
+<span class="go">setting bitrate to 125000 bps</span>
+</pre></div>
+</div>
+<p>如果启用了 <a class="reference internal" href="../../../kconfig.html#CONFIG_CAN_FD_MODE" title="CONFIG_CAN_FD_MODE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CAN_FD_MODE</span></code></a>，可以使用 <code class="docutils literal notranslate"><span class="pre">can</span> <span class="pre">dbitrate</span></code> 子命令配置数据阶段位速率，如下所示。位速率以比特每秒为单位指定。</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>can<span class="w"> </span>dbitrate<span class="w"> </span>can@0<span class="w"> </span><span class="m">1000000</span>
+<span class="go">setting data bitrate to 1000000 bps</span>
+</pre></div>
+</div>
+<p>这两个子命令都允许通过位置参数指定可选的采样点（以千分比表示）和（再）同步跳转宽度（SJW，以时间量子为单位）。更多细节请参阅这些子命令的交互式帮助。</p>
+<p>也可以使用 <code class="docutils literal notranslate"><span class="pre">can</span> <span class="pre">timing</span></code> 和 <code class="docutils literal notranslate"><span class="pre">can</span> <span class="pre">dtiming</span></code> 子命令配置原始位时序。所需参数的详细说明请参阅这些子命令的交互式帮助输出。</p>
+</section>
+<section id="mode">
+<h3>模式<a class="headerlink" href="#mode" title="链接到此标题。"></a></h3>
+<p>CAN shell 可以使用 <code class="docutils literal notranslate"><span class="pre">can</span> <span class="pre">mode</span></code> 子命令设置 CAN 控制器的模式。下面是启用回环模式的示例。</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>can<span class="w"> </span>mode<span class="w"> </span>can@0<span class="w"> </span>loopback
+<span class="go">setting mode 0x00000001</span>
+</pre></div>
+</div>
+<p>该子命令可以在同一命令行中接受多个模式（例如 <code class="docutils literal notranslate"><span class="pre">can</span> <span class="pre">mode</span> <span class="pre">can&#64;0</span> <span class="pre">fd</span> <span class="pre">loopback</span></code> 同时设置 CAN FD 模式和回环模式）。厂商特定的模式可以用十六进制指定。</p>
+</section>
+<section id="starting-and-stopping">
+<h3>启动和停止<a class="headerlink" href="#starting-and-stopping" title="链接到此标题。"></a></h3>
+<p>根据需要配置好时序和模式后，可以使用 <code class="docutils literal notranslate"><span class="pre">can</span> <span class="pre">start</span></code> 子命令启动 CAN 控制器，如下所示。这将使能 CAN 帧的接收和发送。</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>can<span class="w"> </span>start<span class="w"> </span>can@0
+<span class="go">starting can@0</span>
+</pre></div>
+</div>
+<p>在重新配置时序或模式之前，需要使用 <code class="docutils literal notranslate"><span class="pre">can</span> <span class="pre">stop</span></code> 子命令停止 CAN 控制器，如下所示：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>can<span class="w"> </span>stop<span class="w"> </span>can@0
+<span class="go">stopping can@0</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="receiving">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">接收</a><a class="headerlink" href="#receiving" title="链接到此标题。"></a></h2>
+<p>要接收 CAN 帧，需要配置一个或多个 CAN RX 过滤器。使用 <code class="docutils literal notranslate"><span class="pre">can</span> <span class="pre">filter</span> <span class="pre">add</span></code> 子命令添加 CAN RX 过滤器，如下所示。该子命令接受十六进制格式的 CAN ID，以及可选的十六进制格式 CAN ID 掩码，用于设置需要匹配 CAN ID 中的哪些位。所支持参数的更多细节请参阅该子命令的交互式帮助输出。</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>can<span class="w"> </span>filter<span class="w"> </span>add<span class="w"> </span>can@0<span class="w"> </span><span class="m">010</span>
+<span class="go">adding filter with standard (11-bit) CAN ID 0x010, CAN ID mask 0x7ff, data frames 1, RTR frames 0, CAN FD frames 0</span>
+<span class="go">filter ID: 0</span>
+</pre></div>
+</div>
+<p>移除该 CAN RX 过滤器时需要使用返回的过滤器 ID（上例中为 0）。</p>
+<p>与已添加过滤器匹配的已接收 CAN 帧会打印到 shell 中。下面是几个示例：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>Dev<span class="w"> </span>Flags<span class="w">    </span>ID<span class="w">   </span>Size<span class="w">  </span>Data<span class="w"> </span>bytes
+<span class="go">can0  --       010   [8]  01 02 03 04 05 06 07 08</span>
+<span class="go">can0  B-       010  [08]  01 02 03 04 05 06 07 08</span>
+<span class="go">can0  BP       010  [03]  01 aa bb</span>
+<span class="go">can0  --  00000010   [0]</span>
+<span class="go">can0  --       010   [1]  20</span>
+<span class="go">can0  --       010   [8]  remote transmission request</span>
+</pre></div>
+</div>
+<p>各列含义如下：</p>
+<ul class="simple">
+<li><p>Dev</p>
+<ul>
+<li><p>接收该帧的设备名称。</p></li>
+</ul>
+</li>
+<li><p>标志</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">B</span></code>：该帧设置了 CAN FD 波特率切换（BRS）标志。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">P</span></code>：该帧设置了 CAN FD 错误状态指示（ESI）标志，表示发送节点处于被动错误状态。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-</span></code>：标志未设置。</p></li>
+</ul>
+</li>
+<li><p>ID</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">010</span></code>：该帧的标准（11 位）CAN ID，十六进制格式，此处为 10h。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">00000010</span></code>：该帧的扩展（29 位）CAN ID，十六进制格式，此处为 10h。</p></li>
+</ul>
+</li>
+<li><p>大小</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">[8]</span></code>：帧数据字节数，十进制格式，此处为带 8 个数据字节的经典 CAN 帧。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">[08]</span></code>：帧数据字节数，十进制格式，此处为带 8 个数据字节的 CAN FD 帧。</p></li>
+</ul>
+</li>
+<li><p>数据字节</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">01</span> <span class="pre">02</span> <span class="pre">03</span> <span class="pre">04</span> <span class="pre">05</span> <span class="pre">06</span> <span class="pre">07</span> <span class="pre">08</span></code>：帧数据字节，十六进制格式，此处为数字 1 到 8。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">remote</span> <span class="pre">transmission</span> <span class="pre">request</span></code>：该帧是远程传输请求（RTR）帧，因此不携带数据字节。</p></li>
+</ul>
+</li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">小技巧</p>
+<p>如果启用了 <a class="reference internal" href="../../../kconfig.html#CONFIG_CAN_RX_TIMESTAMP" title="CONFIG_CAN_RX_TIMESTAMP"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CAN_RX_TIMESTAMP</span></code></a>，每一行前面都会加上一个时间戳，该时间戳来自 CAN 控制器中自由运行的时间戳计数器。</p>
+</div>
+<p>可以使用 <code class="docutils literal notranslate"><span class="pre">can</span> <span class="pre">filter</span> <span class="pre">remove</span></code> 子命令移除已配置的 CAN RX 过滤器，如下所示。过滤器 ID 是 <code class="docutils literal notranslate"><span class="pre">can</span> <span class="pre">filter</span> <span class="pre">add</span></code> 子命令返回的 ID（下例中为 0）。</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>can<span class="w"> </span>filter<span class="w"> </span>remove<span class="w"> </span>can@0<span class="w"> </span><span class="m">0</span>
+<span class="go">removing filter with ID 0</span>
+</pre></div>
+</div>
+<p>另一种方法是使用 <code class="docutils literal notranslate"><span class="pre">can</span> <span class="pre">dump</span></code> 子命令。它会添加可匹配任意 RX 帧的标准（11 位）和扩展（29 位）CAN 过滤器，启动 CAN 控制器，并将所有接收到的 CAN 帧打印到 shell：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>can<span class="w"> </span>dump<span class="w"> </span>can@0
+<span class="go">dumping CAN RX frames on device can@0, press Ctrl+C to exit</span>
+</pre></div>
+</div>
+<p>按 Ctrl+C 退出 <code class="docutils literal notranslate"><span class="pre">can</span> <span class="pre">dump</span></code> 子命令后，所添加的过滤器会被自动移除，CAN 控制器也会重新停止。</p>
+</section>
+<section id="sending">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">发送</a><a class="headerlink" href="#sending" title="链接到此标题。"></a></h2>
+<p>可以使用 <code class="docutils literal notranslate"><span class="pre">can</span> <span class="pre">send</span></code> 子命令将 CAN 帧加入发送队列，如下所示。该子命令接受十六进制格式的 CAN ID，以及可选的若干数据字节（同样以十六进制指定）。所支持参数的更多细节请参阅该子命令的交互式帮助输出。</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>can<span class="w"> </span>send<span class="w"> </span>can@0<span class="w"> </span><span class="m">010</span><span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="m">3</span><span class="w"> </span><span class="m">4</span><span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">6</span><span class="w"> </span><span class="m">7</span><span class="w"> </span><span class="m">8</span>
+<span class="go">enqueuing CAN frame #2 with standard (11-bit) CAN ID 0x010, RTR 0, CAN FD 0, BRS 0, DLC 8</span>
+<span class="go">CAN frame #2 successfully sent</span>
+</pre></div>
+</div>
+</section>
+<section id="bus-recovery">
+<h2><a class="toc-backref" href="#id8" role="doc-backlink">总线恢复</a><a class="headerlink" href="#bus-recovery" title="链接到此标题。"></a></h2>
+<p>可以使用 <code class="docutils literal notranslate"><span class="pre">can</span> <span class="pre">recover</span></code> 子命令从 CAN 总线关闭事件中发起手动恢复，如下所示：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>can<span class="w"> </span>recover<span class="w"> </span>can@0
+<span class="go">recovering, no timeout</span>
+</pre></div>
+</div>
+<p>该子命令接受一个可选的总线恢复超时（以毫秒为单位）。如果未指定超时，命令将无限期等待总线恢复成功。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>只有启用 <a class="reference internal" href="../../../kconfig.html#CONFIG_CAN_MANUAL_RECOVERY_MODE" title="CONFIG_CAN_MANUAL_RECOVERY_MODE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CAN_MANUAL_RECOVERY_MODE</span></code></a> 时，<code class="docutils literal notranslate"><span class="pre">recover</span></code> 子命令才可用。</p>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 12月 29, 2025.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

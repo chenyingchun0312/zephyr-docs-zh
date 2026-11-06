@@ -1,0 +1,333 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>x86 开发者指南 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/hardware/arch/x86.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="Xtensa 开发者指南" href="xtensa.html" />
+    <link rel="prev" title="TriCore AURIX 开发者指南" href="tricore.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">硬件支持</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">架构相关指南</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="arc-support-status.html">Zephyr 在 ARC 处理器上的支持状态</a></li>
+<li class="toctree-l3"><a class="reference internal" href="arm_cortex_m.html">Arm Cortex-M 开发者指南</a></li>
+<li class="toctree-l3"><a class="reference internal" href="arm64.html">ARM64 开发者指南</a></li>
+<li class="toctree-l3"><a class="reference internal" href="risc-v.html">Zephyr 在 RISC-V 处理器上的支持状态</a></li>
+<li class="toctree-l3"><a class="reference internal" href="semihost.html">半主机（Semihosting）指南</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tricore.html">TriCore AURIX 开发者指南</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">x86 开发者指南</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">概述</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#virtual-memory">虚拟内存</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#separate-virtual-address-space-from-physical-address-space">将虚拟地址空间与物理地址空间分离</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#specifying-additional-memory-mappings-at-build-time">在构建时指定额外的内存映射</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="xtensa.html">Xtensa 开发者指南</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../barriers/index.html">屏障 API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cache/index.html">缓存</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../emulator/index.html">Zephyr 的设备仿真器/模拟器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../emulator/bus_emulators.html">外部总线及总线所连外设的仿真器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../firmware/index.html">固件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../peripherals/index.html">外设</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pinctrl/index.html">引脚控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../porting/index.html">移植</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../virtualization/index.html">虚拟化</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">硬件支持</a> &raquo;</li>
+  
+     <li><a href="index.html">架构相关指南</a> &raquo;</li>
+  
+  <li>x86 开发者指南</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="x86-developer-guide">
+<span id="id1"></span><h1>x86 开发者指南<a class="headerlink" href="#x86-developer-guide" title="链接到此标题。"></a></h1>
+<section id="overview">
+<h2>概述<a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>本页介绍为基于 x86 的平台进行开发时需要注意的某些方面。</p>
+</section>
+<section id="virtual-memory">
+<h2>虚拟内存<a class="headerlink" href="#virtual-memory" title="链接到此标题。"></a></h2>
+<p>在启动的极早期就会加载页表，因此严格来说内核是在虚拟地址空间中执行的。默认情况下，物理内存和虚拟内存采用恒等映射，因此看起来就像是在物理地址空间中执行。物理地址空间由 dts 的 <code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_CHOSEN_SRAM_ADDR</span></code> 和 <code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_CHOSEN_SRAM_SIZE</span></code> 标示，而虚拟地址空间由 <a class="reference internal" href="../../kconfig.html#CONFIG_KERNEL_VM_BASE" title="CONFIG_KERNEL_VM_BASE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_KERNEL_VM_BASE</span></code></a> 和 <a class="reference internal" href="../../kconfig.html#CONFIG_KERNEL_VM_SIZE" title="CONFIG_KERNEL_VM_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_KERNEL_VM_SIZE</span></code></a> 标示。注意，<a class="reference internal" href="../../kconfig.html#CONFIG_SRAM_OFFSET" title="CONFIG_SRAM_OFFSET"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SRAM_OFFSET</span></code></a> 控制 Zephyr 内核在内存中的放置位置，与之对应的是 <a class="reference internal" href="../../kconfig.html#CONFIG_KERNEL_VM_OFFSET" title="CONFIG_KERNEL_VM_OFFSET"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_KERNEL_VM_OFFSET</span></code></a>。</p>
+<section id="separate-virtual-address-space-from-physical-address-space">
+<h3>将虚拟地址空间与物理地址空间分离<a class="headerlink" href="#separate-virtual-address-space-from-physical-address-space" title="链接到此标题。"></a></h3>
+<p>在 32 位 x86 上，可以使物理地址空间和虚拟地址空间相互分离。代码和数据链接在虚拟地址空间中，但仍加载到物理内存中。不过在启动期间，执行到 <code class="file docutils literal notranslate"><span class="pre">arch/x86/core/ia32/crt0.S</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">vm_enter</span></code> 之前，代码和数据必须在物理地址空间中可用且可寻址。<code class="docutils literal notranslate"><span class="pre">vm_enter</span></code> 之后，代码通过虚拟地址执行，数据也可以通过其虚拟地址访问。之所以能做到这一点，是因为页表生成脚本（<code class="file docutils literal notranslate"><span class="pre">arch/x86/gen_mmu.py</span></code>）除了将虚拟地址映射到物理内存外，还在页目录级别对物理地址做了恒等映射。在启动过程的后期，<code class="xref c c-func docutils literal notranslate"><span class="pre">z_x86_mmu_init()</span></code> 会清除页目录级别的恒等映射条目，从而移除物理内存的恒等映射。为了实现用户空间隔离，必须解除这一映射，否则用户空间可以通过物理地址访问受限内存。由于恒等映射是在页目录级别完成的，因此无需为页表分配额外空间。不过，仍可能需要为额外的页目录表分配空间。</p>
+<p>虚拟地址空间的位置有以下限制：</p>
+<ul class="simple">
+<li><p>物理地址空间和虚拟地址空间必须互不重叠。这是因为页目录表中的条目会被清除。如果二者重叠，就会清除虚拟地址所需的条目。</p>
+<ul>
+<li><p>如果启用了 <a class="reference internal" href="../../kconfig.html#CONFIG_X86_PAE" title="CONFIG_X86_PAE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_X86_PAE</span></code></a>（<code class="docutils literal notranslate"><span class="pre">=y</span></code>），由于 PDP（页目录指针）的每个条目覆盖 1GB 内存，每个地址空间必须位于各自独立的 1GB 区域中。例如：</p>
+<ul>
+<li><p>假设 <code class="docutils literal notranslate"><span class="pre">CONFIG_SRAM_OFFSET</span></code> 和 <code class="docutils literal notranslate"><span class="pre">CONFIG_KERNEL_VM_OFFSET</span></code> 都是 <code class="docutils literal notranslate"><span class="pre">0x0</span></code>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DT_CHOSEN_SRAM_ADDR</span> <span class="pre">==</span> <span class="pre">0x00000000</span></code> 且 <code class="docutils literal notranslate"><span class="pre">CONFIG_KERNEL_VM_BASE</span> <span class="pre">=</span> <span class="pre">0x40000000</span></code> 是有效的，而</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DT_CHOSEN_SRAM_ADDR</span> <span class="pre">==</span> <span class="pre">0x00000000</span></code> 且 <code class="docutils literal notranslate"><span class="pre">CONFIG_KERNEL_VM_BASE</span> <span class="pre">=</span> <span class="pre">0x20000000</span></code> 则无效。</p></li>
+</ul>
+</li>
+<li><p>如果禁用了 <a class="reference internal" href="../../kconfig.html#CONFIG_X86_PAE" title="CONFIG_X86_PAE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_X86_PAE</span></code></a>（<code class="docutils literal notranslate"><span class="pre">=n</span></code>），由于 PD（页目录）的每个条目覆盖 4MB 内存，每个地址空间必须位于各自独立的 4MB 区域中。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DT_CHOSEN_SRAM_ADDR</span></code> 和 <code class="docutils literal notranslate"><span class="pre">CONFIG_KERNEL_VM_BASE</span></code> 还必须与目标区域的起始地址对齐。</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="specifying-additional-memory-mappings-at-build-time">
+<h2>在构建时指定额外的内存映射<a class="headerlink" href="#specifying-additional-memory-mappings-at-build-time" title="链接到此标题。"></a></h2>
+<p>页表生成脚本（<code class="file docutils literal notranslate"><span class="pre">arch/x86/gen_mmu.py</span></code>）利用第一遍链接生成的内核镜像，生成代码执行和数据访问所需的多级页表。可以向该脚本传递额外的命令行参数，以生成额外的内存映射。这对于静态映射和/或在启动极早期访问设备 MMIO 很有用。要向脚本传递额外的命令行参数，请在开发板配置文件中填充一个名为 <code class="docutils literal notranslate"><span class="pre">X86_EXTRA_GEN_MMU_ARGUMENTS</span></code> 的 CMake 列表。示例如下：</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nf">set(</span><span class="no">X86_EXTRA_GEN_MMU_ARGUMENTS</span>
+<span class="w">    </span><span class="p">--</span><span class="nb">map</span><span class="w"> </span><span class="m">0</span><span class="nb">xA0000000</span><span class="p">,</span><span class="m">0</span><span class="nb">x2000</span>
+<span class="w">    </span><span class="p">--</span><span class="nb">map</span><span class="w"> </span><span class="m">0</span><span class="nb">x80000000</span><span class="p">,</span><span class="m">0</span><span class="nb">x400000</span><span class="p">,</span><span class="no">LWUX</span><span class="p">,</span><span class="m">0</span><span class="nb">xB0000000</span><span class="nf">)</span>
+</pre></div>
+</div>
+<p>参数 <code class="docutils literal notranslate"><span class="pre">--map</span></code> 接受如下格式的值：<code class="docutils literal notranslate"><span class="pre">&lt;physical</span> <span class="pre">address&gt;,&lt;size&gt;[,&lt;flags:LUWX&gt;[,&lt;virtual</span> <span class="pre">address&gt;]]</span></code>，其中：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;physical</span> <span class="pre">address&gt;</span></code> 是映射的物理地址。（必需）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;size&gt;</span></code> 是要映射的区域大小。（必需）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;flags&gt;</span></code> 是与该映射关联的标志：（可选）</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">L</span></code>：页目录级别的大页。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">U</span></code>：允许用户空间访问。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">W</span></code>：可读写。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">X</span></code>：允许执行。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">D</span></code>：禁用缓存。</p>
+<ul>
+<li><p>默认为小页（4KB）、仅限监管者访问、只读且禁止执行。</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&lt;virtual</span> <span class="pre">address</span></code> 是映射的虚拟地址。（可选）</p></li>
+</ul>
+<p>注意，指定额外的内存映射需要为预分配的页表（包括内核页表和各内存域的页表）提供更大的存储空间。需要使用 <a class="reference internal" href="../../kconfig.html#CONFIG_X86_EXTRA_PAGE_TABLE_PAGES" title="CONFIG_X86_EXTRA_PAGE_TABLE_PAGES"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_X86_EXTRA_PAGE_TABLE_PAGES</span></code></a> 指定为页表额外预留多少个内存页。如果所需空间与预留空间不完全一致，<code class="docutils literal notranslate"><span class="pre">gen_mmu.py</span></code> 脚本会打印一条消息，指出该 Kconfig 选项应设置的值。</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 5月 08, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

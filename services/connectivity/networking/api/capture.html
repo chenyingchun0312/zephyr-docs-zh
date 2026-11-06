@@ -1,0 +1,393 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>网络数据包捕获 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/connectivity/networking/api/capture.html" />
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../../search.html" />
+    <link rel="next" title="网络数据包管理" href="buf_mgmt.html" />
+    <link rel="prev" title="Websocket 客户端 API" href="websocket.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html">
+            
+              <img src="../../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">服务</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">连接</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">网络</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../overview.html">概述</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../net-stack-architecture.html">网络协议栈架构</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../net_config_guide.html">网络配置指南</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../networking_with_host.html">与主机系统联网</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../network_monitoring.html">监视网络流量</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../network_tracing.html">网络跟踪</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../conformance/index.html">使用 TTCN-3 进行协议一致性测试</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="index.html">网络 API</a><ul class="current">
+<li class="toctree-l5 current"><a class="reference internal" href="apis.html">网络 API</a><ul class="current">
+<li class="toctree-l6"><a class="reference internal" href="sockets.html">BSD 套接字</a></li>
+<li class="toctree-l6"><a class="reference internal" href="socket_service.html">套接字服务</a></li>
+<li class="toctree-l6"><a class="reference internal" href="ip_4_6.html">IPv4/IPv6 基本类型与辅助函数</a></li>
+<li class="toctree-l6"><a class="reference internal" href="dns_resolve.html">DNS 解析</a></li>
+<li class="toctree-l6"><a class="reference internal" href="dplpmtud.html">数据报 PLPMTUD API</a></li>
+<li class="toctree-l6"><a class="reference internal" href="net_mgmt.html">网络管理</a></li>
+<li class="toctree-l6"><a class="reference internal" href="net_stats.html">网络统计</a></li>
+<li class="toctree-l6"><a class="reference internal" href="net_timeout.html">网络超时</a></li>
+<li class="toctree-l6"><a class="reference internal" href="net_context.html">网络上下文</a></li>
+<li class="toctree-l6"><a class="reference internal" href="promiscuous.html">混杂模式</a></li>
+<li class="toctree-l6"><a class="reference internal" href="sntp.html">简单网络时间协议库</a></li>
+<li class="toctree-l6"><a class="reference internal" href="socks5.html">SOCKS5 代理支持</a></li>
+<li class="toctree-l6"><a class="reference internal" href="trickle.html">Trickle 定时器库</a></li>
+<li class="toctree-l6"><a class="reference internal" href="websocket.html">Websocket 客户端 API</a></li>
+<li class="toctree-l6 current"><a class="current reference internal" href="#">网络数据包捕获</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="buf_mgmt.html">网络数据包管理</a></li>
+<li class="toctree-l5"><a class="reference internal" href="net_tech.html">网络技术</a></li>
+<li class="toctree-l5"><a class="reference internal" href="protocols.html">协议</a></li>
+<li class="toctree-l5"><a class="reference internal" href="quic.html">QUIC 传输接口</a></li>
+<li class="toctree-l5"><a class="reference internal" href="system_mgmt.html">网络系统管理</a></li>
+<li class="toctree-l5"><a class="reference internal" href="tsn.html">时间敏感网络</a></li>
+<li class="toctree-l5"><a class="reference internal" href="zperf.html">zperf：网络流量生成器</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../conn_mgr/index.html">连接管理器</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../dsa.html">分布式交换架构（DSA）</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../bluetooth/index.html">Bluetooth</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../usb/index.html">USB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../canbus/index.html">控制器局域网（CAN）总线协议</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lora_lorawan/index.html">LoRa 和 LoRaWAN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modbus/index.html">Modbus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modem/index.html">调制解调器模块</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../../index.html">连接</a> &raquo;</li>
+  
+     <li><a href="../index.html">网络</a> &raquo;</li>
+  
+     <li><a href="index.html">网络 API</a> &raquo;</li>
+  
+     <li><a href="apis.html">网络 API</a> &raquo;</li>
+  
+  <li>网络数据包捕获</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="network-packet-capture">
+<span id="net-capture-interface"></span><h1>网络数据包捕获<a class="headerlink" href="#network-packet-capture" title="链接到此标题。"></a></h1>
+<nav class="contents local" id="id1">
+<ul class="simple">
+<li><p><a class="reference internal" href="#overview" id="id2">概述</a></p></li>
+<li><p><a class="reference internal" href="#cooked-mode-capture" id="id3">Cooked 模式捕获</a></p></li>
+<li><p><a class="reference internal" href="#sample-usage" id="id4">使用示例</a></p></li>
+<li><p><a class="reference internal" href="#api-reference" id="id5">API 参考</a></p></li>
+</ul>
+</nav>
+<section id="overview">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">概述</a><a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">net_capture</span></code> API 允许用户监视 Zephyr 某个网络接口上的网络流量，并把这些流量发送到外部系统进行分析。监视既可以通过 <code class="docutils literal notranslate"><span class="pre">net-shell</span></code> 手动设置，也可以通过 <code class="docutils literal notranslate"><span class="pre">net_capture</span></code> API 自动设置。</p>
+</section>
+<section id="cooked-mode-capture">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Cooked 模式捕获</a><a class="headerlink" href="#cooked-mode-capture" title="链接到此标题。"></a></h2>
+<p>如果启用并配置了捕获功能，系统会自动捕获指定网络接口的网络流量。如果想在不涉及网络接口的情况下捕获网络数据，则需要使用 cooked 模式捕获 API。</p>
+<p>在 cooked 模式捕获中，可以捕获任意网络数据包，且不需要涉及网络接口。例如，可以捕获 PPP 中的底层 HDLC 数据包，因为在使用常规的基于网络接口的捕获时，HDLC L2 层数据会被剥离。CANBUS 或 Bluetooth 网络数据也可以被捕获，不过目前网络协议栈还不支持捕获这些数据。</p>
+<p>Cooked 模式捕获的工作方式如下：</p>
+<ul class="simple">
+<li><p>创建一个 <code class="docutils literal notranslate"><span class="pre">any</span></code> 网络接口。它充当接收端，cooked 模式捕获 API 会把捕获到的数据包写入该接口。</p></li>
+<li><p>在这个 <code class="docutils literal notranslate"><span class="pre">any</span></code> 接口之上挂接一个 <code class="docutils literal notranslate"><span class="pre">cooked</span></code> 虚拟网络接口。</p></li>
+<li><p>必须使用网络接口配置 API 将 <code class="docutils literal notranslate"><span class="pre">cooked</span></code> 接口配置为捕获特定的 L2 数据包类型。</p></li>
+<li><p>使用 cooked 模式捕获 API 时，调用者必须指定所捕获数据的第 2 层协议类型。这样，cooked 模式捕获 API 在收到此类 L2 数据包时就能确定要捕获什么。</p></li>
+<li><p>随后对网络数据包捕获基础设施进行设置，把 <code class="docutils literal notranslate"><span class="pre">cooked</span></code> 接口标记为被捕获的网络接口。<code class="docutils literal notranslate"><span class="pre">cooked</span></code> 接口经由 <code class="docutils literal notranslate"><span class="pre">any</span></code> 接口收到的数据包会自动放入捕获 IP 隧道，并发送到远程主机进行分析。</p></li>
+</ul>
+<p>例如，在捕获示例应用程序中会创建以下网络接口：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">Interface</span><span class="w"> </span><span class="n">any</span><span class="w"> </span><span class="p">(</span><span class="mh">0x808ab3c</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">Dummy</span><span class="p">)</span><span class="w"> </span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+<span class="o">================================</span>
+<span class="n">Virtual</span><span class="w"> </span><span class="n">interfaces</span><span class="w"> </span><span class="n">attached</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">2</span>
+<span class="nl">Device</span><span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="n">NET_ANY</span><span class="w"> </span><span class="p">(</span><span class="mh">0x80849a4</span><span class="p">)</span>
+
+<span class="n">Interface</span><span class="w"> </span><span class="n">cooked</span><span class="w"> </span><span class="p">(</span><span class="mh">0x808ac94</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">Virtual</span><span class="p">)</span><span class="w"> </span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
+<span class="o">==================================</span>
+<span class="n">Virtual</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">Cooked</span><span class="w"> </span><span class="n">mode</span><span class="w"> </span><span class="n">capture</span>
+<span class="nl">Attached</span><span class="w">  </span><span class="p">:</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="p">(</span><span class="n">Dummy</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mh">0x808ab3c</span><span class="p">)</span>
+<span class="nl">Device</span><span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="n">NET_COOKED</span><span class="w"> </span><span class="p">(</span><span class="mh">0x808497c</span><span class="p">)</span>
+
+<span class="n">Interface</span><span class="w"> </span><span class="n">eth0</span><span class="w"> </span><span class="p">(</span><span class="mh">0x808adec</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">Ethernet</span><span class="p">)</span><span class="w"> </span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+<span class="o">===================================</span>
+<span class="n">Virtual</span><span class="w"> </span><span class="n">interfaces</span><span class="w"> </span><span class="n">attached</span><span class="w"> </span><span class="n">to</span><span class="w"> </span><span class="n">this</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="mi">4</span>
+<span class="nl">Device</span><span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="n">zeth0</span><span class="w"> </span><span class="p">(</span><span class="mh">0x80849b8</span><span class="p">)</span>
+<span class="n">IPv6</span><span class="w"> </span><span class="n">unicast</span><span class="w"> </span><span class="n">addresses</span><span class="w"> </span><span class="p">(</span><span class="n">max</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="o">:</span>
+<span class="w">     </span><span class="n">fe80</span><span class="o">::</span><span class="mi">5</span><span class="n">eff</span><span class="o">:</span><span class="n">fe00</span><span class="o">:</span><span class="mf">53e6</span><span class="w"> </span><span class="n">autoconf</span><span class="w"> </span><span class="n">preferred</span><span class="w"> </span><span class="n">infinite</span>
+<span class="w">     </span><span class="mi">2001</span><span class="o">:</span><span class="n">db8</span><span class="o">::</span><span class="mi">1</span><span class="w"> </span><span class="n">manual</span><span class="w"> </span><span class="n">preferred</span><span class="w"> </span><span class="n">infinite</span>
+<span class="n">IPv4</span><span class="w"> </span><span class="n">unicast</span><span class="w"> </span><span class="n">addresses</span><span class="w"> </span><span class="p">(</span><span class="n">max</span><span class="w"> </span><span class="mi">2</span><span class="p">)</span><span class="o">:</span>
+<span class="w">     </span><span class="mf">192.0.2.1</span><span class="o">/</span><span class="mf">255.255.255.0</span><span class="w"> </span><span class="n">overridable</span><span class="w"> </span><span class="n">preferred</span><span class="w"> </span><span class="n">infinite</span>
+
+<span class="n">Interface</span><span class="w"> </span><span class="n">net0</span><span class="w"> </span><span class="p">(</span><span class="mh">0x808af44</span><span class="p">)</span><span class="w"> </span><span class="p">(</span><span class="n">Virtual</span><span class="p">)</span><span class="w"> </span><span class="p">[</span><span class="mi">4</span><span class="p">]</span>
+<span class="o">==================================</span>
+<span class="n">Virtual</span><span class="w"> </span><span class="n">name</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">Capture</span><span class="w"> </span><span class="n">tunnel</span>
+<span class="nl">Attached</span><span class="w">  </span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="w"> </span><span class="p">(</span><span class="n">Ethernet</span><span class="w"> </span><span class="o">/</span><span class="w"> </span><span class="mh">0x808adec</span><span class="p">)</span>
+<span class="nl">Device</span><span class="w">    </span><span class="p">:</span><span class="w"> </span><span class="n">IP_TUNNEL0</span><span class="w"> </span><span class="p">(</span><span class="mh">0x8084990</span><span class="p">)</span>
+<span class="n">IPv6</span><span class="w"> </span><span class="n">unicast</span><span class="w"> </span><span class="n">addresses</span><span class="w"> </span><span class="p">(</span><span class="n">max</span><span class="w"> </span><span class="mi">4</span><span class="p">)</span><span class="o">:</span>
+<span class="w">     </span><span class="mi">2001</span><span class="o">:</span><span class="n">db8</span><span class="o">:</span><span class="mi">200</span><span class="o">::</span><span class="mi">1</span><span class="w"> </span><span class="n">manual</span><span class="w"> </span><span class="n">preferred</span><span class="w"> </span><span class="n">infinite</span>
+<span class="w">     </span><span class="n">fe80</span><span class="o">::</span><span class="n">efed</span><span class="o">:</span><span class="mi">6</span><span class="n">dff</span><span class="o">:</span><span class="n">fef2</span><span class="o">:</span><span class="n">b1df</span><span class="w"> </span><span class="n">autoconf</span><span class="w"> </span><span class="n">preferred</span><span class="w"> </span><span class="n">infinite</span>
+<span class="w">     </span><span class="n">fe80</span><span class="o">::</span><span class="mi">56</span><span class="n">da</span><span class="o">:</span><span class="mi">1</span><span class="n">eff</span><span class="o">:</span><span class="n">fe5e</span><span class="o">:</span><span class="n">bc02</span><span class="w"> </span><span class="n">autoconf</span><span class="w"> </span><span class="n">preferred</span><span class="w"> </span><span class="n">infinite</span>
+</pre></div>
+</div>
+<p>在本例中，<code class="docutils literal notranslate"><span class="pre">192.0.2.2</span></code> 是终结隧道的主机的外部端点地址。Zephyr 使用该地址选择隧道所用的内部接口，本例中为接口 3。</p>
+<p>接口 2 是运行在接口 1 之上的虚拟接口。捕获 API 把 cooked 捕获数据包写入接收端接口 1。由于接口 2 与第一个接口相连，数据包会传播到接口 2。net-shell 命令 <code class="docutils literal notranslate"><span class="pre">net</span> <span class="pre">capture</span> <span class="pre">enable</span> <span class="pre">2</span></code> 会使发送到接口 2 的数据包被写入捕获接口 4，捕获接口 4 再对数据包进行封装，并通过以太网接口 3 以隧道方式发送给对端。</p>
+<p>如果修改了示例文件 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/samples/net/capture/overlay-tunnel.conf">samples/net/capture/overlay-tunnel.conf</a> 中的地址，上述 IP 地址可能会随之改变。</p>
+</section>
+<section id="sample-usage">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">使用示例</a><a class="headerlink" href="#sample-usage" title="链接到此标题。"></a></h2>
+<p>详情请参见示例应用程序 <a class="reference internal" href="../../../../samples/net/capture/README.html#net-capture" title="捕获网络数据包，并通过 IPIP 隧道发送到远程主机。">Network packet capture</a> 和 <a class="reference internal" href="../network_monitoring.html#network-monitoring"><span class="std std-ref">监视网络流量</span></a>。</p>
+</section>
+<section id="api-reference">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">API 参考</a><a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">net_capture</span></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/capture/README.html#net-capture" title="捕获网络数据包，并通过 IPIP 隧道发送到远程主机。">Network packet capture</a></span><span class="code-sample-description">捕获网络数据包，并通过 IPIP 隧道发送到远程主机。</span></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 4月 15, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

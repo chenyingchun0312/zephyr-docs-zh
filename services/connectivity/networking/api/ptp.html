@@ -1,0 +1,785 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>精确时间协议（PTP） &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/connectivity/networking/api/ptp.html" />
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../../search.html" />
+    <link rel="next" title="zperf：网络流量生成器" href="zperf.html" />
+    <link rel="prev" title="精确时间协议（PTP）时间格式" href="ptp_time.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html">
+            
+              <img src="../../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">服务</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">连接</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">网络</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../overview.html">概述</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../net-stack-architecture.html">网络协议栈架构</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../net_config_guide.html">网络配置指南</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../networking_with_host.html">与主机系统联网</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../network_monitoring.html">监视网络流量</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../network_tracing.html">网络跟踪</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../conformance/index.html">使用 TTCN-3 进行协议一致性测试</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="index.html">网络 API</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="apis.html">网络 API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="buf_mgmt.html">网络数据包管理</a></li>
+<li class="toctree-l5"><a class="reference internal" href="net_tech.html">网络技术</a></li>
+<li class="toctree-l5"><a class="reference internal" href="protocols.html">协议</a></li>
+<li class="toctree-l5"><a class="reference internal" href="quic.html">QUIC 传输接口</a></li>
+<li class="toctree-l5"><a class="reference internal" href="system_mgmt.html">网络系统管理</a></li>
+<li class="toctree-l5 current"><a class="reference internal" href="tsn.html">时间敏感网络</a><ul class="current">
+<li class="toctree-l6"><a class="reference internal" href="gptp.html">通用精确时间协议（gPTP）</a></li>
+<li class="toctree-l6"><a class="reference internal" href="net_time.html">网络协议栈中的网络时间表示</a></li>
+<li class="toctree-l6"><a class="reference internal" href="ptp_time.html">精确时间协议（PTP）时间格式</a></li>
+<li class="toctree-l6 current"><a class="current reference internal" href="#">精确时间协议（PTP）</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="zperf.html">zperf：网络流量生成器</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../conn_mgr/index.html">连接管理器</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../dsa.html">分布式交换架构（DSA）</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../bluetooth/index.html">Bluetooth</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../usb/index.html">USB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../canbus/index.html">控制器局域网（CAN）总线协议</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lora_lorawan/index.html">LoRa 和 LoRaWAN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modbus/index.html">Modbus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modem/index.html">调制解调器模块</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../../index.html">连接</a> &raquo;</li>
+  
+     <li><a href="../index.html">网络</a> &raquo;</li>
+  
+     <li><a href="index.html">网络 API</a> &raquo;</li>
+  
+     <li><a href="tsn.html">时间敏感网络</a> &raquo;</li>
+  
+  <li>精确时间协议（PTP）</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="precision-time-protocol-ptp">
+<span id="ptp-interface"></span><h1>精确时间协议（PTP）<a class="headerlink" href="#precision-time-protocol-ptp" title="链接到此标题。"></a></h1>
+<nav class="contents local" id="id1">
+<ul class="simple">
+<li><p><a class="reference internal" href="#overview" id="id4">概述</a></p></li>
+<li><p><a class="reference internal" href="#supported-features" id="id5">支持的功能</a></p></li>
+<li><p><a class="reference internal" href="#network-transmission-modes" id="id6">网络传输模式</a></p></li>
+<li><p><a class="reference internal" href="#supported-management-messages" id="id7">支持的管理消息</a></p></li>
+<li><p><a class="reference internal" href="#timestamping-notes" id="id8">时间戳说明</a></p></li>
+<li><p><a class="reference internal" href="#supported-hardware" id="id9">支持的硬件</a></p></li>
+<li><p><a class="reference internal" href="#enabling-the-stack" id="id10">启用协议栈</a></p></li>
+<li><p><a class="reference internal" href="#testing" id="id11">测试</a></p></li>
+<li><p><a class="reference internal" href="#api-reference" id="id12">API 参考</a></p></li>
+</ul>
+</nav>
+<section id="overview">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">概述</a><a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>PTP 是一种在应用层实现的网络协议，用于同步计算机网络中的时钟，精度可达亚微秒级。该协议栈支持 <a class="reference external" href="https://standards.ieee.org/ieee/1588/6825/">IEEE 1588-2019 standard</a> （《IEEE 网络化测量与控制系统精确时钟同步协议标准》）中定义的协议和过程。PTP 有多种配置文件（profile），可以在 L2（以太网）或 L3（UDP/IPv4 或 UDP/IPv6）之上实现。其精度通过对协议数据包进行硬件时间戳来实现。</p>
+<p>Zephyr 的 PTP 协议栈实现包含以下部分：</p>
+<ul class="simple">
+<li><p>处理传入消息和事件的 PTP 协议栈线程</p></li>
+<li><p>与 ptp_clock 驱动的集成</p></li>
+<li><p>在系统初始化期间执行的 PTP 协议栈初始化</p></li>
+</ul>
+<p>该实现会自动创建 PTP 端口（每个 PTP 端口对应一个唯一的接口）。</p>
+</section>
+<section id="supported-features">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">支持的功能</a><a class="headerlink" href="#supported-features" title="链接到此标题。"></a></h2>
+<p>该协议栈的实现并不支持标准中规定的所有功能。下表列出了所有支持的功能。</p>
+<table class="docutils align-default" id="id2">
+<caption><span class="caption-text">支持的功能</span><a class="headerlink" href="#id2" title="链接到此表格。"></a></caption>
+<colgroup>
+<col style="width: 83.3%" />
+<col style="width: 16.7%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>功能</p></th>
+<th class="head"><p>是否支持</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>普通时钟（Ordinary Clock）</p></td>
+<td><p>是</p></td>
+</tr>
+<tr class="row-odd"><td><p>边界时钟（Boundary Clock）</p></td>
+<td><p>是</p></td>
+</tr>
+<tr class="row-even"><td><p>透明时钟（Transparent Clock）</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>管理节点（Management Node）</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>端到端延迟机制</p></td>
+<td><p>是</p></td>
+</tr>
+<tr class="row-odd"><td><p>点对点延迟机制</p></td>
+<td><p>是（两步式）</p></td>
+</tr>
+<tr class="row-even"><td><p>多播工作模式</p></td>
+<td><p>是</p></td>
+</tr>
+<tr class="row-odd"><td><p>混合工作模式</p></td>
+<td><p>是</p></td>
+</tr>
+<tr class="row-even"><td><p>单播工作模式</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>非易失性存储</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>UDP IPv4 传输协议</p></td>
+<td><p>是</p></td>
+</tr>
+<tr class="row-odd"><td><p>UDP IPv6 传输协议</p></td>
+<td><p>是</p></td>
+</tr>
+<tr class="row-even"><td><p>IEEE 802.3（以太网）传输协议</p></td>
+<td><p>是</p></td>
+</tr>
+<tr class="row-odd"><td><p>硬件时间戳</p></td>
+<td><p>是</p></td>
+</tr>
+<tr class="row-even"><td><p>软件时间戳</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>TIME_RECEIVER_ONLY PTP 实例</p></td>
+<td><p>是</p></td>
+</tr>
+<tr class="row-even"><td><p>TIME_TRANSMITTER_ONLY PTP 实例</p></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="network-transmission-modes">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">网络传输模式</a><a class="headerlink" href="#network-transmission-modes" title="链接到此标题。"></a></h2>
+<p>网络传输模式通过 <code class="docutils literal notranslate"><span class="pre">PTP_NETWORK_MODE</span></code> Kconfig 选择项选择：</p>
+<ul>
+<li><p>多播模式（<a class="reference internal" href="../../../../kconfig.html#CONFIG_PTP_NETWORK_MODE_MULTICAST" title="CONFIG_PTP_NETWORK_MODE_MULTICAST"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PTP_NETWORK_MODE_MULTICAST</span></code></a>，默认）是标准的 PTP 模式，所有 PTP 消息都发送到默认的多播地址。这意味着每个节点都会收到所有其他节点的 <code class="docutils literal notranslate"><span class="pre">Delay_Req</span></code> 和 <code class="docutils literal notranslate"><span class="pre">Delay_Resp</span></code> 消息对，从而增加网络上的流量。在只有少量时间接收方（timeReceiver）的小型网络中，这通常不成问题。</p></li>
+<li><p>混合模式（<a class="reference internal" href="../../../../kconfig.html#CONFIG_PTP_NETWORK_MODE_HYBRID" title="CONFIG_PTP_NETWORK_MODE_HYBRID"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PTP_NETWORK_MODE_HYBRID</span></code></a>）仍将 <code class="docutils literal notranslate"><span class="pre">Announce</span></code>、<code class="docutils literal notranslate"><span class="pre">Sync</span></code> 和 <code class="docutils literal notranslate"><span class="pre">Follow_Up</span></code> 消息发送到默认的多播地址，但时间接收方会以单播方式将其 <code class="docutils literal notranslate"><span class="pre">Delay_Req</span></code> 消息直接发送到当前时间发送方（timeTransmitter）的协议地址（IP 地址；对于 IEEE 802.3 传输则为 MAC 地址），时间发送方再以单播 <code class="docutils literal notranslate"><span class="pre">Delay_Resp</span></code> 应答发出请求的时间接收方。这降低了网络上的 PTP 流量，在扩展到拥有大量时间接收方的大型网络时，这一点可能很重要。混合模式只要求网络支持从时间发送方到时间接收方的多播传输。该模式与 linuxptp 的 <code class="docutils literal notranslate"><span class="pre">hybrid_e2e</span></code> 选项以及 sfptpd 的 <code class="docutils literal notranslate"><span class="pre">hybrid</span></code> 网络模式兼容；不支持单播协商。</p>
+<p>如果时间发送方连续 <a class="reference internal" href="../../../../kconfig.html#CONFIG_PTP_HYBRID_FALLBACK_ATTEMPTS" title="CONFIG_PTP_HYBRID_FALLBACK_ATTEMPTS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PTP_HYBRID_FALLBACK_ATTEMPTS</span></code></a> 次未应答单播 <code class="docutils literal notranslate"><span class="pre">Delay_Req</span></code> 消息，PTP 端口会记录一条错误，退回到多播延迟测量，并保持多播方式，直到选出新的时间发送方。可以通过 <a class="reference internal" href="../../../../kconfig.html#CONFIG_PTP_NETWORK_MODE_HYBRID_NO_FALLBACK" title="CONFIG_PTP_NETWORK_MODE_HYBRID_NO_FALLBACK"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PTP_NETWORK_MODE_HYBRID_NO_FALLBACK</span></code></a> 禁用这种回退，此时端口会始终发送单播 <code class="docutils literal notranslate"><span class="pre">Delay_Req</span></code> 消息。</p>
+<p>混合模式要求使用端到端延迟机制（<a class="reference internal" href="../../../../kconfig.html#CONFIG_PTP_DELAY_MECHANISM_E2E" title="CONFIG_PTP_DELAY_MECHANISM_E2E"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PTP_DELAY_MECHANISM_E2E</span></code></a>），并且在所有传输协议（UDP IPv4、UDP IPv6 和 IEEE 802.3）上都受支持。</p>
+</li>
+</ul>
+</section>
+<section id="supported-management-messages">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">支持的管理消息</a><a class="headerlink" href="#supported-management-messages" title="链接到此标题。"></a></h2>
+<p>根据 IEEE 1588-2019 第 15.5.2.3 节中的表 59，支持以下管理 TLV：</p>
+<table class="docutils align-default" id="id3">
+<caption><span class="caption-text">支持的管理消息 ID</span><a class="headerlink" href="#id3" title="链接到此表格。"></a></caption>
+<colgroup>
+<col style="width: 13.3%" />
+<col style="width: 53.3%" />
+<col style="width: 33.3%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>Management_ID</p></th>
+<th class="head"><p>Management_ID 名称</p></th>
+<th class="head"><p>允许的操作</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>0x0000</p></td>
+<td><p>NULL_PTP_MANAGEMENT</p></td>
+<td><p>GET SET COMMAND</p></td>
+</tr>
+<tr class="row-odd"><td><p>0x0001</p></td>
+<td><p>CLOCK_DESCRIPTION</p></td>
+<td><p>GET</p></td>
+</tr>
+<tr class="row-even"><td><p>0x0002</p></td>
+<td><p>USER_DESCRIPTION</p></td>
+<td><p>GET</p></td>
+</tr>
+<tr class="row-odd"><td><p>0x0003</p></td>
+<td><p>SAVE_IN_NON_VOLATILE_STORAGE</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>0x0004</p></td>
+<td><p>RESET_NON_VOLATILE_STORAGE</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>0x0005</p></td>
+<td><p>INITIALIZE</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>0x0006</p></td>
+<td><p>FAULT_LOG</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>0x0007</p></td>
+<td><p>FAULT_LOG_RESET</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>0x2000</p></td>
+<td><p>DEFAULT_DATA_SET</p></td>
+<td><p>GET</p></td>
+</tr>
+<tr class="row-odd"><td><p>0x2001</p></td>
+<td><p>CURRENT_DATA_SET</p></td>
+<td><p>GET</p></td>
+</tr>
+<tr class="row-even"><td><p>0x2002</p></td>
+<td><p>PARENT_DATA_SET</p></td>
+<td><p>GET</p></td>
+</tr>
+<tr class="row-odd"><td><p>0x2003</p></td>
+<td><p>TIME_PROPERTIES_DATA_SET</p></td>
+<td><p>GET</p></td>
+</tr>
+<tr class="row-even"><td><p>0x2004</p></td>
+<td><p>PORT_DATA_SET</p></td>
+<td><p>GET</p></td>
+</tr>
+<tr class="row-odd"><td><p>0x2005</p></td>
+<td><p>PRIORITY1</p></td>
+<td><p>GET SET</p></td>
+</tr>
+<tr class="row-even"><td><p>0x2006</p></td>
+<td><p>PRIORITY2</p></td>
+<td><p>GET SET</p></td>
+</tr>
+<tr class="row-odd"><td><p>0x2007</p></td>
+<td><p>DOMAIN</p></td>
+<td><p>GET SET</p></td>
+</tr>
+<tr class="row-even"><td><p>0x2008</p></td>
+<td><p>TIME_RECEIVER_ONLY</p></td>
+<td><p>GET SET</p></td>
+</tr>
+<tr class="row-odd"><td><p>0x2009</p></td>
+<td><p>LOG_ANNOUNCE_INTERVAL</p></td>
+<td><p>GET SET</p></td>
+</tr>
+<tr class="row-even"><td><p>0x200A</p></td>
+<td><p>ANNOUNCE_RECEIPT_TIMEOUT</p></td>
+<td><p>GET SET</p></td>
+</tr>
+<tr class="row-odd"><td><p>0x200B</p></td>
+<td><p>LOG_SYNC_INTERVAL</p></td>
+<td><p>GET SET</p></td>
+</tr>
+<tr class="row-even"><td><p>0x200C</p></td>
+<td><p>VERSION_NUMBER</p></td>
+<td><p>GET SET</p></td>
+</tr>
+<tr class="row-odd"><td><p>0x200D</p></td>
+<td><p>ENABLE_PORT</p></td>
+<td><p>COMMAND</p></td>
+</tr>
+<tr class="row-even"><td><p>0x200E</p></td>
+<td><p>DISABLE_PORT</p></td>
+<td><p>COMMAND</p></td>
+</tr>
+<tr class="row-odd"><td><p>0x200F</p></td>
+<td><p>TIME</p></td>
+<td><p>GET SET</p></td>
+</tr>
+<tr class="row-even"><td><p>0x2010</p></td>
+<td><p>CLOCK_ACCURACY</p></td>
+<td><p>GET SET</p></td>
+</tr>
+<tr class="row-odd"><td><p>0x2011</p></td>
+<td><p>UTC_PROPERTIES</p></td>
+<td><p>GET SET</p></td>
+</tr>
+<tr class="row-even"><td><p>0x2012</p></td>
+<td><p>TRACEBILITY_PROPERTIES</p></td>
+<td><p>GET SET</p></td>
+</tr>
+<tr class="row-odd"><td><p>0x2013</p></td>
+<td><p>TIMESCALE_PROPERTIES</p></td>
+<td><p>GET SET</p></td>
+</tr>
+<tr class="row-even"><td><p>0x2014</p></td>
+<td><p>UNICAST_NEGOTIATION_ENABLE</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>0x2015</p></td>
+<td><p>PATH_TRACE_LIST</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>0x2016</p></td>
+<td><p>PATH_TRACE_ENABLE</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>0x2017</p></td>
+<td><p>GRANDMASTER_CLUSTER_TABLE</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>0x2018</p></td>
+<td><p>UNICAST_TIME_TRANSMITTER_TABLE</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>0x2019</p></td>
+<td><p>UNICAST_TIME_TRANSMITTER_MAX_TABLE_SIZE</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>0x201A</p></td>
+<td><p>ACCEPTABLE_TIME_TRANSMITTER_TABLE</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>0x201B</p></td>
+<td><p>ACCEPTABLE_TIME_TRANSMITTER_TABLE_ENABLED</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>0x201C</p></td>
+<td><p>ACCEPTABLE_TIME_TRANSMITTER_MAX_TABLE_SIZE</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>0x201D</p></td>
+<td><p>ALTERNATE_TIME_TRANSMITTER</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>0x201E</p></td>
+<td><p>ALTERNATE_TIME_OFFSET_ENABLE</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>0x201F</p></td>
+<td><p>ALTERNATE_TIME_OFFSET_NAME</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>0x2020</p></td>
+<td><p>ALTERNATE_TIME_OFFSET_MAX_KEY</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>0x2021</p></td>
+<td><p>ALTERNATE_TIME_OFFSET_PROPERTIES</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>0x3000</p></td>
+<td><p>EXTERNAL_PORT_CONFIGURATION_ENABLED</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>0x3001</p></td>
+<td><p>TIME_TRANSMITTER_ONLY</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>0x3002</p></td>
+<td><p>HOLDOVER_UPGRADE_ENABLE</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>0x3003</p></td>
+<td><p>EXT_PORT_CONFIG_PORT_DATA_SET</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>0x4000</p></td>
+<td><p>TRANSPARENT_CLOCK_DEFAULT_DATA_SET</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>0x4001</p></td>
+<td><p>TRANSPARENT_CLOCK_PORT_DATA_SET</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>0x4002</p></td>
+<td><p>PRIMARY_DOMAIN</p></td>
+<td><ul class="simple">
+<li></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>0x6000</p></td>
+<td><p>DELAY_MECHANISM</p></td>
+<td><p>GET</p></td>
+</tr>
+<tr class="row-even"><td><p>0x6001</p></td>
+<td><p>LOG_MIN_PDELAY_REQ_INTERVAL</p></td>
+<td><p>GET SET</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="timestamping-notes">
+<h2><a class="toc-backref" href="#id8" role="doc-backlink">时间戳说明</a><a class="headerlink" href="#timestamping-notes" title="链接到此标题。"></a></h2>
+<p>当 RX 硬件时间戳不可用或无效时，同步会退而在接收处理过程中读取 PHC 时间。这可能会因帧到达与读取 PHC 之间的软件处理延迟（数据包路径和调度）而引入额外的抖动。</p>
+<p>对于没有真正由驱动提供 RX 硬件时间戳的 L2 AF_PACKET 路径，这种行为是预期之中的。</p>
+<p>对于 IEEE 802.3 传输，Sync 以两步模式发送，Follow_Up 根据 TX 时间戳回调生成。如果 TX 时间戳缺失或延迟，协议栈会记录一条警告并跳过该 Sync 序列的 Follow_Up，然后在后续间隔中继续正常发送 Sync（尽力而为的行为）。</p>
+<p>可以通过 <a class="reference internal" href="../../../../kconfig.html#CONFIG_PTP_DELAY_MECHANISM_P2P" title="CONFIG_PTP_DELAY_MECHANISM_P2P"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PTP_DELAY_MECHANISM_P2P</span></code></a> 选择点对点延迟测量。首个受支持的 P2P 模式是两步式 <code class="docutils literal notranslate"><span class="pre">Pdelay_Req</span></code> / <code class="docutils literal notranslate"><span class="pre">Pdelay_Resp</span></code> / <code class="docutils literal notranslate"><span class="pre">Pdelay_Resp_Follow_Up</span></code>。一步式 <code class="docutils literal notranslate"><span class="pre">Pdelay_Resp</span></code> 样本会被拒绝并记录日志，留待以后实现。</p>
+</section>
+<section id="supported-hardware">
+<h2><a class="toc-backref" href="#id9" role="doc-backlink">支持的硬件</a><a class="headerlink" href="#supported-hardware" title="链接到此标题。"></a></h2>
+<p>虽然协议栈本身与硬件无关，但必须在以太网驱动中启用以太网帧时间戳支持。</p>
+<p>支持的开发板：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../../../boards/st/nucleo_h563zi/doc/index.html#nucleo_h563zi">Nucleo H563ZI</a></p></li>
+<li><p><a class="reference internal" href="../../../../boards/st/nucleo_h743zi/doc/index.html#nucleo_h743zi">Nucleo H743ZI</a></p></li>
+<li><p><a class="reference internal" href="../../../../boards/st/nucleo_h745zi_q/doc/index.html#nucleo_h745zi_q">Nucleo H745ZI-Q</a></p></li>
+<li><p><a class="reference internal" href="../../../../boards/st/nucleo_f767zi/doc/index.html#nucleo_f767zi">Nucleo F767ZI</a></p></li>
+<li><p><a class="reference internal" href="../../../../boards/nxp/frdm_mcxn947/doc/index.html#frdm_mcxn947">FRDM-MCXN947</a></p></li>
+<li><p><a class="reference internal" href="../../../../boards/native/native_sim/doc/index.html#native_sim">Native simulator - native_sim</a> （仅可用于简单测试，由于没有硬件时钟，功能有限）</p></li>
+</ul>
+</section>
+<section id="enabling-the-stack">
+<h2><a class="toc-backref" href="#id10" role="doc-backlink">启用协议栈</a><a class="headerlink" href="#enabling-the-stack" title="链接到此标题。"></a></h2>
+<p>必须在 <code class="file docutils literal notranslate"><span class="pre">prj.conf</span></code> 文件中启用以下配置选项。</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../../../kconfig.html#CONFIG_PTP" title="CONFIG_PTP"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PTP</span></code></a></p></li>
+</ul>
+</section>
+<section id="testing">
+<h2><a class="toc-backref" href="#id11" role="doc-backlink">测试</a><a class="headerlink" href="#testing" title="链接到此标题。"></a></h2>
+<p>该协议栈已使用 <a class="reference external" href="https://linuxptp.sourceforge.net/">Linux ptp4l</a> 守护进程进行过非正式测试。还在 <a class="reference internal" href="../../../../boards/st/nucleo_h563zi/doc/index.html#nucleo_h563zi">Nucleo H563ZI</a> 和 <a class="reference internal" href="../../../../boards/nxp/frdm_mcxn947/doc/index.html#frdm_mcxn947">FRDM-MCXN947</a> 开发板上针对 GPS 时钟进行了测试，包括以太网直连以及中间经过支持 PTP 的交换机两种情况。所有测试均使用 <a class="reference internal" href="../../../../samples/net/ptp/README.html#ptp" title="启用 PTP 支持，并通过日志监视消息和事件。"><span class="xref zephyr zephyr-code-sample">PTP 示例应用程序</span></a>，并覆盖了 UDP IPv4、UDP IPv6 和 IEEE 802.3 传输。</p>
+<p>下表汇总了非正式测试矩阵：</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"></th>
+<th class="head"><p>IEEE 802.3</p></th>
+<th class="head"><p>UDP IPv4</p></th>
+<th class="head"><p>UDP IPv6</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>ptp4l 守护进程</p></td>
+<td><p>是</p></td>
+<td><p>是</p></td>
+<td><p>是</p></td>
+</tr>
+<tr class="row-odd"><td><p>GPS 时钟（直连）</p></td>
+<td><p>是</p></td>
+<td><p>是</p></td>
+<td><p>是</p></td>
+</tr>
+<tr class="row-even"><td><p>支持 PTP 的交换机</p></td>
+<td><p>是</p></td>
+<td><p>是</p></td>
+<td><p>是</p></td>
+</tr>
+<tr class="row-odd"><td><p>GPS 时钟 + 支持 PTP 的交换机</p></td>
+<td><p>是</p></td>
+<td><p>是</p></td>
+<td><p>是</p></td>
+</tr>
+</tbody>
+</table>
+<p>点对点延迟测量已经实现，并在普通时钟用例中得到验证。边界时钟运行预计会共用同一套端口级 Pdelay 机制，但尚未在多端口硬件上验证。</p>
+<p>可以使用 Zephyr 源代码发行版中的 <a class="reference internal" href="../../../../samples/net/ptp/README.html#ptp" title="启用 PTP 支持，并通过日志监视消息和事件。"><span class="xref zephyr zephyr-code-sample">PTP 示例应用程序</span></a> 进行测试。</p>
+</section>
+<section id="api-reference">
+<h2><a class="toc-backref" href="#id12" role="doc-backlink">API 参考</a><a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">ptp</span></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/ptp/README.html#ptp" title="启用 PTP 支持，并通过日志监视消息和事件。">PTP</a></span><span class="code-sample-description">启用 PTP 支持，并通过日志监视消息和事件。</span></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 8月 26, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

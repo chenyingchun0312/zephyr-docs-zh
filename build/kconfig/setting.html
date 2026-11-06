@@ -1,0 +1,519 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>设置 Kconfig 配置值 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/build/kconfig/setting.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="Kconfig 技巧与最佳实践" href="tips.html" />
+    <link rel="prev" title="追溯配置值的来源" href="tracing.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">构建与配置系统</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../cmake/index.html">构建系统（CMake）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cmake-ref/index.html">CMake 参考</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dts/index.html">设备树</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">配置系统（Kconfig）</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="menuconfig.html">交互式 Kconfig 界面</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tracing.html">追溯配置值的来源</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">设置 Kconfig 配置值</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#visible-and-invisible-kconfig-symbols">可见与不可见的 Kconfig 符号</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#setting-symbols-in-configuration-files">在配置文件中设置符号</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#the-initial-configuration">初始配置</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#treating-kconfig-warnings-as-errors">将 Kconfig 警告视为错误</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tracking-kconfig-symbols">跟随其他 Kconfig 符号</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#configuring-invisible-kconfig-symbols">配置不可见的 Kconfig 符号</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#multiple-symbol-definitions">符号的多重定义</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#motivation-for-kconfig-defconfig-files">使用 Kconfig.defconfig 文件的动机</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#configuring-choices">配置 choice</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#more-kconfig-resources">更多 Kconfig 资料</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="tips.html">Kconfig 技巧与最佳实践</a></li>
+<li class="toctree-l3"><a class="reference internal" href="preprocessor-functions.html">自定义 Kconfig 预处理器函数</a></li>
+<li class="toctree-l3"><a class="reference internal" href="extensions.html">Kconfig 扩展</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../snippets/index.html">代码片段（snippet）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../zephyr_cmake_package.html">Zephyr CMake 包</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sysbuild/index.html">Sysbuild（系统构建）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../version/index.html">应用程序版本管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../flashing/index.html">烧录</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../signing/index.html">对二进制文件签名</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">构建与配置系统</a> &raquo;</li>
+  
+     <li><a href="index.html">配置系统（Kconfig）</a> &raquo;</li>
+  
+  <li>设置 Kconfig 配置值</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="setting-kconfig-configuration-values">
+<span id="setting-configuration-values"></span><h1>设置 Kconfig 配置值<a class="headerlink" href="#setting-kconfig-configuration-values" title="链接到此标题。"></a></h1>
+<p>在应用程序开发期间，可以使用 <a class="reference internal" href="menuconfig.html#menuconfig"><span class="std std-ref">menuconfig 和 guiconfig 界面</span></a> 试验各种配置。本页说明如何使设置永久生效。</p>
+<p>所有 Kconfig 选项都可以在 <a class="reference internal" href="../../kconfig.html#kconfig-search"><span class="std std-ref">Kconfig 搜索页面</span></a> 中搜索。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>在修改 Kconfig 文件之前，最好也读一读 <a class="reference internal" href="tips.html#kconfig-tips-and-tricks"><span class="std std-ref">Kconfig 技巧与最佳实践</span></a> 页面。</p>
+</div>
+<section id="visible-and-invisible-kconfig-symbols">
+<h2>可见与不可见的 Kconfig 符号<a class="headerlink" href="#visible-and-invisible-kconfig-symbols" title="链接到此标题。"></a></h2>
+<p>修改 Kconfig 时，务必理解 <em>可见</em> 符号与 <em>不可见</em> 符号之间的区别。</p>
+<ul>
+<li><p>可见符号是定义了提示（prompt）的符号。可见符号会显示在交互式配置界面中（因此称为 <em>可见</em>），并且可以在配置文件中设置。</p>
+<p>下面是一个可见符号的示例：</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span><span class="k">config</span><span class="w"> </span>FPU
+<span class="w">   </span><span class="nb">bool</span><span class="w"> </span><span class="s2">"Support floating point operations"</span>
+<span class="w">   </span><span class="k">depends on</span><span class="w"> </span>HAS_FPU
+</pre></div>
+</div>
+<p>该符号在 <code class="docutils literal notranslate"><span class="pre">menuconfig</span></code> 中显示如下，可以在其中切换它：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[ ] Support floating point operations
+</pre></div>
+</div>
+</li>
+<li><p><em>不可见</em> 符号是没有提示的符号。不可见符号不会显示在交互式配置界面中，用户也无法直接控制其值。它们的值来自默认值或其他符号。</p>
+<p>下面是一个不可见符号的示例：</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span><span class="k">config</span><span class="w"> </span>CPU_HAS_FPU
+<span class="w">   </span><span class="nb">bool</span>
+<span class="w">   </span><span class="k">help</span>
+<span class="w">     </span>This<span class="w"> </span>symbol<span class="w"> </span>is<span class="w"> </span>y<span class="w"> </span><span class="k">if</span><span class="w"> </span>the<span class="w"> </span>CPU<span class="w"> </span>has<span class="w"> </span>a<span class="w"> </span>hardware<span class="w"> </span>floating<span class="w"> </span>point<span class="w"> </span>unit.
+</pre></div>
+</div>
+<p>在这个例子中，<code class="docutils literal notranslate"><span class="pre">CPU_HAS_FPU</span></code> 是通过其他带有 <code class="docutils literal notranslate"><span class="pre">select</span> <span class="pre">CPU_HAS_FPU</span></code> 的符号启用的。</p>
+</li>
+</ul>
+</section>
+<section id="setting-symbols-in-configuration-files">
+<h2>在配置文件中设置符号<a class="headerlink" href="#setting-symbols-in-configuration-files" title="链接到此标题。"></a></h2>
+<p>可见符号可以通过在配置文件中设置来进行配置。初始配置是将开发板的 <code class="file docutils literal notranslate"><span class="pre">*_defconfig</span></code> 文件与应用程序设置（通常来自 <code class="file docutils literal notranslate"><span class="pre">prj.conf</span></code>）合并而成的。详见下文的 <a class="reference internal" href="#initial-conf"><span class="std std-ref">初始配置</span></a>。</p>
+<p>配置文件中的赋值使用以下语法：</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">CONFIG_&lt;symbol name&gt;</span><span class="o">=</span><span class="s">&lt;value&gt;</span>
+</pre></div>
+</div>
+<p>等号两侧不应有空格。</p>
+<p><code class="docutils literal notranslate"><span class="pre">bool</span></code> 符号可以分别设为 <code class="docutils literal notranslate"><span class="pre">y</span></code> 或 <code class="docutils literal notranslate"><span class="pre">n</span></code> 来启用或禁用。上例中的 <code class="docutils literal notranslate"><span class="pre">FPU</span></code> 符号可以这样启用：</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">CONFIG_FPU</span><span class="o">=</span><span class="s">y</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>布尔符号也可以通过如下格式的注释设为 <code class="docutils literal notranslate"><span class="pre">n</span></code>：</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># CONFIG_SOME_OTHER_BOOL is not set</span>
+</pre></div>
+</div>
+<p>在构建目录中保存到 <code class="file docutils literal notranslate"><span class="pre">zephyr/.config</span></code> 的合并配置里，看到的就是这种格式。</p>
+<p>接受这种写法是出于历史原因：Kconfig 配置文件可以作为 makefile 解析（尽管 Zephyr 并不这样用）。让值为 <code class="docutils literal notranslate"><span class="pre">n</span></code> 的符号对应未设置的变量，可以简化 Make 中的判断。</p>
+</div>
+<p>其他类型的符号按如下方式赋值：</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">CONFIG_SOME_STRING</span><span class="o">=</span><span class="s">"cool value"</span>
+<span class="na">CONFIG_SOME_INT</span><span class="o">=</span><span class="s">123</span>
+</pre></div>
+</div>
+<p>注释使用 #：</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="c1"># This is a comment</span>
+</pre></div>
+</div>
+<p>只有当符号的依赖得到满足时，配置文件中的赋值才会生效，否则会打印一条警告。要了解某个符号的依赖，可以使用某个 <a class="reference internal" href="menuconfig.html#menuconfig"><span class="std std-ref">交互式配置界面</span></a>（可以按 <kbd class="kbd docutils literal notranslate">/</kbd> 直接跳转到某个符号），或在 <a class="reference internal" href="../../kconfig.html#kconfig-search"><span class="std std-ref">Kconfig 搜索页面</span></a> 中查找该符号。</p>
+</section>
+<section id="the-initial-configuration">
+<span id="initial-conf"></span><h2>初始配置<a class="headerlink" href="#the-initial-configuration" title="链接到此标题。"></a></h2>
+<p>应用程序的初始配置由以下三个来源的配置设置合并而成：</p>
+<ol class="arabic simple">
+<li><p>存放在 <code class="file docutils literal notranslate"><span class="pre">boards/&lt;VENDOR&gt;/&lt;BOARD&gt;/&lt;BOARD&gt;_defconfig</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">BOARD</span></code> 专用配置文件</p></li>
+<li><p>所有以 <code class="docutils literal notranslate"><span class="pre">CONFIG_</span></code> 为前缀的 CMake 缓存条目</p></li>
+<li><p>应用程序配置</p></li>
+</ol>
+<p>应用程序配置可以来自以下来源（每个文件称为一个 Kconfig 片段，这些片段合并后得到特定构建所用的最终配置）。默认使用 <code class="file docutils literal notranslate"><span class="pre">prj.conf</span></code>。</p>
+<ol class="arabic simple">
+<li><p>如果设置了 <code class="docutils literal notranslate"><span class="pre">CONF_FILE</span></code>，则将其中指定的配置文件合并后用作应用程序配置。<code class="docutils literal notranslate"><span class="pre">CONF_FILE</span></code> 可以通过多种方式设置：</p>
+<ol class="arabic simple">
+<li><p>在 <code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> 中，在调用 <code class="docutils literal notranslate"><span class="pre">find_package(Zephyr)</span></code> 之前设置</p></li>
+<li><p>直接或通过 <code class="docutils literal notranslate"><span class="pre">west</span></code> 传入 <code class="docutils literal notranslate"><span class="pre">-DCONF_FILE=&lt;conf</span> <span class="pre">file(s)&gt;</span></code></p></li>
+<li><p>来自 CMake 变量缓存</p></li>
+</ol>
+</li>
+<li><p>否则，如果应用程序配置目录中存在 <code class="file docutils literal notranslate"><span class="pre">boards/&lt;BOARD&gt;.conf</span></code>，则使用它与 <code class="file docutils literal notranslate"><span class="pre">prj.conf</span></code> 合并后的结果。</p></li>
+<li><p>否则，如果使用了开发板版本，并且应用程序配置目录中存在 <code class="file docutils literal notranslate"><span class="pre">boards/&lt;BOARD&gt;_&lt;revision&gt;.conf</span></code>，则使用它与 <code class="file docutils literal notranslate"><span class="pre">prj.conf</span></code> 和 <code class="file docutils literal notranslate"><span class="pre">boards/&lt;BOARD&gt;.conf</span></code> 合并后的结果。</p></li>
+<li><p>否则，使用应用程序配置目录中的 <code class="file docutils literal notranslate"><span class="pre">prj.conf</span></code>。如果该文件不存在，则会产生致命错误。</p></li>
+</ol>
+<p>此外，应用程序还可以向配置中添加 SoC Kconfig 片段：如果文件 <code class="file docutils literal notranslate"><span class="pre">socs/&lt;SOC&gt;_&lt;BOARD_QUALIFIERS&gt;.conf</span></code> 存在，它会在主项目配置应用之后、任何开发板 Kconfig 片段文件应用之前被应用。</p>
+<p>除了通过 <code class="docutils literal notranslate"><span class="pre">CONF_FILE</span></code>、<code class="docutils literal notranslate"><span class="pre">EXTRA_CONF_FILE</span></code>、<code class="docutils literal notranslate"><span class="pre">DTC_OVERLAY_FILE</span></code> 和 <code class="docutils literal notranslate"><span class="pre">EXTRA_DTC_OVERLAY_FILE</span></code> 参数给出的绝对路径文件之外，所有配置文件都取自应用程序的配置目录。对于这些参数，在应用程序的 <code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> 中设置上述任一变量时，可以像 <code class="docutils literal notranslate"><span class="pre">\${ZEPHYR_&lt;module&gt;_MODULE_DIR}/&lt;path-to&gt;/&lt;file&gt;</span></code> 这样转义 Zephyr 模块目录变量，以引用 Zephyr 模块中的文件。</p>
+<p>关于应用程序配置目录是如何确定的，请参阅 <a class="reference internal" href="../../develop/application/index.html#application-configuration-directory"><span class="std std-ref">应用程序配置目录</span></a>。</p>
+<p>如果某个符号同时在 <code class="file docutils literal notranslate"><span class="pre">&lt;BOARD&gt;_defconfig</span></code> 和应用程序配置中被赋值，则以应用程序配置中设置的值为准。</p>
+<p>合并后的配置保存在构建目录下的 <code class="file docutils literal notranslate"><span class="pre">zephyr/.config</span></code> 中。</p>
+<p>只要 <code class="file docutils literal notranslate"><span class="pre">zephyr/.config</span></code> 存在且是最新的（比所有 <code class="docutils literal notranslate"><span class="pre">BOARD</span></code> 和应用程序配置文件都新），就会优先使用它，而不会重新生成合并配置。在 <a class="reference internal" href="menuconfig.html#menuconfig"><span class="std std-ref">交互式配置界面</span></a> 中进行修改时，被修改的也是 <code class="file docutils literal notranslate"><span class="pre">zephyr/.config</span></code> 这份配置。</p>
+</section>
+<section id="treating-kconfig-warnings-as-errors">
+<span id="kconfig-warning-as-error"></span><h2>将 Kconfig 警告视为错误<a class="headerlink" href="#treating-kconfig-warnings-as-errors" title="链接到此标题。"></a></h2>
+<p>某些 Kconfig 警告默认会中止构建，例如对未定义符号的赋值。其他警告则只会打印出来，例如某个符号被多次设置，或者由于符号的依赖未满足而忽略了某个赋值。</p>
+<p>设置 CMake 变量 <strong class="makevar">KCONFIG_WARNING_AS_ERROR</strong>，可以将 <em>所有</em> Kconfig 警告视为错误：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">west build -b &lt;board&gt; &lt;app&gt; -- -DKCONFIG_WARNING_AS_ERROR=y</span>
+</pre></div>
+</div>
+<p>这在 CI 中很有用，因为被静默忽略的配置设置很可能是个错误。该变量通过 <code class="docutils literal notranslate"><span class="pre">zephyr_get()</span></code> 读取，因此也可以作为 <a class="reference internal" href="../../develop/env_vars.html#env-vars"><span class="std std-ref">环境变量</span></a> 给出，或通过 <a class="reference internal" href="../zephyr_cmake_package.html#cmake-build-config-package"><span class="std std-ref">Zephyr 构建配置 CMake 包</span></a> 设置。</p>
+</section>
+<section id="tracking-kconfig-symbols">
+<h2>跟随其他 Kconfig 符号<a class="headerlink" href="#tracking-kconfig-symbols" title="链接到此标题。"></a></h2>
+<p>可以创建以另一个 Kconfig 符号的值作为默认值的 Kconfig 符号。</p>
+<p>当你希望有一个应用程序或子系统专用的符号，但又不想直接依赖通用符号时，这种做法很有价值。例如，你可能希望将设置解耦以便独立配置，或者确保始终有一个本地命名的设置，即使外部设置的名称日后发生变化。</p>
+<p>例如，考虑通用设置 <code class="docutils literal notranslate"><span class="pre">FOO_STRING</span></code>，某个子系统希望有一个 <code class="docutils literal notranslate"><span class="pre">SUB_FOO_STRING</span></code>，同时仍允许定制。</p>
+<p>可以这样实现：</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span><span class="k">config</span><span class="w"> </span>FOO_STRING
+<span class="w">        </span><span class="nb">string</span><span class="w"> </span><span class="s2">"Foo"</span>
+<span class="w">        </span><span class="k">default</span><span class="w"> </span><span class="s2">"foo"</span>
+
+<span class="k">config</span><span class="w"> </span>SUB_FOO_STRING
+<span class="w">        </span><span class="nb">string</span><span class="w"> </span><span class="s2">"Sub-foo"</span>
+<span class="w">        </span><span class="k">default</span><span class="w"> </span>FOO_STRING
+</pre></div>
+</div>
+<p>这样可以确保 <code class="docutils literal notranslate"><span class="pre">SUB_FOO_STRING</span></code> 的默认值与 <code class="docutils literal notranslate"><span class="pre">FOO_STRING</span></code> 相同，同时仍允许用户独立配置这两个设置。</p>
+<p>也可以将 <code class="docutils literal notranslate"><span class="pre">SUB_FOO_STRING</span></code> 设为不可见，从而使两个符号保持同步，除非在 <code class="file docutils literal notranslate"><span class="pre">defconfig</span></code> 文件中修改了跟随符号的值。</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span><span class="k">config</span><span class="w"> </span>FOO_STRING
+<span class="w">        </span><span class="nb">string</span><span class="w"> </span><span class="s2">"Foo"</span>
+<span class="w">        </span><span class="k">default</span><span class="w"> </span><span class="s2">"foo"</span>
+
+<span class="k">config</span><span class="w"> </span>SUB_FOO_STRING
+<span class="w">        </span><span class="nb">string</span>
+<span class="w">        </span><span class="k">default</span><span class="w"> </span>FOO_STRING
+<span class="w">        </span><span class="k">help</span>
+<span class="sd">          Hidden symbol which follows FOO_STRING</span>
+<span class="sd">          Can be changed through *.defconfig files.</span>
+</pre></div>
+</div>
+</section>
+<section id="configuring-invisible-kconfig-symbols">
+<h2>配置不可见的 Kconfig 符号<a class="headerlink" href="#configuring-invisible-kconfig-symbols" title="链接到此标题。"></a></h2>
+<p>修改开发板的默认配置时，可能需要配置不可见符号。这在 <code class="file docutils literal notranslate"><span class="pre">boards/&lt;VENDOR&gt;/&lt;BOARD&gt;/Kconfig.defconfig</span></code> 中完成，它是一个普通的 <code class="file docutils literal notranslate"><span class="pre">Kconfig</span></code> 文件。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p><code class="file docutils literal notranslate"><span class="pre">.config</span></code> 文件中的赋值对不可见符号不起作用，因此这种方案不只是组织方式上的问题。</p>
+</div>
+<p>在 <code class="file docutils literal notranslate"><span class="pre">Kconfig.defconfig</span></code> 中赋值依赖于在多个位置定义同一个 Kconfig 符号。例如，假设我们想把下面的 <code class="docutils literal notranslate"><span class="pre">FOO_WIDTH</span></code> 设为 32：</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span><span class="k">config</span><span class="w"> </span>FOO_WIDTH
+<span class="w">    </span><span class="nb">int</span>
+</pre></div>
+</div>
+<p>为此，我们在 <code class="file docutils literal notranslate"><span class="pre">Kconfig.defconfig</span></code> 中按如下方式扩展 <code class="docutils literal notranslate"><span class="pre">FOO_WIDTH</span></code> 的定义：</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="w"> </span>BOARD_MY_BOARD
+
+<span class="k">config</span><span class="w"> </span>FOO_WIDTH
+<span class="w">    </span><span class="k">default</span><span class="w"> </span><span class="mi">32</span>
+
+<span class="k">endif</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>由于符号的类型（<code class="docutils literal notranslate"><span class="pre">int</span></code>）已在第一个定义位置给出，这里无需重复。只在符号的“基础”定义处给出一次类型是个好做法，原因见 <a class="reference internal" href="tips.html#kconfig-shorthands"><span class="std std-ref">常见的 Kconfig 简写</span></a>。</p>
+</div>
+<p><code class="file docutils literal notranslate"><span class="pre">Kconfig.defconfig</span></code> 文件中的 <code class="docutils literal notranslate"><span class="pre">default</span></code> 值优先于符号“基础”定义中给出的 <code class="docutils literal notranslate"><span class="pre">default</span></code> 值。其内部实现方式是先包含 <code class="file docutils literal notranslate"><span class="pre">Kconfig.defconfig</span></code> 文件。Kconfig 使用第一个条件满足的 <code class="docutils literal notranslate"><span class="pre">default</span></code>，空条件相当于 <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">y</span></code>（始终满足）。</p>
+<p>注意，外围顶层 <code class="docutils literal notranslate"><span class="pre">if</span></code> 的条件会传递到符号属性上，因此上面的 <code class="docutils literal notranslate"><span class="pre">default</span></code> 等价于 <code class="docutils literal notranslate"><span class="pre">default</span> <span class="pre">32</span> <span class="pre">if</span> <span class="pre">BOARD_MY_BOARD</span></code>。</p>
+<section id="multiple-symbol-definitions">
+<span id="id1"></span><h3>符号的多重定义<a class="headerlink" href="#multiple-symbol-definitions" title="链接到此标题。"></a></h3>
+<p>当一个符号在多个位置定义时，每个定义都相当于一个恰好同名的独立符号。这意味着属性不会追加到之前的定义上。只要 <strong>任一</strong> 定义的条件使该符号解析为 <code class="docutils literal notranslate"><span class="pre">y</span></code>，该符号就是 <code class="docutils literal notranslate"><span class="pre">y</span></code>。因此，无法通过在多个位置定义符号来使其依赖更严格。</p>
+<p>例如，只要 <code class="docutils literal notranslate"><span class="pre">DEP1</span></code> <strong>或</strong> <code class="docutils literal notranslate"><span class="pre">DEP2</span></code> 为真，下面符号 <code class="docutils literal notranslate"><span class="pre">FOO</span></code> 的依赖即得到满足，并不要求两者同时为真：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>config FOO
+   ...
+   depends on DEP1
+
+config FOO
+   ...
+   depends on DEP2
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>没有显式依赖的符号同样遵循上述规则。没有任何依赖的定义会使该符号始终可赋值。下面的定义会使 <code class="docutils literal notranslate"><span class="pre">FOO</span></code> 默认始终启用，而不管 <code class="docutils literal notranslate"><span class="pre">DEP1</span></code> 的值如何。</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span><span class="k">config</span><span class="w"> </span>FOO
+<span class="w">   </span><span class="nb">bool</span><span class="w"> </span><span class="s2">"FOO"</span>
+<span class="w">   </span><span class="k">depends on</span><span class="w"> </span>DEP1
+
+<span class="k">config</span><span class="w"> </span>FOO
+<span class="w">   </span><span class="k">default</span><span class="w"> </span>y
+</pre></div>
+</div>
+<p>如果只是想添加一个新的默认值，而不改变符号的任何其他行为，可以使用 <a class="reference internal" href="extensions.html#kconfig-extensions"><span class="std std-ref">configdefault</span></a> 扩展来避免这种依赖削弱。</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>修改 <code class="file docutils literal notranslate"><span class="pre">Kconfig.defconfig</span></code> 文件后，务必在某个 <a class="reference internal" href="menuconfig.html#menuconfig"><span class="std std-ref">交互式配置界面</span></a> 中检查该符号的直接依赖。通常需要重复符号基础定义中的依赖，以免削弱符号的依赖。</p>
+</div>
+</section>
+<section id="motivation-for-kconfig-defconfig-files">
+<h3>使用 Kconfig.defconfig 文件的动机<a class="headerlink" href="#motivation-for-kconfig-defconfig-files" title="链接到此标题。"></a></h3>
+<p>采用这种配置方案的动机之一，是避免将固定的 <code class="docutils literal notranslate"><span class="pre">BOARD</span></code> 专用设置暴露在交互式配置界面中供用户配置。如果所有开发板配置都通过 <code class="file docutils literal notranslate"><span class="pre">&lt;BOARD&gt;_defconfig</span></code> 完成，那么所有符号都必须是可见的，因为 <code class="file docutils literal notranslate"><span class="pre">&lt;BOARD&gt;_defconfig</span></code> 中给出的值对不可见符号不起作用。</p>
+<p>让用户可以配置固定设置会使配置界面杂乱、更难理解，也更容易意外地产生错误的配置。</p>
+<p>处理固定的开发板专用设置时，还要考虑是否应改为通过 <a class="reference internal" href="../dts/index.html#dt-guide"><span class="std std-ref">设备树</span></a> 来处理。</p>
+</section>
+<section id="configuring-choices">
+<h3>配置 choice<a class="headerlink" href="#configuring-choices" title="链接到此标题。"></a></h3>
+<p>配置 Kconfig <code class="docutils literal notranslate"><span class="pre">choice</span></code> 有两种方式：</p>
+<ol class="arabic">
+<li><p>在配置文件中将某个 choice 符号设为 <code class="docutils literal notranslate"><span class="pre">y</span></code>。</p>
+<p>将一个 choice 符号设为 <code class="docutils literal notranslate"><span class="pre">y</span></code> 会自动使其他所有 choice 符号的值变为 <code class="docutils literal notranslate"><span class="pre">n</span></code>。</p>
+<p>如果多个 choice 符号都被设为 <code class="docutils literal notranslate"><span class="pre">y</span></code>，只有最后一个设为 <code class="docutils literal notranslate"><span class="pre">y</span></code> 的会生效（其余的值为 <code class="docutils literal notranslate"><span class="pre">n</span></code>）。这使得开发板 <code class="file docutils literal notranslate"><span class="pre">defconfig</span></code> 文件中的 choice 选择可以被应用程序 <code class="file docutils literal notranslate"><span class="pre">prj.conf</span></code> 文件覆盖。</p>
+</li>
+<li><p>在 <code class="file docutils literal notranslate"><span class="pre">Kconfig.defconfig</span></code> 中修改 choice 的 <code class="docutils literal notranslate"><span class="pre">default</span></code>。</p>
+<p>与符号一样，修改 choice 的默认值也是通过在多个位置定义该 choice 来实现的。为此，choice 必须有名称。</p>
+<p>例如，假设某个 choice 有如下基础定义（这里 choice 的名称为 <code class="docutils literal notranslate"><span class="pre">FOO</span></code>）：</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span><span class="k">choice</span><span class="w"> </span>FOO
+<span class="w">    </span><span class="nb">bool</span><span class="w"> </span><span class="s2">"Foo choice"</span>
+<span class="w">    </span><span class="k">default</span><span class="w"> </span>B
+
+<span class="k">config</span><span class="w"> </span>A
+<span class="w">    </span><span class="nb">bool</span><span class="w"> </span><span class="s2">"A"</span>
+
+<span class="k">config</span><span class="w"> </span>B
+<span class="w">    </span><span class="nb">bool</span><span class="w"> </span><span class="s2">"B"</span>
+
+<span class="k">endchoice</span>
+</pre></div>
+</div>
+<p>要将 <code class="docutils literal notranslate"><span class="pre">FOO</span></code> 的默认符号改为 <code class="docutils literal notranslate"><span class="pre">A</span></code>，可以在 <code class="file docutils literal notranslate"><span class="pre">Kconfig.defconfig</span></code> 中添加如下定义：</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span><span class="k">choice</span><span class="w"> </span>FOO
+<span class="w">    </span><span class="k">default</span><span class="w"> </span>A
+<span class="k">endchoice</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<p>当 choice 的依赖可能不满足时，应使用 <code class="file docutils literal notranslate"><span class="pre">Kconfig.defconfig</span></code> 方法。这样，只要用户使该 choice 可见，就会应用你设置的默认选择。</p>
+<section id="more-kconfig-resources">
+<h4>更多 Kconfig 资料<a class="headerlink" href="#more-kconfig-resources" title="链接到此标题。"></a></h4>
+<p><a class="reference internal" href="tips.html#kconfig-tips-and-tricks"><span class="std std-ref">Kconfig 技巧与最佳实践</span></a> 页面给出了一些编写 Kconfig 文件的技巧。</p>
+<p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/scripts/kconfig/kconfiglib.py">kconfiglib.py</a> 的文档字符串（位于文件开头）详细介绍了符号值是如何计算的。</p>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 3月 06, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

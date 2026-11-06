@@ -1,0 +1,404 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>虚拟内存 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/kernel/memory_management/virtual_memory.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="数据结构" href="../data_structures/index.html" />
+    <link rel="prev" title="按需分页" href="demand_paging.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">内核</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../services/index.html">内核服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../drivers/index.html">设备驱动模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usermode/index.html">用户模式</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">内存管理</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="heap.html">内存堆</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shared_multi_heap.html">共享多堆</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slabs.html">内存块（slab）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sys_mem_blocks.html">内存块分配器</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demand_paging.html">按需分页</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">虚拟内存</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#kconfigs">Kconfig 选项</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#required">必需</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#optional">可选</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#memory-map-overview">内存映射概览</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#virtual-memory-mappings">虚拟内存映射</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#setting-up-mappings-at-boot">启动时建立映射</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#mapping-anonymous-memory">映射匿名内存</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#api-reference">API 参考</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../data_structures/index.html">数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../timing_functions/index.html">计时函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../object_cores/index.html">对象核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../timeutil.html">时间工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../precision_timing.html">精密计时</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../util/index.html">实用工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../iterable_sections/index.html">可迭代段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../code-relocation.html">代码和数据重定位</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanup.html">基于作用域的清理辅助工具</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">内核</a> &raquo;</li>
+  
+     <li><a href="index.html">内存管理</a> &raquo;</li>
+  
+  <li>虚拟内存</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="virtual-memory">
+<span id="memory-management-api-virtual-memory"></span><h1>虚拟内存<a class="headerlink" href="#virtual-memory" title="链接到此标题。"></a></h1>
+<p>Zephyr 中的虚拟内存（VM）让开发者能够精细地调整对内存的访问。要使用虚拟内存，平台必须支持内存管理单元（MMU），并且必须在构建中启用。由于 Zephyr 主要面向嵌入式系统，其虚拟内存支持与传统操作系统有所不同：</p>
+<dl class="simple">
+<dt>内核镜像的映射</dt><dd><p>如果未启用按需分页，默认对内核镜像（包括代码和数据）在物理和虚拟内存地址空间之间进行 1:1 映射。偏离这一做法需要谨慎修改链接器脚本。</p>
+</dd>
+<dt>二级存储</dt><dd><p>基本的虚拟内存支持不使用二级存储来扩展可用内存。最大可用内存与物理内存相同。</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="demand_paging.html#memory-management-api-demand-paging"><span class="std std-ref">按需分页</span></a> 允许将二级存储用作虚拟内存的后备存储，从而使可用内存大于可用的物理内存。注意，按需分页需要显式启用。</p></li>
+<li><p>虽然虚拟内存空间可以大于物理内存空间，但如果不启用按需分页，所有虚拟映射的内存都必须由物理内存支撑。</p></li>
+</ul>
+</dd>
+</dl>
+<section id="kconfigs">
+<h2>Kconfig 选项<a class="headerlink" href="#kconfigs" title="链接到此标题。"></a></h2>
+<section id="required">
+<h3>必需<a class="headerlink" href="#required" title="链接到此标题。"></a></h3>
+<p>以下是内核支持虚拟内存所需启用或定义的 Kconfig 选项。</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_MMU" title="CONFIG_MMU"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MMU</span></code></a>：内核支持虚拟内存时必须启用。</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_MMU_PAGE_SIZE" title="CONFIG_MMU_PAGE_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MMU_PAGE_SIZE</span></code></a>：内存页的大小，默认为 4KB。</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_KERNEL_VM_BASE" title="CONFIG_KERNEL_VM_BASE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_KERNEL_VM_BASE</span></code></a>：虚拟地址空间的基地址。</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_KERNEL_VM_SIZE" title="CONFIG_KERNEL_VM_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_KERNEL_VM_SIZE</span></code></a>：虚拟地址空间的大小，默认为 8MB。</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_KERNEL_VM_OFFSET" title="CONFIG_KERNEL_VM_OFFSET"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_KERNEL_VM_OFFSET</span></code></a>：内核镜像从相对于 <a class="reference internal" href="../../kconfig.html#CONFIG_KERNEL_VM_BASE" title="CONFIG_KERNEL_VM_BASE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_KERNEL_VM_BASE</span></code></a> 的这一偏移处开始。</p></li>
+</ul>
+</section>
+<section id="optional">
+<h3>可选<a class="headerlink" href="#optional" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_KERNEL_DIRECT_MAP" title="CONFIG_KERNEL_DIRECT_MAP"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_KERNEL_DIRECT_MAP</span></code></a>：允许虚拟地址与物理地址之间的 1:1 映射，而不是由内核在虚拟地址空间内选择地址。这对于映射设备 MMIO 区域以实现更精确的访问控制很有用。</p></li>
+</ul>
+</section>
+</section>
+<section id="memory-map-overview">
+<h2>内存映射概览<a class="headerlink" href="#memory-map-overview" title="链接到此标题。"></a></h2>
+<p>以下是虚拟内存地址空间的内存映射概览。注意，代码中使用的 <code class="docutils literal notranslate"><span class="pre">Z_*</span></code> 宏可能因架构和 Kconfig 选项不同而含义不同，下文将加以解释。</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="hll">+--------------+ &lt;- K_MEM_VIRT_RAM_START
+</span>| Undefined VM | &lt;- architecture specific reserved area
+<span class="hll">+--------------+ &lt;- K_MEM_KERNEL_VIRT_START
+</span>| Mapping for  |
+| main kernel  |
+| image        |
+|              |
+|              |
+<span class="hll">+--------------+ &lt;- K_MEM_VM_FREE_START
+</span>|              |
+| Unused,      |
+| Available VM |
+|              |
+|..............| &lt;- grows downward as more mappings are made
+| Mapping      |
++--------------+
+| Mapping      |
++--------------+
+| ...          |
++--------------+
+| Mapping      |
+<span class="hll">+--------------+ &lt;- memory mappings start here
+</span>| Reserved     | &lt;- special purpose virtual page(s) of size K_MEM_VM_RESERVED
+<span class="hll">+--------------+ &lt;- K_MEM_VIRT_RAM_END
+</span></pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">K_MEM_VIRT_RAM_START</span></code> 是虚拟内存地址空间的起始地址，需要按页对齐。目前它与 <a class="reference internal" href="../../kconfig.html#CONFIG_KERNEL_VM_BASE" title="CONFIG_KERNEL_VM_BASE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_KERNEL_VM_BASE</span></code></a> 相同。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">K_MEM_VIRT_RAM_SIZE</span></code> 是虚拟内存地址空间的大小，需要按页对齐。目前它与 <a class="reference internal" href="../../kconfig.html#CONFIG_KERNEL_VM_SIZE" title="CONFIG_KERNEL_VM_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_KERNEL_VM_SIZE</span></code></a> 相同。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">K_MEM_VIRT_RAM_END</span></code> 就是（<code class="docutils literal notranslate"><span class="pre">K_MEM_VIRT_RAM_START</span></code> + <code class="docutils literal notranslate"><span class="pre">K_MEM_VIRT_RAM_SIZE</span></code>）。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">K_MEM_KERNEL_VIRT_START</span></code> 与链接器脚本中指定的 <code class="docutils literal notranslate"><span class="pre">z_mapped_start</span></code> 相同。它是启动时内核镜像起始处的虚拟地址。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">K_MEM_KERNEL_VIRT_END</span></code> 与链接器脚本中指定的 <code class="docutils literal notranslate"><span class="pre">z_mapped_end</span></code> 相同。它是启动时内核镜像结束处的虚拟地址。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">K_MEM_VM_FREE_START</span></code> 是虚拟地址空间中可分配给内存映射的地址的起始处。它取决于是否启用了 <a class="reference internal" href="../../kconfig.html#CONFIG_ARCH_MAPS_ALL_RAM" title="CONFIG_ARCH_MAPS_ALL_RAM"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARCH_MAPS_ALL_RAM</span></code></a>。</p>
+<ul>
+<li><p>如果启用了该选项，即所有物理内存都映射在虚拟内存地址空间中，则它等于（<code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_CHOSEN_SRAM_ADDR</span></code> + <code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_CHOSEN_SRAM_SIZE</span></code>）。</p></li>
+<li><p>如果禁用了该选项，<code class="docutils literal notranslate"><span class="pre">K_MEM_VM_FREE_START</span></code> 与 <code class="docutils literal notranslate"><span class="pre">K_MEM_KERNEL_VIRT_END</span></code> 相同，即内核镜像的结束处。</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">K_MEM_VM_RESERVED</span></code> 是为支持内核功能而保留的区域。例如，有些地址被保留用于支持按需分页。</p></li>
+</ul>
+</section>
+<section id="virtual-memory-mappings">
+<h2>虚拟内存映射<a class="headerlink" href="#virtual-memory-mappings" title="链接到此标题。"></a></h2>
+<section id="setting-up-mappings-at-boot">
+<h3>启动时建立映射<a class="headerlink" href="#setting-up-mappings-at-boot" title="链接到此标题。"></a></h3>
+<p>一般来说，大多数受支持的架构在启动时按如下方式建立内存映射：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">.text</span></code> 段为只读、可执行，在内核模式和用户模式下均可访问。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">.rodata</span></code> 段为只读、不可执行，在内核模式和用户模式下均可访问。</p></li>
+<li><p>其他内核段（例如 <code class="docutils literal notranslate"><span class="pre">.data</span></code>、<code class="docutils literal notranslate"><span class="pre">.bss</span></code> 和 <code class="docutils literal notranslate"><span class="pre">.noinit</span></code>）为可读写、不可执行，只能在内核模式下访问。</p>
+<ul>
+<li><p>在创建线程时，用户模式线程的栈会自动授予对应用户模式线程读写权限。</p></li>
+<li><p>默认情况下，用户模式线程无法访问全局变量。关于如何在用户模式线程中使用全局变量以及如何在用户模式线程之间共享数据，请参阅 <a class="reference internal" href="../usermode/memory_domain.html#memory-domain"><span class="std std-ref">内存域和分区</span></a>。</p></li>
+</ul>
+</li>
+</ul>
+<p>这些映射的缓存模式与架构相关，可以是不缓存、回写或写直通。</p>
+<p>注意，SoC 还有其自身启动所需的额外映射，这些映射在各自的 SoC 配置中定义，通常包括设置硬件所需的设备 MMIO 区域。</p>
+</section>
+<section id="mapping-anonymous-memory">
+<h3>映射匿名内存<a class="headerlink" href="#mapping-anonymous-memory" title="链接到此标题。"></a></h3>
+<p>未使用的物理内存可以按需映射到虚拟地址空间中。这在概念上类似于从堆中分配内存，但这些映射必须按页大小对齐，并且具有更精细的访问控制。</p>
+<ul class="simple">
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_map()</span></code> 可用于映射未使用的物理内存：</p>
+<ul>
+<li><p>所请求的大小必须是页大小的整数倍。</p></li>
+<li><p>返回的地址位于虚拟地址空间中 <code class="docutils literal notranslate"><span class="pre">K_MEM_VM_FREE_START</span></code> 与 <code class="docutils literal notranslate"><span class="pre">K_MEM_VIRT_RAM_END</span></code> 之间。</p></li>
+<li><p>不保证映射区域在内存中物理连续。</p></li>
+<li><p>会在映射的虚拟区域前后自动分配保护页，以捕获由缓冲区下溢或上溢引起的访问问题。</p></li>
+</ul>
+</li>
+<li><p>可以通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_unmap()</span></code> 取消映射（即释放）映射区域：</p>
+<ul>
+<li><p>必须注意向 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_map()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_unmap()</span></code> 传入相同的区域大小。取消映射函数在取消映射之前不会检查它是否是有效的已映射区域。</p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="api-reference">
+<h2>API 参考<a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">kernel_memory_management</span></dt>
+</dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 5月 08, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,108 @@
+var group__spi__interface =
+[
+    [ "SPI Driver Backend API", "group__spi__interface__backend.html", "group__spi__interface__backend" ],
+    [ "SPI 仿真接口", "group__spi__emul__interface.html", "group__spi__emul__interface" ],
+    [ "设备树 SPI API", "group__devicetree-spi.html", "group__devicetree-spi" ],
+    [ "spi.h", "drivers_2spi_8h.html", null ],
+    [ "spi_cs_control", "structspi__cs__control.html", [
+      [ "cs_is_gpio", "structspi__cs__control.html#a8614da6ccc73ce2a2a457fbd7a0882e2", null ]
+    ] ],
+    [ "spi_cs_control::[union].__unnamed0__", "unionspi__cs__control_1_1_0funion_0e_8____unnamed0____.html", null ],
+    [ "spi_cs_control::[struct].__unnamed0__.__unnamed1__", "structspi__cs__control_1_1_0fstruct_0e_8____unnamed0_____8____unnamed1____.html", [
+      [ "hold_ns", "structspi__cs__control_1_1_0fstruct_0e_8____unnamed0_____8____unnamed1____.html#a6701f748e24b6653f5c785d5a8774453", null ],
+      [ "setup_ns", "structspi__cs__control_1_1_0fstruct_0e_8____unnamed0_____8____unnamed1____.html#a842525e8d2a00eda7793cd64e5b17faa", null ]
+    ] ],
+    [ "spi_cs_control::[struct].__unnamed0__.__unnamed0__", "structspi__cs__control_1_1_0fstruct_0e_8____unnamed0_____8____unnamed0____.html", [
+      [ "delay", "structspi__cs__control_1_1_0fstruct_0e_8____unnamed0_____8____unnamed0____.html#a4ff494b3f67f67c2c7fc6250bad83501", null ],
+      [ "gpio", "structspi__cs__control_1_1_0fstruct_0e_8____unnamed0_____8____unnamed0____.html#a276f2fba682e0ec80a3bff5d44c94daf", null ]
+    ] ],
+    [ "spi_dt_spec", "structspi__dt__spec.html", [
+      [ "bus", "structspi__dt__spec.html#a37519633ae787ffaa1026e6867d7007a", null ],
+      [ "config", "structspi__dt__spec.html#a88372c17ede2e9dfb0c09c49abebf87e", null ]
+    ] ],
+    [ "spi_buf", "structspi__buf.html", [
+      [ "buf", "structspi__buf.html#aeaf52d3ff5af10545b2d6904ed452cba", null ],
+      [ "len", "structspi__buf.html#a9755deadff0dd01a886f22e41099b8ba", null ]
+    ] ],
+    [ "spi_buf_set", "structspi__buf__set.html", [
+      [ "buffers", "structspi__buf__set.html#a2b88917ca29487b2d0b5b63d2083db67", null ],
+      [ "count", "structspi__buf__set.html#abc7c37cffebb7873aaba2e524c9a23dc", null ]
+    ] ],
+    [ "spi_config", "structspi__config.html", [
+      [ "cs", "structspi__config.html#a537dbfe323fafedaa219de1be2097dde", null ],
+      [ "frequency", "structspi__config.html#aa1ec6933fe66f91653c5be488e4c9b2a", null ],
+      [ "operation", "structspi__config.html#a71a02ea548e187e6511abf10fdfa4829", null ],
+      [ "word_delay", "structspi__config.html#af55961609841e6f42fb20bf807710a5d", null ]
+    ] ],
+    [ "spi_config::[union].__unnamed0__", "unionspi__config_1_1_0funion_0e_8____unnamed0____.html", [
+      [ "peripheral", "unionspi__config_1_1_0funion_0e_8____unnamed0____.html#aa754e44296fb07864637602841373cdd", null ],
+      [ "slave", "unionspi__config_1_1_0funion_0e_8____unnamed0____.html#a7dec730608d4f812881c56a5e33b4671", null ]
+    ] ],
+    [ "SPI_CONFIG_DT", "group__spi__interface.html#gaf7d4888063e5b739f2a3bee295962bfe", null ],
+    [ "SPI_CONFIG_DT_INST", "group__spi__interface.html#ga67837cbae6f29c5f8ad9a05dbc9b05f8", null ],
+    [ "SPI_CS_ACTIVE_HIGH", "group__spi__interface.html#ga44076fa14703997f7e3aefb2bfccd801", null ],
+    [ "SPI_CS_CONTROL_INIT", "group__spi__interface.html#ga81308d27cd78e65f0a3ddaa918f2a74a", null ],
+    [ "SPI_CS_CONTROL_INIT_INST", "group__spi__interface.html#ga92195f45dac561b19204f6be21f62b55", null ],
+    [ "SPI_CS_GPIOS_DT_SPEC_GET", "group__spi__interface.html#ga48aa19f45413d56b03596d10b72c732e", null ],
+    [ "SPI_CS_GPIOS_DT_SPEC_INST_GET", "group__spi__interface.html#ga88fefbfadb8184806123e1f935a4ff7c", null ],
+    [ "SPI_DEVICE_DT_DEFINE", "group__spi__interface.html#ga27af5f053c5fd4e9eef0900406fbf854", null ],
+    [ "SPI_DEVICE_DT_DEINIT_DEFINE", "group__spi__interface.html#gaf98b0cb38cb316b9fe05146bba34126d", null ],
+    [ "SPI_DEVICE_DT_INST_DEFINE", "group__spi__interface.html#ga84811e0fdd574477c8569d559f773dae", null ],
+    [ "SPI_DEVICE_DT_INST_DEINIT_DEFINE", "group__spi__interface.html#ga50cbb6845d230033f192f1e716fd9f2b", null ],
+    [ "SPI_DT_INST_IODEV_DEFINE", "group__spi__interface.html#ga4e5633f6e8da22f4c00a723a669b2d9a", null ],
+    [ "SPI_DT_IODEV_DEFINE", "group__spi__interface.html#ga1eec8a77be8a512e8b0fa74d270877e5", null ],
+    [ "SPI_DT_SPEC_GET", "group__spi__interface.html#ga43857c934651c4bfb3823a5080a4a294", null ],
+    [ "SPI_DT_SPEC_INST_GET", "group__spi__interface.html#gac9537325ca3188121d0f8c382c798ca1", null ],
+    [ "SPI_FRAME_FORMAT_MOTOROLA", "group__spi__interface.html#ga6a1b4ba33900165b6e09706903a6e6ee", null ],
+    [ "SPI_FRAME_FORMAT_TI", "group__spi__interface.html#ga22801357a9682371e3d8a10e522de388", null ],
+    [ "SPI_FULL_DUPLEX", "group__spi__interface.html#ga5585d5e81dec606b605f31b6745c35d3", null ],
+    [ "SPI_HALF_DUPLEX", "group__spi__interface.html#ga602a7804b7434d7ebc1ebe6cb9b47a2f", null ],
+    [ "SPI_HOLD_ON_CS", "group__spi__interface.html#gae917312adef283b4bf67cdb53566e4bb", null ],
+    [ "SPI_LINES_DUAL", "group__spi__interface.html#ga120ab60329d664d5d6e828f90251a98a", null ],
+    [ "SPI_LINES_MASK", "group__spi__interface.html#gadc79f986c4b30fe5b263841cd8bb5676", null ],
+    [ "SPI_LINES_OCTAL", "group__spi__interface.html#ga512d76085e600886654b8541aab31cf7", null ],
+    [ "SPI_LINES_QUAD", "group__spi__interface.html#ga30866b948e995224de854e10a428bda5", null ],
+    [ "SPI_LINES_SINGLE", "group__spi__interface.html#ga7a183f157e8cb8b437857a0babbd923b", null ],
+    [ "SPI_LOCK_ON", "group__spi__interface.html#gafe8dc164d6fc0a0f93f2ff9d5381af14", null ],
+    [ "SPI_MODE_CPHA", "group__spi__interface.html#ga35e98b37e3ec4889a90100abe884590f", null ],
+    [ "SPI_MODE_CPOL", "group__spi__interface.html#ga5a2be1003873beaa0ade10e7218d67d5", null ],
+    [ "SPI_MODE_GET", "group__spi__interface.html#gaa3582b96ff42dba0b0ad815c727d5e42", null ],
+    [ "SPI_MODE_LOOP", "group__spi__interface.html#ga8619b297de563eca6852af34c79daa62", null ],
+    [ "SPI_MOSI_OVERRUN_DT", "group__spi__interface.html#gaa9621b033dfaf128602b1432927a67fe", null ],
+    [ "SPI_MOSI_OVERRUN_DT_INST", "group__spi__interface.html#ga24c7416a98421e353a8892151f34122c", null ],
+    [ "SPI_MOSI_OVERRUN_UNKNOWN", "group__spi__interface.html#ga15b5fa509a3b7dc87bfd451af5a11917", null ],
+    [ "SPI_OP_MODE_CONTROLLER", "group__spi__interface.html#gace0f0d954c2bd7d603c4003289c11102", null ],
+    [ "SPI_OP_MODE_GET", "group__spi__interface.html#ga6dd4395e027407a7b3b92cff2abcc8b3", null ],
+    [ "SPI_OP_MODE_MASTER", "group__spi__interface.html#ga5b9d40fa0f455b1e63f8040b3316b0da", null ],
+    [ "SPI_OP_MODE_PERIPHERAL", "group__spi__interface.html#gaa1f42ffeac36380f4d1d8f84bda2990b", null ],
+    [ "SPI_OP_MODE_SLAVE", "group__spi__interface.html#ga1c3310d3711cb99cdb78fa9d1c970779", null ],
+    [ "SPI_SDO_OVERRUN_DT", "group__spi__interface.html#gaf66331d56f20e0c37f2a3cff998c6bce", null ],
+    [ "SPI_SDO_OVERRUN_DT_INST", "group__spi__interface.html#ga0e05910cd0be7211389514b7b4edc0cc", null ],
+    [ "SPI_SDO_OVERRUN_UNKNOWN", "group__spi__interface.html#ga1dbef324b98a8921507de0da1c4e4fa6", null ],
+    [ "SPI_STATS_RX_BYTES_INC", "group__spi__interface.html#ga83fa04d1e9f281cd566ee32cf807325e", null ],
+    [ "SPI_STATS_TRANSFER_ERROR_INC", "group__spi__interface.html#ga6f69e68a79afbbe016aecc515f14de3a", null ],
+    [ "SPI_STATS_TX_BYTES_INC", "group__spi__interface.html#gadd3b82af2396b91930ece09fa79fc4e2", null ],
+    [ "spi_transceive_stats", "group__spi__interface.html#gad7d1058f600d6aef4fc4e2bdff5d55f3", null ],
+    [ "SPI_TRANSFER_LSB", "group__spi__interface.html#ga93504a76a265bedbe781c107beebc9dc", null ],
+    [ "SPI_TRANSFER_MSB", "group__spi__interface.html#ga7761f42c6241cf396fc02d0de8617e46", null ],
+    [ "SPI_WORD_SET", "group__spi__interface.html#gac1115bf80134efd38d88161e3f5e3e1a", null ],
+    [ "SPI_WORD_SIZE_GET", "group__spi__interface.html#gacd7edd9ce02bd8351f8eebe5b5c07c7a", null ],
+    [ "spi_operation_t", "group__spi__interface.html#ga398a8ae1c4799e77fb6c067b6d47294a", null ],
+    [ "spi_cs_is_gpio", "group__spi__interface.html#gae1156a4ee1b5909c321811045566d888", null ],
+    [ "spi_cs_is_gpio_dt", "group__spi__interface.html#gaa13f0da1f28cffa0da4677987db0c9c5", null ],
+    [ "spi_iodev_submit", "group__spi__interface.html#ga8b23855bdc7dab7d02b8f7daa7db651b", null ],
+    [ "spi_is_ready_dt", "group__spi__interface.html#ga37b4e5079ed18b70b0c5a260f4c36403", null ],
+    [ "spi_is_ready_iodev", "group__spi__interface.html#gafea78af1fe1fa49fdc5459ab3a2d5f73", null ],
+    [ "spi_read", "group__spi__interface.html#ga41f771785a4fa9ca0954125d1e97959e", null ],
+    [ "spi_read_dt", "group__spi__interface.html#ga7a1d7ebd37d2861b169c265cb90015bf", null ],
+    [ "spi_read_signal", "group__spi__interface.html#ga9a1ceadb217368232af5b688c12169c5", null ],
+    [ "spi_release", "group__spi__interface.html#ga0c4f4f0a93bb83a4f58d551a7491164e", null ],
+    [ "spi_release_dt", "group__spi__interface.html#ga829b59767c51b20b546eee8a9cc84b69", null ],
+    [ "spi_transceive", "group__spi__interface.html#gad51054c1ba259db5a64619788506a6f5", null ],
+    [ "spi_transceive_cb", "group__spi__interface.html#ga6114e63ca23b82f9be0ac70e372b878b", null ],
+    [ "spi_transceive_dt", "group__spi__interface.html#ga52c017066736414b31ff709ddc67c4ff", null ],
+    [ "spi_transceive_signal", "group__spi__interface.html#ga41b8a541257c0d45575fdc4593417edc", null ],
+    [ "spi_write", "group__spi__interface.html#ga7e7c4460670ec1c0433ba19accd97796", null ],
+    [ "spi_write_dt", "group__spi__interface.html#ga292d6d1fe82f3f1ce0d9a2aa5437201b", null ],
+    [ "spi_write_signal", "group__spi__interface.html#gadcb19d43461ef88e31f6b382cc87fd0b", null ]
+];

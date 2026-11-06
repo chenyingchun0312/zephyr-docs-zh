@@ -1,0 +1,314 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>控制流完整性 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/security/control-flow-integrity.html" />
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../_static/translations.js?v=540d3cec"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="漏洞" href="vulnerabilities.html" />
+    <link rel="prev" title="加固工具" href="hardening-tool.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../project/index.html">项目与治理</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">信息安全</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="security-overview.html">Zephyr 信息安全概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reporting.html">信息安全漏洞报告</a></li>
+<li class="toctree-l2"><a class="reference internal" href="secure-coding.html">安全编码</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sensor-threat.html">传感器设备威胁模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hardening-tool.html">加固工具</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">控制流完整性</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#forward-and-return-edges">前向边与返回边</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#implementation-details">实现细节</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#hardware-support">硬件支持</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#intel-cet">Intel CET</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#intel-cet-limitations">Intel CET 的限制</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#arm-pointer-authentication-and-branch-target-identification">ARM 指针认证与分支目标识别</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="vulnerabilities.html">漏洞</a></li>
+<li class="toctree-l2"><a class="reference internal" href="standards/index.html">信息安全标准与 Zephyr</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="index.html">信息安全</a> &raquo;</li>
+  
+  <li>控制流完整性</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="control-flow-integrity">
+<span id="id1"></span><h1>控制流完整性<a class="headerlink" href="#control-flow-integrity" title="链接到此标题。"></a></h1>
+<p>控制流完整性（Control Flow Integrity，CFI）是一种信息安全特性，它确保程序的控制流沿预先定义的路径执行，防止攻击者将执行流转向恶意代码。CFI 在防御控制流劫持攻击方面尤其有用，例如面向返回编程（ROP）和面向跳转编程（JOP）。</p>
+<p>CFI 在运行时验证程序的控制流，确保函数调用和返回都指向合法目标。通常通过对代码插桩来实现：插入的检查会验证控制流是否遵循程序控制流图所定义的预期路径。</p>
+<section id="forward-and-return-edges">
+<h2>前向边与返回边<a class="headerlink" href="#forward-and-return-edges" title="链接到此标题。"></a></h2>
+<p>在 CFI 中，控制流边可以分为两类：</p>
+<ol class="arabic simple">
+<li><p><strong>前向边</strong>：表示控制从一个函数流向另一个函数，例如函数调用。通常会验证前向边，以确保调用目标是程序中的合法函数。</p></li>
+<li><p><strong>返回边</strong>：表示从函数返回到调用者。验证返回边是为了确保返回地址合法，并且对应一个有效的调用点。</p></li>
+</ol>
+<p>前向边可以通过编译器插桩来支持，插入的检查会验证函数调用的目标是否有效。返回边可以通过维护影子栈（shadow stack）或其他机制来支持，以确保返回地址合法。</p>
+<p>Zephyr 支持维护影子栈，可通过 <a class="reference internal" href="../kconfig.html#CONFIG_HW_SHADOW_STACK" title="CONFIG_HW_SHADOW_STACK"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HW_SHADOW_STACK</span></code></a> 启用。启用后，内核会使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_THREAD_HW_SHADOW_STACK_DEFINE</span></code> 等宏，配合其他与线程栈相关的宏，为线程使用的影子栈提供存储区域。通常，应用程序只需启用 <a class="reference internal" href="../kconfig.html#CONFIG_HW_SHADOW_STACK" title="CONFIG_HW_SHADOW_STACK"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HW_SHADOW_STACK</span></code></a>（以及相关选项，例如 <a class="reference internal" href="../kconfig.html#CONFIG_HW_SHADOW_STACK_PERCENTAGE_SIZE" title="CONFIG_HW_SHADOW_STACK_PERCENTAGE_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HW_SHADOW_STACK_PERCENTAGE_SIZE</span></code></a> 和 <a class="reference internal" href="../kconfig.html#CONFIG_HW_SHADOW_STACK_MIN_SIZE" title="CONFIG_HW_SHADOW_STACK_MIN_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HW_SHADOW_STACK_MIN_SIZE</span></code></a>）即可启用影子栈支持，之后内核会自动管理每个线程的影子栈。</p>
+<section id="implementation-details">
+<h3>实现细节<a class="headerlink" href="#implementation-details" title="链接到此标题。"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">K_THREAD_HW_SHADOW_STACK*</span></code> 系列宏只对影子栈参数做最基本的设置，然后调用特定于架构的 <code class="docutils literal notranslate"><span class="pre">ARCH_THREAD_HW_SHADOW_STACK*</span></code> 宏完成实际设置。</p>
+</section>
+</section>
+<section id="hardware-support">
+<h2>硬件支持<a class="headerlink" href="#hardware-support" title="链接到此标题。"></a></h2>
+<p>CFI 虽然可以用软件实现，但硬件支持可以大幅提升其效果和性能。目前，Zephyr 支持 Intel 控制流强制技术（Control-flow Enforcement Technology，CET），它为 CFI 提供基于硬件的支持。</p>
+<section id="intel-cet">
+<h3>Intel CET<a class="headerlink" href="#intel-cet" title="链接到此标题。"></a></h3>
+<p>Intel 控制流强制技术（CET）是一组硬件特性，通过为 CFI 提供支持来增强应用程序的信息安全。CET 包含两个主要组件：</p>
+<ol class="arabic simple">
+<li><p><strong>影子栈（Shadow Stack）</strong>：该特性为返回地址单独维护一个栈，确保返回地址无法被篡改。函数返回时，返回地址从影子栈中弹出，并与常规栈中的返回地址进行比较，从而为防御控制流劫持多提供一层保护。</p></li>
+<li><p><strong>间接分支跟踪（Indirect Branch Tracking，IBT）</strong>：该特性跟踪间接分支（例如函数指针），确保它们只跳转到代码中的有效位置，防止攻击者通过 ROP 等技术将执行流重定向到任意代码。</p></li>
+</ol>
+<p>这两个特性分别提供返回边和前向边的验证。在受支持的硬件上，可以使用 <a class="reference internal" href="../kconfig.html#CONFIG_HW_SHADOW_STACK" title="CONFIG_HW_SHADOW_STACK"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HW_SHADOW_STACK</span></code></a> Kconfig 选项在 Zephyr 中启用影子栈支持。要启用 IBT，请使用 <a class="reference internal" href="../kconfig.html#CONFIG_X86_CET_IBT" title="CONFIG_X86_CET_IBT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_X86_CET_IBT</span></code></a>。</p>
+<p>由于 IBT 实际上由编译器实现，因此需要工具链支持。目前，可以使用 Zephyr SDK 的 x86 工具链构建支持 IBT 的应用程序。但是，该工具链中的预编译产物（例如 <code class="docutils literal notranslate"><span class="pre">libc</span></code> 和 <code class="docutils literal notranslate"><span class="pre">libgcc</span></code>）没有启用 IBT。因此，对于 <code class="docutils literal notranslate"><span class="pre">libc</span></code>，需要将其作为模块构建，例如使用 <a class="reference internal" href="../kconfig.html#CONFIG_PICOLIBC_USE_MODULE" title="CONFIG_PICOLIBC_USE_MODULE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PICOLIBC_USE_MODULE</span></code></a>。对于其他部分，则需要使用定制的工具链。</p>
+<section id="intel-cet-limitations">
+<h4>Intel CET 的限制<a class="headerlink" href="#intel-cet-limitations" title="链接到此标题。"></a></h4>
+<p>目前，在后台自动创建的影子栈位于全局命名空间中。因此，<em>不能</em> 重复使用线程栈名称，即使在不同的编译单元之间也不行。</p>
+</section>
+</section>
+<section id="arm-pointer-authentication-and-branch-target-identification">
+<h3>ARM 指针认证与分支目标识别<a class="headerlink" href="#arm-pointer-authentication-and-branch-target-identification" title="链接到此标题。"></a></h3>
+<p>ARM 平台通过指针认证（Pointer Authentication，PAC）和分支目标识别（Branch Target Identification，BTI）提供基于硬件的 CFI 特性，Cortex-M 和 ARM64（Cortex-A/R）架构均支持这些特性：</p>
+<ol class="arabic simple">
+<li><p><strong>指针认证（PAC）</strong>：使用密码学签名对返回地址和其他指针进行签名。返回地址压入栈时，会使用每个线程独有的密钥对其签名。返回之前会验证签名，以确保返回地址未被篡改。这可以防御面向返回编程（ROP）攻击。ARMv8.1-M Mainline（Cortex-M）以及 ARMv8.3-A 及更高版本（ARM64）支持该特性。</p></li>
+<li><p><strong>分支目标识别（BTI）</strong>：使用特殊的 BTI 着陆点（landing pad）指令标记合法的间接分支目标。处理器会验证间接分支只落在以 BTI 指令标记的有效目标上。这可以防御面向跳转编程（JOP）攻击。ARMv8.1-M Mainline（Cortex-M）以及 ARMv8.5-A 及更高版本（ARM64）支持该特性。</p></li>
+</ol>
+<p>这两个特性分别提供返回边和前向边的验证。PAC 和 BTI 可以通过 <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">ARM_PACBTI</span></code> 菜单启用。可用选项包括 <a class="reference internal" href="../kconfig.html#CONFIG_ARM_PACBTI_STANDARD" title="CONFIG_ARM_PACBTI_STANDARD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARM_PACBTI_STANDARD</span></code></a>（同时启用 PAC 和 BTI）、<a class="reference internal" href="../kconfig.html#CONFIG_ARM_PACBTI_PACRET" title="CONFIG_ARM_PACBTI_PACRET"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARM_PACBTI_PACRET</span></code></a>（仅 PAC）、<a class="reference internal" href="../kconfig.html#CONFIG_ARM_PACBTI_BTI" title="CONFIG_ARM_PACBTI_BTI"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARM_PACBTI_BTI</span></code></a>（仅 BTI）以及其他变体。这两个特性既可以单独使用，也可以组合使用，以实现全面的控制流完整性。</p>
+<p>与 x86 CET IBT 一样，这些特性需要编译器支持以及对 C 库进行相应的插桩。PAC 要求函数使用相应的签名和验证指令，而 BTI 要求所有合法的分支目标都包含 BTI 着陆点指令。工具链自带的预编译 C 库通常缺少这种插桩。</p>
+<p>要支持 BTI，C 库必须使用 <code class="docutils literal notranslate"><span class="pre">-mbranch-protection</span></code> 标志编译，以便在所有函数中加入 BTI 着陆点。因此，使用任何启用 BTI 的选项时，只能使用 <a class="reference internal" href="../kconfig.html#CONFIG_MINIMAL_LIBC" title="CONFIG_MINIMAL_LIBC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MINIMAL_LIBC</span></code></a>，或通过 <a class="reference internal" href="../kconfig.html#CONFIG_PICOLIBC_USE_MODULE" title="CONFIG_PICOLIBC_USE_MODULE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PICOLIBC_USE_MODULE</span></code></a> 作为模块构建的 picolibc。BTI 不支持工具链自带的 Newlib。</p>
+<p>PAC 的要求没有那么严格，因为它主要影响函数的序言和尾声；但为了获得最佳的信息安全效果，建议构建支持 PAC 的 C 库。</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 1月 24, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

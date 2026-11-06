@@ -1,0 +1,26 @@
+var bflb__bl808__clock_8h =
+[
+    [ "BL808_AUPLL_ID_DIV1", "bflb__bl808__clock_8h.html#a09e845c88455d650e087d54e5e0104df", null ],
+    [ "BL808_AUPLL_TOP_FREQ", "bflb__bl808__clock_8h.html#aa94669727f1a2fe2f030a683dbba7644", null ],
+    [ "BL808_AUPLL_TOP_FREQ_44K1", "bflb__bl808__clock_8h.html#a0e3929bae7d5d2451d83dd4ea40b1960", null ],
+    [ "BL808_CLKID_CLK_160M", "bflb__bl808__clock_8h.html#a14ebe26a8a7978110db3b60b02c14cf5", null ],
+    [ "BL808_CLKID_CLK_AUPLL", "bflb__bl808__clock_8h.html#a4698a9cec975c91e8eb835d905177686", null ],
+    [ "BL808_CLKID_CLK_BCLK", "bflb__bl808__clock_8h.html#ae5146bbdf74be5084e2c585f22857433", null ],
+    [ "BL808_CLKID_CLK_CPUPLL", "bflb__bl808__clock_8h.html#aa9c012eb82f134cc040781f9f9eb37d2", null ],
+    [ "BL808_CLKID_CLK_CRYSTAL", "bflb__bl808__clock_8h.html#af6a43433db32add4813c688ab1a4adc5", null ],
+    [ "BL808_CLKID_CLK_F32K", "bflb__bl808__clock_8h.html#a7fee3bb46198223c41681c86f8574a28", null ],
+    [ "BL808_CLKID_CLK_RC32K", "bflb__bl808__clock_8h.html#af76d527c250ec896ed0d768a1a11616a", null ],
+    [ "BL808_CLKID_CLK_RC32M", "bflb__bl808__clock_8h.html#a99b553bfe231791c2c7c40d8a88329ad", null ],
+    [ "BL808_CLKID_CLK_ROOT", "bflb__bl808__clock_8h.html#acd2b6c7f3812560d616c43312e747c70", null ],
+    [ "BL808_CLKID_CLK_UHSPLL", "bflb__bl808__clock_8h.html#ac6a515aeb3dc9b2a101c8ba3935fa029", null ],
+    [ "BL808_CLKID_CLK_WIFIPLL", "bflb__bl808__clock_8h.html#a2aa6a56fd934cc2657b4aeda89fc938f", null ],
+    [ "BL808_CLKID_CLK_XTAL32K", "bflb__bl808__clock_8h.html#a8be3db0e3d1933894c2917fb176a08f7", null ],
+    [ "BL808_CPUPLL_ID_DIV1", "bflb__bl808__clock_8h.html#a34149d4ba4e5d7c84aaacca3d67cb1f8", null ],
+    [ "BL808_CPUPLL_TOP_FREQ", "bflb__bl808__clock_8h.html#a9e92ee2f1449fe9e3cf875e3faeaaded", null ],
+    [ "BL808_UHSPLL_TOP_FREQ", "bflb__bl808__clock_8h.html#aecb902e1a8d8861dc07010d1e6cb1908", null ],
+    [ "BL808_WIFIPLL_ID_DIV1", "bflb__bl808__clock_8h.html#a7bf45d0ed63f9db31d1c61a9677b378c", null ],
+    [ "BL808_WIFIPLL_ID_DIV3_4", "bflb__bl808__clock_8h.html#a4ad1ebd0d4c445b74d18f1409beeb8fe", null ],
+    [ "BL808_WIFIPLL_TOP_FREQ", "bflb__bl808__clock_8h.html#acb181224dc5658205cc1d6047519d52d", null ],
+    [ "BL808_WIFIPLL_TOP_FREQ_OC1", "bflb__bl808__clock_8h.html#a9b5da6c37cdda7252f4cd22309e18702", null ],
+    [ "BL808_WIFIPLL_TOP_FREQ_OC2", "bflb__bl808__clock_8h.html#a794fb843efa91b6c59611ead5799c0ef", null ]
+];

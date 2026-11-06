@@ -1,0 +1,408 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>自定义 Kconfig 预处理器函数 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/build/kconfig/preprocessor-functions.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="Kconfig 扩展" href="extensions.html" />
+    <link rel="prev" title="Kconfig 技巧与最佳实践" href="tips.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">构建与配置系统</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../cmake/index.html">构建系统（CMake）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cmake-ref/index.html">CMake 参考</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../dts/index.html">设备树</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">配置系统（Kconfig）</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="menuconfig.html">交互式 Kconfig 界面</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tracing.html">追溯配置值的来源</a></li>
+<li class="toctree-l3"><a class="reference internal" href="setting.html">设置 Kconfig 配置值</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tips.html">Kconfig 技巧与最佳实践</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">自定义 Kconfig 预处理器函数</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#devicetree-related-functions">设备树相关函数</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#integer-functions">整数函数</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#string-functions">字符串函数</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#other-functions">其他函数</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#example-usage">用法示例</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="extensions.html">Kconfig 扩展</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../snippets/index.html">代码片段（snippet）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../zephyr_cmake_package.html">Zephyr CMake 包</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sysbuild/index.html">Sysbuild（系统构建）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../version/index.html">应用程序版本管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../flashing/index.html">烧录</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../signing/index.html">对二进制文件签名</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">构建与配置系统</a> &raquo;</li>
+  
+     <li><a href="index.html">配置系统（Kconfig）</a> &raquo;</li>
+  
+  <li>自定义 Kconfig 预处理器函数</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="custom-kconfig-preprocessor-functions">
+<span id="kconfig-functions"></span><h1>自定义 Kconfig 预处理器函数<a class="headerlink" href="#custom-kconfig-preprocessor-functions" title="链接到此标题。"></a></h1>
+<p>Kconfiglib 支持用 Python 编写的自定义 Kconfig 预处理器函数。这些函数定义在 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/scripts/kconfig/kconfigfunctions.py">scripts/kconfig/kconfigfunctions.py</a> 中。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>官方 Kconfig 预处理器文档请见 <a class="reference external" href="https://www.kernel.org/doc/html/latest/kbuild/kconfig-macro-language.html">此处</a>。</p>
+</div>
+<p>详细文档请参阅 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/scripts/kconfig/kconfigfunctions.py">scripts/kconfig/kconfigfunctions.py</a> 中的 Python 文档字符串。大多数自定义预处理器函数用于将设备树信息导入 Kconfig。例如，Kconfig 符号的默认值可以从设备树的 <code class="docutils literal notranslate"><span class="pre">reg</span></code> 属性中获取。</p>
+<section id="devicetree-related-functions">
+<h2>设备树相关函数<a class="headerlink" href="#devicetree-related-functions" title="链接到此标题。"></a></h2>
+<p>下面列出的函数用于将设备树信息导入 Kconfig。每个函数的 <code class="docutils literal notranslate"><span class="pre">*_int</span></code> 版本以十进制整数返回值，而 <code class="docutils literal notranslate"><span class="pre">*_hex</span></code> 版本返回以 <code class="docutils literal notranslate"><span class="pre">0x</span></code> 开头的十六进制值。</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$(dt_alias_enabled,&lt;node alias&gt;)
+$(dt_chosen_bool_prop, &lt;property in /chosen&gt;, &lt;prop&gt;)
+$(dt_chosen_enabled,&lt;property in /chosen&gt;)
+$(dt_chosen_has_compat,&lt;property in /chosen&gt;,&lt;compatible string&gt;)
+$(dt_chosen_label,&lt;property in /chosen&gt;)
+$(dt_chosen_partition,addr_hex,&lt;chosen&gt;[,&lt;index&gt;,&lt;unit&gt;])
+$(dt_chosen_partition,addr_int,&lt;chosen&gt;[,&lt;index&gt;,&lt;unit&gt;])
+$(dt_chosen_path,&lt;property in /chosen&gt;)
+$(dt_chosen_reg_addr_hex,&lt;property in /chosen&gt;[,&lt;index&gt;,&lt;unit&gt;])
+$(dt_chosen_reg_addr_int,&lt;property in /chosen&gt;[,&lt;index&gt;,&lt;unit&gt;])
+$(dt_chosen_reg_size_hex,&lt;property in /chosen&gt;[,&lt;index&gt;,&lt;unit&gt;])
+$(dt_chosen_reg_size_int,&lt;property in /chosen&gt;[,&lt;index&gt;,&lt;unit&gt;])
+$(dt_class_enabled,&lt;class name&gt;)
+$(dt_compat_all_has_prop,&lt;compatible string&gt;,&lt;prop&gt;[,&lt;value&gt;])
+$(dt_compat_any_has_prop,&lt;compatible string&gt;,&lt;prop&gt;[,&lt;value&gt;])
+$(dt_compat_any_on_bus,&lt;compatible string&gt;,&lt;prop&gt;)
+$(dt_compat_enabled,&lt;compatible string&gt;)
+$(dt_compat_enabled_num,&lt;compatible string&gt;)
+$(dt_compat_on_bus,&lt;compatible string&gt;,&lt;bus&gt;)
+$(dt_gpio_hogs_enabled)
+$(dt_has_compat,&lt;compatible string&gt;)
+$(dt_highest_controller_irq_number,&lt;node path&gt;,&lt;cell&gt;)
+$(dt_node_array_prop_has_val,&lt;node path&gt;,&lt;prop&gt;,&lt;value&gt;)
+$(dt_node_array_prop_hex,&lt;node path&gt;,&lt;prop&gt;,&lt;index&gt;[,&lt;unit&gt;])
+$(dt_node_array_prop_int,&lt;node path&gt;,&lt;prop&gt;,&lt;index&gt;[,&lt;unit&gt;])
+$(dt_node_bool_prop,&lt;node path&gt;,&lt;prop&gt;)
+$(dt_node_has_compat,&lt;node path&gt;,&lt;compatible string&gt;)
+$(dt_node_has_prop,&lt;node path&gt;,&lt;prop&gt;)
+$(dt_node_int_prop_hex,&lt;node path&gt;,&lt;prop&gt;[,&lt;unit&gt;])
+$(dt_node_int_prop_int,&lt;node path&gt;,&lt;prop&gt;[,&lt;unit&gt;])
+$(dt_node_parent,&lt;node path&gt;)
+$(dt_node_ph_array_prop_hex,&lt;node path&gt;,&lt;prop&gt;,&lt;index&gt;,&lt;cell&gt;[,&lt;unit&gt;])
+$(dt_node_ph_array_prop_int,&lt;node path&gt;,&lt;prop&gt;,&lt;index&gt;,&lt;cell&gt;[,&lt;unit&gt;])
+$(dt_node_ph_prop_path,&lt;node path&gt;,&lt;prop&gt;)
+$(dt_node_reg_addr_hex,&lt;node path&gt;[,&lt;index&gt;,&lt;unit&gt;])
+$(dt_node_reg_addr_int,&lt;node path&gt;[,&lt;index&gt;,&lt;unit&gt;])
+$(dt_node_reg_size_hex,&lt;node path&gt;[,&lt;index&gt;,&lt;unit&gt;])
+$(dt_node_reg_size_int,&lt;node path&gt;[,&lt;index&gt;,&lt;unit&gt;])
+$(dt_node_str_prop_equals,&lt;node path&gt;,&lt;prop&gt;,&lt;value&gt;)
+$(dt_nodelabel_array_prop_has_val, &lt;node label&gt;, &lt;prop&gt;, &lt;value&gt;)
+$(dt_nodelabel_bool_prop,&lt;node label&gt;,&lt;prop&gt;)
+$(dt_nodelabel_enabled,&lt;node label&gt;)
+$(dt_nodelabel_enabled_with_compat,&lt;node label&gt;,&lt;compatible string&gt;)
+$(dt_nodelabel_exists,&lt;node label&gt;)
+$(dt_nodelabel_has_compat,&lt;node label&gt;,&lt;compatible string&gt;)
+$(dt_nodelabel_has_prop,&lt;node label&gt;,&lt;prop&gt;)
+$(dt_nodelabel_path,&lt;node label&gt;)
+$(dt_nodelabel_reg_addr_hex,&lt;node label&gt;[,&lt;index&gt;,&lt;unit&gt;])
+$(dt_nodelabel_reg_addr_int,&lt;node label&gt;[,&lt;index&gt;,&lt;unit&gt;])
+$(dt_nodelabel_reg_size_hex,&lt;node label&gt;[,&lt;index&gt;,&lt;unit&gt;])
+$(dt_nodelabel_reg_size_int,&lt;node label&gt;[,&lt;index&gt;,&lt;unit&gt;])
+$(dt_path_enabled,&lt;node path&gt;)
+$(dt_partition_mtd,&lt;node path&gt;)
+</pre></div>
+</div>
+</section>
+<section id="integer-functions">
+<h2>整数函数<a class="headerlink" href="#integer-functions" title="链接到此标题。"></a></h2>
+<p>下面列出的函数可用于对整数变量进行加法、减法等算术运算。名称带 <code class="docutils literal notranslate"><span class="pre">_hex</span></code> 后缀和不带该后缀的函数分别返回十六进制值和十进制值。</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$(add,&lt;value&gt;[,value]...)
+$(add_hex,&lt;value&gt;[,value]...)
+$(dec,&lt;value&gt;[,value]...)
+$(dec_hex,&lt;value&gt;[,value]...)
+$(div,&lt;value&gt;[,value]...)
+$(div_hex,&lt;value&gt;[,value]...)
+$(inc,&lt;value&gt;[,value]...)
+$(inc_hex,&lt;value&gt;[,value]...)
+$(max,&lt;value&gt;[,value]...)
+$(max_hex,&lt;value&gt;[,value]...)
+$(min,&lt;value&gt;[,value]...)
+$(min_hex,&lt;value&gt;[,value]...)
+$(mod,&lt;value&gt;[,value]...)
+$(mod_hex,&lt;value&gt;[,value]...)
+$(mul,&lt;value&gt;[,value]...)
+$(mul_hex,&lt;value&gt;[,value]...)
+$(sub,&lt;value&gt;[,value]...)
+$(sub_hex,&lt;value&gt;[,value]...)
+</pre></div>
+</div>
+</section>
+<section id="string-functions">
+<h2>字符串函数<a class="headerlink" href="#string-functions" title="链接到此标题。"></a></h2>
+<p>下面列出的函数可用于修改字符串变量。</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$(normalize_upper,&lt;string&gt;)
+$(substring,&lt;string&gt;,&lt;start&gt;[,&lt;stop&gt;])
+</pre></div>
+</div>
+</section>
+<section id="other-functions">
+<h2>其他函数<a class="headerlink" href="#other-functions" title="链接到此标题。"></a></h2>
+<p>用于执行特定操作的函数，目前只有一个检查是否指定了某个扩展板名称的函数。</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$(shields_list_contains,&lt;shield name&gt;)
+</pre></div>
+</div>
+<p>扩展板名称不能包含空白字符。逗号后的空格（如 <code class="docutils literal notranslate"><span class="pre">$(shields_list_contains,</span> <span class="pre">foo)</span></code> 中所示）会被去除并打印一条警告，因此仍能匹配到 <code class="docutils literal notranslate"><span class="pre">foo</span></code>。</p>
+<section id="example-usage">
+<h3>用法示例<a class="headerlink" href="#example-usage" title="链接到此标题。"></a></h3>
+<p>假设某开发板的设备树如下：</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">     </span><span class="na">soc</span><span class="w"> </span><span class="p">{</span>
+<span class="w">             </span><span class="kr">#address-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">             </span><span class="kr">#size-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">             </span><span class="nl">spi0</span><span class="p">:</span><span class="w"> </span><span class="nf">spi</span><span class="o">@</span><span class="mi">10014000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                     </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"sifive,spi0"</span><span class="p">;</span>
+<span class="w">                     </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x10014000</span><span class="w"> </span><span class="mh">0x1000</span><span class="w"> </span><span class="mh">0x20010000</span><span class="w"> </span><span class="mh">0x3c0900</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                     </span><span class="kr">reg</span><span class="o">-</span><span class="n">names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"control"</span><span class="p">,</span><span class="w"> </span><span class="s">"mem"</span><span class="p">;</span>
+<span class="w">                     </span><span class="p">...</span>
+<span class="w">             </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">spi&#64;1001400</span></code> 中 <code class="docutils literal notranslate"><span class="pre">reg</span></code> 的第二项（<code class="docutils literal notranslate"><span class="pre">&lt;0x20010000</span> <span class="pre">0x3c0900&gt;</span></code>）对应 <code class="docutils literal notranslate"><span class="pre">mem</span></code>，其地址为 <code class="docutils literal notranslate"><span class="pre">0x20010000</span></code>。可以按如下方式将该地址插入 Kconfig：</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span><span class="k">config</span><span class="w"> </span>FLASH_BASE_ADDRESS
+<span class="w">     </span><span class="k">default</span><span class="w"> </span>$(dt_node_reg_addr_hex,/soc/spi@1001400,1)
+</pre></div>
+</div>
+<p>经过预处理器展开后，它会变成如下定义：</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span><span class="k">config</span><span class="w"> </span>FLASH_BASE_ADDRESS
+<span class="w">     </span><span class="k">default</span><span class="w"> </span><span class="mi">0</span>x20010000
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 9月 09, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

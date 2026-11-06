@@ -1,0 +1,363 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>使用 QEMU 以太网联网 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/connectivity/networking/qemu_eth_setup.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" />
+    <link rel="next" title="使用 QEMU 联网" href="qemu_setup.html" />
+    <link rel="prev" title="使用 native_sim 开发板联网" href="native_sim_setup.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">服务</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">连接</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">网络</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="overview.html">概述</a></li>
+<li class="toctree-l4"><a class="reference internal" href="net-stack-architecture.html">网络协议栈架构</a></li>
+<li class="toctree-l4"><a class="reference internal" href="net_config_guide.html">网络配置指南</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="networking_with_host.html">与主机系统联网</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="native_sim_setup.html">使用 native_sim 开发板联网</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">使用 QEMU 以太网联网</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#prerequisites">前提条件</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#basic-setup">基本设置</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="qemu_setup.html">使用 QEMU 联网</a></li>
+<li class="toctree-l5"><a class="reference internal" href="usbnet_setup.html">USB 设备联网</a></li>
+<li class="toctree-l5"><a class="reference internal" href="qemu_user_setup.html">使用 QEMU 用户网络联网</a></li>
+<li class="toctree-l5"><a class="reference internal" href="networking_with_multiple_instances.html">多个 Zephyr 实例之间联网</a></li>
+<li class="toctree-l5"><a class="reference internal" href="eth_bridge_native_sim_setup.html">native_sim 开发板上的以太网桥</a></li>
+<li class="toctree-l5"><a class="reference internal" href="qemu_802154_setup.html">使用 QEMU 和 IEEE 802.15.4 联网</a></li>
+<li class="toctree-l5"><a class="reference internal" href="armfvp_user_networking_setup.html">使用 Arm FVP 用户模式联网</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="network_monitoring.html">监视网络流量</a></li>
+<li class="toctree-l4"><a class="reference internal" href="network_tracing.html">网络跟踪</a></li>
+<li class="toctree-l4"><a class="reference internal" href="conformance/index.html">使用 TTCN-3 进行协议一致性测试</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/index.html">网络 API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="conn_mgr/index.html">连接管理器</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dsa.html">分布式交换架构（DSA）</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../bluetooth/index.html">Bluetooth</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../usb/index.html">USB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../canbus/index.html">控制器局域网（CAN）总线协议</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lora_lorawan/index.html">LoRa 和 LoRaWAN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modbus/index.html">Modbus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modem/index.html">调制解调器模块</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../index.html">连接</a> &raquo;</li>
+  
+     <li><a href="index.html">网络</a> &raquo;</li>
+  
+     <li><a href="networking_with_host.html">与主机系统联网</a> &raquo;</li>
+  
+  <li>使用 QEMU 以太网联网</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="networking-with-qemu-ethernet">
+<span id="networking-with-eth-qemu"></span><h1>使用 QEMU 以太网联网<a class="headerlink" href="#networking-with-qemu-ethernet" title="链接到此标题。"></a></h1>
+<nav class="contents local" id="id1">
+<ul class="simple">
+<li><p><a class="reference internal" href="#prerequisites" id="id2">前提条件</a></p></li>
+<li><p><a class="reference internal" href="#basic-setup" id="id3">基本设置</a></p>
+<ul>
+<li><p><a class="reference internal" href="#step-1-create-ethernet-interface" id="id4">第 1 步 - 创建以太网接口</a></p></li>
+<li><p><a class="reference internal" href="#step-2-start-app-in-qemu-board" id="id5">第 2 步 - 在 QEMU 开发板中启动应用程序</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<p>本页介绍如何在（Linux）主机与运行在 QEMU 中的 Zephyr 应用程序之间建立虚拟网络。</p>
+<p>本例在 QEMU 中运行 Zephyr 源码中的 <a class="reference internal" href="../../../samples/net/sockets/echo_server/README.html#sockets-echo-server" title="实现一个将收到的数据包发回给发送方的 UDP/TCP 服务器。">Echo server (advanced)</a> 示例应用程序。Zephyr 实例通过 tuntap 设备连接到 Linux 主机，该设备在 Linux 中表现为一个以太网网络接口。</p>
+<section id="prerequisites">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">前提条件</a><a class="headerlink" href="#prerequisites" title="链接到此标题。"></a></h2>
+<p>在 Linux 主机上找到 Zephyr <a class="reference external" href="https://github.com/zephyrproject-rtos/net-tools">net-tools</a> 项目。它位于 Zephyr 标准安装的 <code class="docutils literal notranslate"><span class="pre">tools/net-tools</span></code> 目录下，也可以从其独立的 git 仓库单独安装：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">git clone https://github.com/zephyrproject-rtos/net-tools</span>
+</pre></div>
+</div>
+</section>
+<section id="basic-setup">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">基本设置</a><a class="headerlink" href="#basic-setup" title="链接到此标题。"></a></h2>
+<p>执行以下步骤需要两个终端窗口：</p>
+<ul class="simple">
+<li><p>终端 #1 的当前目录为 net-tools（<code class="docutils literal notranslate"><span class="pre">cd</span> <span class="pre">net-tools</span></code>）</p></li>
+<li><p>终端 #2 是常用的 Zephyr 开发终端，已初始化 Zephyr 环境。</p></li>
+</ul>
+<p>配置 Zephyr 实例时，必须为 QEMU 连接选择正确的以太网驱动：</p>
+<ul class="simple">
+<li><p>对于 <code class="docutils literal notranslate"><span class="pre">qemu_x86</span></code>，选择 <code class="docutils literal notranslate"><span class="pre">Intel(R)</span> <span class="pre">PRO/1000</span> <span class="pre">Gigabit</span> <span class="pre">Ethernet</span> <span class="pre">driver</span></code> 以太网驱动。该驱动在 Zephyr 源码树中名为 <code class="docutils literal notranslate"><span class="pre">e1000</span></code>。</p></li>
+<li><p>对于 <code class="docutils literal notranslate"><span class="pre">qemu_cortex_m3</span></code>，选择 <code class="docutils literal notranslate"><span class="pre">TI</span> <span class="pre">Stellaris</span> <span class="pre">MCU</span> <span class="pre">family</span> <span class="pre">ethernet</span> <span class="pre">driver</span></code> 以太网驱动。该驱动在 Zephyr 源码树中名为 <code class="docutils literal notranslate"><span class="pre">stellaris</span></code>。</p></li>
+<li><p>对于 <code class="docutils literal notranslate"><span class="pre">mps2_an385</span></code>，选择 <code class="docutils literal notranslate"><span class="pre">SMSC911x/9220</span> <span class="pre">Ethernet</span> <span class="pre">driver</span></code> 以太网驱动。该驱动在 Zephyr 源码树中名为 <code class="docutils literal notranslate"><span class="pre">smsc911x</span></code>。</p></li>
+<li><p>对于 <code class="docutils literal notranslate"><span class="pre">qemu_cortex_a53</span></code>，默认选择 <code class="docutils literal notranslate"><span class="pre">Intel(R)</span> <span class="pre">PRO/1000</span> <span class="pre">Gigabit</span> <span class="pre">Ethernet</span> <span class="pre">driver</span></code> 以太网驱动。</p></li>
+<li><p>此外，<a class="reference internal" href="../../../samples/net/sockets/echo_server/README.html#sockets-echo-server" title="实现一个将收到的数据包发回给发送方的 UDP/TCP 服务器。">Echo server (advanced)</a> 示例还包含用于 <code class="docutils literal notranslate"><span class="pre">qemu_x86_64</span></code> 上 VIRTIO 网络设备的覆盖文件。</p></li>
+</ul>
+<section id="step-1-create-ethernet-interface">
+<h3><a class="toc-backref" href="#id4" role="doc-backlink">第 1 步 - 创建以太网接口</a><a class="headerlink" href="#step-1-create-ethernet-interface" title="链接到此标题。"></a></h3>
+<p>在启动带网络连接的 QEMU 之前，应先在主机系统中创建网络接口。</p>
+<p>在终端 #1 中输入：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./net-setup.sh</span>
+</pre></div>
+</div>
+<p>可以调整 <code class="docutils literal notranslate"><span class="pre">net-setup.sh</span></code> 脚本的行为。按如下方式运行 <code class="docutils literal notranslate"><span class="pre">net-setup.sh</span></code> 可查看各种选项：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./net-setup.sh --help</span>
+</pre></div>
+</div>
+</section>
+<section id="step-2-start-app-in-qemu-board">
+<h3><a class="toc-backref" href="#id5" role="doc-backlink">第 2 步 - 在 QEMU 开发板中启动应用程序</a><a class="headerlink" href="#step-2-start-app-in-qemu-board" title="链接到此标题。"></a></h3>
+<p>构建并启动 <a class="reference internal" href="../../../samples/net/sockets/echo_server/README.html#sockets-echo-server" title="实现一个将收到的数据包发回给发送方的 UDP/TCP 服务器。">Echo server (advanced)</a> 示例应用程序。本例使用 qemu_x86 开发板。</p>
+<p>在终端 #2 中输入：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>qemu_x86<span class="w"> </span>samples/net/sockets/echo_server<span class="w"> </span>--<span class="w"> </span>-DEXTRA_CONF_FILE<span class="o">=</span>overlay-e1000.conf
+west<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>run
+</pre></div>
+</div>
+<p>如果决定在 qemu_x86_64 上使用 VIRTIO 网络设备，则输入：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>qemu_x86_64<span class="w"> </span>samples/net/sockets/echo_server<span class="w"> </span>--<span class="w"> </span>-DDTC_OVERLAY_FILE<span class="o">=</span>virtnet.overlay<span class="w"> </span>-DEXTRA_CONF_FILE<span class="o">=</span>overlay-virtnet.conf
+west<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>run
+</pre></div>
+</div>
+<p>按 <kbd class="kbd docutils literal notranslate">CTRL</kbd>+<kbd class="kbd docutils literal notranslate">A</kbd> <kbd class="kbd docutils literal notranslate">x</kbd> 退出 QEMU。</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 4月 15, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

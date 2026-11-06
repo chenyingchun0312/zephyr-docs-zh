@@ -1,0 +1,375 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>设计目标 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/build/dts/design.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="设备树绑定" href="bindings.html" />
+    <link rel="prev" title="输入和输出文件" href="intro-input-output.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">构建与配置系统</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../cmake/index.html">构建系统（CMake）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cmake-ref/index.html">CMake 参考</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">设备树</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="index.html#devicetree-guide">设备树指南</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="intro.html">设备树简介</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">设计目标</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#single-source-for-hardware-information">硬件信息的单一来源</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#examples">示例</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#example-remaining-work">尚待完成的工作示例</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#source-compatibility-with-other-operating-systems">与其他操作系统的源码兼容性</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#id1">示例</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#id2">尚待完成的工作示例</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#modeling-hardware-exposed-through-multiple-zephyr-apis">对通过多个 Zephyr API 使用的硬件进行建模</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#guidelines">准则</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#id3">示例</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="bindings.html">设备树绑定</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api-usage.html">从 C/C++ 访问设备树</a></li>
+<li class="toctree-l4"><a class="reference internal" href="phandles.html">phandle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="zephyr-user-node.html"><code class="docutils literal notranslate"><span class="pre">/zephyr,user</span></code> 节点</a></li>
+<li class="toctree-l4"><a class="reference internal" href="howtos.html">设备树 HOWTO</a></li>
+<li class="toctree-l4"><a class="reference internal" href="troubleshooting.html">设备树故障排除</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dt-vs-kconfig.html">设备树与 Kconfig 的对比</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#devicetree-reference">设备树参考</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../kconfig/index.html">配置系统（Kconfig）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../snippets/index.html">代码片段（snippet）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../zephyr_cmake_package.html">Zephyr CMake 包</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sysbuild/index.html">Sysbuild（系统构建）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../version/index.html">应用程序版本管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../flashing/index.html">烧录</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../signing/index.html">对二进制文件签名</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">构建与配置系统</a> &raquo;</li>
+  
+     <li><a href="index.html">设备树</a> &raquo;</li>
+  
+  <li>设计目标</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="design-goals">
+<span id="dt-design"></span><h1>设计目标<a class="headerlink" href="#design-goals" title="链接到此标题。"></a></h1>
+<p>Zephyr 对设备树的使用方式随着时间推移发生了很大变化，预计还会有进一步的变化。以下是总体设计目标，以及这些目标如何影响 Zephyr 源代码的具体示例，和仍有待完成的工作。</p>
+<section id="single-source-for-hardware-information">
+<h2>硬件信息的单一来源<a class="headerlink" href="#single-source-for-hardware-information" title="链接到此标题。"></a></h2>
+<p>Zephyr 的内置设备驱动和示例应用程序应从设备树获取可配置的硬件描述。</p>
+<section id="examples">
+<h3>示例<a class="headerlink" href="#examples" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p>新的设备驱动应使用设备树 API 来确定要 <a class="reference internal" href="howtos.html#dt-create-devices"><span class="std std-ref">创建哪些设备</span></a>。</p></li>
+<li><p>树内示例应用程序应使用 <a class="reference internal" href="intro-syntax-structure.html#dt-alias-chosen"><span class="std std-ref">别名</span></a> 来确定当前构建中使用给定类型的多个可能通用设备中的哪一个。例如，<a class="reference internal" href="../../samples/basic/blinky/README.html#blinky" title="使用 GPIO API 让 LED 无限闪烁。">Blinky</a> 示例使用别名来确定要闪烁的 LED。</p></li>
+<li><p>新 SoC 的启动时引脚复用和引脚控制应通过基于设备树的 pinctrl 驱动实现</p></li>
+</ul>
+</section>
+<section id="example-remaining-work">
+<h3>尚待完成的工作示例<a class="headerlink" href="#example-remaining-work" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p>Zephyr 的 <a class="reference internal" href="../../develop/twister/index.html#twister-script"><span class="std std-ref">测试运行器（Twister）</span></a> 目前使用 <code class="file docutils literal notranslate"><span class="pre">board.yaml</span></code> 文件来确定开发板支持的硬件。这应改为从设备树获取。</p></li>
+<li><p>旧式设备驱动目前使用 Kconfig 来确定启用某个 compatible 的哪些实例。这可以而且应该改用设备树覆盖文件来完成。</p></li>
+<li><p>开发板级文档中仍包含手工生成和维护的硬件支持表格。这些信息可以而且应该改为从开发板级设备树获取。</p></li>
+<li><p>运行时 <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span></code> 关系的确定（例如用于设备电源管理）应使用从设备树获取的信息来完成。</p></li>
+</ul>
+</section>
+</section>
+<section id="source-compatibility-with-other-operating-systems">
+<span id="dt-source-compatibility"></span><h2>与其他操作系统的源码兼容性<a class="headerlink" href="#source-compatibility-with-other-operating-systems" title="链接到此标题。"></a></h2>
+<p>Zephyr 的设备树工具基于一个通用层，该层可与 Linux 内核等其他设备树使用者互操作。</p>
+<p>Zephyr 绑定语言的 <em>语义</em> 可以支持 Zephyr 特有的属性，但不应表达 Zephyr 特有的关系。</p>
+<section id="id1">
+<h3>示例<a class="headerlink" href="#id1" title="链接到此标题。"></a></h3>
+<ul>
+<li><p>Zephyr 的设备树源码解析器 <a class="reference internal" href="intro-input-output.html#dt-scripts"><span class="std std-ref">dtlib.py</span></a> 与 <a class="reference external" href="https://git.kernel.org/pub/scm/utils/dtc/dtc.git/about/">dtc</a> 等其他工具双向源码兼容：<code class="file docutils literal notranslate"><span class="pre">dtlib.py</span></code> 可以解析 <code class="docutils literal notranslate"><span class="pre">dtc</span></code> 的输出，<code class="docutils literal notranslate"><span class="pre">dtc</span></code> 也可以解析 <code class="file docutils literal notranslate"><span class="pre">dtlib.py</span></code> 的输出。</p></li>
+<li><p>Zephyr 的“扩展 dtlib”库 <code class="file docutils literal notranslate"><span class="pre">edtlib.py</span></code> 不应包含 Zephyr 特有的功能。它的用途是针对中断和总线等常见元素提供更高层次的设备树视图。</p>
+<p>只有构建在 <code class="file docutils literal notranslate"><span class="pre">edtlib.py</span></code> 之上的高层脚本 <code class="file docutils literal notranslate"><span class="pre">gen_defines.py</span></code> 包含 Zephyr 特有的知识和功能。</p>
+</li>
+</ul>
+</section>
+<section id="id2">
+<h3>尚待完成的工作示例<a class="headerlink" href="#id2" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p>Zephyr 有一套自定义的 <a class="reference internal" href="bindings.html#dt-bindings"><span class="std std-ref">设备树绑定</span></a> 语言 <em>语法</em>。虽然 Linux 的 dtschema 尚不能满足 Zephyr 的需求，但我们应尽量在 Zephyr 自己的绑定中遵循它能够表示的内容。</p></li>
+<li><p>由于绑定语言不够灵活，Zephyr 无法支持 Linux 所支持的全部绑定。</p></li>
+<li><p>Zephyr 与 Linux 之间不共享设备树源文件。</p></li>
+</ul>
+</section>
+</section>
+<section id="modeling-hardware-exposed-through-multiple-zephyr-apis">
+<span id="dt-multi-api-hardware"></span><h2>对通过多个 Zephyr API 使用的硬件进行建模<a class="headerlink" href="#modeling-hardware-exposed-through-multiple-zephyr-apis" title="链接到此标题。"></a></h2>
+<p>当一个硬件模块可以通过不同的 Zephyr API 使用时，设备树应将硬件标识与软件驱动和子系统使用各个硬件实例的方式分开。</p>
+<section id="guidelines">
+<h3>准则<a class="headerlink" href="#guidelines" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p>让 <code class="docutils literal notranslate"><span class="pre">compatible</span></code> 属性专注于设备的编程模型。避免仅为了选择软件 API 而更改它。当硬件接口在架构上不同时（例如使用不同的寄存器块），使用不同的 <code class="docutils literal notranslate"><span class="pre">compatible</span></code> 才是合适的。</p></li>
+<li><p>使用 <code class="docutils literal notranslate"><span class="pre">/chosen</span></code> 进行系统范围内的单例选择。如果系统必须为某个全局功能（例如系统定时器、控制台或熵源）选择恰好一个实例，应使用与平台无关的 chosen 属性表示该选择，即使其他相同的硬件实例被其他 API 使用。另请参见 <a class="reference internal" href="api/api.html#devicetree-zephyr-chosen-nodes"><span class="std std-ref">Zephyr 特有的 chosen 节点</span></a>。</p></li>
+<li><p>在合适的集成层级进行选择。如果它是芯片级的固定属性，应在 SoC <code class="docutils literal notranslate"><span class="pre">.dtsi</span></code> 中描述；如果它随开发板、产品或应用程序而变化，应在开发板 <code class="docutils literal notranslate"><span class="pre">.dts</span></code> 或覆盖文件中描述。</p></li>
+</ul>
+<p>如果硬件设备的不同用途需要不同的属性、子节点或总线语义，则它们不必共享同一个绑定模式。这种情况下，应使用不同的 <code class="docutils literal notranslate"><span class="pre">compatible</span></code> 值，或者将该设备建模为多功能设备。</p>
+</section>
+<section id="id3">
+<h3>示例<a class="headerlink" href="#id3" title="链接到此标题。"></a></h3>
+<p><strong>使用</strong> <code class="docutils literal notranslate"><span class="pre">/chosen</span></code> <strong>进行单例选择</strong></p>
+<p>系统定时器是一个单例功能。<code class="docutils literal notranslate"><span class="pre">zephyr,system-timer</span></code> chosen 属性选择由哪个硬件定时器实例提供该功能，其他相同的实例仍可供其他 API 使用。</p>
+<p>例如，两个相同的 LPTMR 定时器实例可以在硬件描述中共享同一个 <code class="docutils literal notranslate"><span class="pre">compatible</span></code>：</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nl">lptmr1</span><span class="p">:</span><span class="w"> </span><span class="nf">timer</span><span class="o">@</span><span class="mi">44300000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"nxp,lptmr"</span><span class="p">;</span>
+<span class="w">    </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x44300000</span><span class="w"> </span><span class="mh">0x1000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="cm">/* ... */</span>
+<span class="p">};</span>
+
+<span class="nl">lptmr2</span><span class="p">:</span><span class="w"> </span><span class="nf">timer</span><span class="o">@</span><span class="mi">424d0000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"nxp,lptmr"</span><span class="p">;</span>
+<span class="w">    </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x424d0000</span><span class="w"> </span><span class="mh">0x1000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="cm">/* ... */</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>然后，集成层可以选择由哪一个实例提供单例的系统定时器功能：</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">/</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nf">chosen</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">zephyr</span><span class="p">,</span><span class="n">system-timer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">lptmr1</span><span class="p">;</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>系统定时器驱动绑定到 <code class="docutils literal notranslate"><span class="pre">/chosen</span></code> 节点。计数器驱动跳过该实例，使用剩下的那个实例。</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 4月 02, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,438 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="使用网络管理套接字监听网络管理事件。" name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Network management socket &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/samples/net/sockets/net_mgmt/README.html" />
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../../search.html" />
+    <link rel="next" title="Packet socket" href="../packet/README.html" />
+    <link rel="prev" title="HTTP Server" href="../http_server/README.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html">
+            
+              <img src="../../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1 current"><a class="category-link reference internal" href="../../../index.html">Samples and Demos</a><ul class="current">
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../boards/96boards/index.html">96Boards</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../boards/96boards/argonkey/index.html">96Boards ArgonKey</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../drivers/adc/index.html">ADC</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../boards/adi/index.html">ADI</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../boards/amd/index.html">AMD</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../application_development/application_development.html">Application Development</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../arch/index.html">Architecture-dependent Samples</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../drivers/audio/index.html">Audio</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/authentication/authentication.html">Authentication</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../boards/bbc/index.html">BBC</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../boards/bbc/microbit/microbit.html">BBC micro:bit</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../basic/basic.html">Basic</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/bindesc/bindesc.html">Binary Descriptor</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../drivers/biometrics/index.html">Biometrics</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../bluetooth/bluetooth.html">Bluetooth</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../bluetooth/audio/index.html">Bluetooth Audio</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../boards/boards.html">Boards</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../drivers/buzzer/index.html">Buzzer</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../cpp/cpp.html">C++</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/portability/cmsis_rtos_v1/cmsis_rtos_v1.html">CMSIS RTOS v1</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/portability/cmsis_rtos_v2/cmsis_rtos_v2.html">CMSIS RTOS v2</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../modules/cmsis_dsp/cmsis_dsp.html">CMSIS-DSP</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/cpu_freq/cpu_freq.html">CPU Freq</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../drivers/clock_monitor/index.html">Clock Monitor</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/console/console.html">Console</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../drivers/can/index.html">Controller Area Network (CAN)</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/canbus/canbus.html">Controller Area Network (CAN) Bus</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../drivers/counter/index.html">Counter</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../data_structures/data_structures.html">Data Structures</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/debug/index.html">Debug</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/display/display.html">Display</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../drivers/drivers.html">Drivers</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../modules/index.html">External modules</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/fs/fs.html">File Systems</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/input/input.html">Input</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/ipc/ipc.html">Inter-Processor Communication (IPC)</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../cloud/README.html">IoT Cloud</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../kernel/index.html">Kernel and Scheduler</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/kvss/kvss.html">Key-Value Storage Systems</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/llext/llext.html">Linkable Loadable Extensions (LLEXT)</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/lorawan/lorawan.html">LoRaWAN</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/logging/logging.html">Logging</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../mcp/mcp.html">MCP (Model Context Protocol)</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/pmci/mctp/mctp.html">MCTP</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/mgmt/mgmt.html">Management</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/modbus/modbus.html">Modbus</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../ethernet/README.html">Network Ethernet</a></li>
+<li class="toctree-l2 current"><a class="category-link reference internal" href="../../net.html">Networking</a><ul class="current">
+<li class="toctree-l3"><a class="category-link reference internal" href="../../openthread/README.html">OpenThread</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../quic/quic.html">QUIC API</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../qos/QoS.html">Quality of Service</a></li>
+<li class="toctree-l3 current"><a class="category-link reference internal" href="../sockets.html">Sockets API</a><ul class="current">
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../echo_async/README.html" title="使用 BSD 套接字和 poll() 实现一个异步 IPv4/IPv6 TCP 回显服务器">Asynchronous echo server using poll()</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../echo_async_select/README.html" title="使用 BSD 套接字和 select() 实现一个异步 IPv4/IPv6 TCP 回显服务器">Asynchronous echo server using select()</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../coap_client/README.html" title="使用 CoAP 库实现一个获取资源的客户端。">CoAP client</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../coap_download/README.html" title="使用 CoAP 客户端 API 通过 GET 请求下载数据">CoAP download</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../coap_server/README.html" title="使用 CoAP 服务器子系统注册 CoAP 资源。">CoAP service</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../coap_client_tcp/README.html" title="使用 CoAP over TCP 客户端与 CoAP 服务器通信。">CoAP TCP Client</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../coap_upload/README.html" title="使用 CoAP 客户端 API 通过 PUT 请求上传数据">CoAP upload</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../dumb_http_server/README.html" title="使用 BSD 套接字实现一个简单、可移植的 HTTP 服务器。">Dumb HTTP server</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../dumb_http_server_mt/README.html" title="使用 BSD 套接字实现一个支持并发连接的简单 HTTP 服务器。">Dumb HTTP server (multi-threaded)</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../echo_client/README.html" title="实现一个发送 IP 数据包、等待数据被发回并进行验证的客户端。">Echo client (advanced)</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../echo_server/README.html" title="实现一个将收到的数据包发回给发送方的 UDP/TCP 服务器。">Echo server (advanced)</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../echo_service/README.html" title="使用 BSD 套接字和套接字服务 API 实现一个简单的 IPv4/IPv6 TCP 回显服务器。">Echo server (service)</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../echo/README.html" title="使用 BSD 套接字实现一个简单的 IPv4/IPv6 TCP 回显服务器。">Echo server (simple)</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../http_client/README.html" title="实现一个发出多种 HTTP 请求的 HTTP(S) 客户端。">HTTP Client</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../http_get/README.html" title="使用普通 BSD 套接字实现一个 HTTP(S) 客户端。">HTTP GET using plain sockets</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../http_server/README.html" title="实现一个演示多种资源类型的 HTTP(S) 服务器。">HTTP Server</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../big_http_download/README.html" title="使用 BSD 套接字从 Web 服务器下载大文件。">Large HTTP download</a></li>
+<li class="toctree-l4 current"><a class="code-sample-link current reference internal" href="#" title="使用网络管理套接字监听网络管理事件。">Network management socket</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../packet/README.html" title="在以太网上使用原始数据包套接字。">Packet socket</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../sntp_client/README.html" title="使用 SNTP 从主机获取当前时间。">SNTP client</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../sntp_server/README.html" title="为网络上的 SNTP 客户端提供当前时间。">SNTP server</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../can/README.html" title="使用 BSD 套接字 API 收发原始 CAN 帧。">SocketCAN</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../socketpair/README.html" title="使用套接字对实现线程间通信。">Socketpair</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../txtime/README.html" title="使用 SO_TXTIME 套接字选项控制数据包的发送时间。">UDP sender using SO_TXTIME</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../websocket_client/README.html" title="实现一个连接到 Websocket 服务器的 Websocket 客户端。">WebSocket Client</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../wifi/README.html">Wi-Fi</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../ethernet/t1s/README.html" title="设置测试以检验 10BASE-T1S 通信的长期稳定性">10BASE-T1S tests (OA_TC6)</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../wpan_serial/README.html" title="实现一个用于基于 Contiki 的边界路由器的 slip-radio 设备。">802.15.4 &quot;serial-radio&quot;</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../cloud/aws_iot_mqtt/README.html" title="连接 AWS IoT Core 并使用 MQTT 发布消息。">AWS IoT Core MQTT</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../ethernet/bridge/README.html" title="测试和调试以太网网桥">bridge</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../cellular_modem/README.html" title="使用蜂窝调制解调器与 UDP 服务器通信。">Cellular modem</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../dhcpv4_client/README.html" title="启动 DHCPv4 客户端，从 DHCPv4 服务器获取 IPv4 地址。">DHCPv4 client</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../dhcpv6_pd/README.html" title="使用 DHCPv6（RFC 8415）获取并委派 IPv6 前缀。">DHCPv6 prefix delegation</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../dns_resolve/README.html" title="解析给定主机名的 IP 地址。">DNS resolve</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../ethernet/dsa/README.html" title="测试和调试分布式交换架构（DSA）">DSA (Distributed Switch Architecture)</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../ftp_client/README.html" title="通过 Zephyr shell 与 FTP 服务器交互的 FTP 客户端示例。">FTP client shell sample</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../ethernet/gptp/README.html" title="启用 gPTP 支持，并使用 net-shell 监视其功能。">gPTP</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../ipv4_autoconf/README.html" title="执行 IPv4 自动配置，为自己分配一个随机 IPv4 地址">IPv4 autoconf client</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../latmon/README.html" title="Measures delta time between GPIO events and reports the latency metrics via latmon to the latmus service executing on the SUT.">Latmon Client</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../ethernet/lldp/README.html" title="启用 LLDP 支持并设置 VLAN。">Link Layer Discovery Protocol (LLDP)</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../lwm2m_client/README.html" title="实现一个连接到 LwM2M 服务器的 LwM2M 客户端。">LwM2M client</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../mcp/mcp_server_hello_world/README.html" title="This code sample shows two very basic tool definitions to introduce users to the Zephyr MCP Server library.">MCP Server Hello World</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../mdns_responder/README.html" title="监听并响应 mDNS 查询。">mDNS responder</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../cloud/mqtt_azure/README.html" title="连接 Azure IoT Hub 并使用 MQTT 发布消息。">Microsoft Azure IoT Hub MQTT</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../midi2/README.html" title="通过 Network MIDI 2.0 协议交换通用 MIDI 数据包（UMP）">MIDI2 network transport</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../mqtt_publisher/README.html" title="向 MQTT 服务器发送 MQTT PUBLISH 消息。">MQTT publisher</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../mqtt_sn_publisher/README.html" title="向 MQTT-SN 网关发送 MQTT-SN PUBLISH 消息。">MQTT-SN publisher</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../capture/README.html" title="捕获网络数据包，并通过 IPIP 隧道发送到远程主机。">Network packet capture</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../pkt_filter/README.html" title="安装网络数据包过滤器钩子。">Network packet filter</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../stats/README.html" title="在用户应用程序中查询并显示网络统计信息。">Network statistics</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../ocpp/README.html" title="Implement an OCPP charge point that connects to a Central System server and simulates the meter readings.">OCPP charge point</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../prometheus/README.html" title="实现一个演示多种指标类型的 Prometheus 指标服务器。">Prometheus Sample</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../promiscuous_mode/README.html" title="在所有接口上启用混杂模式，并打印传入数据包的信息。">Promiscuous mode</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../ptp/README.html" title="启用 PTP 支持，并通过日志监视消息和事件。">PTP</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../syslog_net/README.html" title="启用远程 syslog 服务，将 syslog 消息发送到远程服务器">Remote syslog</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../rtp/README.html" title="通过 UDP 组播发送或接收 RTP 音频流。">RTP</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../secure_mqtt_sensor_actuator/README.html" title="实现一个基于 MQTT 的物联网传感器/执行器设备">Secure MQTT Sensor/Actuator</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../ssh/README.html" title="实现 SSH 服务器和客户端的 shell 支持。">SSH server and client</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../cloud/tagoio_http_post/README.html" title="使用 HTTP 向 TagoIO IoT 云平台发送随机温度值。">TagoIO HTTP Post</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../telnet/README.html" title="通过 telnet 访问 Zephyr shell。">Telnet console</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../tftp_client/README.html" title="使用 TFTP 客户端库从 TFTP 服务器获取文件或向其上传文件。">TFTP client</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../ethernet/tsn-switch/README.html" title="测试和调试 TSN 交换机">TSN Switch</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../ethernet/vlan/README.html" title="设置两个虚拟局域网，并使用 net-shell 查看网络设置。">Virtual LAN</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../virtual/README.html" title="创建一个示例虚拟网络接口。">Virtual network interface</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../wireguard/README.html" title="Implement a echo-server application that sends received packets back to the sender over Wireguard VPN connection.">Wireguard VPN</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../zperf/README.html" title="使用 zperf shell 工具评估网络带宽。">zperf: Network Traffic Generator</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/pmci/index.html">PMCI</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/portability/posix/posix.html">POSIX API</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../psa/index.html">PSA</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/portability/portability.html">Portability</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/pm/index.html">Power Management</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/profiling/profiling.html">Profiling</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/rtio/rtio.html">Real Time I/O (RTIO)</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../regulator/index.html">Regulator</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/sensing/sensing.html">Sensing</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../sensor/sensor.html">Sensors</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/shell/shell.html">Shell</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../shields/shields.html">Shields</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/smf/smf.html">State Machine Framework</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../subsys/subsys.html">Subsystems</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../sysbuild/sysbuild.html">Sysbuild</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../tfm_integration/tfm_integration.html">TF-M Integration</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../userspace/index.html">Userspace</a></li>
+<li class="toctree-l2"><a class="code-sample-link reference internal" href="../../../synchronization/README.html" title="操作基本的内核同步原语。">Basic Synchronization</a></li>
+<li class="toctree-l2"><a class="code-sample-link reference internal" href="../../../philosophers/README.html" title="使用 Zephyr 内核服务实现哲学家就餐问题的解决方案。">Dining Philosophers</a></li>
+<li class="toctree-l2"><a class="code-sample-link reference internal" href="../../../hello_world/README.html" title="向控制台打印 &quot;Hello World&quot;。">Hello World</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../../index.html">示例与演示</a> &raquo;</li>
+  
+     <li><a href="../../net.html">网络</a> &raquo;</li>
+  
+     <li><a href="../sockets.html">套接字 API</a> &raquo;</li>
+  
+  <li>Network management socket</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="sockets-net-mgmt">
+<h1>Network management socket<a class="headerlink" href="#sockets-net-mgmt" title="链接到此标题。"></a></h1>
+<p>
+                <a href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0//samples\net\sockets\net_mgmt\README.rst/.." class="btn btn-info fa fa-github"
+                    target="_blank" style="text-align: center;">
+                    Browse source code on GitHub
+                </a>
+                </p>
+<section id="overview">
+<h2>概述<a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>这个面向 Zephyr 的 net-mgmt-socket 示例应用程序实现了一个监听器，用于监听网络子系统发出的网络管理事件。</p>
+<p>此示例应用程序的源代码位于：<a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/samples/net/sockets/net_mgmt">samples/net/sockets/net_mgmt</a>。</p>
+</section>
+<section id="requirements">
+<h2>要求<a class="headerlink" href="#requirements" title="链接到此标题。"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../../../services/connectivity/networking/networking_with_host.html#networking-with-host"><span class="std std-ref">与主机系统联网</span></a></p></li>
+</ul>
+</section>
+<section id="building-and-running">
+<h2>构建与运行<a class="headerlink" href="#building-and-running" title="链接到此标题。"></a></h2>
+<p>本应用程序有多种用法。最常见的使用场景之一是在 QEMU 中运行 echo-server 应用程序，具体见 <a class="reference internal" href="../../../../services/connectivity/networking/qemu_setup.html#networking-with-qemu"><span class="std std-ref">使用 QEMU 联网</span></a>。</p>
+<p>按如下方式构建 net-mgmt 套接字示例应用程序：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>&lt;board<span class="w"> </span>to<span class="w"> </span>use&gt;<span class="w"> </span>samples/net/sockets/net_mgmt<span class="w"> </span>--<span class="w"> </span>-DCONF_FILE<span class="o">=</span>&lt;config<span class="w"> </span>file<span class="w"> </span>to<span class="w"> </span>use&gt;
+</pre></div>
+</div>
+<p>为 native_sim 开发板构建的示例：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>native_sim<span class="w"> </span>samples/net/sockets/net_mgmt<span class="w"> </span>--<span class="w"> </span>-DCONF_FILE<span class="o">=</span>prj.conf
+west<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>run
+</pre></div>
+</div>
+</section>
+<section id="see-also">
+<h2>See also<a class="headerlink" href="#see-also" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">bsd_sockets</span></dt>
+</dl>
+
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">net_if</span></dt>
+</dl>
+
+</section>
+</section>
+<script type="application/ld+json">
+                {"@context": "http://schema.org", "@type": "SoftwareSourceCode", "name": "Network management socket", "description": "\u4f7f\u7528\u7f51\u7edc\u7ba1\u7406\u5957\u63a5\u5b57\u76d1\u542c\u7f51\u7edc\u7ba1\u7406\u4e8b\u4ef6\u3002", "codeSampleType": "full", "codeRepository": "https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0//samples\\net\\sockets\\net_mgmt\\README.rst"}
+                </script>
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 11月 10, 2023.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

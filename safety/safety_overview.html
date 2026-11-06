@@ -1,0 +1,430 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zephyr 功能安全概述 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/safety/safety_overview.html" />
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../_static/translations.js?v=540d3cec"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="功能安全需求管理" href="safety_requirements/index.html" />
+    <link rel="prev" title="功能安全" href="index.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../security/index.html">信息安全</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">功能安全</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Zephyr 功能安全概述</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#introduction">简介</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#overview">概述</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#safety-document-update">功能安全文档更新</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#general-safety-scope">总体功能安全范围</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#summarization-iec-61508-standard">IEC 61508 标准概要</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#why-iec-61508">为什么选择 IEC 61508？</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#quality">质量</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#basic-software-quality-standards-safety-view">基本软件质量标准——功能安全视角</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#coding-guidelines">编码准则</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#requirements-and-requirements-tracing">需求与需求追溯</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#test-coverage">测试覆盖率</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#software-architecture-design-principles">软件架构设计原则</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#layered-architecture-model">分层架构模型</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#encapsulated-components">封装的组件</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#encapsulated-single-functionality-if-not-reasonable-and-manageable-in-safety">封装的单一功能（如果在功能安全上不合理或无法管理）</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#processes-and-workflow">流程与工作流</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="safety_requirements/index.html">功能安全需求管理</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="index.html">功能安全</a> &raquo;</li>
+  
+  <li>Zephyr 功能安全概述</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="zephyr-safety-overview">
+<span id="safety-overview"></span><h1>Zephyr 功能安全概述<a class="headerlink" href="#zephyr-safety-overview" title="链接到此标题。"></a></h1>
+<section id="introduction">
+<h2>简介<a class="headerlink" href="#introduction" title="链接到此标题。"></a></h2>
+<p>本文档是功能安全文档，概述了与功能安全相关的活动，以及 Zephyr 项目和 Zephyr 安全工作组/委员会力图实现的目标。</p>
+<p>本概述面向对 Zephyr RTOS 功能安全开发部分感兴趣的人员，以及希望为项目的功能安全方面做出贡献的项目成员。</p>
+</section>
+<section id="overview">
+<h2>概述<a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>本节向读者概述功能安全认证的总体目标、我们力求达到的标准，以及为获得此类功能安全认证而需要实施的质量标准和流程。</p>
+</section>
+<section id="safety-document-update">
+<h2>功能安全文档更新<a class="headerlink" href="#safety-document-update" title="链接到此标题。"></a></h2>
+<p>本文档是一份持续更新的文档，可能会随着新需求、准则或流程的引入而不断演进。</p>
+<ol class="arabic simple">
+<li><p>相关方将通过向 Zephyr 文档仓库提交 PR 的方式提交变更。</p></li>
+<li><p>Zephyr 安全委员会将审查这些变更，并提供反馈或接受变更。</p></li>
+<li><p>变更一经接受，即成为本文档的一部分。</p></li>
+</ol>
+</section>
+<section id="general-safety-scope">
+<span id="id1"></span><h2>总体功能安全范围<a class="headerlink" href="#general-safety-scope" title="链接到此标题。"></a></h2>
+<p>安全委员会的总体目标是，在有限的源代码范围内（参见认证范围，待定）获得 <a class="reference external" href="https://en.wikipedia.org/wiki/IEC_61508">IEC 61508</a> 标准的认证，达到安全完整性等级（SIL）3/系统能力（SC）3。由于代码库是已有的，我们采用 IEC 61508 标准定义的 3s/1s 路线方法。</p>
+<dl class="simple">
+<dt>路线 3s</dt><dd><p><em>对非合规开发的评估。基本上就是针对现有源代码的路线 1s。</em></p>
+</dd>
+<dt>路线 1s</dt><dd><p><em>合规开发。遵守本标准中关于避免和控制软件系统性故障的要求。</em></p>
+</dd>
+</dl>
+<section id="summarization-iec-61508-standard">
+<h3>IEC 61508 标准概要<a class="headerlink" href="#summarization-iec-61508-standard" title="链接到此标题。"></a></h3>
+<p>IEC 61508 标准是一项广受认可的国际标准，用于电气、电子和可编程电子安全相关系统的功能安全。以下是该标准中一些关键功能安全方面的概述：</p>
+<ol class="arabic simple">
+<li><p><strong>危害与风险分析</strong>：IEC 61508 标准要求对与系统相关的潜在危害和风险进行全面分析，以确定将这些风险降低到可接受水平所需的适当安全措施等级。</p></li>
+<li><p><strong>安全完整性等级（SIL）</strong>：该标准引入了安全完整性等级（SIL）的概念，用于划分每个安全功能所需的风险降低程度。SIL 越高，所需的风险降低程度就越大。</p></li>
+<li><p><strong>系统设计</strong>：IEC 61508 标准要求采用系统化的方法进行系统设计，包括识别安全需求、制定安全计划，以及使用适当的安全技术和措施，以确保系统达到所需的 SIL。</p></li>
+<li><p><strong>验证与确认</strong>：该标准要求对安全相关系统进行严格的测试和评估，以确保其达到规定的 SIL 和其他安全需求。这包括验证系统设计、确认系统功能，以及对系统进行持续的监控和维护。</p></li>
+<li><p><strong>文档与可追溯性</strong>：IEC 61508 标准要求有完善的文档流程，以确保安全相关系统的所有方面都被完整记录，并且从安全需求到最终系统设计和实现都具有完全的可追溯性。</p></li>
+</ol>
+<p>总的来说，IEC 61508 标准为安全相关系统的设计、开发和实现提供了一个框架，旨在降低事故风险、提高整体安全性。遵循该标准，组织可以确保其安全相关系统按照最高的安全完整性等级进行设计和实现。</p>
+</section>
+<section id="why-iec-61508">
+<h3>为什么选择 IEC 61508？<a class="headerlink" href="#why-iec-61508" title="链接到此标题。"></a></h3>
+<p>之所以选择 IEC 61508 标准，是因为它是一项适用于各个行业领域的基础功能安全标准。它提供了一个完善的框架，可作为不同行业特定标准的基础。由于 Zephyr 操作系统用途广泛，可以有效地应用于众多行业领域，因此 IEC 61508 对 Zephyr 尤为适用。</p>
+<p>下图展示了 IEC 61508 标准与其他相关标准之间的关系：</p>
+<figure class="align-center" id="id2">
+<img alt="IEC 61508 与其他标准的关系" src="../_images/IEC-61508-basis.svg" />
+<figcaption>
+<p><span class="caption-text">IEC 61508 与其他标准的关系</span><a class="headerlink" href="#id2" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+</section>
+</section>
+<section id="quality">
+<h2>质量<a class="headerlink" href="#quality" title="链接到此标题。"></a></h2>
+<p>质量是整个行业对软件的必然要求。项目的代码库必须达到多项软件质量目标，才能从功能安全的角度被视为可审计代码库，并可用于认证目的。但软件质量并不是功能安全标准带来的额外要求。功能安全将质量视为既有的前提条件，因此无论功能安全目标如何，任何项目都应追求“质量受控”（quality managed）状态。以下列表描述了实现可审计代码库需要达到的质量目标：</p>
+<ol class="arabic simple">
+<li><p>基本软件质量标准</p>
+<ol class="loweralpha simple">
+<li><p><a class="reference internal" href="../contribute/coding_guidelines/index.html#coding-guidelines"><span class="std std-ref">编码规范</span></a> （包括：静态代码分析、编码风格等）</p></li>
+<li><p><a class="reference internal" href="safety_requirements/safety_requirements.html#safety-requirements"><span class="std std-ref">功能安全需求</span></a> 及需求追溯</p></li>
+<li><p>测试覆盖率</p></li>
+</ol>
+</li>
+<li><p>软件架构设计原则</p>
+<ol class="loweralpha simple">
+<li><p>分层架构模型</p></li>
+<li><p>封装的组件</p></li>
+<li><p>封装的单一功能（如果无法在功能安全范围内适配和管理）</p></li>
+</ol>
+</li>
+</ol>
+<section id="basic-software-quality-standards-safety-view">
+<h3>基本软件质量标准——功能安全视角<a class="headerlink" href="#basic-software-quality-standards-safety-view" title="链接到此标题。"></a></h3>
+<p>在本章中，安全委员会说明了为什么需要将上面列出的质量目标作为前提条件，以及从功能安全角度实现可审计代码库需要做哪些工作。总的来说，所有这些与功能安全相关的质量措施都是为了尽量降低代码开发过程中的错误率。</p>
+<section id="coding-guidelines">
+<h4>编码准则<a class="headerlink" href="#coding-guidelines" title="链接到此标题。"></a></h4>
+<p>编码准则是工业软件产品形成共同理解、统一规则集和统一开发风格的基础。对功能安全而言，编码准则至关重要，而且除了统一规则集之外还有另一个目的：还需要证明开发者遵循了统一的开发风格，以防止在软件开发过程中出现 <strong>系统性错误</strong>，从而尽量降低整个软件系统的总体 <strong>错误率</strong>。</p>
+<p>此外，<strong>IEC 61508 标准</strong> 也将使用编码标准/准则作为降低出错可能性的前提条件和建议。</p>
+<p>项目 TSC 和项目安全委员会已商定采用分阶段、渐进式的方法来遵守一套编码规则（即编码准则），以提高代码库的质量和一致性。以下是商定的各个阶段：</p>
+<dl>
+<dt>第 I 阶段（已完成）</dt><dd><p>编码准则规则已可供遵循和参考，但不强制执行。这些规则尚未在 CI 中强制执行，审查者/批准者也不能因违规而阻止 PR。</p>
+</dd>
+<dt>第 II 阶段</dt><dd><p>对于整个代码库中的 PR，审查者/批准者可以因其违反编码准则而阻止 PR。</p>
+<p>开始在有限的代码库范围内强制执行。最初，这一范围将是功能安全认证范围。对于易于在整个代码库中应用的规则，不应将合规要求局限于初始范围。这一步需要工具、CI 配置和强制执行策略。</p>
+</dd>
+<dt>第 III 阶段</dt><dd><p>重新审视编码准则规则，并根据前几个阶段的经验，对选定的规则进行细化和迭代。</p>
+</dd>
+<dt>第 IV 阶段</dt><dd><p>将强制执行扩大到更广泛的代码库。在给出适当理由的情况下，代码库的某些领域可以获得豁免。豁免需要 TSC 批准。</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>可以随时通过提交 GitHub issue/RFC 来删除或修改编码准则规则。</p>
+</div>
+<div class="admonition important">
+<p class="admonition-title">重要</p>
+<p><strong>当前阶段：</strong> 目前正在研究完成 <strong>第 II 阶段</strong> 的前提条件：工具正在评估中，CI 配置和 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/58903">强制执行策略</a> 正在制定中。</p>
+</div>
+</section>
+<section id="requirements-and-requirements-tracing">
+<h4>需求与需求追溯<a class="headerlink" href="#requirements-and-requirements-tracing" title="链接到此标题。"></a></h4>
+<p>需求和需求管理不仅对软件开发很重要，对功能安全也非常重要。一方面，它在技术层面上详细规定和描述了软件应该做什么；另一方面，它是验证所描述的功能是否按预期实现的重要且必要的工具。为此，需要将需求一直追溯到代码层面。有了需求管理和追溯，就可以验证功能是否已被正确测试和实现，从而尽量降低系统性错误率。</p>
+<p>此外，IEC 61508 标准也强烈推荐（对认证而言实际上是必备的）需求和需求追溯。</p>
+</section>
+<section id="test-coverage">
+<h4>测试覆盖率<a class="headerlink" href="#test-coverage" title="链接到此标题。"></a></h4>
+<p>反过来，高测试覆盖率是功能安全的证据，表明代码完全符合其开发目的，不会执行任何意外的指令。如果整个代码都经过测试并具有很高的（理想情况下为 100%）测试覆盖率，还有一个额外的好处：能够快速发现错误的变更，进一步降低错误率。但必须注意，功能安全对测试覆盖率有不同的要求，必须考虑 IEC 61508 标准针对 SIL 3/SC3 目标规定的各种指标。除其他要求外，必须满足以下条件：</p>
+<ul class="simple">
+<li><p>结构测试覆盖率（入口点）100%</p></li>
+<li><p>结构测试覆盖率（语句）100%</p></li>
+<li><p>结构测试覆盖率（分支）100%</p></li>
+</ul>
+<p>如果无法达到 100%（例如防御性代码的语句覆盖率），则需要在文档中对该部分进行描述并说明理由。</p>
+</section>
+</section>
+<section id="software-architecture-design-principles">
+<h3>软件架构设计原则<a class="headerlink" href="#software-architecture-design-principles" title="链接到此标题。"></a></h3>
+<p>为了创建和维护结构化的软件产品，还需要考虑各个软件架构设计，并按照功能安全标准来实现它们，因为有些设计和实现在功能安全上并不合理；这样整个软件和代码库才能作为可审计代码使用。不过，这些软件架构设计大多已在 Zephyr 项目中实现，需要由安全委员会/安全工作组和安全架构师进行验证。</p>
+<section id="layered-architecture-model">
+<h4>分层架构模型<a class="headerlink" href="#layered-architecture-model" title="链接到此标题。"></a></h4>
+<p><strong>IEC 61508 标准</strong> 强烈推荐采用模块化的软件架构方法。Zephyr 项目从一开始就通过其分层架构采用了这种方法。这种架构的思想是将功能相似的模块或组件组织成层，从而为每一层在系统中分配特定的角色。该模型在功能安全方面的优势在于，可以在很高的层次上展示不同组件和层之间的接口，从而确定哪些功能与功能安全相关并可加以限制。此外，可以在此架构之上开展各种分析和编写各种文档，这些对认证以及负责的认证机构都很重要。</p>
+</section>
+<section id="encapsulated-components">
+<h4>封装的组件<a class="headerlink" href="#encapsulated-components" title="链接到此标题。"></a></h4>
+<p>在这一点上，封装的组件是面向功能安全的架构设计的重要组成部分。最重要的方面是将与功能安全相关的组件与非功能安全相关的组件（包括其相关接口）隔离开来。这确保了组件不会对其他组件产生 <strong>连带影响</strong>。</p>
+</section>
+<section id="encapsulated-single-functionality-if-not-reasonable-and-manageable-in-safety">
+<h4>封装的单一功能（如果在功能安全上不合理或无法管理）<a class="headerlink" href="#encapsulated-single-functionality-if-not-reasonable-and-manageable-in-safety" title="链接到此标题。"></a></h4>
+<p>对整个系统和软件环境的另一项要求是，能够在组件内部禁用单个功能。这是因为，如果某个功能对功能安全而言是绝对不可接受的（例如完整的动态内存管理），就应该能够关闭这些单个功能。Zephyr 项目已经通过 Kconfig 及其灵活的可配置性提供了这种能力。</p>
+</section>
+</section>
+</section>
+<section id="processes-and-workflow">
+<h2>流程与工作流<a class="headerlink" href="#processes-and-workflow" title="链接到此标题。"></a></h2>
+<figure class="align-center" id="id3">
+<img alt="功能安全流程与工作流概述" src="../_images/zephyr-safety-process.svg" />
+<figcaption>
+<p><span class="caption-text">功能安全流程与工作流概述</span><a class="headerlink" href="#id3" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<p>该图描述了安全委员会为确保 Zephyr 项目开发过程中的功能安全而制定的大致流程。为便于理解，需要强调几点，并解释安全架构师和安全委员会在整个流程中所承担角色的一些细节。该图只描述了变更与功能安全相关时可能走的路径。</p>
+<ol class="arabic simple">
+<li><p>在 main 分支上，应确定项目的功能安全范围，它通常只占整个代码库的一小部分。然后，应在“main”上的正常开发过程中使这一子集达到可审计状态，即在此范围内特别关注质量目标（<a class="reference internal" href="#quality">Quality</a>）和功能安全流程。安全架构师在这一领域与技术指导委员会（TSC）合作，监督开发过程，以确保架构满足功能安全需求。</p></li>
+<li><p>此时，安全架构师的作用越来越重要。对于属于功能安全范围的 PR/issue，安全架构师最好参与功能安全范围内小型变更的讨论和决策，以便能够对不合规的功能安全相关变更做出反应。如果某个 PR 或 issue 引入了重大且影响深远、需要深入讨论或决策的变更或改进，安全架构师应视情况提请安全委员会或技术指导委员会（TSC）关注，以便由其决定最佳的处理方式。</p></li>
+<li><p>本部分描述认证方面。此时，代码库必须处于“可审计”状态，理想情况下不应再需要或进行任何代码变更。但仍存在一条从 main 分支通往这一区域的路径。如果在创建 LTS 和可审计分支之后，在 main 分支的功能安全范围内发现了严重缺陷或实现了重要变更，就需要这条路径。在这种情况下，安全委员会必须与安全架构师一起决定是否应将该缺陷修复或变更集成到 LTS 中，以便该缺陷修复或变更也能集成到可审计分支中。这种集成可以有三种形式：一是仅修改代码；二是仅更新功能安全文档；三是两者兼有。</p></li>
+<li><p>这里描述认证本身所需的功能安全流程。在此阶段，将完成认证过程中必须完成的、由认证机构和所认证标准规定的最终分析、测试和文档。如果认证机构在此阶段批准了所有内容，且功能安全流程已完成，即可创建并发布功能安全版本。</p></li>
+<li><p>从可审计分支到 main 分支的这种转移只应在特殊情况下发生，具体来说，是在认证过程中发现了需要在“可审计”分支上快速调整才能获得认证的问题时。为了防止下次认证时再次出现这一问题，需要有一条将这些变更合并回 main 分支的路径，使其不会丢失，并在必要时为下一次认证做好准备。</p></li>
+</ol>
+<div class="admonition important">
+<p class="admonition-title">重要</p>
+<p>功能安全不应以任何方式阻碍项目或压缩其发展空间。</p>
+</div>
+<div class="admonition important">
+<p class="admonition-title">重要</p>
+<p><strong>TODO：</strong> 找到并定义对维护者、审查者、贡献者以及安全架构师本身的日常工作影响最小、同时又适用于功能安全的方法、准则和流程。</p>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 12月 03, 2025.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

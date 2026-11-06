@@ -1,0 +1,388 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>代码和数据重定位 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/kernel/code-relocation.html" />
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../_static/translations.js?v=540d3cec"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="基于作用域的清理辅助工具" href="cleanup.html" />
+    <link rel="prev" title="可迭代段" href="iterable_sections/index.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">内核</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="services/index.html">内核服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="drivers/index.html">设备驱动模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usermode/index.html">用户模式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="memory_management/index.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_structures/index.html">数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timing_functions/index.html">计时函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="object_cores/index.html">对象核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeutil.html">时间工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="precision_timing.html">精密计时</a></li>
+<li class="toctree-l2"><a class="reference internal" href="util/index.html">实用工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iterable_sections/index.html">可迭代段</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">代码和数据重定位</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">概述</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#details">详细说明</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#additional-configurations">其他配置</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#section-filtering">段过滤</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nokeep-flag">NOKEEP 标志</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nocopy-flag">NOCOPY 标志</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#relocating-libraries">重定位库</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tips">提示</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#samples-tests">示例/测试</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="cleanup.html">基于作用域的清理辅助工具</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="index.html">内核</a> &raquo;</li>
+  
+  <li>代码和数据重定位</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="code-and-data-relocation">
+<span id="code-data-relocation"></span><h1>代码和数据重定位<a class="headerlink" href="#code-and-data-relocation" title="链接到此标题。"></a></h1>
+<section id="overview">
+<h2>概述<a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>该功能可以将指定文件中的 .text、.rodata、.data 和 .bss 段重定位，并放置到指定的内存区域中。内存区域和文件以字符串形式提供给 <a class="reference internal" href="../build/cmake/index.html#gen-relocate-app-py"><span class="std std-ref">scripts/build/gen_relocate_app.py</span></a> 脚本。该脚本总是从 cmake 内部调用。</p>
+<p>该脚本提供了一种可靠的方式来重新排列内存内容，而无需实际修改代码。简单来说，该脚本相当于同时对一批文件完成 <code class="docutils literal notranslate"><span class="pre">__attribute__((section(&quot;name&quot;)))</span></code> 的工作。</p>
+<p>可以使用正则表达式过滤器，只选择需要重定位的段。</p>
+</section>
+<section id="details">
+<h2>详细说明<a class="headerlink" href="#details" title="链接到此标题。"></a></h2>
+<p>内存区域和文件通过一个文件提供给 <a class="reference internal" href="../build/cmake/index.html#gen-relocate-app-py"><span class="std std-ref">scripts/build/gen_relocate_app.py</span></a> 脚本，该文件的每一行指定要放置到给定区域中的文件列表。</p>
+<p>此类文件的示例如下：</p>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>SRAM2:/home/xyz/zephyr/samples/hello_world/src/main.c,
+SRAM1:/home/xyz/zephyr/samples/hello_world/src/main2.c,
+</pre></div>
+</div>
+</div></blockquote>
+<p>调用该脚本时使用以下参数：<code class="docutils literal notranslate"><span class="pre">python3</span> <span class="pre">gen_relocate_app.py</span> <span class="pre">-i</span> <span class="pre">input_file</span> <span class="pre">-o</span> <span class="pre">generated_linker</span> <span class="pre">-c</span> <span class="pre">generated_code</span></code></p>
+<p>在 <code class="docutils literal notranslate"><span class="pre">prj.conf</span></code> 中启用 Kconfig 选项 <a class="reference internal" href="../kconfig.html#CONFIG_CODE_DATA_RELOCATION" title="CONFIG_CODE_DATA_RELOCATION"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CODE_DATA_RELOCATION</span></code></a> 后，将会调用该脚本并完成所需的重定位。</p>
+<p>该脚本还会触发生成 <code class="docutils literal notranslate"><span class="pre">linker_relocate.ld</span></code> 和 <code class="docutils literal notranslate"><span class="pre">code_relocation.c</span></code> 文件。<code class="docutils literal notranslate"><span class="pre">linker_relocate.ld</span></code> 文件会创建相应的段，并链接所有选定文件中所需的函数或变量。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>在主链接脚本中，text 段被拆分为 2 部分。第一部分包含与向量表相关的信息以及其他调试相关信息，第二部分包含完整的 text 段。这样做是为了将所需的函数和数据变量强制放到正确的位置，这是由链接器的行为决定的。链接器只会链接一次，因此必须拆分这个 text 段，为生成的链接脚本腾出位置。</p>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">code_relocation.c</span></code> 文件包含初始化数据段所需的代码，以及 text 段的副本（如果是 XIP）。此外，它还包含 bss 清零所需的代码，以及将数据从 ROM 复制到所需内存类型的代码。</p>
+<p><strong>使用该功能的步骤如下：</strong></p>
+<ul>
+<li><p>在 <code class="docutils literal notranslate"><span class="pre">prj.conf</span></code> 文件中启用 <a class="reference internal" href="../kconfig.html#CONFIG_CODE_DATA_RELOCATION" title="CONFIG_CODE_DATA_RELOCATION"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CODE_DATA_RELOCATION</span></code></a></p></li>
+<li><p>在项目的 <code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> 文件中，列出所有需要重定位的文件。</p>
+<p><code class="docutils literal notranslate"><span class="pre">zephyr_code_relocate(FILES</span> <span class="pre">src/main.c</span> <span class="pre">LOCATION</span> <span class="pre">SRAM2)</span></code></p>
+<p>其中第一个参数是一个或多个文件，第二个参数是这些文件必须放置到的内存。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p><code class="docutils literal notranslate"><span class="pre">zephyr_code_relocate()</span></code> 函数可以根据需要调用任意多次。</p>
+</div>
+</li>
+</ul>
+<section id="additional-configurations">
+<h3>其他配置<a class="headerlink" href="#additional-configurations" title="链接到此标题。"></a></h3>
+<p>本节介绍可以在 <code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> 中设置的其他配置选项。</p>
+<ul>
+<li><p>如果内存是 <code class="docutils literal notranslate"><span class="pre">SRAM1</span></code>、<code class="docutils literal notranslate"><span class="pre">SRAM2</span></code>、<code class="docutils literal notranslate"><span class="pre">CCD</span></code> 或 <code class="docutils literal notranslate"><span class="pre">AON</span></code>，则将整个目标文件放入这些段中。例如：</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nf">zephyr_code_relocate(</span><span class="no">FILES</span><span class="w"> </span><span class="na">src/file1.c</span><span class="w"> </span><span class="no">LOCATION</span><span class="w"> </span><span class="no">SRAM2</span><span class="nf">)</span>
+<span class="nf">zephyr_code_relocate(</span><span class="no">FILES</span><span class="w"> </span><span class="na">src/file2.c</span><span class="w"> </span><span class="no">LOCATION</span><span class="w"> </span><span class="no">SRAM1</span><span class="nf">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>如果内存类型后面附加了 <code class="docutils literal notranslate"><span class="pre">_DATA</span></code>、<code class="docutils literal notranslate"><span class="pre">_TEXT</span></code>、<code class="docutils literal notranslate"><span class="pre">_RODATA</span></code>、<code class="docutils literal notranslate"><span class="pre">_BSS</span></code> 或 <code class="docutils literal notranslate"><span class="pre">_NOINIT</span></code>，则只有所选的部分会被放置到指定的内存区域中。例如：</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nf">zephyr_code_relocate(</span><span class="no">FILES</span><span class="w"> </span><span class="na">src/file1.c</span><span class="w"> </span><span class="no">LOCATION</span><span class="w"> </span><span class="no">SRAM2_DATA</span><span class="nf">)</span>
+<span class="nf">zephyr_code_relocate(</span><span class="no">FILES</span><span class="w"> </span><span class="na">src/file2.c</span><span class="w"> </span><span class="no">LOCATION</span><span class="w"> </span><span class="no">SRAM2_TEXT</span><span class="nf">)</span>
+</pre></div>
+</div>
+</li>
+<li><p>也可以将多个区域附加在一起，例如 <code class="docutils literal notranslate"><span class="pre">SRAM2_DATA_BSS_NOINIT</span></code>。这会将所有数据（值初始化、零初始化和未初始化的数据）都放入 <code class="docutils literal notranslate"><span class="pre">SRAM2</span></code> 中。</p></li>
+<li><p>可以向 <code class="docutils literal notranslate"><span class="pre">FILES</span></code> 参数传入多个文件，也可以使用 CMake 生成器表达式来重定位以逗号分隔的文件列表。</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nf">file(</span><span class="no">GLOB</span><span class="w"> </span><span class="nb">sources</span><span class="w"> </span><span class="s">"file*.c"</span><span class="nf">)</span>
+<span class="nf">zephyr_code_relocate(</span><span class="no">FILES</span><span class="w"> </span><span class="o">${</span><span class="nt">sources</span><span class="o">}</span><span class="w"> </span><span class="no">LOCATION</span><span class="w"> </span><span class="no">SRAM2</span><span class="nf">)</span>
+<span class="nf">zephyr_code_relocate(</span><span class="no">FILES</span><span class="w"> </span><span class="o">$&lt;</span><span class="no">TARGET_PROPERTY</span><span class="o">:</span><span class="nb">my_tgt</span><span class="p">,</span><span class="no">SOURCES</span><span class="o">&gt;</span><span class="w"> </span><span class="no">LOCATION</span><span class="w"> </span><span class="no">SRAM2</span><span class="nf">)</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</section>
+<section id="section-filtering">
+<h3>段过滤<a class="headerlink" href="#section-filtering" title="链接到此标题。"></a></h3>
+<p>默认情况下，指定文件的所有段都会被重定位。如果使用 <code class="docutils literal notranslate"><span class="pre">FILTER</span></code>，则需提供一个正则表达式，只选择要重定位的段。</p>
+<p>正则表达式作用于段名称。当文件使用 <code class="docutils literal notranslate"><span class="pre">-ffunction-sections</span></code> 和 <code class="docutils literal notranslate"><span class="pre">-fdata-sections</span></code> 构建时（默认即是如此），可以借此选择该文件中的符号。</p>
+<blockquote>
+<div><div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nf">zephyr_code_relocate(</span><span class="no">FILES</span><span class="w"> </span><span class="na">src/file1.c</span><span class="w"> </span><span class="no">FILTER</span><span class="w"> </span><span class="s">".*\\.func1|.*\\.func2"</span><span class="w"> </span><span class="no">LOCATION</span><span class="w"> </span><span class="no">SRAM2_TEXT</span><span class="nf">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>上面的示例只会重定位文件 <code class="docutils literal notranslate"><span class="pre">src/file1.c</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">func1()</span></code> 和 <code class="docutils literal notranslate"><span class="pre">func2()</span></code></p>
+</section>
+<section id="nokeep-flag">
+<h3>NOKEEP 标志<a class="headerlink" href="#nokeep-flag" title="链接到此标题。"></a></h3>
+<p>默认情况下，生成 <code class="docutils literal notranslate"><span class="pre">linker_relocate.ld</span></code> 时，所有被重定位的函数和变量都会用 <code class="docutils literal notranslate"><span class="pre">KEEP()</span></code> 标记。因此，如果某个输入文件恰好包含未使用的符号，即使在调用链接器时使用了 <code class="docutils literal notranslate"><span class="pre">--gc-sections</span></code>，这些符号也不会被丢弃。如果要改变这一行为，可以向 <code class="docutils literal notranslate"><span class="pre">zephyr_code_relocate()</span></code> 调用传入 <code class="docutils literal notranslate"><span class="pre">NOKEEP</span></code>。</p>
+<blockquote>
+<div><div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nf">zephyr_code_relocate(</span><span class="no">FILES</span><span class="w"> </span><span class="na">src/file1.c</span><span class="w"> </span><span class="no">LOCATION</span><span class="w"> </span><span class="no">SRAM2_TEXT</span><span class="w"> </span><span class="no">NOKEEP</span><span class="nf">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>上面的示例有助于确保 <code class="docutils literal notranslate"><span class="pre">file1.c</span></code> 的 .text 段中任何未使用的代码不会被保留在 SRAM2 中。</p>
+</section>
+<section id="nocopy-flag">
+<h3>NOCOPY 标志<a class="headerlink" href="#nocopy-flag" title="链接到此标题。"></a></h3>
+<p>当向 <code class="docutils literal notranslate"><span class="pre">zephyr_code_relocate()</span></code> 函数传入 <code class="docutils literal notranslate"><span class="pre">NOCOPY</span></code> 选项时，不会在 <code class="docutils literal notranslate"><span class="pre">code_relocation.c</span></code> 中生成重定位代码。当需要将特定文件（或一组文件）的内容移到 XIP 区域时，可以使用此标志。</p>
+<p>该示例会将 <code class="docutils literal notranslate"><span class="pre">xip_external_flash.c</span></code> 文件的 .text 段放置到 <code class="docutils literal notranslate"><span class="pre">EXTFLASH</span></code> 内存区域，并从该区域执行（XIP）。.data 段则照常重定位到 SRAM 中。</p>
+<blockquote>
+<div><div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nf">zephyr_code_relocate(</span><span class="no">FILES</span><span class="w"> </span><span class="na">src/xip_external_flash.c</span><span class="w"> </span><span class="no">LOCATION</span><span class="w"> </span><span class="no">EXTFLASH_TEXT</span><span class="w"> </span><span class="no">NOCOPY</span><span class="nf">)</span>
+<span class="nf">zephyr_code_relocate(</span><span class="no">FILES</span><span class="w"> </span><span class="na">src/xip_external_flash.c</span><span class="w"> </span><span class="no">LOCATION</span><span class="w"> </span><span class="no">SRAM_DATA</span><span class="nf">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+<section id="relocating-libraries">
+<h3>重定位库<a class="headerlink" href="#relocating-libraries" title="链接到此标题。"></a></h3>
+<p>可以向 <code class="docutils literal notranslate"><span class="pre">zephyr_code_relocation()</span></code> 传入 LIBRARY 参数和库名称来重定位库。例如，以下代码片段会将串口驱动重定位到 SRAM2：</p>
+<blockquote>
+<div><div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nf">zephyr_code_relocate(</span><span class="no">LIBRARY</span><span class="w"> </span><span class="nb">drivers__serial</span><span class="w"> </span><span class="no">LOCATION</span><span class="w"> </span><span class="no">SRAM2</span><span class="nf">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+<section id="tips">
+<h3>提示<a class="headerlink" href="#tips" title="链接到此标题。"></a></h3>
+<p>重定位 kernel/arch 文件时要小心，其中一些文件包含在代码重定位之前执行的早期初始化代码。</p>
+<p>可能需要额外的 MPU/MMU 配置，以确保目标内存区域被配置为允许执行代码。</p>
+</section>
+<section id="samples-tests">
+<h3>示例/测试<a class="headerlink" href="#samples-tests" title="链接到此标题。"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">$ZEPHYR_BASE/tests/application_development/code_relocation</span></code> 中提供了一个展示该功能的测试</p>
+<p>该测试展示了如何使用代码重定位功能。</p>
+<p>该测试使用一个派生自 <code class="docutils literal notranslate"><span class="pre">include/zephyr/arch/arm/cortex_m/scripts/linker.ld</span></code> 的自定义链接器文件，将 3 个文件中的 .text、.data、.bss 放置到 SRAM 的不同部分。</p>
+<p>此处提供了一个展示 NOCOPY 标志的示例：<a class="reference internal" href="../samples/application_development/code_relocation_nocopy/README.html#code_relocation_nocopy" title="使用自定义链接脚本重定位代码段、数据段或 bss 段。">Code relocation nocopy</a>。</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 8月 19, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

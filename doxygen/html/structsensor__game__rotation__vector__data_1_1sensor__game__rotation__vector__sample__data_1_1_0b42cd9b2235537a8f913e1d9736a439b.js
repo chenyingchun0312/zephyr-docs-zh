@@ -1,0 +1,7 @@
+var structsensor__game__rotation__vector__data_1_1sensor__game__rotation__vector__sample__data_1_1_0b42cd9b2235537a8f913e1d9736a439b =
+[
+    [ "w", "structsensor__game__rotation__vector__data_1_1sensor__game__rotation__vector__sample__data_1_1_0b42cd9b2235537a8f913e1d9736a439b.html#a50b5cefabd48a66e73128d26d3cf28ec", null ],
+    [ "x", "structsensor__game__rotation__vector__data_1_1sensor__game__rotation__vector__sample__data_1_1_0b42cd9b2235537a8f913e1d9736a439b.html#a05e04c675602282b29addd0853774e00", null ],
+    [ "y", "structsensor__game__rotation__vector__data_1_1sensor__game__rotation__vector__sample__data_1_1_0b42cd9b2235537a8f913e1d9736a439b.html#ac493c7c43eb3f21cb2a10c5e9ebeace4", null ],
+    [ "z", "structsensor__game__rotation__vector__data_1_1sensor__game__rotation__vector__sample__data_1_1_0b42cd9b2235537a8f913e1d9736a439b.html#a5cff87909ffbda5471ee3b1bd2016b48", null ]
+];

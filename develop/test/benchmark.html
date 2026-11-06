@@ -1,0 +1,475 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>基准测试框架 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/develop/test/benchmark.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="生成覆盖率报告" href="coverage.html" />
+    <link rel="prev" title="测试框架" href="ztest.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">使用 Zephyr 进行开发</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/index.html">入门指南</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beyond-GSG.html">入门指南之外</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../env_vars.html">环境变量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../application/index.html">应用程序开发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../debug/index.html">调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/index.html">API 状态与准则</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../languages/index.html">编程语言支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../optimizations/index.html">优化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../flash_debug/index.html">烧录与硬件调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html">模块（外部项目）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../west/index.html">West（Zephyr 的元工具）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../twister/index.html">测试运行器（Twister）</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">测试</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ztest.html">测试框架</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">基准测试框架</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">概述</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#configuration">配置</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#usage">用法</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#standard-benchmarks">标准基准测试</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#timed-benchmarks">定时基准测试</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#manual-benchmarks">手动基准测试</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#understanding-results">理解结果</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#standard-benchmarking-results">标准基准测试结果</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#statistical-metrics">统计指标</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#warmup-and-the-cold-cost">预热与冷启动开销</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#latency-percentiles">延迟百分位数</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#timed-benchmarking-results">定时基准测试结果</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#id1">统计指标</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#benchmark-output-options">基准测试输出选项</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#important-considerations">重要注意事项</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api-reference">API 参考</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="coverage.html">生成覆盖率报告</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bsim.html">BabbleSim</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ci_test_plan.html">CI 测试计划选择器（test_plan_v2）</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../sca/index.html">静态代码分析（SCA）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../toolchains/index.html">工具链</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tools/index.html">工具与 IDE</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">使用 Zephyr 进行开发</a> &raquo;</li>
+  
+     <li><a href="index.html">测试</a> &raquo;</li>
+  
+  <li>基准测试框架</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="benchmarking-framework">
+<span id="ztest-benchmarking"></span><h1>基准测试框架<a class="headerlink" href="#benchmarking-framework" title="链接到此标题。"></a></h1>
+<p>Zephyr 基准测试框架提供周期级精确的性能测量。它将数据收集和统计计算自动化，为在整个 Zephyr 生态系统中评估执行指标提供了一种标准化方法。</p>
+<section id="overview">
+<h2>概述<a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>该框架通过提供以下功能，帮助发现性能退化并优化关键路径：</p>
+<ul class="simple">
+<li><p><strong>标准化 API</strong>：与现有 <code class="docutils literal notranslate"><span class="pre">ztest</span></code> 约定保持一致的宏。</p></li>
+<li><p><strong>统计分析</strong>：计算均值、标准差、标准误差以及最小值/最大值。</p></li>
+<li><p><strong>开销补偿</strong>：包含一个对照测试，用于扣除基准测试框架自身的执行时间。每项报告的统计量都会以相同方式减去对照值，因此修正后的值是实数，通常不会与任何单次测量值相同。</p></li>
+</ul>
+</section>
+<section id="configuration">
+<h2>配置<a class="headerlink" href="#configuration" title="链接到此标题。"></a></h2>
+<p>要使用基准测试框架，必须启用以下 Kconfig 选项：</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">CONFIG_ZTEST</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_ZTEST_BENCHMARK</span><span class="o">=</span><span class="s">y</span>
+</pre></div>
+</div>
+</section>
+<section id="usage">
+<h2>用法<a class="headerlink" href="#usage" title="链接到此标题。"></a></h2>
+<p>基准测试套件的定义方式与普通 ztest 测试套件类似：先使用 <code class="docutils literal notranslate"><span class="pre">ZTEST_BENCHMARK_SUITE</span></code> 定义套件，然后使用 <code class="docutils literal notranslate"><span class="pre">ZTEST_BENCHMARK</span></code> 或 <code class="docutils literal notranslate"><span class="pre">ZTEST_BENCHMARK_TIMED</span></code> 宏向套件中添加各个基准测试。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/ztest.h&gt;</span>
+
+<span class="n">ZTEST_BENCHMARK_SUITE</span><span class="p">(</span><span class="o">&lt;</span><span class="n">test</span><span class="w"> </span><span class="n">suite</span><span class="w"> </span><span class="n">name</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;</span><span class="n">setup_fn</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;</span><span class="n">teardown_fn</span><span class="o">&gt;</span><span class="p">);</span>
+</pre></div>
+</div>
+<section id="standard-benchmarks">
+<h3>标准基准测试<a class="headerlink" href="#standard-benchmarks" title="链接到此标题。"></a></h3>
+<p>标准基准测试基于采样，即按指定次数执行测试并测量所用的总周期数。当你希望以周期数了解关键路径的原始 CPU 性能时，这种方式很有用。它可以揭示代码的效率，帮助找出 CPU 使用方面的瓶颈。这种基准测试方法适用于执行时间稳定、受 I/O 操作或上下文切换等外部因素影响不大的代码。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/ztest.h&gt;</span>
+
+<span class="n">ZTEST_BENCHMARK_SUITE</span><span class="p">(</span><span class="o">&lt;</span><span class="n">suite</span><span class="w"> </span><span class="n">name</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+
+<span class="n">ZTEST_BENCHMARK</span><span class="p">(</span><span class="o">&lt;</span><span class="n">suite</span><span class="w"> </span><span class="n">name</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;</span><span class="n">benchmark</span><span class="w"> </span><span class="n">name</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;</span><span class="n">number</span><span class="w"> </span><span class="n">of</span><span class="w"> </span><span class="n">samples</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;</span><span class="n">setup_fn</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;</span><span class="n">teardown_fn</span><span class="o">&gt;</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="cm">/* Code to benchmark */</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>标准基准测试的流程如下：每次采样前调用 setup 函数，按指定的采样次数执行测试函数，每次采样后调用 teardown 函数。</p>
+</section>
+<section id="timed-benchmarks">
+<h3>定时基准测试<a class="headerlink" href="#timed-benchmarks" title="链接到此标题。"></a></h3>
+<p>与标准基准测试不同，定时基准测试测量的是代码的执行时间而不是周期数。当代码的执行时间可能不固定，或者你希望测量实际耗时而不仅仅是关键路径的 CPU 周期数时，这种方式很有用。它能更全面地反映性能特征，尤其适用于涉及 I/O 操作、上下文切换或其他会在原始 CPU 性能之外影响执行时间的因素的代码。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">ZTEST_BENCHMARK_TIMED</span><span class="p">(</span><span class="o">&lt;</span><span class="n">suite</span><span class="w"> </span><span class="n">name</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;</span><span class="n">benchmark</span><span class="w"> </span><span class="n">name</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;</span><span class="n">time</span><span class="w"> </span><span class="n">in</span><span class="w"> </span><span class="n">ms</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;</span><span class="n">setup_fn</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;</span><span class="n">teardown_fn</span><span class="o">&gt;</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">      </span><span class="cm">/* Code to benchmark */</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>标准基准测试注重隔离，而定时基准测试只执行一次 setup 和 teardown 函数，让测试函数在专门的时间窗口内持续热运行。这样得到的测量结果更贴近实际，因为其中包含了真实场景中的系统开销，例如中断、上下文切换和其他后台任务。</p>
+</section>
+<section id="manual-benchmarks">
+<h3>手动基准测试<a class="headerlink" href="#manual-benchmarks" title="链接到此标题。"></a></h3>
+<p>标准基准测试和定时基准测试由框架自身计时，框架会在线程上下文中、在每次调用基准测试主体的前后各取一个时间戳。有些测量无法用这种方式表达，因为其起点和终点是在不同的执行上下文中捕获的，例如从触发中断到其 ISR 第一条指令的延迟，或者从 ISR 结束到被唤醒线程开始运行的延迟。</p>
+<p>手动基准测试将循环、setup 和 teardown 保留在框架中，只把测量什么交由主体决定：主体用 <code class="xref c c-func docutils literal notranslate"><span class="pre">ztest_benchmark_start()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">ztest_benchmark_end()</span></code> 将要测量的部分括起来。框架会计算并报告与标准基准测试相同的统计量。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">ZTEST_BENCHMARK_MANUAL</span><span class="p">(</span><span class="o">&lt;</span><span class="n">suite</span><span class="w"> </span><span class="n">name</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;</span><span class="n">benchmark</span><span class="w"> </span><span class="n">name</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;</span><span class="n">samples</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;</span><span class="n">setup_fn</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;</span><span class="n">teardown_fn</span><span class="o">&gt;</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">      </span><span class="n">prepare</span><span class="p">();</span>
+
+<span class="w">      </span><span class="n">ztest_benchmark_start</span><span class="p">();</span>
+<span class="w">      </span><span class="n">operation_under_test</span><span class="p">();</span>
+<span class="w">      </span><span class="n">ztest_benchmark_end</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>这两个钩子都只记录时间戳，因此都可以在 ISR 中调用，测量区间也不必在同一个执行上下文中开始和结束。对于从中断到其所唤醒线程的延迟，由 ISR 标记开始，由线程结束该区间：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">my_isr</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">arg</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">      </span><span class="n">ztest_benchmark_start</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">ZTEST_BENCHMARK_MANUAL</span><span class="p">(</span><span class="o">&lt;</span><span class="n">suite</span><span class="w"> </span><span class="n">name</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="n">isr_exit_latency</span><span class="p">,</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">      </span><span class="n">trigger_the_interrupt</span><span class="p">();</span>
+
+<span class="w">      </span><span class="n">ztest_benchmark_end</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>采样值在主体返回后才计算，这样统计工作就不会在中断上下文中进行：更新统计量需要使用浮点运算，而并非所有架构都允许在 ISR 中使用浮点运算。如果某次迭代的主体没有标记任何区间，则该次迭代不产生采样值。</p>
+<p>手动基准测试使用自己的对照值进行修正，而不是采样基准测试所用的对照值。手动区间的开销只有括住它的两个时间戳；而采样对照还会测量对基准测试主体的间接调用，这部分并不属于手动区间。如果区间的两端在两个不同的上下文中捕获，则两者的开销都无法准确对应，也没有任何对照值能够表达这种情况。</p>
+<p>预热在这里的作用与采样基准测试完全相同：框架会额外运行主体 <a class="reference internal" href="../../kconfig.html#CONFIG_ZTEST_BENCHMARK_WARMUP" title="CONFIG_ZTEST_BENCHMARK_WARMUP"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZTEST_BENCHMARK_WARMUP</span></code></a> 次并丢弃这些区间，同时保留第一次作为冷启动开销。主体无需区分这两个阶段，并且每次被测量的迭代之前所做的工作都与上一次完全相同。</p>
+</section>
+</section>
+<section id="understanding-results">
+<h2>理解结果<a class="headerlink" href="#understanding-results" title="链接到此标题。"></a></h2>
+<section id="standard-benchmarking-results">
+<h3>标准基准测试结果<a class="headerlink" href="#standard-benchmarking-results" title="链接到此标题。"></a></h3>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">&lt;suite name&gt; ###############################################</span>
+<span class="go">&lt;benchmark name&gt; ===========================================</span>
+<span class="go">   Sample size:&lt;number of samples&gt;, total cycles: &lt;total amount of cycles&gt;</span>
+<span class="go">   Mean(u): &lt;mean cycles per sample&gt;</span>
+<span class="go">   Standard deviation(s): &lt;cycles&gt;</span>
+<span class="go">   Standard Error(SE): &lt;cycles&gt;</span>
+<span class="go">   Min: &lt;cycles&gt; (run #&lt;sample number&gt;)</span>
+<span class="go">   Max: &lt;cycles&gt; (run #&lt;sample number&gt;)</span>
+</pre></div>
+</div>
+<section id="statistical-metrics">
+<h4>统计指标<a class="headerlink" href="#statistical-metrics" title="链接到此标题。"></a></h4>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p><a class="reference internal" href="../../kconfig.html#CONFIG_ZTEST_BENCHMARK_OUTLIERS" title="CONFIG_ZTEST_BENCHMARK_OUTLIERS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZTEST_BENCHMARK_OUTLIERS</span></code></a> 会将标准误差这一行替换为超出中位数的幅度大于 <a class="reference internal" href="../../kconfig.html#CONFIG_ZTEST_BENCHMARK_OUTLIER_MARGIN_DIV" title="CONFIG_ZTEST_BENCHMARK_OUTLIER_MARGIN_DIV"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZTEST_BENCHMARK_OUTLIER_MARGIN_DIV</span></code></a> 所允许范围的采样数，以及该数量所占的百分比。之所以需要这个余量，是因为计数器的分辨率会使基线分散在几个计数值上；如果没有余量，任何分布中大约一半的采样都会被报告出来。延迟分布通常是一条基线加上少量受干扰的运行，而不是来自同一个随机总体的样本；对这两者计算的标准误差暗示了一个任何单次执行都从未产生过的平均值。例如，一万次 760 个周期的运行加上一次 1240 个周期的运行，得到的标准误差为 0.048，看起来很精确但实际并非如此，而 <code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">/</span> <span class="pre">10000</span> <span class="pre">(0.010%)</span></code> 则如实说明了发生的情况。只有报告内容会改变，标准误差仍保留其 CSV 列。</p>
+</div>
+<ul class="simple">
+<li><p><strong>均值（u）</strong>：每次采样所用的平均周期数。它给出一个代表预期执行开销的中心值。</p></li>
+<li><p><strong>标准差（s）</strong>：衡量执行开销相对于均值的变化或波动程度。标准差越低，说明行为越确定、越一致。</p></li>
+<li><p><strong>标准误差（SE）</strong>：估计样本均值可能与系统“真实”均值相差多远。它反映了测试的统计可靠性。SE 越低，对结果的置信度越高。</p></li>
+<li><p><strong>最小值/最大值</strong>：观察到的最小和最大周期数，以及它们出现在哪一次采样中。</p></li>
+</ul>
+</section>
+<section id="warmup-and-the-cold-cost">
+<h4>预热与冷启动开销<a class="headerlink" href="#warmup-and-the-cold-cost" title="链接到此标题。"></a></h4>
+<p>基准测试分为三个阶段：setup，然后是执行但不记录的 <a class="reference internal" href="../../kconfig.html#CONFIG_ZTEST_BENCHMARK_WARMUP" title="CONFIG_ZTEST_BENCHMARK_WARMUP"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZTEST_BENCHMARK_WARMUP</span></code></a> 次迭代，最后是被测量的采样。预热设置适用于镜像中的每个基准测试。</p>
+<p>无论预热设为多少，第一次执行总是不被记录。它在缓存、分支预测器和 TLB 都是冷状态下运行，可能比稳定状态慢一个数量级。框架不会丢弃这一信息，而是将其作为 <strong>冷启动开销</strong> 单独报告。两者回答的是不同的问题：一个操作第一次被执行时的开销，以及此后的开销。对于在启动时只运行一次某条路径的应用程序，关心的是前者。</p>
+<p>正是将其排除在分布之外，分布的尾部才有意义。如果基准测试在两处都报告冷启动，那么冷启动将决定极端百分位数：在一万个采样中，最近秩法的 p99.99 是第二大的值，因此一次冷启动就会被当作稳定状态的尾部。</p>
+<p>对于总开销与一次缓存未命中相当的微基准测试，将预热次数提高到超过这个程度会降低准确度；而采样数足够大时，最初几次迭代对均值没有可测量的影响，因此默认值零是合适的起点。当基准测试足够大、缓存状态会产生影响，并且你关心的是稳定状态时，再提高预热次数。</p>
+</section>
+<section id="latency-percentiles">
+<h4>延迟百分位数<a class="headerlink" href="#latency-percentiles" title="链接到此标题。"></a></h4>
+<p>均值和标准误差描述的是平均值的估计精确程度。这对吞吐量来说是合适的问题，但对延迟则不然：实时系统的特征在于单次操作最坏能有多差，而这体现在分布的尾部，而不是均值附近。</p>
+<p>启用 <a class="reference internal" href="../../kconfig.html#CONFIG_ZTEST_BENCHMARK_PERCENTILES" title="CONFIG_ZTEST_BENCHMARK_PERCENTILES"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZTEST_BENCHMARK_PERCENTILES</span></code></a> 可以保留各个采样，并在常规统计量之外报告 <code class="docutils literal notranslate"><span class="pre">min</span></code>、<code class="docutils literal notranslate"><span class="pre">p50</span></code>、<code class="docutils literal notranslate"><span class="pre">p90</span></code>、<code class="docutils literal notranslate"><span class="pre">p99</span></code>、<code class="docutils literal notranslate"><span class="pre">p99.9</span></code>、<code class="docutils literal notranslate"><span class="pre">p99.99</span></code> 和 <code class="docutils literal notranslate"><span class="pre">max</span></code>。在 CSV 模式下，每个采样基准测试和手动基准测试都会额外输出一行 <code class="docutils literal notranslate"><span class="pre">P</span></code>；各列含义参见 <a class="reference internal" href="../../kconfig.html#CONFIG_ZTEST_BENCHMARK_OUTPUT_CSV" title="CONFIG_ZTEST_BENCHMARK_OUTPUT_CSV"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZTEST_BENCHMARK_OUTPUT_CSV</span></code></a>。</p>
+<p>这种差别在带有长尾的分布上最为明显。在有负载的系统上测量中断进入延迟，得到的均值为 1264 个周期，标准误差为 34，但这并不对应任何一次实际发生的中断：百分位数显示直到 p99 都是 1216 个周期，而超出 p99 后则为 25184 个周期。</p>
+<p>百分位数必须能够由所采集的采样数分辨出来。p99 至少需要 100 个采样，p99.9 至少需要 1000 个，p99.99 至少需要 10000 个；采样数更少时，报告的值会退化为最大值。采样保存在一个包含 <a class="reference internal" href="../../kconfig.html#CONFIG_ZTEST_BENCHMARK_MAX_SAMPLES" title="CONFIG_ZTEST_BENCHMARK_MAX_SAMPLES"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZTEST_BENCHMARK_MAX_SAMPLES</span></code></a> 个条目、每个条目 8 字节的缓冲区中，该缓冲区必须不小于最大基准测试的采样数。保留的是最先采集的那些采样，而不是整个运行过程的抽样，因此基于截断前缀计算的百分位数会遗漏缓冲区填满之后发生的情况，而长尾往往恰恰出现在那里。因此，超出缓冲区的基准测试完全不报告百分位数，并说明有多少个采样未能存入。</p>
+<p>简而言之，所有指标的值都是越低越好。均值、最小值和最大值越低，表示原始性能越好；标准差和标准误差越低，表示性能越一致，因而越可靠。</p>
+</section>
+</section>
+<section id="timed-benchmarking-results">
+<h3>定时基准测试结果<a class="headerlink" href="#timed-benchmarking-results" title="链接到此标题。"></a></h3>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">&lt;benchmark name&gt; ===============================================</span>
+<span class="go">   Samples: &lt;Number of samples executed during the benchmark&gt;</span>
+<span class="go">   Total Time: &lt;Gross execution time&gt;</span>
+<span class="go">   Work Time: &lt;Net execution time&gt; ns (Net)</span>
+<span class="go">   Ops/Sec: &lt;average operations per second&gt;</span>
+<span class="go">   Cycles/Op: &lt;average cycles per operation&gt;</span>
+</pre></div>
+</div>
+<section id="id1">
+<h4>统计指标<a class="headerlink" href="#id1" title="链接到此标题。"></a></h4>
+<ul class="simple">
+<li><p><strong>Total Time（总时间）</strong>：基准测试所有采样所用的总时间，包括开销。</p></li>
+<li><p><strong>Work Time（工作时间）</strong>：被测代码所用的总时间，不包括基准测试框架自身的开销。它能更准确地衡量被测代码的实际性能。</p></li>
+<li><p><strong>Ops/Sec（每秒操作数）</strong>：每秒可执行的操作（采样）数，由采样数除以净工作时间（单位为秒）得到。该指标对于了解被测代码的吞吐量特别有用。</p></li>
+<li><p><strong>Cycles/Op（每操作周期数）</strong>：每次操作平均所用的 CPU 周期数，由净周期数除以采样数得到。该指标反映了代码在 CPU 使用方面的效率。</p></li>
+</ul>
+<p>一般来说，Ops/Sec 越高越好，因为它表示吞吐量更高；同样，Cycles/Op 越低越好。由于 Cycles/Op 和 Ops/Sec 指标源自相同的底层数据，它们是从不同角度反映同样的性能特征。Ops/Sec 高应对应 Cycles/Op 低，反之亦然。</p>
+</section>
+</section>
+<section id="benchmark-output-options">
+<h3>基准测试输出选项<a class="headerlink" href="#benchmark-output-options" title="链接到此标题。"></a></h3>
+<p>基准测试框架提供了多种输出基准测试数据结果的选项。默认情况下，结果以详细的人类可读格式打印，便于理解和解读。也可以启用 Kconfig 选项 <a class="reference internal" href="../../kconfig.html#CONFIG_ZTEST_BENCHMARK_OUTPUT_CSV" title="CONFIG_ZTEST_BENCHMARK_OUTPUT_CSV"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZTEST_BENCHMARK_OUTPUT_CSV</span></code></a>，以 CSV 格式输出结果，便于脚本导入并做进一步分析。CSV 输出包含与详细输出相同的所有指标，但其格式更有利于自动化分析和报告。</p>
+<p>标准基准测试的 csv 输出格式如下：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">S,&lt;suite name&gt;,&lt;benchmark name&gt;,&lt;sample size&gt;,&lt;total cycles&gt;,&lt;mean&gt;,&lt;stddev&gt;,&lt;stderr&gt;,&lt;min&gt;,&lt;min sample&gt;,&lt;max&gt;,&lt;max sample&gt;</span>
+</pre></div>
+</div>
+<p>定时基准测试的 csv 输出格式如下：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">T,&lt;suite name&gt;,&lt;benchmark name&gt;,&lt;samples&gt;,&lt;total time&gt;,&lt;work time&gt;,&lt;ops/sec&gt;,&lt;cycles/op&gt;</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="important-considerations">
+<h2>重要注意事项<a class="headerlink" href="#important-considerations" title="链接到此标题。"></a></h2>
+<ul class="simple">
+<li><p><strong>噪声</strong>：基准测试本身对系统噪声很敏感。为了获得尽可能准确的结果，请禁用可能干扰计时的不必要后台任务和中断。</p></li>
+<li><p><strong>缓存预热</strong>：由于缓存未命中，基准测试的第一个采样往往会更慢，在采样数较少时可能使结果略有偏差。请选择足够多的采样数以减轻这种影响。</p></li>
+<li><p><strong>使用 setup/teardown 函数</strong>：<em>强烈</em> 建议使用 setup 和 teardown 函数，尽可能将被测代码隔离出来。基准测试代码中过多的 setup/teardown 代码会引入噪声，对于较短的关键路径会 <em>明显</em> 扭曲结果。</p></li>
+</ul>
+</section>
+<section id="api-reference">
+<h2>API 参考<a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">ztest_benchmark</span></dt>
+</dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 8月 13, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

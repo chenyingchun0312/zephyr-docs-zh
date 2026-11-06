@@ -1,0 +1,325 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>单向链表 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/kernel/data_structures/slist.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="双向链表" href="dlist.html" />
+    <link rel="prev" title="数据结构" href="index.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">内核</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../services/index.html">内核服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../drivers/index.html">设备驱动模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usermode/index.html">用户模式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../memory_management/index.html">内存管理</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">数据结构</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">单向链表</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#single-linked-list-internals">单向链表内部实现</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#flagged-list">带标志链表</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#single-linked-list-api-reference">单向链表 API 参考</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#flagged-list-api-reference">带标志链表 API 参考</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="dlist.html">双向链表</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mpsc_pbuf.html">多生产者单消费者数据包缓冲区</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spsc_pbuf.html">单生产者单消费者数据包缓冲区</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rbtree.html">平衡红黑树</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ring_buffers.html">环形缓冲区</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mpsc_lockfree.html">多生产者单消费者无锁队列</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spsc_lockfree.html">单生产者单消费者无锁队列</a></li>
+<li class="toctree-l3"><a class="reference internal" href="min_heap.html">最小堆数据结构</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ringq.html">sys_ringq 数据结构</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../timing_functions/index.html">计时函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../object_cores/index.html">对象核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../timeutil.html">时间工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../precision_timing.html">精密计时</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../util/index.html">实用工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../iterable_sections/index.html">可迭代段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../code-relocation.html">代码和数据重定位</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanup.html">基于作用域的清理辅助工具</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">内核</a> &raquo;</li>
+  
+     <li><a href="index.html">数据结构</a> &raquo;</li>
+  
+  <li>单向链表</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="single-linked-list">
+<span id="slist-api"></span><h1>单向链表<a class="headerlink" href="#single-linked-list" title="链接到此标题。"></a></h1>
+<p>Zephyr 提供了 <code class="xref c c-type docutils literal notranslate"><span class="pre">sys_slist_t</span></code> 类型，用于存储简单的单向链表数据（即每个链表元素保存指向下一个元素的指针，但不保存指向上一个元素的指针）。它支持以常数时间访问链表的第一个（头部）和最后一个（尾部）元素、在头部之前和尾部之后插入，以及以常数时间删除头部。删除后续节点需要访问“前一个”指针，因此只能通过搜索链表以线性时间完成。</p>
+<p>用户可以在任何可访问的内存中实例化 <code class="xref c c-type docutils literal notranslate"><span class="pre">sys_slist_t</span></code> 结构体。使用前应通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">sys_slist_init()</span></code> 或用 SYS_SLIST_STATIC_INIT 静态赋值进行初始化。其内部字段是不透明的，用户代码不应访问。</p>
+<p>可以使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">sys_slist_peek_head()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">sys_slist_peek_tail()</span></code> 获取链表的端点节点。如果链表为空，这两个函数返回 NULL，否则返回指向 <code class="xref c c-type docutils literal notranslate"><span class="pre">sys_snode_t</span></code> 结构体的指针。</p>
+<p><code class="xref c c-type docutils literal notranslate"><span class="pre">sys_snode_t</span></code> 结构体表示要插入的数据。一般来说，它应由用户分配和控制，通常嵌入在要添加到链表中的结构体内。可以使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">SYS_SLIST_CONTAINER</span></code> 从链表节点获取外层结构体的指针，需要向其传入外层结构体的结构体名称和节点的字段名。在内部，<code class="xref c c-type docutils literal notranslate"><span class="pre">sys_snode_t</span></code> 结构体只包含一个 next 指针，可以通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">sys_slist_peek_next()</span></code> 访问。</p>
+<p>可以使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">sys_slist_prepend()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">sys_slist_append()</span></code> 在头部或尾部添加单个节点来修改链表。也可以使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">sys_slist_insert()</span></code> 在内部位置添加节点，它会在现有节点之后插入新节点。同样，给定指向前驱节点的指针，<code class="xref c c-func docutils literal notranslate"><span class="pre">sys_slist_remove()</span></code> 会删除该节点。这些操作都是常数时间的。</p>
+<p>对于更复杂的链表修改，还提供了一些便捷例程。<code class="xref c c-func docutils literal notranslate"><span class="pre">sys_slist_merge_slist()</span></code> 会将整个链表追加到现有链表上。<code class="xref c c-func docutils literal notranslate"><span class="pre">sys_slist_append_list()</span></code> 会以常数时间追加现有链表中一段有界的子集。<code class="xref c c-func docutils literal notranslate"><span class="pre">sys_slist_find_and_remove()</span></code> 会（以线性时间）在链表中搜索给定节点，如果存在则将其删除。</p>
+<p>最后，slist 实现提供了一组 “for each” 宏，可以用自然的方式遍历链表，而无需手动沿 next 指针遍历。<code class="xref c c-macro docutils literal notranslate"><span class="pre">SYS_SLIST_FOR_EACH_NODE</span></code> 会枚举链表中的每个节点，需要提供一个用于保存节点指针的局部变量。<code class="xref c c-macro docutils literal notranslate"><span class="pre">SYS_SLIST_FOR_EACH_NODE_SAFE</span></code> 的行为类似，但实现更复杂，需要一个额外的临时变量用于存储，并允许用户在迭代过程中删除当前迭代的节点。这些宏都还有一个 “container” 变体（<code class="xref c c-macro docutils literal notranslate"><span class="pre">SYS_SLIST_FOR_EACH_CONTAINER</span></code> 和 <code class="xref c c-macro docutils literal notranslate"><span class="pre">SYS_SLIST_FOR_EACH_CONTAINER_SAFE</span></code>），它们会对一个类型与用户外层结构体（而非节点结构体）相匹配的局部变量赋值，并在内部完成所需的偏移计算。此外，<code class="xref c c-macro docutils literal notranslate"><span class="pre">SYS_SLIST_ITERATE_FROM_NODE</span></code> 允许只枚举某个节点及其所有后继节点，而不检查链表的前面部分。</p>
+<section id="single-linked-list-internals">
+<h2>单向链表内部实现<a class="headerlink" href="#single-linked-list-internals" title="链接到此标题。"></a></h2>
+<p>slist 代码的设计力求精简和常规。在内部，<code class="xref c c-type docutils literal notranslate"><span class="pre">sys_slist_t</span></code> 结构体只不过是一对 “head” 和 “tail” 指针字段，而 <code class="xref c c-type docutils literal notranslate"><span class="pre">sys_snode_t</span></code> 只保存一个 “next” 指针。</p>
+<figure class="align-center" id="id1">
+<img alt="slist 示例" src="../../_images/slist.png" />
+<figcaption>
+<p><span class="caption-text">包含三个元素的 slist。</span><a class="headerlink" href="#id1" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<figure class="align-center" id="id2">
+<img alt="空 slist 示例" src="../../_images/slist-empty.png" />
+<figcaption>
+<p><span class="caption-text">空 slist</span><a class="headerlink" href="#id2" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<p>不过，链表代码的具体实现是通过一个内部的 “Z_GENLIST” 模板 API 完成的，它可以从任意结构体中提取这些字段，并生成一组任意命名的函数。这样就可以使用相同的基本原语实现更复杂的单向链表变体。genlist 的实现者只需负责基本操作的自定义实现：每个结构体的 “init” 步骤，以及相关结构体上 head、tail 和 next 指针各自的 “get” 和 “set” 原语。这些内联函数作为参数传给 genlist 宏展开。</p>
+<p>目前 Zephyr 中只有一个这样的变体，即 sflist。</p>
+</section>
+<section id="flagged-list">
+<h2>带标志链表<a class="headerlink" href="#flagged-list" title="链接到此标题。"></a></h2>
+<p><code class="xref c c-type docutils literal notranslate"><span class="pre">sys_sflist_t</span></code> 使用上述 genlist 模板 API 实现。除了符号命名（“sflist” 而非 “slist”）和下面介绍的额外 API 之外，它在各方面的行为都与 slist API 完全相同。</p>
+<p>它增加了为每个链表节点关联恰好两位用户自定义“标志”的能力。可以通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">sys_sfnode_flags_get()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">sys_sfnode_flags_set()</span></code> 访问和修改这些标志。在内部，这些标志与 next 指针的最低几位以联合方式存储，与更简单的 slist 代码相比，不会产生额外的 SRAM 存储开销。</p>
+</section>
+<section id="single-linked-list-api-reference">
+<h2>单向链表 API 参考<a class="headerlink" href="#single-linked-list-api-reference" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">single-linked-list_apis</span></dt>
+</dl>
+
+</section>
+<section id="flagged-list-api-reference">
+<h2>带标志链表 API 参考<a class="headerlink" href="#flagged-list-api-reference" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">flagged-single-linked-list_apis</span></dt>
+</dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 12月 11, 2025.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,27 @@
+var group__devicetree_interrupt__controller =
+[
+    [ "Arm GIC 中断控制器", "group__dt__arm__gic.html", "group__dt__arm__gic" ],
+    [ "Espressif ESP32 中断分配器", "group__dt__esp32__intmux.html", "group__dt__esp32__intmux" ],
+    [ "Espressif ESP32-C2 中断分配器", "group__dt__esp32c2__intmux.html", "group__dt__esp32c2__intmux" ],
+    [ "Espressif ESP32-C3 中断分配器", "group__dt__esp32c3__intmux.html", "group__dt__esp32c3__intmux" ],
+    [ "Espressif ESP32-C5 中断分配器", "group__dt__esp32c5__intmux.html", "group__dt__esp32c5__intmux" ],
+    [ "Espressif ESP32-C6 中断分配器", "group__dt__esp32c6__intmux.html", "group__dt__esp32c6__intmux" ],
+    [ "Espressif ESP32-C61 中断分配器", "group__dt__esp32c61__intmux.html", "group__dt__esp32c61__intmux" ],
+    [ "Espressif ESP32-H2 中断分配器", "group__dt__esp32h2__intmux.html", "group__dt__esp32h2__intmux" ],
+    [ "Espressif ESP32-P4 中断分配器", "group__dt__esp32p4__intmux.html", "group__dt__esp32p4__intmux" ],
+    [ "Espressif ESP32-S2 中断分配器", "group__dt__esp32s2__intmux.html", "group__dt__esp32s2__intmux" ],
+    [ "Espressif ESP32-S3 中断分配器", "group__dt__esp32s3__intmux.html", "group__dt__esp32s3__intmux" ],
+    [ "ITE IT51XXX 中断控制器", "group__dt__ite__it51xxx__intc.html", "group__dt__ite__it51xxx__intc" ],
+    [ "ITE IT51XXX 唤醒控制器", "group__dt__ite__it51xxx__wuc.html", "group__dt__ite__it51xxx__wuc" ],
+    [ "ITE IT8XXX2 中断控制器", "group__dt__ite__intc.html", "group__dt__ite__intc" ],
+    [ "ITE IT8XXX2 唤醒控制器", "group__dt__ite__it8xxx2__wuc.html", "group__dt__ite__it8xxx2__wuc" ],
+    [ "Infineon XMC4xxx 中断控制器", "group__dt__infineon__xmc4xxx__intc.html", "group__dt__infineon__xmc4xxx__intc" ],
+    [ "Intel I/O APIC 中断控制器", "group__dt__intel__ioapic.html", "group__dt__intel__ioapic" ],
+    [ "Microchip SmartFusion2 中断控制器", "group__dt__microchip__smartfusion2__irq.html", "group__dt__microchip__smartfusion2__irq" ],
+    [ "Microchip XEC ECIA 中断控制器", "group__dt__mchp__xec__ecia.html", "group__dt__mchp__xec__ecia" ],
+    [ "OpenISA RV32M1 INTMUX", "group__dt__openisa__intmux.html", "group__dt__openisa__intmux" ],
+    [ "Realtek RTS5817 中断源", "group__dt__realtek__rts5817__intc.html", "group__dt__realtek__rts5817__intc" ],
+    [ "TI VIM 中断控制器", "group__dt__ti__vim.html", "group__dt__ti__vim" ],
+    [ "DT_INST_INTC_GET_AGGREGATOR_LEVEL", "group__devicetree-interrupt__controller.html#ga914952a10c55fecc1f6e7c0cc3685b1b", null ],
+    [ "DT_INTC_GET_AGGREGATOR_LEVEL", "group__devicetree-interrupt__controller.html#ga4eebef2c5e75d6a6c87d0cea03ac1bee", null ]
+];

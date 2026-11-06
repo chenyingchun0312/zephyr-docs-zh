@@ -1,0 +1,668 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>USB 设备支持（已弃用） &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/connectivity/usb/device/usb_device.html" />
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../../search.html" />
+    <link rel="next" title="USB 设备支持 API（已弃用）" href="api/index.html" />
+    <link rel="prev" title="USB" href="../index.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html">
+            
+              <img src="../../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">服务</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">连接</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../networking/index.html">网络</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bluetooth/index.html">Bluetooth</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">USB</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">USB 设备支持（已弃用）</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#overview">概述</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#supported-usb-classes">支持的 USB 类</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#audio">Audio</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#bluetooth-hci-usb-transport-layer">Bluetooth HCI USB 传输层</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#cdc-acm">CDC ACM</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#dfu">DFU</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#usb-human-interface-devices-hid-support">USB 人机接口设备（HID）支持</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#mass-storage-class">大容量存储类（Mass Storage Class）</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#networking">网络</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#binary-device-object-store-bos-support">二进制设备对象存储（BOS）支持</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#interface-number-and-endpoint-address-assignment">接口号和端点地址分配</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#testing-over-usbip-in-native-sim">在 native_sim 中通过 USBIP 测试</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#usb-vendor-and-product-identifiers">USB 厂商标识符和产品标识符</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="api/index.html">USB 设备支持 API（已弃用）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guidelines.html">USB 测试和示例的通用准则</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../device_next/usb_device.html">USB 设备支持</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../device_next/vid_pid.html">USB 厂商标识符和产品标识符</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../device_next/cdc_acm.html">USB 设备 CDC ACM</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../device_next/api/index.html">USB 设备支持 API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../host/api/index.html">USB 主机支持 API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../host/usbip.html">USB/IP 协议支持</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../pd/ucds.html">USB-C 设备协议栈</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/hid.html">人机接口设备（HID）</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../canbus/index.html">控制器局域网（CAN）总线协议</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lora_lorawan/index.html">LoRa 和 LoRaWAN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modbus/index.html">Modbus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modem/index.html">调制解调器模块</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../../index.html">连接</a> &raquo;</li>
+  
+     <li><a href="../index.html">USB</a> &raquo;</li>
+  
+  <li>USB 设备支持（已弃用）</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="usb-device-support-deprecated">
+<span id="usb-device-stack"></span><h1>USB 设备支持（已弃用）<a class="headerlink" href="#usb-device-support-deprecated" title="链接到此标题。"></a></h1>
+<nav class="contents local" id="id1">
+<ul class="simple">
+<li><p><a class="reference internal" href="#overview" id="id2">概述</a></p></li>
+<li><p><a class="reference internal" href="#supported-usb-classes" id="id3">支持的 USB 类</a></p>
+<ul>
+<li><p><a class="reference internal" href="#audio" id="id4">Audio</a></p></li>
+<li><p><a class="reference internal" href="#bluetooth-hci-usb-transport-layer" id="id5">Bluetooth HCI USB 传输层</a></p></li>
+<li><p><a class="reference internal" href="#cdc-acm" id="id6">CDC ACM</a></p>
+<ul>
+<li><p><a class="reference internal" href="#console-over-cdc-acm-uart" id="id7">通过 CDC ACM UART 使用控制台</a></p></li>
+<li><p><a class="reference internal" href="#cdc-acm-uart-as-backend" id="id8">将 CDC ACM UART 用作后端</a></p></li>
+<li><p><a class="reference internal" href="#posix-default-tty-echo-mitigation" id="id9">缓解 POSIX tty 默认 ECHO 问题</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#dfu" id="id10">DFU</a></p></li>
+<li><p><a class="reference internal" href="#usb-human-interface-devices-hid-support" id="id11">USB 人机接口设备（HID）支持</a></p></li>
+<li><p><a class="reference internal" href="#mass-storage-class" id="id12">大容量存储类（Mass Storage Class）</a></p></li>
+<li><p><a class="reference internal" href="#networking" id="id13">网络</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#binary-device-object-store-bos-support" id="id14">二进制设备对象存储（BOS）支持</a></p></li>
+<li><p><a class="reference internal" href="#interface-number-and-endpoint-address-assignment" id="id15">接口号和端点地址分配</a></p></li>
+<li><p><a class="reference internal" href="#testing-over-usbip-in-native-sim" id="id16">在 native_sim 中通过 USBIP 测试</a></p></li>
+<li><p><a class="reference internal" href="#usb-vendor-and-product-identifiers" id="id17">USB 厂商标识符和产品标识符</a></p></li>
+</ul>
+</nav>
+<section id="overview">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">概述</a><a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>USB 设备协议栈是位于 USB 设备控制器驱动与 USB 设备类驱动或用户应用程序之间、与硬件无关的接口。它移植自 LPCUSB 设备协议栈，并随着时间推移不断修改和扩展。它提供以下功能：</p>
+<ul class="simple">
+<li><p>使用设备控制器驱动提供的 <a class="reference internal" href="api/usb_dc.html#usb-dc-api"><span class="std std-ref">USB 设备控制器驱动 API（已弃用）</span></a> 与 USB 设备控制器交互。</p></li>
+<li><p>响应标准设备请求并返回标准描述符，本质上是处理“第 9 章”的内容，具体而言是通用串行总线规范 2.0 版表 9-3 中的标准设备请求。</p></li>
+<li><p>提供供 USB 设备类或用户应用程序使用的编程接口。相关 API 在 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/usb/usb_device.h">include/zephyr/usb/usb_device.h</a> 中描述</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p><a class="reference internal" href="api/index.html#usb-api"><span class="std std-ref">USB 设备支持 API（已弃用）</span></a> 中列出的所有 API 以及依赖它们的函数均已弃用，并将在 v4.5.0 中移除。请改用新的 USB 设备支持，其 API 见 <a class="reference internal" href="../device_next/api/index.html#usb-device-next-api"><span class="std std-ref">USB 设备支持 API</span></a>。</p>
+</div>
+</section>
+<section id="supported-usb-classes">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">支持的 USB 类</a><a class="headerlink" href="#supported-usb-classes" title="链接到此标题。"></a></h2>
+<section id="audio">
+<h3><a class="toc-backref" href="#id4" role="doc-backlink">Audio</a><a class="headerlink" href="#audio" title="链接到此标题。"></a></h3>
+<p>Audio 类目前有一个实验性实现。它遵循规范 1.00 版（<code class="docutils literal notranslate"><span class="pre">bcdADC</span> <span class="pre">0x0100</span></code>），且仅支持同步（synchronous）同步类型。请参阅示例 <a class="reference internal" href="../../../../samples/subsys/usb/legacy/audio_headphones_microphone/README.html#usb-audio-headphones-microphone" title="实现一个带音频 IN/OUT 回环的 USB Audio 麦克风 + 耳机设备。">Legacy USB Audio microphone &amp; headphones</a> 和 <a class="reference internal" href="../../../../samples/subsys/usb/legacy/audio_headset/README.html#usb-audio-headset" title="实现一个带音频 IN/OUT 回环的 USB Audio 耳麦设备。">Legacy USB Audio headset</a>。</p>
+</section>
+<section id="bluetooth-hci-usb-transport-layer">
+<h3><a class="toc-backref" href="#id5" role="doc-backlink">Bluetooth HCI USB 传输层</a><a class="headerlink" href="#bluetooth-hci-usb-transport-layer" title="链接到此标题。"></a></h3>
+<p>Bluetooth HCI USB 传输层的实现使用 <a class="reference internal" href="../../bluetooth/api/hci_raw.html#bt-hci-raw"><span class="std std-ref">HCI RAW 通道</span></a> 向主机暴露 HCI 接口。它与 Bluetooth 规范中的描述不完全一致，只包含一个具有以下端点配置的接口：</p>
+<ul class="simple">
+<li><p>通过控制端点传输 HCI 命令（仅主机到设备方向）</p></li>
+<li><p>通过中断 IN 端点传输 HCI 事件</p></li>
+<li><p>通过一个批量 IN 端点和一个批量 OUT 端点传输 ACL 数据</p></li>
+</ul>
+<p>由于 <a class="reference internal" href="../../bluetooth/index.html#bluetooth"><span class="std std-ref">Bluetooth</span></a> 不支持语音通道，用于语音通道的第二个接口尚未实现。在 Linux 下，如果 HCI USB 传输层是配置中唯一的接口，这并不是大问题，btusb 驱动不会尝试占用第二个（同步传输）接口。但如果 HCI USB 用在复合配置中且是第一个接口，Linux 的 btusb 驱动会同时占用第一个和下一个接口，导致其他复合功能无法工作。因此，HCI USB 不应在复合配置中使用。新 USB 支持中的实现已修复了此问题。</p>
+<p>请参阅示例 <a class="reference internal" href="../../../../samples/bluetooth/hci_usb/README.html#bluetooth_hci_usb" title="将 Zephyr 开发板变成 USB 蓝牙适配器（兼容所有操作系统）。">HCI USB</a>。</p>
+</section>
+<section id="cdc-acm">
+<span id="usb-device-cdc-acm"></span><h3><a class="toc-backref" href="#id6" role="doc-backlink">CDC ACM</a><a class="headerlink" href="#cdc-acm" title="链接到此标题。"></a></h3>
+<p>CDC ACM 类在 Zephyr 中被用作多个子系统的后端。然而，对于缺乏经验的用户来说，配置它可能并不容易。下面介绍不同的使用场景和一些常见陷阱。</p>
+<p>面向 CDC ACM 用户的接口是 <a class="reference internal" href="../../../../hardware/peripherals/uart.html#uart-api"><span class="std std-ref">通用异步收发器（UART）</span></a> 驱动 API。但它在行为上与真实的 UART 控制器有两个重要区别：</p>
+<ul class="simple">
+<li><p>只有在 USB 设备协议栈初始化并启动之后才能传输数据，在此之前的所有数据都会被丢弃</p></li>
+<li><p>即使设备已连接到主机，主机端仍需要有一个应用程序来请求数据</p></li>
+<li><p>CDC ACM 的 poll out 实现遵循该 API，仅当启用了 hw-flow-control 属性且在非 ISR 上下文中调用时，才会在 TX 环形缓冲区已满时阻塞。</p></li>
+</ul>
+<p>CDC ACM UART 的设备树 compatible 属性为 <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,cdc-acm-uart</span></code>。当启用 USB 设备支持且设备树源文件中存在兼容节点时，会自动选中 CDC ACM 支持。如有需要，可以通过 <a class="reference internal" href="../../../../kconfig.html#CONFIG_USB_CDC_ACM" title="CONFIG_USB_CDC_ACM"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USB_CDC_ACM</span></code></a> 显式禁用 CDC ACM 支持。大约可以定义和使用四个 CDC ACM UART 实例，具体受控制器支持的最大端点数量限制。</p>
+<p>CDC ACM UART 节点应是 USB 设备控制器节点的子节点。由于各厂商对控制器节点的命名各不相同，而我们的示例和应用程序应尽可能通用，默认 USB 设备控制器通常被分配 <code class="docutils literal notranslate"><span class="pre">zephyr_udc0</span></code> 节点标签。CDC ACM UART 通常在设备树覆盖文件中描述，如下所示：</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="nf">zephyr_udc0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nl">cdc_acm_uart0</span><span class="p">:</span><span class="w"> </span><span class="nf">cdc_acm_uart0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"zephyr,cdc-acm-uart"</span><span class="p">;</span>
+<span class="w">                </span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"CDC_ACM_0"</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>示例 <a class="reference internal" href="../../../../samples/subsys/usb/cdc_acm/README.html#usb-cdc-acm" title="使用 USB CDC ACM UART 驱动实现串口回显。">USB CDC ACM UART sample</a> 也有类似的覆盖文件。由于其中没有特殊属性，用设备树描述 CDC ACM UART 似乎有些多余。使用设备树的目的在于，让应用程序可以方便地在真实 UART 控制器和 CDC ACM UART 之间互换。</p>
+<section id="console-over-cdc-acm-uart">
+<h4><a class="toc-backref" href="#id7" role="doc-backlink">通过 CDC ACM UART 使用控制台</a><a class="headerlink" href="#console-over-cdc-acm-uart" title="链接到此标题。"></a></h4>
+<p>利用上面的 CDC ACM UART 节点以及 chosen 节点的 <code class="docutils literal notranslate"><span class="pre">zephyr,console</span></code> 属性，可以指定将 CDC ACM UART 用于控制台。示例 <a class="reference internal" href="../../../../samples/subsys/usb/console/README.html#usb-cdc-acm-console" title="通过 USB CDC ACM 向控制台输出 &quot;Hello World!&quot;。">Console over USB CDC ACM</a> 使用了类似的覆盖文件。</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">/</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nf">chosen</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">zephyr</span><span class="p">,</span><span class="n">console</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">cdc_acm_uart0</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="p">};</span>
+
+<span class="o">&amp;</span><span class="nf">zephyr_udc0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nl">cdc_acm_uart0</span><span class="p">:</span><span class="w"> </span><span class="nf">cdc_acm_uart0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"zephyr,cdc-acm-uart"</span><span class="p">;</span>
+<span class="w">                </span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"CDC_ACM_0"</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>建议应用程序在使用控制台之前等待 DTR 信号：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="k">const</span><span class="w"> </span><span class="n">dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DEVICE_DT_GET</span><span class="p">(</span><span class="n">DT_CHOSEN</span><span class="p">(</span><span class="n">zephyr_console</span><span class="p">));</span>
+<span class="kt">uint32_t</span><span class="w"> </span><span class="n">dtr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">usb_enable</span><span class="p">(</span><span class="nb">NULL</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">dtr</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">uart_line_ctrl_get</span><span class="p">(</span><span class="n">dev</span><span class="p">,</span><span class="w"> </span><span class="n">UART_LINE_CTRL_DTR</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">dtr</span><span class="p">);</span>
+<span class="w">        </span><span class="n">k_sleep</span><span class="p">(</span><span class="n">K_MSEC</span><span class="p">(</span><span class="mi">100</span><span class="p">));</span>
+<span class="p">}</span>
+
+<span class="n">printk</span><span class="p">(</span><span class="s">"nuqneH</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="cdc-acm-uart-as-backend">
+<h4><a class="toc-backref" href="#id8" role="doc-backlink">将 CDC ACM UART 用作后端</a><a class="headerlink" href="#cdc-acm-uart-as-backend" title="链接到此标题。"></a></h4>
+<p>与控制台示例类似，可以通过设置 <a class="reference internal" href="../../../../build/dts/api/api.html#devicetree-chosen-nodes"><span class="std std-ref">chosen 节点</span></a> 属性，将 CDC ACM UART 配置为其他子系统的后端。</p>
+<p>以下列出几个 Zephyr 专用的 chosen 属性，可用于为子系统或应用程序选择 CDC ACM UART 作为后端：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">zephyr,bt-c2h-uart</span></code> 用于 Bluetooth，示例参见 <a class="reference internal" href="../../../../samples/bluetooth/hci_uart/README.html#bluetooth_hci_uart" title="通过 UART 将蓝牙控制器提供给另一台设备或 CPU。">HCI UART</a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">zephyr,ot-uart</span></code> 用于 OpenThread，示例参见 <a class="reference internal" href="../../../../samples/net/openthread/coprocessor/README.html#openthread-coprocessor" title="使用 OpenThread 的协处理器设计构建 Thread 边界路由器。">OpenThread co-processor</a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">zephyr,shell-uart</span></code> 被 Shell 用作串行后端，示例参见 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/samples/subsys/shell/shell_module">samples/subsys/shell/shell_module</a></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">zephyr,uart-mcumgr</span></code> 由示例 <a class="reference internal" href="../../../../samples/subsys/mgmt/mcumgr/smp_svr/README.html#smp-svr" title="实现一个简单管理协议（SMP）服务器。">SMP server</a> 使用</p></li>
+</ul>
+</section>
+<section id="posix-default-tty-echo-mitigation">
+<h4><a class="toc-backref" href="#id9" role="doc-backlink">缓解 POSIX tty 默认 ECHO 问题</a><a class="headerlink" href="#posix-default-tty-echo-mitigation" title="链接到此标题。"></a></h4>
+<p>Linux 等 POSIX 系统默认在 tty 设备上启用 ECHO。如果不需要回显，主机端应用程序可以在 tty 设备上调用 <code class="docutils literal notranslate"><span class="pre">open()</span></code>，然后调用 <code class="docutils literal notranslate"><span class="pre">ioctl()</span></code>（最好通过 <code class="docutils literal notranslate"><span class="pre">tcsetattr()</span></code>）来禁用回显。遗憾的是，<code class="docutils literal notranslate"><span class="pre">open()</span></code> 和 <code class="docutils literal notranslate"><span class="pre">ioctl()</span></code> 之间存在固有的竞争窗口：此期间 ECHO 处于启用状态，收到的任何字符（即使主机应用程序没有调用 <code class="docutils literal notranslate"><span class="pre">read()</span></code>）都会被回显。当 CDC ACM 端口另一端没有任何真实 UART 时，这个问题尤其明显，因为不存在由波特率带来的额外延迟。</p>
+<p>为缓解该问题，Zephyr 的 CDC ACM 实现在设备被配置后，会在 IN 端点上预备一个 ZLP（零长度包）。当主机读取该 ZLP 时（这几乎是主机应用程序已打开 tty 设备的最佳指示），Zephyr 会在发送真正的有效载荷之前强制延迟 <a class="reference internal" href="../../../../kconfig.html#CONFIG_CDC_ACM_TX_DELAY_MS" title="CONFIG_CDC_ACM_TX_DELAY_MS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CDC_ACM_TX_DELAY_MS</span></code></a> 毫秒。这应能为第一个（且仅第一个）打开 tty 设备的应用程序留出足够时间，在不需要回显时禁用 ECHO。如果完全不需要 CDC ACM 设备回显，最好设置 udev 规则，在设备连接后立即禁用 ECHO。</p>
+<p>当 CDC ACM 实例用于 Zephyr Shell 时，ECHO 尤其不受欢迎，因为回送给 Shell 的颜色控制字符会被解释为（无效）命令，用户最终会看到乱码。虽然 minicom 默认会禁用 ECHO，但在带复位退出时，它会将 termios 设置恢复为进入时的状态。因此，如果 minicom 是第一个打开 tty 设备的应用程序，带复位退出会重新启用 ECHO，从而给下一个应用程序造成问题（这无法在 Zephyr 端缓解）。为避免该问题，建议退出 minicom 时不复位，或在启动 minicom 之前禁用 ECHO。</p>
+</section>
+</section>
+<section id="dfu">
+<h3><a class="toc-backref" href="#id10" role="doc-backlink">DFU</a><a class="headerlink" href="#dfu" title="链接到此标题。"></a></h3>
+<p>USB DFU 类的实现与 <a class="reference internal" href="../../../device_mgmt/dfu.html#dfu"><span class="std std-ref">设备固件升级</span></a> 和 <a class="reference internal" href="../../../device_mgmt/dfu.html#mcuboot-api"><span class="std std-ref">MCUBoot API</span></a> 紧密耦合。这意味着目标平台必须支持 <a class="reference internal" href="../../../device_mgmt/dfu.html#flash-img-api"><span class="std std-ref">Flash 镜像</span></a> API。</p>
+<p>请参阅示例 <a class="reference internal" href="../../../../samples/subsys/usb/legacy/dfu/README.html#legacy-usb-dfu" title="使用 USB DFU 类驱动实现设备固件升级。">Legacy USB DFU (Device Firmware Upgrade)</a>。</p>
+</section>
+<section id="usb-human-interface-devices-hid-support">
+<h3><a class="toc-backref" href="#id11" role="doc-backlink">USB 人机接口设备（HID）支持</a><a class="headerlink" href="#usb-human-interface-devices-hid-support" title="链接到此标题。"></a></h3>
+<p>HID 支持滥用了 <a class="reference internal" href="../../../../kernel/drivers/index.html#device-model-api"><span class="std std-ref">设备驱动模型</span></a>，仅仅是为了让应用程序能够使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">device_get_binding()</span></code>。注意，并不存在真正意义上的 HID 设备 API，接口改由 <code class="xref c c-struct docutils literal notranslate"><span class="pre">hid_ops</span></code> 提供。默认实例名为 <code class="docutils literal notranslate"><span class="pre">HID_n</span></code>，其中 n 可以是 {0, 1, 2, ...}，取决于 <a class="reference internal" href="../../../../kconfig.html#CONFIG_USB_HID_DEVICE_COUNT" title="CONFIG_USB_HID_DEVICE_COUNT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USB_HID_DEVICE_COUNT</span></code></a>。</p>
+<p>每个 HID 实例都需要一个 HID 报告描述符。必须使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">usb_hid_register_device()</span></code> 注册与核心交互的接口以及报告描述符。</p>
+<p>由于 USB HID 规范不只被 USB 子系统使用，USB HID API 参考分为两部分：<a class="reference internal" href="../api/hid.html#usb-hid-common"><span class="std std-ref">人机接口设备（HID）</span></a> 和 <a class="reference internal" href="api/usb_device_hid.html#usb-hid-device"><span class="std std-ref">USB HID 类 API（已弃用）</span></a>。应使用 <a class="reference internal" href="../api/hid.html#usb-hid-common"><span class="std std-ref">人机接口设备（HID）</span></a> 中的 HID 辅助宏来编写 HID 报告描述符。宏名称与 USB HID 规范中使用的名称一致。</p>
+<p>对于 HID 类接口，每个实例都需要一个 IN 中断端点，OUT 中断端点则是可选的。因此，<code class="xref c c-struct docutils literal notranslate"><span class="pre">hid_ops</span></code> 的最低实现要求是提供 <code class="docutils literal notranslate"><span class="pre">int_in_ready</span></code> 回调。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#define REPORT_ID               1</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="n">configured</span><span class="p">;</span>
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">hdev</span><span class="p">;</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">int_in_ready_cb</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="k">static</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">report</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="n">REPORT_ID</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">};</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">hid_int_ep_write</span><span class="p">(</span><span class="n">hdev</span><span class="p">,</span><span class="w"> </span><span class="n">report</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">report</span><span class="p">),</span><span class="w"> </span><span class="nb">NULL</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">LOG_ERR</span><span class="p">(</span><span class="s">"Failed to submit report"</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">report</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">++</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">status_cb</span><span class="p">(</span><span class="k">enum</span><span class="w"> </span><span class="n">usb_dc_status_code</span><span class="w"> </span><span class="n">status</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="o">*</span><span class="n">param</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">status</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">USB_DC_RESET</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">configured</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">false</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">status</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">USB_DC_CONFIGURED</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="o">!</span><span class="n">configured</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">int_in_ready_cb</span><span class="p">(</span><span class="n">hdev</span><span class="p">);</span>
+<span class="w">                </span><span class="n">configured</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">hid_report_desc</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">HID_USAGE_PAGE</span><span class="p">(</span><span class="n">HID_USAGE_GEN_DESKTOP</span><span class="p">),</span>
+<span class="w">        </span><span class="n">HID_USAGE</span><span class="p">(</span><span class="n">HID_USAGE_GEN_DESKTOP_UNDEFINED</span><span class="p">),</span>
+<span class="w">        </span><span class="n">HID_COLLECTION</span><span class="p">(</span><span class="n">HID_COLLECTION_APPLICATION</span><span class="p">),</span>
+<span class="w">        </span><span class="n">HID_LOGICAL_MIN8</span><span class="p">(</span><span class="mh">0x00</span><span class="p">),</span>
+<span class="w">        </span><span class="n">HID_LOGICAL_MAX16</span><span class="p">(</span><span class="mh">0xFF</span><span class="p">,</span><span class="w"> </span><span class="mh">0x00</span><span class="p">),</span>
+<span class="w">        </span><span class="n">HID_REPORT_ID</span><span class="p">(</span><span class="n">REPORT_ID</span><span class="p">),</span>
+<span class="w">        </span><span class="n">HID_REPORT_SIZE</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span>
+<span class="w">        </span><span class="n">HID_REPORT_COUNT</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span>
+<span class="w">        </span><span class="n">HID_USAGE</span><span class="p">(</span><span class="n">HID_USAGE_GEN_DESKTOP_UNDEFINED</span><span class="p">),</span>
+<span class="w">        </span><span class="n">HID_INPUT</span><span class="p">(</span><span class="mh">0x02</span><span class="p">),</span>
+<span class="w">        </span><span class="n">HID_END_COLLECTION</span><span class="p">,</span>
+<span class="p">};</span>
+
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">hid_ops</span><span class="w"> </span><span class="n">my_ops</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">int_in_ready</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">int_in_ready_cb</span><span class="p">,</span>
+<span class="p">};</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">hdev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">device_get_binding</span><span class="p">(</span><span class="s">"HID_0"</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">hdev</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nb">NULL</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="o">-</span><span class="n">ENODEV</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="n">usb_hid_register_device</span><span class="p">(</span><span class="n">hdev</span><span class="p">,</span><span class="w"> </span><span class="n">hid_report_desc</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">hid_report_desc</span><span class="p">),</span>
+<span class="w">                                </span><span class="o">&amp;</span><span class="n">my_ops</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">usb_hid_init</span><span class="p">(</span><span class="n">hdev</span><span class="p">);</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ret</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">return</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">usb_enable</span><span class="p">(</span><span class="n">status_cb</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>如果应用程序希望通过 OUT 中断端点接收输出报告，必须启用 <a class="reference internal" href="../../../../kconfig.html#CONFIG_ENABLE_HID_INT_OUT_EP" title="CONFIG_ENABLE_HID_INT_OUT_EP"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ENABLE_HID_INT_OUT_EP</span></code></a> 并提供 <code class="docutils literal notranslate"><span class="pre">int_out_ready</span></code> 回调。其缺点是 <a class="reference internal" href="../../../../kconfig.html#CONFIG_ENABLE_HID_INT_OUT_EP" title="CONFIG_ENABLE_HID_INT_OUT_EP"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ENABLE_HID_INT_OUT_EP</span></code></a> 或 <a class="reference internal" href="../../../../kconfig.html#CONFIG_HID_INTERRUPT_EP_MPS" title="CONFIG_HID_INTERRUPT_EP_MPS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HID_INTERRUPT_EP_MPS</span></code></a> 等 Kconfig 选项会作用于所有实例。新 USB 支持中的 HID 类实现将修复这一设计问题。</p>
+<p>请参阅示例 <a class="reference internal" href="../../../../samples/subsys/usb/hid-mouse/README.html#usb-hid-mouse" title="实现一个基本的 HID 鼠标设备。">USB HID mouse</a>。</p>
+</section>
+<section id="mass-storage-class">
+<h3><a class="toc-backref" href="#id12" role="doc-backlink">大容量存储类（Mass Storage Class）</a><a class="headerlink" href="#mass-storage-class" title="链接到此标题。"></a></h3>
+<p>MSC 遵循仅批量传输（Bulk-Only Transport）规范，并使用 <a class="reference internal" href="../../../storage/disk/access.html#disk-access-api"><span class="std std-ref">磁盘访问</span></a> 访问 RAM 磁盘、基于 Flash 分区仿真的块设备或 SD 卡，并将其暴露给主机。同一时间只能导出一个磁盘实例。</p>
+<p>实现所使用的磁盘由 <a class="reference internal" href="../../../../kconfig.html#CONFIG_MASS_STORAGE_DISK_NAME" title="CONFIG_MASS_STORAGE_DISK_NAME"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MASS_STORAGE_DISK_NAME</span></code></a> 设置，它应与应用程序要暴露给主机的磁盘访问驱动所用的名称相同。Flash、RAM 和 SDMMC/MMC 磁盘驱动使用节点属性 <code class="docutils literal notranslate"><span class="pre">disk-name</span></code> 设置磁盘名称。</p>
+<p>对于基于 Flash 分区仿真的块设备，所使用的 Flash 分区和 Flash 磁盘必须在设备树中描述。如果开发板层面已经描述了存储分区，应用程序的设备树覆盖文件还必须先删除 <code class="docutils literal notranslate"><span class="pre">storage_partition</span></code> 节点。<a class="reference internal" href="../../../../kconfig.html#CONFIG_MASS_STORAGE_DISK_NAME" title="CONFIG_MASS_STORAGE_DISK_NAME"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MASS_STORAGE_DISK_NAME</span></code></a> 应与 <code class="docutils literal notranslate"><span class="pre">disk-name</span></code> 属性相同。</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="cp">/delete-node/</span><span class="cm"> </span><span class="cp">&amp;storage_partition</span><span class="p">;</span>
+
+<span class="o">&amp;</span><span class="nf">mx25r64</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nf">partitions</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"fixed-partitions"</span><span class="p">;</span>
+<span class="w">                </span><span class="kr">#address-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                </span><span class="kr">#size-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">                </span><span class="nl">storage_partition</span><span class="p">:</span><span class="w"> </span><span class="nf">partition</span><span class="o">@</span><span class="mi">0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"storage"</span><span class="p">;</span>
+<span class="w">                        </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x00000000</span><span class="w"> </span><span class="mh">0x00020000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                </span><span class="p">};</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="p">};</span>
+
+<span class="nf">/</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nf">msc_disk0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"zephyr,flash-disk"</span><span class="p">;</span>
+<span class="w">                </span><span class="n">partition</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">storage_partition</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                </span><span class="n">disk-name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"NAND"</span><span class="p">;</span>
+<span class="w">                </span><span class="n">cache-size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">4096</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">disk-property</span></code> &quot;NAND&quot; 可能令人困惑，但这只是某些文件系统识别磁盘的方式。因此，如果应用程序还要访问所暴露磁盘上的文件系统，应使用默认名称，请参阅示例 <a class="reference internal" href="../../../../samples/subsys/usb/mass/README.html#usb-mass" title="使用 USB 大容量存储驱动将开发板的 RAM 或 FLASH 作为 USB 磁盘提供。">USB Mass Storage</a>。</p>
+</section>
+<section id="networking">
+<h3><a class="toc-backref" href="#id13" role="doc-backlink">网络</a><a class="headerlink" href="#networking" title="链接到此标题。"></a></h3>
+<p>有三种工作方式类似的实现，它们在远端（USB 主机）与 Zephyr 网络支持之间提供虚拟以太网连接。</p>
+<ul class="simple">
+<li><p>CDC ECM 类，通过 <a class="reference internal" href="../../../../kconfig.html#CONFIG_USB_DEVICE_NETWORK_ECM" title="CONFIG_USB_DEVICE_NETWORK_ECM"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USB_DEVICE_NETWORK_ECM</span></code></a> 启用</p></li>
+<li><p>CDC EEM 类，通过 <a class="reference internal" href="../../../../kconfig.html#CONFIG_USB_DEVICE_NETWORK_EEM" title="CONFIG_USB_DEVICE_NETWORK_EEM"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USB_DEVICE_NETWORK_EEM</span></code></a> 启用</p></li>
+<li><p>RNDIS 支持，通过 <a class="reference internal" href="../../../../kconfig.html#CONFIG_USB_DEVICE_NETWORK_RNDIS" title="CONFIG_USB_DEVICE_NETWORK_RNDIS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USB_DEVICE_NETWORK_RNDIS</span></code></a> 启用</p></li>
+</ul>
+<p>请参阅示例 <a class="reference internal" href="../../../../samples/subsys/usb/legacy/netusb/README.html#legacy-netusb" title="使用 USB CDC EEM/ECM 或 RNDIS 实现">Legacy USB device netusb sample</a>。</p>
+<p>使用 RNDIS 支持的应用程序应启用 <a class="reference internal" href="../../../../kconfig.html#CONFIG_USB_DEVICE_OS_DESC" title="CONFIG_USB_DEVICE_OS_DESC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USB_DEVICE_OS_DESC</span></code></a>，以便在运行 Microsoft Windows 操作系统的主机上获得更好的用户体验。</p>
+</section>
+</section>
+<section id="binary-device-object-store-bos-support">
+<h2><a class="toc-backref" href="#id14" role="doc-backlink">二进制设备对象存储（BOS）支持</a><a class="headerlink" href="#binary-device-object-store-bos-support" title="链接到此标题。"></a></h2>
+<p>可以通过 Kconfig 选项 <a class="reference internal" href="../../../../kconfig.html#CONFIG_USB_DEVICE_BOS" title="CONFIG_USB_DEVICE_BOS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USB_DEVICE_BOS</span></code></a> 启用 BOS 处理。该选项还会将设备描述符的 <code class="docutils literal notranslate"><span class="pre">bcdUSB</span></code> 改为 <code class="docutils literal notranslate"><span class="pre">0210</span></code>。应用程序应使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">usb_bos_register_cap()</span></code> 注册能力描述符（Capability Descriptor）等描述符。已注册的描述符会被添加到根 BOS 描述符中，并由协议栈处理。</p>
+<p>请参阅示例 <a class="reference internal" href="../../../../samples/subsys/usb/legacy/webusb/README.html#legacy-webusb" title="使用 WebUSB API 接收并回显来自网页的数据。">Legacy WebUSB</a>。</p>
+</section>
+<section id="interface-number-and-endpoint-address-assignment">
+<h2><a class="toc-backref" href="#id15" role="doc-backlink">接口号和端点地址分配</a><a class="headerlink" href="#interface-number-and-endpoint-address-assignment" title="链接到此标题。"></a></h2>
+<p>在 USB 术语中，<code class="docutils literal notranslate"><span class="pre">function</span></code>（功能）是向主机提供某种能力的设备，例如实现键盘的 HID 类设备。一个功能包含一组 <code class="docutils literal notranslate"><span class="pre">interfaces</span></code>（接口），且至少需要一个接口。接口可以包含设备 <code class="docutils literal notranslate"><span class="pre">endpoints</span></code>（端点）；例如，实现 HID 类设备至少需要一个输入端点，而实现 USB DFU 类则不需要任何端点。组合了多个功能的 USB 设备是多功能 USB 设备，例如 HID 类设备与 CDC ACM 设备的组合。</p>
+<p>借助 Zephyr RTOS 的 USB 支持，可以将内置的 USB 类/功能或用户自定义实现进行各种组合，限制在于可用的设备端点数量。每个设备端点都可以被唯一寻址。端点地址由端点方向和端点号（一个四位的值）组合而成。端点号 0 用于默认控制方式，以初始化和配置 USB 设备。按照规范，另外最多还有 <code class="docutils literal notranslate"><span class="pre">15</span> <span class="pre">IN</span></code> 和 <code class="docutils literal notranslate"><span class="pre">15</span> <span class="pre">OUT</span></code> 个设备端点可供功能使用。实际数量取决于所用的设备控制器。并非所有控制器都支持最大端点数量和所有端点类型。例如，某个设备控制器可能支持一个 IN 和一个 OUT 同步端点，但只能使用端点号 8，因此端点地址为 0x88 和 0x08。此外，有的控制器可以在同一端点号上同时使用 IN/OUT 端点（例如中断 IN 端点 0x81 和批量 OUT 端点 0x01），而另一些控制器每个端点号只能处理一个端点。接口数量、接口关联、端点类型和地址等信息通过接口描述符、接口专用描述符和端点描述符提供给主机。</p>
+<p>特定功能的主机驱动使用接口描述符和端点描述符来获取端点地址、类型和其他属性。这使得功能主机驱动可以是通用的，例如可以构建由一个或多个 CDC ACM 以及一个或多个 CDC ECM 类实现组成的多功能设备，而无需专用驱动。</p>
+<p>Zephyr RTOS 中内置 USB 类/功能实现的接口描述符和端点描述符，通常按升序分配了默认的接口号和端点地址。初始化期间，默认接口号可能会根据给定配置中的接口数量重新分配。端点地址则会根据控制器能力（因为并非每个控制器都能支持某些端点组合）以及给定配置中的接口数量重新分配。这也意味着 Zephyr RTOS 中设备端的类/功能必须在运行时检查接口描述符和端点描述符的实际值。该机制还使我们能够提供通用示例和通用多功能示例，它们只受控制器所提供资源（例如端点数量和端点 FIFO 大小）的限制。</p>
+<p>某些特定功能的主机驱动（例如 Linux 内核中的驱动）可能不读取接口描述符和端点描述符来检查接口号或端点地址，而是使用硬编码的值。因此，这类主机驱动无法以通用方式使用，也就是说，无法在不同的设备控制器上、或在与其他功能组合的不同设备配置下使用。这也可能是因为该驱动是为特定硬件设计的，并不打算用于该硬件的克隆品。反之，如果驱动本质上是通用的、应当适用于不同的硬件变体，那么它就不得使用硬编码的接口号和端点地址。Zephyr RTOS 中无法禁用端点重新分配，这可能使你无法实现硬件克隆固件。如有可能，应修正主机驱动的实现，使其使用接口描述符和端点描述符中的值。</p>
+</section>
+<section id="testing-over-usbip-in-native-sim">
+<span id="testing-usb-native-sim"></span><h2><a class="toc-backref" href="#id16" role="doc-backlink">在 native_sim 中通过 USBIP 测试</a><a class="headerlink" href="#testing-over-usbip-in-native-sim" title="链接到此标题。"></a></h2>
+<p>可以使用通过 USBIP 实现的虚拟 USB 控制器来测试 USB 设备协议栈。按照常规构建流程，为 <a class="reference internal" href="../../../../boards/native/native_sim/doc/index.html#native_sim"><span class="xref zephyr zephyr-board">native_sim</span></a> 配置构建 USB 示例。</p>
+<p>使用以下命令运行构建好的示例：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">west build -t run</span>
+</pre></div>
+</div>
+<p>在终端窗口中运行以下命令列出 USB 设备：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>usbip<span class="w"> </span>list<span class="w"> </span>-r<span class="w"> </span>localhost
+<span class="go">Exportable USB devices</span>
+<span class="go">======================</span>
+<span class="go"> - 127.0.0.1</span>
+<span class="go">        1-1: unknown vendor : unknown product (2fe3:0100)</span>
+<span class="go">           : /sys/devices/pci0000:00/0000:00:01.2/usb1/1-1</span>
+<span class="go">           : (Defined at Interface level) (00/00/00)</span>
+<span class="go">           :  0 - Vendor Specific Class / unknown subclass / unknown protocol (ff/00/00)</span>
+</pre></div>
+</div>
+<p>在终端窗口中运行以下命令挂接 USB 设备：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>sudo<span class="w"> </span>usbip<span class="w"> </span>attach<span class="w"> </span>-r<span class="w"> </span>localhost<span class="w"> </span>-b<span class="w"> </span><span class="m">1</span>-1
+</pre></div>
+</div>
+<p>USB 设备应已连接到你的 Linux 主机，可以使用以下命令进行验证：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>sudo<span class="w"> </span>usbip<span class="w"> </span>port
+<span class="go">Imported USB devices</span>
+<span class="go">====================</span>
+<span class="go">Port 00: &lt;Port in Use&gt; at Full Speed(12Mbps)</span>
+<span class="go">       unknown vendor : unknown product (2fe3:0100)</span>
+<span class="go">       7-1 -&gt; usbip://localhost:3240/1-1</span>
+<span class="go">           -&gt; remote bus/dev 001/002</span>
+<span class="gp">$ </span>lsusb<span class="w"> </span>-d<span class="w"> </span>2fe3:0100
+<span class="go">Bus 007 Device 004: ID 2fe3:0100</span>
+</pre></div>
+</div>
+</section>
+<section id="usb-vendor-and-product-identifiers">
+<h2><a class="toc-backref" href="#id17" role="doc-backlink">USB 厂商标识符和产品标识符</a><a class="headerlink" href="#usb-vendor-and-product-identifiers" title="链接到此标题。"></a></h2>
+<p>Zephyr 项目的 USB 厂商 ID（Vendor ID）为 <code class="docutils literal notranslate"><span class="pre">0x2FE3</span></code>。厂商将 Zephyr USB 设备支持集成到自己的产品中时，不得使用该 USB 厂商 ID。</p>
+<p>每个 USB <a class="reference internal" href="../../../../samples/subsys/usb/usb.html#usb"><span class="xref zephyr zephyr-code-sample-category">sample</span></a> 都有自己唯一的产品 ID（Product ID）。USB 维护者（如果已指定）或 Zephyr 技术指导委员会（Technical Steering Committee）可以根据理由充分且有文档记录的申请，分配其他 USB 产品 ID。</p>
+<p>目前已使用的产品 ID 如下：</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>示例</p></th>
+<th class="head"><p>PID</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="../../../../samples/subsys/usb/cdc_acm/README.html#usb-cdc-acm" title="使用 USB CDC ACM UART 驱动实现串口回显。">USB CDC ACM UART sample</a></p></td>
+<td><p>0x0001</p></td>
+</tr>
+<tr class="row-odd"><td><p>保留（原为：usb-cdc-acm-composite）</p></td>
+<td><p>0x0002</p></td>
+</tr>
+<tr class="row-even"><td><p>保留（原为：usb-hid-cdc）</p></td>
+<td><p>0x0003</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../../../samples/subsys/usb/console/README.html#usb-cdc-acm-console" title="通过 USB CDC ACM 向控制台输出 &quot;Hello World!&quot;。">Console over USB CDC ACM</a></p></td>
+<td><p>0x0004</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../../../samples/subsys/usb/dfu/README.html#usb-dfu" title="实现一个基本的 USB DFU 设备">USB DFU</a>（运行时）</p></td>
+<td><p>0x0005</p></td>
+</tr>
+<tr class="row-odd"><td><p>保留（原为：usb-hid）</p></td>
+<td><p>0x0006</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../../../samples/subsys/usb/hid-mouse/README.html#usb-hid-mouse" title="实现一个基本的 HID 鼠标设备。">USB HID mouse</a></p></td>
+<td><p>0x0007</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../../../samples/subsys/usb/mass/README.html#usb-mass" title="使用 USB 大容量存储驱动将开发板的 RAM 或 FLASH 作为 USB 磁盘提供。">USB Mass Storage</a></p></td>
+<td><p>0x0008</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../../../samples/subsys/usb/testusb/README.html#testusb-app" title="使用回环功能测试 USB 设备驱动。">USB device testing application</a></p></td>
+<td><p>0x0009</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../../../samples/subsys/usb/webusb/README.html#webusb" title="使用 WebUSB API 接收并回显来自网页的数据。">WebUSB</a></p></td>
+<td><p>0x000A</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../../../samples/bluetooth/hci_usb/README.html#bluetooth_hci_usb" title="将 Zephyr 开发板变成 USB 蓝牙适配器（兼容所有操作系统）。">HCI USB</a></p></td>
+<td><p>0x000B</p></td>
+</tr>
+<tr class="row-odd"><td><p>保留（原为：bluetooth_hci_usb_h4）</p></td>
+<td><p>0x000C</p></td>
+</tr>
+<tr class="row-even"><td><p>保留（原为：wpan-usb）</p></td>
+<td><p>0x000D</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../../../samples/subsys/usb/uac2_explicit_feedback/README.html#uac2-explicit-feedback" title="在 I2S 上播放音频的 USB Audio 2 显式反馈示例。">USB Audio asynchronous explicit feedback sample</a></p></td>
+<td><p>0x000E</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../../../samples/subsys/usb/uac2_implicit_feedback/README.html#uac2-implicit-feedback" title="USB Audio 2 implicit feedback sample playing stereo and recording mono audio on I2S interface.">USB Audio asynchronous implicit feedback sample</a></p></td>
+<td><p>0x000F</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../../../samples/subsys/usb/uvc/README.html#uvc" title="通过 USB 发送视频帧。">USB Video webcam</a></p></td>
+<td><p>0x0011</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../../../samples/subsys/usb/dfu/README.html#usb-dfu" title="实现一个基本的 USB DFU 设备">USB DFU</a>（DFU 模式）</p></td>
+<td><p>0xFFFF</p></td>
+</tr>
+</tbody>
+</table>
+<p>USB 设备描述符字段 <code class="docutils literal notranslate"><span class="pre">bcdDevice</span></code>（设备发布编号）以二进制编码十进制（BCD）值表示 Zephyr 内核的主版本号和次版本号。</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 4月 15, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

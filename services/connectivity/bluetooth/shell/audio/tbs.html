@@ -1,0 +1,499 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bluetooth：电话承载服务（Telephone Bearer Service）Shell &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/connectivity/bluetooth/shell/audio/tbs.html" />
+      <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../../../search.html" />
+    <link rel="next" title="Bluetooth：电话和媒体音频规范（Telephone and Media Audio Profile）Shell" href="tmap.html" />
+    <link rel="prev" title="Bluetooth：媒体控制规范（Media Control Profile）Shell" href="mcp.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../index.html">
+            
+              <img src="../../../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../index.html">服务</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../index.html">连接</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../networking/index.html">网络</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../index.html">Bluetooth</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../../features.html">支持的功能</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bluetooth-qual.html">认证</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bluetooth-arch.html">协议栈架构</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bluetooth-le-host.html">LE 主机</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/audio/bluetooth-le-audio-arch.html">LE Audio 协议栈</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/audio/bluetooth-le-audio-arch.html#le-audio-resources">LE Audio 资源</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bluetooth-ctlr-arch.html">LE 控制器</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bluetooth-dev.html">应用程序开发</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bluetooth-tools.html">工具</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../../bluetooth-shell.html">Shell</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="bap.html">Bluetooth：基本音频规范（Basic Audio Profile）Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="bap_broadcast_assistant.html">Bluetooth：基本音频规范：广播助手（Broadcast Assistant）Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="bap_scan_delegator.html">Bluetooth：基本音频规范：扫描委托者（Scan Delegator）Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="cap.html">Bluetooth：通用音频规范（Common Audio Profile）Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="ccp.html">Bluetooth：呼叫控制规范（Call Control Profile）Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="csip.html">Bluetooth：协调集识别规范（Coordinated Set Identification Profile）Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="gmap.html">Bluetooth：游戏音频规范（Gaming Audio Profile）Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="mcp.html">Bluetooth：媒体控制规范（Media Control Profile）Shell</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">Bluetooth：电话承载服务（Telephone Bearer Service）Shell</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#telephone-bearer-service-client">电话承载服务客户端</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#telephone-bearer-service-tbs">电话承载服务（TBS）</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="tmap.html">Bluetooth：电话和媒体音频规范（Telephone and Media Audio Profile）Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="pbp.html">Bluetooth：公共广播规范（Public Broadcast Profile）Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../classic/a2dp.html">Bluetooth：A2DP Shell 命令</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../classic/avrcp.html">Bluetooth：经典 Bluetooth：AVRCP Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../classic/goep.html">Bluetooth：经典 Bluetooth：GOEP Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../classic/hfp.html">Bluetooth：经典 Bluetooth：HFP Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../classic/l2cap.html">Bluetooth：经典 Bluetooth：L2CAP Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../classic/map.html">Bluetooth：MAP Shell 命令</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../classic/pbap.html">Bluetooth：经典 Bluetooth：PBAP Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../classic/spp.html">Bluetooth：经典 Bluetooth：SPP Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../host/gap.html">Bluetooth：GAP Shell 命令</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../host/gatt.html">Bluetooth：GATT Shell 命令</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../host/iso.html">Bluetooth：等时信道 Shell 命令</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../host/l2cap.html">Bluetooth：L2CAP Shell 命令</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../bluetooth-shell.html#bluetooth-shell-setup-and-usage">Bluetooth Shell 的设置与使用</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../bluetooth-shell.html#logging">日志</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usb/index.html">USB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../canbus/index.html">控制器局域网（CAN）总线协议</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lora_lorawan/index.html">LoRa 和 LoRaWAN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../modbus/index.html">Modbus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../modem/index.html">调制解调器模块</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../../../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../../../index.html">连接</a> &raquo;</li>
+  
+     <li><a href="../../index.html">Bluetooth</a> &raquo;</li>
+  
+     <li><a href="../../bluetooth-shell.html">Shell</a> &raquo;</li>
+  
+  <li>Bluetooth：电话承载服务（Telephone Bearer Service）Shell</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="bluetooth-telephone-bearer-service-shell">
+<h1>Bluetooth：电话承载服务（Telephone Bearer Service）Shell<a class="headerlink" href="#bluetooth-telephone-bearer-service-shell" title="链接到此标题。"></a></h1>
+<p>本文档介绍如何以客户端和（电话承载服务（TBS））服务器两种身份运行呼叫控制功能。注意，为了缩短篇幅并提供更好的概览，以下示例中删除了部分调试输出行。</p>
+<section id="telephone-bearer-service-client">
+<h2>电话承载服务客户端<a class="headerlink" href="#telephone-bearer-service-client" title="链接到此标题。"></a></h2>
+<p>电话承载服务客户端通常位于资源受限的设备上，例如耳机，但也可能位于手机或笔记本电脑等设备上。因此，呼叫控制客户端通常也是广播者。客户端可以使用呼叫控制点（call control point）控制服务器上通话的状态。</p>
+<p>要以交互方式使用客户端，必须启用 <a class="reference internal" href="../../../../../kconfig.html#CONFIG_BT_TBS_CLIENT_LOG_LEVEL_DBG" title="CONFIG_BT_TBS_CLIENT_LOG_LEVEL_DBG"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_TBS_CLIENT_LOG_LEVEL_DBG</span></code></a>。</p>
+<section id="using-the-telephone-bearer-service-client">
+<h3>使用电话承载服务客户端<a class="headerlink" href="#using-the-telephone-bearer-service-client" title="链接到此标题。"></a></h3>
+<p>初始化 Bluetooth 协议栈（<code class="code docutils literal notranslate"><span class="pre">bt</span> <span class="pre">init</span></code>）并连接设备后，电话承载服务客户端可以调用 <code class="code docutils literal notranslate"><span class="pre">tbs_client</span> <span class="pre">discover</span></code> 在已连接设备上发现 TBS，该命令会开始发现 TBS UUID 并保存句柄，还可选择订阅所有通知（默认订阅全部）。</p>
+<p>由于服务器可能有多个 TBS 实例，大多数 tbs_client 命令都以索引（从 0 开始）作为输入。合并通话至少需要 2 个通话 ID，并且所有通话索引必须位于同一个 TBS 实例上。</p>
+<p>服务器还会有一个 GTBS 实例，它是服务器上所有电话承载的抽象层。如果服务器同时具有 GTBS 和 TBS，并且启用了 <code class="code docutils literal notranslate"><span class="pre">BT_TBS_CLIENT_GTBS</span></code>，客户端在发送请求时可以订阅并使用其中任意一个。</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">tbs_client --help</span>
+<span class="go">tbs_client - Bluetooth TBS_CLIENT shell commands</span>
+<span class="go">Subcommands:</span>
+<span class="go">   discover                       :Discover TBS [subscribe]</span>
+<span class="go">   set_signal_reporting_interval  :Set the signal reporting interval</span>
+<span class="go">                                    [&lt;{instance_index, gtbs}&gt;] &lt;interval&gt;</span>
+<span class="go">   originate                      :Originate a call [&lt;{instance_index, gtbs}&gt;]</span>
+<span class="go">                                    &lt;uri&gt;</span>
+<span class="go">   terminate                      :terminate a call [&lt;{instance_index, gtbs}&gt;]</span>
+<span class="go">                                    &lt;id&gt;</span>
+<span class="go">   accept                         :Accept a call [&lt;{instance_index, gtbs}&gt;] &lt;id&gt;</span>
+<span class="go">   hold                           :Place a call on hold [&lt;{instance_index,</span>
+<span class="go">                                    gtbs}&gt;] &lt;id&gt;</span>
+<span class="go">   retrieve                       :Retrieve a held call [&lt;{instance_index,</span>
+<span class="go">                                    gtbs}&gt;] &lt;id&gt;</span>
+<span class="go">   read_provider_name             :Read the bearer name [&lt;{instance_index,</span>
+<span class="go">                                    gtbs}&gt;]</span>
+<span class="go">   read_bearer_uci                :Read the bearer UCI [&lt;{instance_index, gtbs}&gt;]</span>
+<span class="go">   read_technology                :Read the bearer technology [&lt;{instance_index,</span>
+<span class="go">                                    gtbs}&gt;]</span>
+<span class="go">   read_uri_list                  :Read the bearer's supported URI list</span>
+<span class="go">                                    [&lt;{instance_index, gtbs}&gt;]</span>
+<span class="go">   read_signal_strength           :Read the bearer signal strength</span>
+<span class="go">                                    [&lt;{instance_index, gtbs}&gt;]</span>
+<span class="go">   read_signal_interval           :Read the bearer signal strength reporting</span>
+<span class="go">                                    interval [&lt;{instance_index, gtbs}&gt;]</span>
+<span class="go">   read_current_calls             :Read the current calls [&lt;{instance_index,</span>
+<span class="go">                                    gtbs}&gt;]</span>
+<span class="go">   read_ccid                      :Read the CCID [&lt;{instance_index, gtbs}&gt;]</span>
+<span class="go">   read_status_flags              :Read the in feature and status value</span>
+<span class="go">                                    [&lt;{instance_index, gtbs}&gt;]</span>
+<span class="go">   read_uri                       :Read the incoming call target URI</span>
+<span class="go">                                    [&lt;{instance_index, gtbs}&gt;]</span>
+<span class="go">   read_call_state                :Read the call state [&lt;{instance_index, gtbs}&gt;]</span>
+<span class="go">   read_remote_uri                :Read the incoming remote URI</span>
+<span class="go">                                    [&lt;{instance_index, gtbs}&gt;]</span>
+<span class="go">   read_friendly_name             :Read the friendly name of an incoming call</span>
+<span class="go">                                    [&lt;{instance_index, gtbs}&gt;]</span>
+<span class="go">   read_optional_opcodes          :Read the optional opcodes [&lt;{instance_index,</span>
+<span class="go">                                    gtbs}&gt;]</span>
+</pre></div>
+</div>
+<p>在以下示例中，除非另有说明，否则忽略来自 GTBS 的通知。</p>
+</section>
+<section id="example-usage">
+<h3>使用示例<a class="headerlink" href="#example-usage" title="链接到此标题。"></a></h3>
+<section id="setup">
+<h4>设置<a class="headerlink" href="#setup" title="链接到此标题。"></a></h4>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>bt<span class="w"> </span>init
+<span class="gp">uart:~$ </span>bt<span class="w"> </span>advertise<span class="w"> </span>on
+<span class="go">Advertising started</span>
+</pre></div>
+</div>
+</section>
+<section id="when-connected">
+<h4>连接后<a class="headerlink" href="#when-connected" title="链接到此标题。"></a></h4>
+<p>拨打电话：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>tbs_client<span class="w"> </span>discover
+<span class="go">&lt;dbg&gt; bt_tbs_client.primary_discover_func: Discover complete, found 1 instances (GTBS found)</span>
+<span class="go">&lt;dbg&gt; bt_tbs_client.discover_func: Setup complete for 1 / 1 TBS</span>
+<span class="go">&lt;dbg&gt; bt_tbs_client.discover_func: Setup complete GTBS</span>
+<span class="gp">uart:~$ </span>tbs_client<span class="w"> </span>originate<span class="w"> </span><span class="m">0</span><span class="w"> </span>tel:123
+<span class="go">&lt;dbg&gt; bt_tbs_client.notify_handler: Index 0</span>
+<span class="go">&lt;dbg&gt; bt_tbs_client.current_calls_notify_handler: Call 0x01 is in the dialing state with URI tel:123</span>
+<span class="go">&lt;dbg&gt; bt_tbs_client.call_cp_notify_handler: Status: success for the originate opcode for call 0x00</span>
+<span class="go">&lt;dbg&gt; bt_tbs_client.notify_handler: Index 0</span>
+<span class="go">&lt;dbg&gt; bt_tbs_client.current_calls_notify_handler: Call 0x01 is in the alerting state with URI tel:123</span>
+<span class="go">&lt;call answered by peer device, and status notified by TBS server&gt;</span>
+<span class="go">&lt;dbg&gt; bt_tbs_client.notify_handler: Index 0</span>
+<span class="go">&lt;dbg&gt; bt_tbs_client.current_calls_notify_handler: Call 0x01 is in the active state with URI tel:123</span>
+</pre></div>
+</div>
+<p>在 GTBS 上拨打电话：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>tbs_client<span class="w"> </span>originate<span class="w"> </span><span class="m">0</span><span class="w"> </span>tel:123
+<span class="go">&lt;dbg&gt; bt_tbs_client.notify_handler: Index 0</span>
+<span class="go">&lt;dbg&gt; bt_tbs_client.current_calls_notify_handler: Call 0x01 is in the dialing state with URI tel:123</span>
+<span class="go">&lt;dbg&gt; bt_tbs_client.call_cp_notify_handler: Status: success for the originate opcode for call 0x00</span>
+<span class="go">&lt;dbg&gt; bt_tbs_client.notify_handler: Index 0</span>
+<span class="go">&lt;dbg&gt; bt_tbs_client.current_calls_notify_handler: Call 0x01 is in the alerting state with URI tel:123</span>
+<span class="go">&lt;call answered by peer device, and status notified by TBS server&gt;</span>
+<span class="go">&lt;dbg&gt; bt_tbs_client.notify_handler: Index 0</span>
+<span class="go">&lt;dbg&gt; bt_tbs_client.current_calls_notify_handler: Call 0x01 is in the active state with URI tel:123</span>
+</pre></div>
+</div>
+<p>拨打电话之前，必须设置去电主叫号码（outgoing caller ID）。</p>
+<p>接听来自对端设备的来电：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">&lt;dbg&gt; bt_tbs_client.incoming_uri_notify_handler: tel:123</span>
+<span class="go">&lt;dbg&gt; bt_tbs_client.in_call_notify_handler: tel:456</span>
+<span class="go">&lt;dbg&gt; bt_tbs_client.friendly_name_notify_handler: Peter</span>
+<span class="go">&lt;dbg&gt; bt_tbs_client.current_calls_notify_handler: Call 0x05 is in the incoming state with URI tel:456</span>
+<span class="gp">uart:~$ </span>tbs_client<span class="w"> </span>accept<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">5</span>
+<span class="go">&lt;dbg&gt; bt_tbs_client.call_cp_callback_handler: Status: success for the accept opcode for call 0x05</span>
+<span class="go">&lt;dbg&gt; bt_tbs_client.current_calls_notify_handler: Call 0x05 is in the active state with URI tel</span>
+</pre></div>
+</div>
+<p>结束通话：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>tbs_client<span class="w"> </span>terminate<span class="w"> </span><span class="m">0</span><span class="w"> </span><span class="m">5</span>
+<span class="go">&lt;dbg&gt; bt_tbs_client.termination_reason_notify_handler: ID 0x05, reason 0x06</span>
+<span class="go">&lt;dbg&gt; bt_tbs_client.call_cp_notify_handler: Status: success for the terminate opcode for call 0x05</span>
+<span class="go">&lt;dbg&gt; bt_tbs_client.current_calls_notify_handler:</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="telephone-bearer-service-tbs">
+<h2>电话承载服务（TBS）<a class="headerlink" href="#telephone-bearer-service-tbs" title="链接到此标题。"></a></h2>
+<p>电话承载服务通常位于能够拨打电话（包括 Skype 等应用发起的通话）的设备上，例如（智能）手机和 PC。</p>
+<p>要以交互方式使用 TBS 服务器，必须启用 <a class="reference internal" href="../../../../../kconfig.html#CONFIG_BT_TBS_LOG_LEVEL_DBG" title="CONFIG_BT_TBS_LOG_LEVEL_DBG"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_TBS_LOG_LEVEL_DBG</span></code></a>。</p>
+<section id="using-the-telephone-bearer-service">
+<h3>使用电话承载服务<a class="headerlink" href="#using-the-telephone-bearer-service" title="链接到此标题。"></a></h3>
+<p>TBS 可以在本地控制，也可以由远端设备控制（通话期间）。例如，远端设备可以向具有 TBS 服务器的设备发起呼叫，TBS 服务器也可以在没有 TBS_CLIENT 客户端的情况下向远端设备发起呼叫。TBS 实现能够完全控制任何通话。对于可以提供 <code class="code docutils literal notranslate"><span class="pre">&lt;instance_index&gt;</span></code> 的命令，省略索引时默认使用 GTBS 承载。</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">tbs --help</span>
+<span class="go">tbs - Bluetooth TBS shell commands</span>
+<span class="go">Subcommands:</span>
+<span class="go">   init                        :Initialize TBS</span>
+<span class="go">   authorize                   :Authorize the current connection</span>
+<span class="go">   accept                      :Accept call &lt;call_index&gt;</span>
+<span class="go">   terminate                   :Terminate call &lt;call_index&gt;</span>
+<span class="go">   hold                        :Hold call &lt;call_index&gt;</span>
+<span class="go">   retrieve                    :Retrieve call &lt;call_index&gt;</span>
+<span class="go">   originate                   :Originate call [&lt;instance_index&gt;] &lt;uri&gt;</span>
+<span class="go">   join                        :Join calls &lt;id&gt; &lt;id&gt; [&lt;id&gt; [&lt;id&gt; [...]]]</span>
+<span class="go">   incoming                    :Simulate incoming remote call [&lt;{instance_index,</span>
+<span class="go">                                 gtbs}&gt;] &lt;local_uri&gt; &lt;remote_uri&gt;</span>
+<span class="go">                                 &lt;remote_friendly_name&gt;</span>
+<span class="go">   remote_answer               :Simulate remote answer outgoing call &lt;call_index&gt;</span>
+<span class="go">   remote_retrieve             :Simulate remote retrieve &lt;call_index&gt;</span>
+<span class="go">   remote_terminate            :Simulate remote terminate &lt;call_index&gt;</span>
+<span class="go">   remote_hold                 :Simulate remote hold &lt;call_index&gt;</span>
+<span class="go">   set_bearer_provider_name    :Set the bearer provider name [&lt;{instance_index,</span>
+<span class="go">                                 gtbs}&gt;] &lt;name&gt;</span>
+<span class="go">   set_bearer_technology       :Set the bearer technology [&lt;{instance_index,</span>
+<span class="go">                                 gtbs}&gt;] &lt;technology&gt;</span>
+<span class="go">   set_bearer_signal_strength  :Set the bearer signal strength [&lt;{instance_index,</span>
+<span class="go">                                 gtbs}&gt;] &lt;strength&gt;</span>
+<span class="go">   set_status_flags            :Set the bearer feature and status value</span>
+<span class="go">                                 [&lt;{instance_index, gtbs}&gt;] &lt;feature_and_status&gt;</span>
+<span class="go">   set_uri_scheme              :Set the URI prefix list &lt;bearer_idx&gt; &lt;uri1[,uri2[,uri3[,...]]]&gt;</span>
+<span class="go">   print_calls                 :Output all calls in the debug log</span>
+</pre></div>
+</div>
+</section>
+<section id="id1">
+<h3>使用示例<a class="headerlink" href="#id1" title="链接到此标题。"></a></h3>
+<section id="id2">
+<h4>设置<a class="headerlink" href="#id2" title="链接到此标题。"></a></h4>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>bt<span class="w"> </span>init
+<span class="gp">uart:~$ </span>bt<span class="w"> </span>connect<span class="w"> </span>P:xx:xx:xx:xx:xx:xx
+</pre></div>
+</div>
+</section>
+<section id="id3">
+<h4>连接后<a class="headerlink" href="#id3" title="链接到此标题。"></a></h4>
+<p>为对端设备接听由客户端发起的呼叫：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">&lt;dbg&gt; bt_tbs.write_call_cp: Index 0: Processing the originate opcode</span>
+<span class="go">&lt;dbg&gt; bt_tbs.originate_call: New call with call index 1</span>
+<span class="go">&lt;dbg&gt; bt_tbs.write_call_cp: Index 0: Processed the originate opcode with status success for call index 1</span>
+<span class="gp">uart:~$ </span>tbs<span class="w"> </span>remote_answer<span class="w"> </span><span class="m">1</span>
+<span class="go">TBS succeeded for call_id: 1</span>
+</pre></div>
+</div>
+<p>来自对端设备的来电，由客户端接听：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>tbs<span class="w"> </span>incoming<span class="w"> </span><span class="m">0</span><span class="w"> </span>tel:123<span class="w"> </span>tel:456<span class="w"> </span>Peter
+<span class="go">TBS succeeded for call_id: 4</span>
+<span class="go">&lt;dbg&gt; bt_tbs.bt_tbs_remote_incoming: New call with call index 4</span>
+<span class="go">&lt;dbg&gt; bt_tbs.write_call_cp: Index 0: Processed the accept opcode with status success for call index 4</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 9月 16, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

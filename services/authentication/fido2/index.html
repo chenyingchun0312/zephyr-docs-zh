@@ -1,0 +1,405 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FIDO2 认证器 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/authentication/fido2/index.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" />
+    <link rel="next" title="JSON Web 令牌（JWT）" href="../../jwt/index.html" />
+    <link rel="prev" title="身份认证" href="../index.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">服务</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../connectivity/index.html">连接</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../power_management.html">电源管理</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../security.html">安全</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../crypto/index.html">密码学</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">身份认证</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">FIDO2 认证器</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#overview">概述</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#architecture">架构</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#usage">用法</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#basic-initialization">基本初始化</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runtime-state-monitoring">运行时状态监视</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#extensions">扩展</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#references">参考资料</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#api-reference">API 参考</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../jwt/index.html">JSON Web 令牌（JWT）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../tfm/index.html">Trusted Firmware-M (TF-M)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../uuid/index.html">UUID</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../../security.html">安全</a> &raquo;</li>
+  
+     <li><a href="../index.html">身份认证</a> &raquo;</li>
+  
+  <li>FIDO2 认证器</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="fido2-authenticator">
+<span id="fido2-api"></span><h1>FIDO2 认证器<a class="headerlink" href="#fido2-authenticator" title="链接到此标题。"></a></h1>
+<section id="overview">
+<h2>概述<a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>FIDO2 认证器子系统实现了 <a class="reference external" href="https://fidoalliance.org/specs/fido-v2.2-rd-20230321/fido-client-to-authenticator-protocol-v2.2-rd-20230321.html">FIDO2 CTAP2 Specification</a> （Client to Authenticator Protocol，客户端到认证器协议），使 Zephyr 设备可以充当用于无密码身份认证的硬件安全密钥。可通过 <a class="reference internal" href="../../../kconfig.html#CONFIG_FIDO2" title="CONFIG_FIDO2"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FIDO2</span></code></a> 选项启用该子系统。</p>
+<p>FIDO2 安全密钥与 <a class="reference external" href="https://www.w3.org/TR/webauthn-2/">WebAuthn Specification</a> Web 标准配合使用。依赖方（relying party，即网站或服务）通过客户端（浏览器或操作系统平台）与认证器交互，以注册和验证用户凭据。认证器使用设备上的密钥执行密码学运算，这些密钥永远不会离开硬件。</p>
+<p>该子系统目前支持以下 CTAP2 命令：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">authenticatorMakeCredential</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">authenticatorGetAssertion</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">authenticatorGetInfo</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">authenticatorClientPIN</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">authenticatorGetNextAssertion</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">authenticatorSelection</span></code></p></li>
+</ul>
+</section>
+<section id="architecture">
+<h2>架构<a class="headerlink" href="#architecture" title="链接到此标题。"></a></h2>
+<p>该子系统由可插拔的后端组件构成，每个组件都可以在构建时通过 Kconfig 选择：</p>
+<dl class="simple">
+<dt>传输层</dt><dd><p>负责主机与认证器之间的线路协议通信。传输层通过 <code class="xref c c-macro docutils literal notranslate"><span class="pre">FIDO2_TRANSPORT_DEFINE</span></code> 宏注册，并在启动时被逐一遍历。可用的传输层：</p>
+<ul class="simple">
+<li><p><strong>USB HID（CTAPHID）</strong> — <a class="reference internal" href="../../../kconfig.html#CONFIG_FIDO2_TRANSPORT_USB_HID" title="CONFIG_FIDO2_TRANSPORT_USB_HID"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FIDO2_TRANSPORT_USB_HID</span></code></a></p></li>
+<li><p><strong>低功耗蓝牙（CTAPBLE）</strong> — <a class="reference internal" href="../../../kconfig.html#CONFIG_FIDO2_TRANSPORT_BLE" title="CONFIG_FIDO2_TRANSPORT_BLE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FIDO2_TRANSPORT_BLE</span></code></a></p></li>
+</ul>
+</dd>
+<dt>用户在场（User Presence，UP）</dt><dd><p>确认有人实际在场。通过 <a class="reference internal" href="../../../kconfig.html#CONFIG_FIDO2_UP_BACKEND" title="CONFIG_FIDO2_UP_BACKEND"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FIDO2_UP_BACKEND</span></code></a> 选择后端：</p>
+<ul class="simple">
+<li><p><strong>输入设备</strong> — <a class="reference internal" href="../../../kconfig.html#CONFIG_FIDO2_UP_INPUT" title="CONFIG_FIDO2_UP_INPUT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FIDO2_UP_INPUT</span></code></a></p></li>
+<li><p><strong>始终批准</strong> — <a class="reference internal" href="../../../kconfig.html#CONFIG_FIDO2_UP_ALWAYS" title="CONFIG_FIDO2_UP_ALWAYS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FIDO2_UP_ALWAYS</span></code></a></p></li>
+<li><p><strong>自定义</strong> — <a class="reference internal" href="../../../kconfig.html#CONFIG_FIDO2_UP_CUSTOM" title="CONFIG_FIDO2_UP_CUSTOM"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FIDO2_UP_CUSTOM</span></code></a> （由应用程序提供）</p></li>
+</ul>
+</dd>
+<dt>凭据存储</dt><dd><p>持久保存可发现（驻留）凭据。通过 <a class="reference internal" href="../../../kconfig.html#CONFIG_FIDO2_STORAGE_BACKEND" title="CONFIG_FIDO2_STORAGE_BACKEND"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FIDO2_STORAGE_BACKEND</span></code></a> 选择后端：</p>
+<ul class="simple">
+<li><p><strong>Settings 子系统</strong> — <a class="reference internal" href="../../../kconfig.html#CONFIG_FIDO2_STORAGE_SETTINGS" title="CONFIG_FIDO2_STORAGE_SETTINGS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FIDO2_STORAGE_SETTINGS</span></code></a></p></li>
+<li><p><strong>无</strong> — <a class="reference internal" href="../../../kconfig.html#CONFIG_FIDO2_STORAGE_NONE" title="CONFIG_FIDO2_STORAGE_NONE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FIDO2_STORAGE_NONE</span></code></a> （仅支持不可发现凭据）</p></li>
+</ul>
+</dd>
+<dt>证明（Attestation）</dt><dd><p>对新创建的凭据签名以证明其来源。通过 <a class="reference internal" href="../../../kconfig.html#CONFIG_FIDO2_ATTESTATION_BACKEND" title="CONFIG_FIDO2_ATTESTATION_BACKEND"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FIDO2_ATTESTATION_BACKEND</span></code></a> 选择后端：</p>
+<ul class="simple">
+<li><p><strong>自证明</strong> — <a class="reference internal" href="../../../kconfig.html#CONFIG_FIDO2_ATTESTATION_SELF" title="CONFIG_FIDO2_ATTESTATION_SELF"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FIDO2_ATTESTATION_SELF</span></code></a> （默认）</p></li>
+<li><p><strong>无</strong> — <a class="reference internal" href="../../../kconfig.html#CONFIG_FIDO2_ATTESTATION_NONE" title="CONFIG_FIDO2_ATTESTATION_NONE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FIDO2_ATTESTATION_NONE</span></code></a></p></li>
+<li><p><strong>自定义</strong> — <a class="reference internal" href="../../../kconfig.html#CONFIG_FIDO2_ATTESTATION_CUSTOM" title="CONFIG_FIDO2_ATTESTATION_CUSTOM"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FIDO2_ATTESTATION_CUSTOM</span></code></a> （由应用程序提供）</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="usage">
+<h2>用法<a class="headerlink" href="#usage" title="链接到此标题。"></a></h2>
+<p>要使用 FIDO2 子系统，请包含主头文件：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/authentication/fido2/fido2.h&gt;</span>
+</pre></div>
+</div>
+<section id="basic-initialization">
+<h3>基本初始化<a class="headerlink" href="#basic-initialization" title="链接到此标题。"></a></h3>
+<p>必须至少启用一种传输层，认证器才能与主机通信。</p>
+<p>完整的初始化流程请参见 <a class="reference internal" href="../../../samples/subsys/authentication/fido2/README.html#fido2" title="实现一个 FIDO2/CTAP2 硬件安全密钥。">FIDO2 Authenticator</a>。</p>
+</section>
+<section id="runtime-state-monitoring">
+<h3>运行时状态监视<a class="headerlink" href="#runtime-state-monitoring" title="链接到此标题。"></a></h3>
+<p>该子系统提供一个运行时状态回调，应用程序可以用它来驱动 LED 等状态指示器：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/authentication/fido2/fido2.h&gt;</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">on_state_change</span><span class="p">(</span><span class="k">enum</span><span class="w"> </span><span class="n">fido2_runtime_state</span><span class="w"> </span><span class="n">state</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">user_data</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">state</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">FIDO2_RUNTIME_STATE_IDLE</span><span class="p">:</span>
+<span class="w">        </span><span class="cm">/* LED off */</span>
+<span class="w">        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">FIDO2_RUNTIME_STATE_WAITING_USER_PRESENCE</span><span class="p">:</span>
+<span class="w">        </span><span class="cm">/* Blink LED */</span>
+<span class="w">        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">FIDO2_RUNTIME_STATE_PROCESSING</span><span class="p">:</span>
+<span class="w">        </span><span class="cm">/* LED on solid */</span>
+<span class="w">        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">    </span><span class="k">default</span><span class="o">:</span>
+<span class="w">        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">fido2_set_state_callback</span><span class="p">(</span><span class="n">on_state_change</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="extensions">
+<h2>扩展<a class="headerlink" href="#extensions" title="链接到此标题。"></a></h2>
+<p>CTAP2 扩展尚未实现。以下 Kconfig 选项是为将来的实现预留的：</p>
+<ul class="simple">
+<li><p><strong>credProtect</strong> — <a class="reference internal" href="../../../kconfig.html#CONFIG_FIDO2_EXT_CRED_PROTECT" title="CONFIG_FIDO2_EXT_CRED_PROTECT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FIDO2_EXT_CRED_PROTECT</span></code></a></p></li>
+<li><p><strong>hmac-secret</strong> — <a class="reference internal" href="../../../kconfig.html#CONFIG_FIDO2_EXT_HMAC_SECRET" title="CONFIG_FIDO2_EXT_HMAC_SECRET"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FIDO2_EXT_HMAC_SECRET</span></code></a></p></li>
+<li><p><strong>largeBlobKey</strong> — <a class="reference internal" href="../../../kconfig.html#CONFIG_FIDO2_EXT_LARGE_BLOB_KEY" title="CONFIG_FIDO2_EXT_LARGE_BLOB_KEY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FIDO2_EXT_LARGE_BLOB_KEY</span></code></a></p></li>
+<li><p><strong>credBlob</strong> — <a class="reference internal" href="../../../kconfig.html#CONFIG_FIDO2_EXT_CRED_BLOB" title="CONFIG_FIDO2_EXT_CRED_BLOB"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FIDO2_EXT_CRED_BLOB</span></code></a></p></li>
+<li><p><strong>thirdPartyPayment</strong> — <a class="reference internal" href="../../../kconfig.html#CONFIG_FIDO2_EXT_THIRD_PARTY_PAYMENT" title="CONFIG_FIDO2_EXT_THIRD_PARTY_PAYMENT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FIDO2_EXT_THIRD_PARTY_PAYMENT</span></code></a></p></li>
+</ul>
+</section>
+<section id="references">
+<h2>参考资料<a class="headerlink" href="#references" title="链接到此标题。"></a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://fidoalliance.org/specs/fido-v2.2-rd-20230321/fido-client-to-authenticator-protocol-v2.2-rd-20230321.html">FIDO2 CTAP2 Specification</a></p></li>
+</ul>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.w3.org/TR/webauthn-2/">WebAuthn Specification</a></p></li>
+</ul>
+<ul class="simple">
+<li><p><a class="reference external" href="https://fidoalliance.org/">FIDO Alliance</a></p></li>
+</ul>
+</section>
+<section id="api-reference">
+<h2>API 参考<a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">fido2</span></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/subsys/authentication/fido2/README.html#fido2" title="实现一个 FIDO2/CTAP2 硬件安全密钥。">FIDO2 Authenticator</a></span><span class="code-sample-description">实现一个 FIDO2/CTAP2 硬件安全密钥。</span></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 8月 17, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

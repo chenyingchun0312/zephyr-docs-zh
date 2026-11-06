@@ -1,0 +1,435 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="从 FXAS21002 传感器同步获取陀螺仪数据。" name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FXAS21002 Gyroscope Sensor &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/samples/sensor/fxas21002/README.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" />
+    <link rel="next" title="Grove Temperature Sensor" href="../grove_temperature/README.html" />
+    <link rel="prev" title="Flow Meter" href="../flow_meter/README.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1 current"><a class="category-link reference internal" href="../../index.html">Samples and Demos</a><ul class="current">
+<li class="toctree-l2"><a class="category-link reference internal" href="../../boards/96boards/index.html">96Boards</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../boards/96boards/argonkey/index.html">96Boards ArgonKey</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../drivers/adc/index.html">ADC</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../boards/adi/index.html">ADI</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../boards/amd/index.html">AMD</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../application_development/application_development.html">Application Development</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../arch/index.html">Architecture-dependent Samples</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../drivers/audio/index.html">Audio</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/authentication/authentication.html">Authentication</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../boards/bbc/index.html">BBC</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../boards/bbc/microbit/microbit.html">BBC micro:bit</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../basic/basic.html">Basic</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/bindesc/bindesc.html">Binary Descriptor</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../drivers/biometrics/index.html">Biometrics</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../bluetooth/bluetooth.html">Bluetooth</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../bluetooth/audio/index.html">Bluetooth Audio</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../boards/boards.html">Boards</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../drivers/buzzer/index.html">Buzzer</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../cpp/cpp.html">C++</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/portability/cmsis_rtos_v1/cmsis_rtos_v1.html">CMSIS RTOS v1</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/portability/cmsis_rtos_v2/cmsis_rtos_v2.html">CMSIS RTOS v2</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../modules/cmsis_dsp/cmsis_dsp.html">CMSIS-DSP</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/cpu_freq/cpu_freq.html">CPU Freq</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../drivers/clock_monitor/index.html">Clock Monitor</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/console/console.html">Console</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../drivers/can/index.html">Controller Area Network (CAN)</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/canbus/canbus.html">Controller Area Network (CAN) Bus</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../drivers/counter/index.html">Counter</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../data_structures/data_structures.html">Data Structures</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/debug/index.html">Debug</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/display/display.html">Display</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../drivers/drivers.html">Drivers</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../modules/index.html">External modules</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/fs/fs.html">File Systems</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/input/input.html">Input</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/ipc/ipc.html">Inter-Processor Communication (IPC)</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../net/cloud/README.html">IoT Cloud</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../kernel/index.html">Kernel and Scheduler</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/kvss/kvss.html">Key-Value Storage Systems</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/llext/llext.html">Linkable Loadable Extensions (LLEXT)</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/lorawan/lorawan.html">LoRaWAN</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/logging/logging.html">Logging</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../net/mcp/mcp.html">MCP (Model Context Protocol)</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/pmci/mctp/mctp.html">MCTP</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/mgmt/mgmt.html">Management</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/modbus/modbus.html">Modbus</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../net/ethernet/README.html">Network Ethernet</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../net/net.html">Networking</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/pmci/index.html">PMCI</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/portability/posix/posix.html">POSIX API</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../psa/index.html">PSA</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/portability/portability.html">Portability</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/pm/index.html">Power Management</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/profiling/profiling.html">Profiling</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/rtio/rtio.html">Real Time I/O (RTIO)</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../regulator/index.html">Regulator</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/sensing/sensing.html">Sensing</a></li>
+<li class="toctree-l2 current"><a class="category-link reference internal" href="../sensor.html">Sensors</a><ul class="current">
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../6dof_fifo_stream/README.html" title="Get accelerometer/gyroscope/temperature FIFO data frames from a sensor using SENSOR_TRIG_FIFO_WATERMARK as a trigger.">6dof device FIFO streaming</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../accel_trig/README.html" title="使用中断测试和调试加速度计。">Accelerometer trigger</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../adt7420/README.html" title="使用轮询和窗口模式从 ADT7420 传感器获取温度数据。">ADT7420 high-accuracy digital I2C temperature sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../amg88xx/README.html" title="从 AMG88XX 8x8 热成像传感器获取温度数据。">AMG88XX infrared array sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../ams_iAQcore/README.html" title="从 ams iAQcore 传感器获取 CO2 当量和 VOC 数据。">ams iAQcore indoor air quality sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../apds9960/README.html" title="从 APDS9960 传感器获取环境光、RGB 和接近/手势数据。">APDS9960 RGB, ambient light, and gesture sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../pressure_interrupt/README.html" title="管理气压与温度传感器的中断。">Barometric pressure and temperature sensor interrupt example</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../pressure_polling/README.html" title="从传感器获取气压和温度数据。">Barometric pressure and temperature sensor polling example</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../bme280/README.html" title="从 BME280 传感器获取温度、气压和湿度数据。">BME280 humidity and pressure sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../bmg160/README.html" title="从 BMG160 传感器获取温度和角速度数据。">BMG160 3-axis gyroscope</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../bmi270/README.html" title="配置 BMI270 传感器并读取其加速度计和陀螺仪数据。">BMI270 6-axis IMU sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../bq274xx/README.html" title="从 BQ274XX 传感器获取各种电量计参数。">BQ274XX fuel gauge sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../ccs811/README.html" title="从 CCS811 传感器获取 CO2 当量和 VOC 数据。">CCS811 indoor air quality sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../die_temp_polling/README.html" title="使用轮询方式从传感器获取 CPU 芯片温度数据。">CPU die temperature polling</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../ds18b20/README.html" title="从 DS18B20 传感器获取环境温度数据（轮询模式）。">DS18B20 1-Wire Temperature Sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../fdc2x1x/README.html" title="从 FDC2X1X 传感器获取电容和频率数据（轮询和触发）。">FDC2X1X Capacitance-to-Digital Converter</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../flow_meter/README.html" title="从霍尔效应脉冲输出流量计读取流量和体积。">Flow Meter</a></li>
+<li class="toctree-l3 current"><a class="code-sample-link current reference internal" href="#" title="从 FXAS21002 传感器同步获取陀螺仪数据。">FXAS21002 Gyroscope Sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../accel_polling/README.html" title="从传感器获取 3 轴加速度计数据（轮询模式）。">Generic 3-Axis accelerometer polling</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../accel_stream/README.html" title="从传感器获取 3 轴加速度计数据（流模式）。">Generic 3-Axis accelerometer streaming</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../6dof_motion_drdy/README.html" title="从传感器获取 6 轴加速度计和陀螺仪数据（数据就绪中断模式）。">Generic 6DOF Motion Dataready</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../co2_polling/README.html" title="从传感器获取 CO2 数据（轮询模式）。">Generic CO2 polling sample</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../stream_drdy/README.html" title="使用 SENSOR_TRIG_DATA_READY 从传感器获取加速度计数据帧。">Generic device sample streaming using Data Ready trigger</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../dht_polling/README.html" title="从 DHT 传感器获取温度和湿度数据（轮询模式）。">Generic digital humidity temperature sensor polling</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../distance_polling/README.html" title="使用距离传感器测量到物体的距离">Generic distance measurement</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../light_polling/README.html" title="从光传感器获取照度数据。">Generic Light Sensor Polling</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../grove_temperature/README.html" title="从 Grove 温度传感器获取温度数据，并在 LCD 显示屏上显示。">Grove Temperature Sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../grow_r502a/README.html" title="使用 GROW R502-A 指纹传感器存储和匹配指纹。">GROW R502-A Fingerprint Sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../heart_rate/README.html" title="从传感器获取心率数据（轮询/中断模式）。">Heart Rate Sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../hts221/README.html" title="从 HTS221 传感器获取温度和湿度数据（轮询和触发模式）。">HTS221 Temperature and Humidity Monitor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../i3g4250d/README.html" title="从 I3G4250D 传感器获取陀螺仪数据。">I3G4250D 3-axis gyroscope sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../s3km1110/README.html" title="从 Iclegend S3KM1110 毫米波雷达传感器读取标准通道和自定义通道。">Iclegend S3KM1110 mmWave sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../ina219/README.html" title="从 INA219 传感器获取分流电压、总线电压、功率和电流。">INA219 Bidirectional Power/Current Monitor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../isl29035/README.html" title="从 ISL29035 传感器获取光照强度数据（轮询和触发模式）。">ISL29035 Digital Light Sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../jc42/README.html" title="Get ambient temperature from a JEDEC JC 42.4 compliant temperature sensor (polling &amp; trigger mode).">JEDEC JC 42.4 compliant Temperature Sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../lis2dh/README.html" title="从 LIS2DH 传感器获取加速度计数据（轮询和触发模式）。">LIS2DH Motion Sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../lps22hb/README.html" title="从 LPS22HB 传感器获取气压和温度数据（轮询模式）。">LPS22HB Temperature and Pressure Sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../lps22hh/README.html" title="从 LPS22HH 传感器获取气压和温度数据（轮询和触发模式）。">LPS22HH Temperature and Pressure Sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../lps22hh_i3c/README.html" title="Get pressure and temperature data from an LPS22HH sensor over I3C (polling &amp; trigger mode).">LPS22HH Temperature and Pressure Sensor (I3C)</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../lsm303dlhc/README.html" title="Get magnetometer and accelerometer data from an LSM303DLHC sensor (polling mode).">LSM303DLHC Magnetometer and Accelerometer sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../lsm6dsl/README.html" title="Get accelerometer and gyroscope data from an LSM6DSL sensor (polling &amp; trigger mode).">LSM6DSL IMU sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../lsm6dso/README.html" title="Get accelerometer and gyroscope data from an LSM6DSO sensor (polling &amp; trigger mode).">LSM6DSO IMU sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../lsm6dso_i2c_on_i3c/README.html" title="Get accelerometer and gyroscope data from an LSM6DSO sensor using I2C on I3C bus (polling &amp; trigger mode).">LSM6DSO IMU sensor (I2C on I3C bus)</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../magn_polling/README.html" title="从磁力计传感器获取磁力计数据（轮询模式）。">Magnetometer Sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../magn_trig/README.html" title="使用中断测试和调试磁力计">Magnetometer trigger</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../max17262/README.html" title="从 MAX17262 传感器获取电压、电流和温度数据（轮询模式）。">MAX17262 Fuel Gauge Sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../max32664c/README.html" title="">MAX32664C + MAX86141 Sensor Hub</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../max6675/README.html" title="Get temperature from a MAX6675 K-thermocouple to digital converter (polling mode).">MAX6675 K-thermocouple to digital converter</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../icm42605/README.html" title="Get temperature, acceleration, and angular velocity from an ICM42605 sensor (polling &amp; trigger mode).">MPU6050 Invensense Motion Tracking Device</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../mpu6050/README.html" title="Get temperature, acceleration, and angular velocity from an MPU6050 sensor (polling &amp; trigger mode).">MPU6050 motion tracking device</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../ms5837/README.html" title="从 MS5837 传感器获取气压和温度数据（轮询模式）。">MS5837 Digital Pressure Sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../mtch9010/README.html" title="配置 MTCH9010 并周期性地接收其数据。">MTCH9010 Liquid Leak Detector Testbench</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../qdec_multi/README.html" title="Read several quadrature encoders from a single sensor device using the Read-and-Decode API.">Multi-unit quadrature decoder</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../adc_cmp_npcx/README.html" title="使用 NPCX ADC 比较器驱动检测电压上限/下限。">NPCX ADC Comparator</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../mcux_acmp/README.html" title="从 NXP MCUX 模拟比较器（ACMP）获取模拟比较器数据。">NXP MCUX Analog Comparator (ACMP)</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../mcux_lpcmp/README.html" title="从 NXP MCUX 低功耗模拟比较器（LPCMP）获取模拟比较器数据。">NXP MCUX Low-power Analog Comparator (LPCMP)</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../paj7620_gesture/README.html" title="从 PAJ7620 传感器获取手势数据。">PAJ7620 Gesture Sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../proximity_polling/README.html" title="从最多 10 个接近传感器获取接近数据（轮询模式）。">Proximity sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../qdec/README.html" title="从正交解码器传感器获取旋转数据。">Quadrature Decoder Sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../clock/README.html" title="测试和调试传感器时钟功能。">Sensor Clock</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../sensor_shell/README.html" title="使用 shell 模块与传感器交互。">Sensor shell</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../sgp40_sht4x/README.html" title="从 SGP40 和 SHT4X 传感器获取温度、湿度和气体传感器数据（轮询模式）。">SGP40 and SHT4X digital humidity and multipixel gas sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../sht3xd/README.html" title="从 SHT3XD 传感器获取温度和湿度（轮询和触发模式）。">SHT3XD humidity sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../sm351lt/README.html" title="使用 SM351LT 磁阻传感器检测磁铁是否存在（轮询和触发模式）。">SM351LT Magnetoresistive Sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../soc_voltage/README.html" title="从 SoC 的电压传感器获取电压数据。">SoC Voltage Sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../sx9500/README.html" title="从 SX9500 SAR 接近传感器获取接近数据。">SX9500 SAR proximity sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../tdk_apex/README.html" title="获取 TDK APEX 事件检测结果（触发模式）。">TDK Advanced Pedometer and Event Detection (APEX)</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../tad2144/README.html" title="使用 SPI、I2C 和编码器（仅角度数据）从 TDK TAD2144 传感器获取角度和温度数据。">TDK integrated angle sensor with TMR (Tunnel Magneto Resistance)</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../th02/README.html" title="从 TH02 传感器获取温度和湿度数据（轮询模式）。">TH02 Temperature and Humidity Sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../thermometer/README.html" title="Get ambient temperature data from a temperature sensor and get alerts when temperature drifts above a threshold. (polling &amp; trigger mode).">Thermometer</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../tmp108/README.html" title="从 TMP108 传感器获取温度数据（轮询和触发模式）。">TMP108 Temperature Sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../tmp112/README.html" title="从 TMP112 传感器获取温度数据（轮询和触发模式）。">TMP112 Temperature Sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../vcnl4040/README.html" title="从 VCNL4040 传感器获取接近和环境光数据（轮询和触发模式）。">VCNL4040 Proximity and Ambient Light Sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../veaa_x_3/README.html" title="控制 VEAA-X-3 比例压力控制阀。">VEAA-X-3 proportional pressure control valve</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../veml6031/README.html" title="从 VEML4040 传感器获取环境光数据（轮询模式）。">VEML6031 High Accuracy Ambient Light Sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../veml6046/README.html" title="Get red, green, blue and IR light data from a VEML6046 sensor (polling mode).">VEML6046 RGBIR Color Sensor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../vl53l0x/README.html" title="从 VL53L0X 传感器获取距离数据（轮询模式）。">VL53L0X Time Of Flight sensor</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/shell/shell.html">Shell</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../shields/shields.html">Shields</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/smf/smf.html">State Machine Framework</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/subsys.html">Subsystems</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../sysbuild/sysbuild.html">Sysbuild</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../tfm_integration/tfm_integration.html">TF-M Integration</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../userspace/index.html">Userspace</a></li>
+<li class="toctree-l2"><a class="code-sample-link reference internal" href="../../synchronization/README.html" title="操作基本的内核同步原语。">Basic Synchronization</a></li>
+<li class="toctree-l2"><a class="code-sample-link reference internal" href="../../philosophers/README.html" title="使用 Zephyr 内核服务实现哲学家就餐问题的解决方案。">Dining Philosophers</a></li>
+<li class="toctree-l2"><a class="code-sample-link reference internal" href="../../hello_world/README.html" title="向控制台打印 &quot;Hello World&quot;。">Hello World</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">示例与演示</a> &raquo;</li>
+  
+     <li><a href="../sensor.html"><span class="xref std std-ref">传感器</span></a> &raquo;</li>
+  
+  <li>FXAS21002 Gyroscope Sensor</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="fxas21002">
+<h1>FXAS21002 Gyroscope Sensor<a class="headerlink" href="#fxas21002" title="链接到此标题。"></a></h1>
+<p>
+                <a href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0//samples\sensor\fxas21002\README.rst/.." class="btn btn-info fa fa-github"
+                    target="_blank" style="text-align: center;">
+                    Browse source code on GitHub
+                </a>
+                </p>
+<section id="overview">
+<h2>概述<a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>一个传感器应用程序，演示如何使用 fxas21002 数据就绪中断同步读取陀螺仪数据。</p>
+</section>
+<section id="building-and-running">
+<h2>构建与运行<a class="headerlink" href="#building-and-running" title="链接到此标题。"></a></h2>
+<p>该项目将传感器数据输出到控制台。它需要一个 fxas21002 传感器，<a class="reference internal" href="../../../boards/mikroe/hexiwear/doc/index.html#hexiwear">Hexiwear</a> 开发板上带有该传感器。它不能在 QEMU 上运行。</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>hexiwear/mk64f12<span class="w"> </span>samples/sensor/fxas21002
+</pre></div>
+</div>
+<section id="sample-output">
+<h3>示例输出<a class="headerlink" href="#sample-output" title="链接到此标题。"></a></h3>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">X=    -2.063 Y=     0.813 Z=     0.188</span>
+<span class="go">X=    -1.750 Y=     1.063 Z=     0.063</span>
+<span class="go">X=    -2.000 Y=     0.625 Z=     0.063</span>
+<span class="go">X=    -2.188 Y=     0.625 Z=     0.188</span>
+<span class="go">X=    -2.125 Y=     1.313 Z=    -0.063</span>
+<span class="go">X=    -2.188 Y=     1.188 Z=     0.313</span>
+</pre></div>
+</div>
+<p>&lt;无限重复&gt;</p>
+</section>
+</section>
+<section id="see-also">
+<h2>See also<a class="headerlink" href="#see-also" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">sensor_interface</span></dt>
+</dl>
+
+</section>
+</section>
+<script type="application/ld+json">
+                {"@context": "http://schema.org", "@type": "SoftwareSourceCode", "name": "FXAS21002 Gyroscope Sensor", "description": "\u4ece FXAS21002 \u4f20\u611f\u5668\u540c\u6b65\u83b7\u53d6\u9640\u87ba\u4eea\u6570\u636e\u3002", "codeSampleType": "full", "codeRepository": "https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0//samples\\sensor\\fxas21002\\README.rst"}
+                </script>
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 1月 22, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

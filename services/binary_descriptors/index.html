@@ -1,0 +1,397 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>二进制描述符 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/binary_descriptors/index.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="算法与数据" href="../algorithms.html" />
+    <link rel="prev" title="EC 主机命令" href="../device_mgmt/ec_host_cmd.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">服务</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../connectivity/index.html">连接</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../security.html">安全</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../device_mgmt/index.html">设备管理</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../device_mgmt/mcumgr.html">MCUmgr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../device_mgmt/mcumgr_handlers.html">MCUmgr 处理程序</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../device_mgmt/mcumgr_callbacks.html">MCUmgr 回调</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../device_mgmt/smp_protocol.html">SMP 协议规范</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../device_mgmt/smp_transport.html">SMP 传输规范</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../device_mgmt/dfu.html">设备固件升级</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../device_mgmt/ota.html">空中升级（OTA）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../device_mgmt/fota_http.html">基于 HTTP 的固件空中升级</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../device_mgmt/ec_host_cmd.html">EC 主机命令</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">二进制描述符</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#internals">内部实现</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#usage">用法</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#standard-descriptors">标准描述符</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#reading-descriptors">读取描述符</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#west-bindesc-tool">west bindesc 工具</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#api-reference">API 参考</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../device_mgmt/index.html">设备管理</a> &raquo;</li>
+  
+  <li>二进制描述符</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="binary-descriptors">
+<span id="id1"></span><h1>二进制描述符<a class="headerlink" href="#binary-descriptors" title="链接到此标题。"></a></h1>
+<p>二进制描述符是存储二进制可执行文件相关信息的常量数据对象。与“普通”常量不同，二进制描述符被链接到二进制文件中的已知偏移处，因此其他程序（例如同一设备上运行的另一个镜像或主机工具）也能访问它们。适合作为二进制描述符的常量举例：内核版本、应用程序版本、构建时间、编译器版本、环境变量、编译主机名等。</p>
+<p>二进制描述符通过 <code class="docutils literal notranslate"><span class="pre">DEFINE_BINDESC_*</span></code> 宏创建。例如：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/bindesc.h&gt;</span>
+
+<span class="n">BINDESC_STR_DEFINE</span><span class="p">(</span><span class="n">my_string</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="s">"Hello world!"</span><span class="p">);</span><span class="w"> </span><span class="c1">// Unique ID is 2</span>
+</pre></div>
+</div>
+<p>之后可以这样访问 <code class="docutils literal notranslate"><span class="pre">my_string</span></code>：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">printk</span><span class="p">(</span><span class="s">"my_string: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="w"> </span><span class="n">BINDESC_GET_STR</span><span class="p">(</span><span class="n">my_string</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>也可以通过 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">bindesc</span></code> 获取：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>west<span class="w"> </span>bindesc<span class="w"> </span>custom_search<span class="w"> </span>STR<span class="w"> </span><span class="m">2</span><span class="w"> </span>build/zephyr/zephyr.bin
+<span class="s2">"Hello world!"</span>
+</pre></div>
+</div>
+<section id="internals">
+<h2>内部实现<a class="headerlink" href="#internals" title="链接到此标题。"></a></h2>
+<p>二进制描述符以 TLV（标签、长度、值）头部的形式实现，并链接到二进制镜像中的已知偏移处。该偏移因架构而异，但一般会将描述符链接到尽量靠近镜像开头的位置。在镜像必须以向量表开头的架构（如 ARM）上，描述符紧接在向量表之后链接，复位向量指向位于描述符之后的 text 段开头。在镜像必须以可执行代码开头的架构（如 x86）上，会在镜像开头插入一条跳转指令以跳过二进制描述符，描述符紧跟在这条跳转指令之后。</p>
+<p>每个标签是一个 16 位无符号整数，其中最高的半字节（4 位）表示类型（目前为 uint、string 或 bytes），其余部分为 ID。每个描述符的 ID 全局唯一。例如，应用程序版本字符串的 ID 为 <code class="docutils literal notranslate"><span class="pre">0x800</span></code>，字符串类型用 0x1 表示，因此应用程序版本的标签为 <code class="docutils literal notranslate"><span class="pre">0x1800</span></code>。长度是一个 16 位数，等于数据的字节数。数据即描述符的实际值。所有二进制描述符中的数字（魔数、标签、uint）在内存中都按 SoC 原生的字节序排列。<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">bindesc</span></code> 默认假定为小端序，因此如果镜像属于大端序 SoC，应向该工具传入相应的标志。</p>
+<p>二进制描述符头部以魔数 <code class="docutils literal notranslate"><span class="pre">0xb9863e5a7ea46046</span></code> 开始，其后是各个 TLV，最后以 <code class="docutils literal notranslate"><span class="pre">DESCRIPTORS_END</span></code> （<code class="docutils literal notranslate"><span class="pre">0xffff</span></code>）标签结束。标签总是按 32 位对齐。如果前一个描述符的值长度未对齐，会填充零以确保当前标签对齐。</p>
+<p>综上，上面的示例在（小端序 SoC 的）内存中如下所示：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span> 46 60 a4 7e 5a 3e 86 b9 02 10  0d 00  48 65 6c 6c 6f 20 77 6f 72 6c 64 21 00 00 00 00 ff ff 00 00
+|         magic         | tag |length| H  e  l  l  o     w  o  r  l  d  !    |   pad  |    end    |
+</pre></div>
+</div>
+</section>
+<section id="usage">
+<h2>用法<a class="headerlink" href="#usage" title="链接到此标题。"></a></h2>
+<p>二进制描述符总是通过 <code class="docutils literal notranslate"><span class="pre">BINDESC_*_DEFINE</span></code> 宏创建。如上例所示，可以用任意 ID 从任意字符串或整数生成描述符。不过，建议遵循 <code class="docutils literal notranslate"><span class="pre">include/zephyr/bindesc.h</span></code> 中定义的标准标签，这样有以下好处：</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">bindesc</span></code> 工具能够识别描述符的含义，并打印有意义的标签</p></li>
+<li><p>可以确保来自不同来源的各个应用程序之间保持一致</p></li>
+<li><p>使描述符的生成可以合入上游（参见标准描述符）</p></li>
+</ol>
+</div></blockquote>
+<p>要定义使用标准标签的描述符，只需使用 <code class="docutils literal notranslate"><span class="pre">bindesc.h</span></code> 中包含的标签：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/bindesc.h&gt;</span>
+
+<span class="n">BINDESC_STR_DEFINE</span><span class="p">(</span><span class="n">app_version</span><span class="p">,</span><span class="w"> </span><span class="n">BINDESC_ID_APP_VERSION_STRING</span><span class="p">,</span><span class="w"> </span><span class="s">"1.2.3"</span><span class="p">);</span>
+</pre></div>
+</div>
+<section id="standard-descriptors">
+<h3>标准描述符<a class="headerlink" href="#standard-descriptors" title="链接到此标题。"></a></h3>
+<p>有些描述符实现起来很简单，因此可以在上游 Zephyr 中以标准方式实现，然后通过 Kconfig 启用，而不必让每个用户重新实现。这些描述符包括构建时间、内核版本和主机信息。例如，要以字符串形式添加构建日期和时间，应启用以下配置：</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span><span class="c1"># Enable binary descriptors</span>
+CONFIG_BINDESC=y
+
+<span class="c1"># Enable definition of binary descriptors</span>
+CONFIG_BINDESC_DEFINE=y
+
+<span class="c1"># Enable default build time binary descriptors</span>
+CONFIG_BINDESC_DEFINE_BUILD_TIME=y
+CONFIG_BINDESC_BUILD_DATE_TIME_STRING=y
+</pre></div>
+</div>
+<p>为避免与用户定义的描述符冲突，标准描述符被分配在 <code class="docutils literal notranslate"><span class="pre">0x800-0xfff</span></code> 范围内，<code class="docutils literal notranslate"><span class="pre">0x000-0x7ff</span></code> 则留给用户。更多信息请阅读这些 Kconfig 符号的 <code class="docutils literal notranslate"><span class="pre">help</span></code> 部分。按照惯例，每个 Kconfig 符号对应一个二进制描述符，其名称为该 Kconfig 名称（去掉 <code class="docutils literal notranslate"><span class="pre">CONFIG_BINDESC_</span></code>）的小写形式。例如，<code class="docutils literal notranslate"><span class="pre">CONFIG_BINDESC_KERNEL_VERSION_STRING</span></code> 会创建一个描述符，可通过 <code class="docutils literal notranslate"><span class="pre">BINDESC_GET_STR(kernel_version_string)</span></code> 访问。</p>
+</section>
+<section id="reading-descriptors">
+<h3>读取描述符<a class="headerlink" href="#reading-descriptors" title="链接到此标题。"></a></h3>
+<p>也可以在应用程序中读取和解析二进制描述符。无论是镜像读取自身的描述符，还是读取另一个镜像的描述符，这都很有用。可以通过以下三种后端之一进行读取：</p>
+<blockquote>
+<div><ol class="arabic simple">
+<li><p>RAM：假定描述符已被复制到 RAM 中（例如由引导加载程序复制），则可以从其所在的缓冲区读取。</p></li>
+<li><p>内存映射 Flash：如果待读取镜像所在的 Flash 可以通过程序的地址空间访问，则可以直接从 Flash 读取。此选项占用的 RAM 最少，但在 Flash 未做内存映射时无法使用；出于安全考虑，也不建议用它读取引导加载程序的描述符。</p></li>
+<li><p>Flash：使用一个内部缓冲区，通过 Flash API 逐个读取描述符，并在描述符位于缓冲区中时交给用户。</p></li>
+</ol>
+</div></blockquote>
+<p>要启用描述符读取功能，请启用 <a class="reference internal" href="../../kconfig.html#CONFIG_BINDESC_READ" title="CONFIG_BINDESC_READ"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BINDESC_READ</span></code></a>。三种后端分别由以下 Kconfig 符号启用：<a class="reference internal" href="../../kconfig.html#CONFIG_BINDESC_READ_RAM" title="CONFIG_BINDESC_READ_RAM"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BINDESC_READ_RAM</span></code></a>、<a class="reference internal" href="../../kconfig.html#CONFIG_BINDESC_READ_MEMORY_MAPPED_FLASH" title="CONFIG_BINDESC_READ_MEMORY_MAPPED_FLASH"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BINDESC_READ_MEMORY_MAPPED_FLASH</span></code></a> 和 <a class="reference internal" href="../../kconfig.html#CONFIG_BINDESC_READ_FLASH" title="CONFIG_BINDESC_READ_FLASH"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BINDESC_READ_FLASH</span></code></a>。</p>
+<p>要读取描述符，首先应初始化一个描述符句柄：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">bindesc_handle</span><span class="w"> </span><span class="n">handle</span><span class="p">;</span>
+
+<span class="cm">/* Assume buffer holds a copy of the descriptors */</span>
+<span class="n">bindesc_open_ram</span><span class="p">(</span><span class="o">&amp;</span><span class="n">handle</span><span class="p">,</span><span class="w"> </span><span class="n">buffer</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>只有 <code class="docutils literal notranslate"><span class="pre">bindesc_open_*</span></code> 系列函数与所用的后端有关，其余 API 与数据所在位置无关。句柄初始化后，即可与其余 API 一起使用：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">version</span><span class="p">;</span>
+<span class="n">bindesc_find_str</span><span class="p">(</span><span class="o">&amp;</span><span class="n">handle</span><span class="p">,</span><span class="w"> </span><span class="n">BINDESC_ID_KERNEL_VERSION_STRING</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">version</span><span class="p">);</span>
+<span class="n">printk</span><span class="p">(</span><span class="s">"Kernel version: %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="w"> </span><span class="n">version</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="west-bindesc-tool">
+<h3>west bindesc 工具<a class="headerlink" href="#west-bindesc-tool" title="链接到此标题。"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">west</span></code> 能够从给定的可执行镜像中解析并显示二进制描述符。</p>
+<p>更多信息请参阅 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">bindesc</span> <span class="pre">--help</span></code> 或 <a class="reference internal" href="../../develop/west/zephyr-cmds.html#west-bindesc"><span class="std std-ref">文档</span></a>。</p>
+</section>
+</section>
+<section id="api-reference">
+<h2>API 参考<a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">bindesc_define</span></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/subsys/bindesc/hello_bindesc/README.html#hello-bindesc" title="为一个基本的 Zephyr 应用程序设置并访问二进制描述符。">Binary descriptors &quot;Hello World&quot;</a></span><span class="code-sample-description">为一个基本的 Zephyr 应用程序设置并访问二进制描述符。</span></li>
+</ul>
+</div>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">bindesc_read</span></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/subsys/bindesc/read_bindesc/README.html#read-bindesc" title="定义一些二进制描述符并读取它们。">Binary descriptors read</a></span><span class="code-sample-description">定义一些二进制描述符并读取它们。</span></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 12月 21, 2023.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

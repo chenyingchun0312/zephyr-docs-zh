@@ -1,0 +1,452 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>zperf 确定性回环吞吐量测试（qemu_x86 + icount） &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/samples/net/zperf/README-loopback-icount.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" />
+    <link rel="next" title="Dining Philosophers" href="../../philosophers/README.html" />
+    <link rel="prev" title="zperf: Network Traffic Generator" href="README.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">示例与演示</a> &raquo;</li>
+  
+     <li><a href="../net.html">网络</a> &raquo;</li>
+  
+  <li>zperf 确定性回环吞吐量测试（qemu_x86 + icount）</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="zperf-deterministic-loopback-throughput-qemu-x86-icount">
+<span id="zperf-loopback-icount"></span><h1>zperf 确定性回环吞吐量测试（qemu_x86 + icount）<a class="headerlink" href="#zperf-deterministic-loopback-throughput-qemu-x86-icount" title="链接到此标题。"></a></h1>
+<section id="overview">
+<h2>概述<a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>本文介绍一种自包含的方式，将 zperf 示例用作 <strong>网络吞吐量回归检查</strong>。该方式与硬件无关，最重要的是，它与运行模拟器的主机速度无关。</p>
+<p>测量完全在 <code class="docutils literal notranslate"><span class="pre">qemu_x86</span></code> 客户机内部运行：</p>
+<ul class="simple">
+<li><p>所有流量都经过客户机内部的回环接口，因此测量路径上没有外部（实时）网络后端。</p></li>
+<li><p>QEMU 以 <strong>icount 模式</strong> 运行，因此客户机的时间概念由已执行的指令数推导得出，而不是来自主机的挂钟时间。</p></li>
+<li><p>该示例自行驱动（没有交互式 shell）：它在回环接口上启动一个 UDP 接收端和一个 TCP 接收端，向 <code class="docutils literal notranslate"><span class="pre">127.0.0.1</span></code> 上传数据，并打印结果。</p></li>
+</ul>
+<p>吞吐量等于 <code class="docutils literal notranslate"><span class="pre">bytes</span> <span class="pre">/</span> <span class="pre">elapsed_time</span></code>，因此只有当 <code class="docutils literal notranslate"><span class="pre">elapsed_time</span></code> 是确定的且与主机无关时，该指标才可用于回归检测。在 icount 模式下，虚拟 CPU 每执行一条指令，虚拟时间就前进 <code class="docutils literal notranslate"><span class="pre">2^shift</span></code> ns，因此报告的吞吐量成为 <em>每字节指令数</em> 的确定性函数：多次运行之间、不同机器之间结果相同，并且对真实的代码回归敏感（每字节指令数增加会使该数值降低）。所有流量都保持在回环接口上，意味着不存在会破坏 icount 确定性的外部实时后端。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>Mbps 的绝对值是一个 <em>虚拟时间代理指标</em>（代表每字节指令数），而不是真实的线路速率。只能比较在相同 icount shift、数据包大小和节拍频率下采集的数值。</p>
+</div>
+</section>
+<section id="how-it-works">
+<h2>工作原理<a class="headerlink" href="#how-it-works" title="链接到此标题。"></a></h2>
+<p>运行器位于 <code class="file docutils literal notranslate"><span class="pre">src/main.c</span></code> 中，由 <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZPERF_LOOPBACK_SELFTEST</span></code> 控制。启用后，示例会：</p>
+<ol class="arabic">
+<li><p>自行启用网络（自动初始化被禁用，以免传输与网络启用过程产生竞争）。</p></li>
+<li><p>对于每个 IP 协议族，运行一系列传输，每次传输依次启动对应的接收端、运行阻塞式上传、停止接收端，并为每次传输打印一行 <code class="docutils literal notranslate"><span class="pre">ZPERF-RESULT</span> <span class="pre">&lt;marker&gt;_mbps=&lt;value&gt;</span></code>：</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>标记</p></th>
+<th class="head"><p>传输</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">udp4</span></code> / <code class="docutils literal notranslate"><span class="pre">udp6</span></code></p></td>
+<td><p>基准 UDP，接近 MTU 的负载（单个未分片的数据报）。</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">udp4_frag</span></code> / <code class="docutils literal notranslate"><span class="pre">udp6_frag</span></code></p></td>
+<td><p>使用超大负载的 UDP，在发送端强制进行 <strong>IP 分片</strong>，在接收端进行重组。仅在启用了对应的 <a class="reference internal" href="../../../kconfig.html#CONFIG_NET_IPV4_FRAGMENT" title="CONFIG_NET_IPV4_FRAGMENT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_IPV4_FRAGMENT</span></code></a> / <a class="reference internal" href="../../../kconfig.html#CONFIG_NET_IPV6_FRAGMENT" title="CONFIG_NET_IPV6_FRAGMENT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_IPV6_FRAGMENT</span></code></a> 时运行。</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tcp4</span></code> / <code class="docutils literal notranslate"><span class="pre">tcp6</span></code></p></td>
+<td><p>基准 TCP（启用 Nagle）。</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tcp4_nodelay</span></code> / <code class="docutils literal notranslate"><span class="pre">tcp6_nodelay</span></code></p></td>
+<td><p>使用 <code class="docutils literal notranslate"><span class="pre">TCP_NODELAY</span></code>（禁用 Nagle）的 TCP，用于覆盖另一条发送路径。</p></td>
+</tr>
+</tbody>
+</table>
+</li>
+<li><p>打印最终的 <code class="docutils literal notranslate"><span class="pre">ZPERF-DONE</span></code> 标记。</p></li>
+</ol>
+<p>两个 IP 协议族都会被测试，因此任一代码路径中的回归都能被发现。IPv4 传输使用 <code class="docutils literal notranslate"><span class="pre">127.0.0.1</span></code>，IPv6 传输使用 <code class="docutils literal notranslate"><span class="pre">::1</span></code>；回环驱动会将这两个地址都分配给回环接口。对于每个协议族，接收端都绑定到该回环地址（而不仅仅是接口的默认地址），以便客户端能够连接。当 <a class="reference internal" href="../../../kconfig.html#CONFIG_NET_IPV6" title="CONFIG_NET_IPV6"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_IPV6</span></code></a> 被禁用时，会跳过 IPv6 测试（IPv4 同理）。</p>
+<p>每次上传都使用非默认的套接字优先级（<code class="xref c c-enumerator docutils literal notranslate"><span class="pre">NET_PRIORITY_VI</span></code>）发送。结合配置了多个流量类别（见下文），流量会经由 <code class="docutils literal notranslate"><span class="pre">net_tc.c</span></code> 中各流量类别专用的线程，而不是在调用者上下文中处理，因此每次运行都会测试这条调度路径。</p>
+<p>整个过程由 <code class="file docutils literal notranslate"><span class="pre">overlay-loopback-icount.conf</span></code> 配置，它叠加在现有的 <code class="file docutils literal notranslate"><span class="pre">overlay-loopback.conf</span></code> 之上。</p>
+<section id="configuration-knobs">
+<h3>配置参数<a class="headerlink" href="#configuration-knobs" title="链接到此标题。"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Kconfig 选项</p></th>
+<th class="head"><p>含义</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZPERF_LOOPBACK_SELFTEST</span></code></p></td>
+<td><p>启用自驱动的回环运行器。</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZPERF_LOOPBACK_SELFTEST_DURATION_MS</span></code></p></td>
+<td><p>每次（UDP 和 TCP）上传运行的持续时间。</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZPERF_LOOPBACK_SELFTEST_PACKET_SIZE</span></code></p></td>
+<td><p>负载大小（字节）。默认值是 1280 字节 MTU 下的 IPv6 TCP MSS，因此每次写入都是一个完整大小的分段（见下文）。</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZPERF_LOOPBACK_SELFTEST_FRAG_PACKET_SIZE</span></code></p></td>
+<td><p>额外的分片 UDP 运行所用的负载大小（字节）。必须超过 MTU（使数据报被分片），且小于 <a class="reference internal" href="../../../kconfig.html#CONFIG_NET_ZPERF_MAX_PACKET_SIZE" title="CONFIG_NET_ZPERF_MAX_PACKET_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_ZPERF_MAX_PACKET_SIZE</span></code></a>。</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZPERF_LOOPBACK_SELFTEST_RATE_KBPS</span></code></p></td>
+<td><p>目标速率；<code class="docutils literal notranslate"><span class="pre">0</span></code> 表示以（虚拟）CPU 允许的最快速度发送。</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZPERF_LOOPBACK_SELFTEST_PORT</span></code></p></td>
+<td><p>接收端和客户端共同使用的服务器端口。</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="implementation-notes-gotchas">
+<h3>实现说明 / 注意事项<a class="headerlink" href="#implementation-notes-gotchas" title="链接到此标题。"></a></h3>
+<p><code class="file docutils literal notranslate"><span class="pre">overlay-loopback-icount.conf</span></code> 中包含了一些不太直观的设置：</p>
+<ul class="simple">
+<li><p><strong>栈大小。</strong> 回环驱动在发送方上下文中同步投递每个数据包，因此整个接收路径（以及阻塞式客户端上传）都嵌套在调用者的栈上。主线程和网络线程的栈都已加大；否则客户机在启动时会发生栈溢出并出错。</p></li>
+<li><p><strong>节拍频率。</strong> 节拍频率提高到 10 kHz。在默认的 100 Hz 下，<code class="docutils literal notranslate"><span class="pre">USECS_PER_TICK</span> <span class="pre">&gt;=</span> <span class="pre">1000</span></code> 会编译进 UDP 上传器的时钟补偿路径，该路径会除以每个数据包的持续时间。在不限速率时该持续时间为零，因此高于 1 kHz 的节拍既避免了除零错误，又能提供细粒度的发送节奏控制。</p></li>
+<li><p><strong>接近 MTU 的数据包大小以及 MSS 注意事项。</strong> 覆盖文件将回环 MTU（<a class="reference internal" href="../../../kconfig.html#CONFIG_NET_LOOPBACK_MTU" title="CONFIG_NET_LOOPBACK_MTU"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_LOOPBACK_MTU</span></code></a>）提高到 1280，并将 zperf 自身的数据包上限（<a class="reference internal" href="../../../kconfig.html#CONFIG_NET_ZPERF_MAX_PACKET_SIZE" title="CONFIG_NET_ZPERF_MAX_PACKET_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_ZPERF_MAX_PACKET_SIZE</span></code></a>）提高到负载之上，因此默认 1220 字节的负载会产生接近 MTU 的帧。大帧使每字节的工作（校验和、遍历缓冲区/分片）超过每次调用的固定开销而占主导地位，而这正是吞吐量回归检查应当敏感的部分。要在不同协议族之间进行 <em>公平</em> 的 TCP 比较，1220 这个确切值很重要：zperf TCP 上传器每次 <code class="docutils literal notranslate"><span class="pre">send()</span></code> 发送整个负载，由 TCP 按 MSS 进行分段。在 1280 字节 MTU 下，IPv4 MSS 为 <code class="docutils literal notranslate"><span class="pre">1280</span> <span class="pre">-</span> <span class="pre">40</span></code> = 1240，而 IPv6 MSS 只有 <code class="docutils literal notranslate"><span class="pre">1280</span> <span class="pre">-</span> <span class="pre">60</span></code> = 1220（IPv6 报头大 20 字节）。例如 1232 的负载在 IPv4 下可放入一个分段，但超过了 IPv6 MSS，因此每次 IPv6 写入都会被拆分为一个完整的 1220 字节分段加一个 12 字节的小分段，IPv6 的分段/ACK 数量几乎翻倍，IPv6 TCP 吞吐量几乎减半。使用 1220 可使两种协议族的每次写入都保持为单个完整大小的分段。基准 UDP 负载在两种协议族下也都小于 MTU，因此这些数据报不会被 IP 分片。由于 net_buf 数据大小（1100）小于 MTU，每个帧仍会跨越两个缓冲区分片，这是有意为之，用于测试分片链的遍历。</p></li>
+<li><p><strong>IP 分片覆盖。</strong> 启用了 <a class="reference internal" href="../../../kconfig.html#CONFIG_NET_IPV4_FRAGMENT" title="CONFIG_NET_IPV4_FRAGMENT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_IPV4_FRAGMENT</span></code></a> 和 <a class="reference internal" href="../../../kconfig.html#CONFIG_NET_IPV6_FRAGMENT" title="CONFIG_NET_IPV6_FRAGMENT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_IPV6_FRAGMENT</span></code></a>，运行器为每个协议族额外增加一次 UDP 运行，其负载（<code class="docutils literal notranslate"><span class="pre">CONFIG_ZPERF_LOOPBACK_SELFTEST_FRAG_PACKET_SIZE</span></code>，默认为 2000）超过 MTU。这会驱动发送端 <code class="docutils literal notranslate"><span class="pre">ipv4.c</span></code> / <code class="docutils literal notranslate"><span class="pre">ipv6.c</span></code> 中的分片路径以及接收端的重组路径（即 <code class="docutils literal notranslate"><span class="pre">*_frag</span></code> 标记）。<a class="reference internal" href="../../../kconfig.html#CONFIG_NET_ZPERF_MAX_PACKET_SIZE" title="CONFIG_NET_ZPERF_MAX_PACKET_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_ZPERF_MAX_PACKET_SIZE</span></code></a> 被提高到该负载之上。</p></li>
+<li><p><strong>流量类别与优先级。</strong> 覆盖文件配置了多个 TX/RX 流量类别（<a class="reference internal" href="../../../kconfig.html#CONFIG_NET_TC_TX_COUNT" title="CONFIG_NET_TC_TX_COUNT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_TC_TX_COUNT</span></code></a> / <a class="reference internal" href="../../../kconfig.html#CONFIG_NET_TC_RX_COUNT" title="CONFIG_NET_TC_RX_COUNT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_TC_RX_COUNT</span></code></a> = 2），并启用了 <a class="reference internal" href="../../../kconfig.html#CONFIG_NET_CONTEXT_PRIORITY" title="CONFIG_NET_CONTEXT_PRIORITY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_CONTEXT_PRIORITY</span></code></a>（以及 <a class="reference internal" href="../../../kconfig.html#CONFIG_NET_ALLOW_ANY_PRIORITY" title="CONFIG_NET_ALLOW_ANY_PRIORITY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_ALLOW_ANY_PRIORITY</span></code></a>）。每次上传都设置非默认的 <code class="docutils literal notranslate"><span class="pre">SO_PRIORITY</span></code>，因此流量通过各流量类别专用的线程分派，而不是在调用者上下文中处理。这会测试 <code class="docutils literal notranslate"><span class="pre">net_tc.c</span></code> 调度路径，但会增加上下文切换，因此与单流量类别配置相比，绝对数值会降低。</p></li>
+<li><p><strong>不限速率时的计算。</strong> 在不限速率（<code class="docutils literal notranslate"><span class="pre">rate</span> <span class="pre">=</span> <span class="pre">0</span></code>）模式下，运行器会选取一个足够高的速率，使每个数据包的节奏延迟向下取整为零。该合成速率以 64 位计算，以避免中间结果溢出，因此支持任何现实的数据包大小（最大约 500 kB）。</p></li>
+<li><p><strong>不使用 SLIP/TAP。</strong> QEMU 的 SLIP 主机网络后端已被禁用；运行时不需要主机端的 <code class="docutils literal notranslate"><span class="pre">slip.sock</span></code>。</p></li>
+<li><p><strong>日志缓冲区大小。</strong> 结果行使用 <code class="docutils literal notranslate"><span class="pre">printk()</span></code> 打印，日志子系统会通过其延迟后端转发这些内容。在默认的 1024 字节缓冲区下，<code class="docutils literal notranslate"><span class="pre">qemu_x86_64</span></code> 运行会在最初的 IPv4 传输期间使缓冲区溢出，随后 <a class="reference internal" href="../../../kconfig.html#CONFIG_LOG_MODE_OVERFLOW" title="CONFIG_LOG_MODE_OVERFLOW"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_MODE_OVERFLOW</span></code></a> 会丢弃三条最旧的消息，从而悄无声息地吞掉 <code class="docutils literal notranslate"><span class="pre">udp4_frag</span></code> 结果行，导致该指标根本不会出现在报告中。覆盖文件将 <a class="reference internal" href="../../../kconfig.html#CONFIG_LOG_BUFFER_SIZE" title="CONFIG_LOG_BUFFER_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_BUFFER_SIZE</span></code></a> 提高到 4096。测量本身不受影响；使用更大缓冲区时，32 位的数值逐位相同。</p></li>
+</ul>
+</section>
+</section>
+<section id="usage">
+<h2>用法<a class="headerlink" href="#usage" title="链接到此标题。"></a></h2>
+<section id="build-and-run-once">
+<h3>构建并运行一次<a class="headerlink" href="#build-and-run-once" title="链接到此标题。"></a></h3>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">west build -p -b qemu_x86 -d ../build/zperf_loop samples/net/zperf -- \</span>
+<span class="go">    -DEXTRA_CONF_FILE="overlay-loopback.conf;overlay-loopback-icount.conf"</span>
+<span class="go">west build -t run -d ../build/zperf_loop</span>
+</pre></div>
+</div>
+<p>预期输出（在给定构建上，数值是确定的，并且在多次运行中完全重复；具体数值取决于工具链、数据包大小、icount shift 和节拍频率，因此仅作示例）:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ZPERF-RESULT udp4_mbps=13.099
+ZPERF-RESULT udp4_frag_mbps=20.249
+ZPERF-RESULT tcp4_mbps=5.970
+ZPERF-RESULT tcp4_nodelay_mbps=5.876
+ZPERF-RESULT udp6_mbps=13.310
+ZPERF-RESULT udp6_frag_mbps=20.059
+ZPERF-RESULT tcp6_mbps=5.979
+ZPERF-RESULT tcp6_nodelay_mbps=5.910
+ZPERF-DONE
+</pre></div>
+</div>
+<p>IPv4 和 IPv6 的 TCP 数值接近，因为默认负载就是 IPv6 TCP MSS；参见 <a class="reference internal" href="#implementation-notes-gotchas">Implementation notes / gotchas</a> 中的 MSS 注意事项。<code class="docutils literal notranslate"><span class="pre">*_frag</span></code>（分片）UDP 运行报告的数值比基准 UDP 运行 <em>更高</em>，因为即使计入分片的工作量，更大的数据报也能把每个数据报的固定开销分摊到更多负载上。</p>
+</section>
+<section id="run-through-twister">
+<h3>通过 twister 运行<a class="headerlink" href="#run-through-twister" title="链接到此标题。"></a></h3>
+<p><code class="file docutils literal notranslate"><span class="pre">tests.yaml</span></code> 中的场景 <code class="docutils literal notranslate"><span class="pre">sample.net.zperf.loopback_icount</span></code> 使用 <code class="docutils literal notranslate"><span class="pre">console</span></code> harness，并将吞吐量数值记录到 twister JSON 报告中：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./scripts/twister -p qemu_x86 -s sample.net.zperf.loopback_icount \</span>
+<span class="go">    --outdir ../build/zperf_run</span>
+</pre></div>
+</div>
+<p>该场景可在 <code class="docutils literal notranslate"><span class="pre">qemu_x86</span></code>（32 位）和 <code class="docutils literal notranslate"><span class="pre">qemu_x86_64</span></code>（64 位）上运行；后者提供一个 64 位数据点（例如 64 位校验和快速路径）。两者可以在一次运行中同时测量：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./scripts/twister -T samples/net/zperf -s sample.net.zperf.loopback_icount \</span>
+<span class="go">    -p qemu_x86 -p qemu_x86_64 --outdir ../build/zperf_run</span>
+</pre></div>
+</div>
+<p>使用 <code class="docutils literal notranslate"><span class="pre">-T</span> <span class="pre">samples/net/zperf</span></code> 限制扫描范围，可以避免为单个场景遍历整个源码树。</p>
+<p>两个平台报告的绝对数值不同，彼此之间不可比较，因此 <code class="file docutils literal notranslate"><span class="pre">scripts/zperf_regression.py</span></code> 以 twister 平台名称（<code class="docutils literal notranslate"><span class="pre">qemu_x86/atom</span></code>、<code class="docutils literal notranslate"><span class="pre">qemu_x86_64/atom</span></code>）作为每个指标的键，并分别报告。使用 <code class="docutils literal notranslate"><span class="pre">--platform</span></code> 可将报告限制为其中一个平台，参数可以是完整的 <code class="docutils literal notranslate"><span class="pre">board/soc</span></code> 名称，也可以只写开发板名称。</p>
+</section>
+<section id="baseline-and-regression-gate">
+<h3>基准与回归门限<a class="headerlink" href="#baseline-and-regression-gate" title="链接到此标题。"></a></h3>
+<p>辅助脚本 <code class="file docutils literal notranslate"><span class="pre">scripts/zperf_regression.py</span></code> 读取 twister 运行的记录数据。在参考提交上采集一次基准：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./scripts/twister -p qemu_x86 -s sample.net.zperf.loopback_icount \</span>
+<span class="go">    --outdir ../build/zperf_base</span>
+<span class="go">samples/net/zperf/scripts/zperf_regression.py --base-dir .. \</span>
+<span class="go">    --twister-json ../build/zperf_base/twister.json \</span>
+<span class="go">    --save baseline.json</span>
+</pre></div>
+</div>
+<p>在之后的提交上重新运行，并以允许的最大降幅（百分比）作为门限：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./scripts/twister -p qemu_x86 -s sample.net.zperf.loopback_icount \</span>
+<span class="go">    --outdir ../build/zperf_cur</span>
+<span class="go">samples/net/zperf/scripts/zperf_regression.py --base-dir .. \</span>
+<span class="go">    --twister-json ../build/zperf_cur/twister.json \</span>
+<span class="go">    --baseline baseline.json --tolerance 5</span>
+</pre></div>
+</div>
+<p>如果任何记录的指标降幅超过容差，脚本会以非零状态退出，因此适合作为 CI 回归检查。</p>
+<p>也可以直接比较两次运行，无需中间的基准文件：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">samples/net/zperf/scripts/zperf_regression.py --base-dir .. \</span>
+<span class="go">    --twister-json ../build/zperf_cur/twister.json \</span>
+<span class="go">    --baseline-twister-json ../build/zperf_base/twister.json</span>
+</pre></div>
+</div>
+<p>其余选项影响的是报告的形式，而不是测量本身：</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>选项</p></th>
+<th class="head"><p>含义</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--threshold</span> <span class="pre">PCT</span></code></p></td>
+<td><p>报告的噪声下限，默认为 1%。变化小于此值的指标会被描述为不变，而不是改进或回归。对于给定的二进制文件，icount 结果完全可重复，但两个源码树会构建出两个不同的二进制文件，仅代码布局的差异就可能使数值变化，即使执行的工作没有任何改变。实际上这种漂移很小：在比较相隔 157 个提交、且其间只改动了 TCP 的两个源码树时，所有 UDP 指标在 <code class="docutils literal notranslate"><span class="pre">qemu_x86</span></code> 上逐位相同，在 <code class="docutils literal notranslate"><span class="pre">qemu_x86_64</span></code> 上的差异也在 0.02% 以内。</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--markdown</span> <span class="pre">PATH</span></code></p></td>
+<td><p>以 markdown 表格形式输出比较结果，每个平台一节，用于 GitHub Actions 作业摘要或 PR 评论。所有指标均未变化的平台会折叠到一个 <code class="docutils literal notranslate"><span class="pre">&lt;details&gt;</span></code> 块中，其摘要行会注明这一点；有指标变化的平台则保持展开。</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">--annotate</span></code></p></td>
+<td><p>每个平台输出一条 <code class="docutils literal notranslate"><span class="pre">::notice::</span></code> 工作流命令，汇总发生变化的指标。</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">--exit-zero</span></code></p></td>
+<td><p>始终以成功状态退出。适用于比较仅供参考、不得导致构建失败的情况。缺失或无法构建的基准也以同样方式报告，即视为无法进行比较。</p></td>
+</tr>
+</tbody>
+</table>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>为了在脚本由自动化流程驱动时保证安全，它读写的每个文件都必须解析到 <code class="docutils literal notranslate"><span class="pre">--base-dir</span></code>（默认：当前目录）之下的位置；逃逸出该目录的路径（通过 <code class="docutils literal notranslate"><span class="pre">..</span></code> 或绝对路径）会被拒绝。示例中传入 <code class="docutils literal notranslate"><span class="pre">--base-dir</span> <span class="pre">..</span></code>，是因为它们从同级的 <code class="docutils literal notranslate"><span class="pre">../build</span></code> 目录树读取 twister 报告，同时将输出写入仓库。</p>
+</div>
+</section>
+<section id="continuous-integration">
+<h3>持续集成<a class="headerlink" href="#continuous-integration" title="链接到此标题。"></a></h3>
+<p><code class="file docutils literal notranslate"><span class="pre">.github/workflows/net-perf.yml</span></code> 会在每个涉及 <code class="docutils literal notranslate"><span class="pre">subsys/net/</span></code>、<code class="docutils literal notranslate"><span class="pre">include/zephyr/net/</span></code>、<code class="docutils literal notranslate"><span class="pre">lib/net_buf/</span></code>、回环驱动或本示例的 PR 上运行此场景。它在同一个运行器上、在两个平台上分别测量该 PR 及其目标分支，并将比较结果写入作业摘要。</p>
+<p>以下两个细节保证了比较结果的意义：</p>
+<ul class="simple">
+<li><p>工作流在 PR 变基到目标分支之后运行，因此差异只反映该系列提交本身的影响，不会混入目标分支上无关的变化。</p></li>
+<li><p>测量目标分支时使用 PR 中的 <code class="file docutils literal notranslate"><span class="pre">samples/net/zperf/</span></code> 副本，因此两侧的运行器、覆盖文件和负载大小完全相同，只有被测代码不同。因此，修改该示例的 PR 不会通过改变测量对象而使数值发生变化。</p></li>
+</ul>
+<p>配套的工作流 <code class="file docutils literal notranslate"><span class="pre">.github/workflows/net-perf-comment.yml</span></code> 会将相同的报告作为评论发布到 PR 上，使数值在评审变更的地方可见。它是一个独立的工作流，因为测量由 <code class="docutils literal notranslate"><span class="pre">pull_request</span></code> 事件触发，该事件的令牌对于派生仓库是只读的，无法发表评论；配套工作流在 <code class="docutils literal notranslate"><span class="pre">workflow_run</span></code> 上运行，从构件（artifact）中读取报告和 PR 编号，并且从不检出 PR 代码。每个 PR 只有一条评论，每次推送时原地重写；所有指标均未变化的平台会被折叠，使不变的结果只占一行。</p>
+<p>该检查 <strong>仅供参考</strong>。它以 <code class="docutils literal notranslate"><span class="pre">--exit-zero</span></code> 运行，每个测量步骤都设置为 <code class="docutils literal notranslate"><span class="pre">continue-on-error</span></code>，并且不属于必需检查：异常或出人意料的数值只是提供给评审者的信息，绝不会阻止合并。无法产生的结果（例如目标分支构建失败）会被报告为无法进行比较，作业仍然通过。</p>
+<p>只测量回环路径，因此报告中数值不变并不代表变更对性能没有影响；驱动、L2 和卸载相关的工作根本不会在这里体现。</p>
+</section>
+<section id="visualize-the-results">
+<h3>可视化结果<a class="headerlink" href="#visualize-the-results" title="链接到此标题。"></a></h3>
+<p>传入 <code class="docutils literal notranslate"><span class="pre">--plot</span></code> 可将指标的条形图写入一个自包含的 SVG 文件（无需额外的 Python 依赖）。不带基准时绘制当前值；与 <code class="docutils literal notranslate"><span class="pre">--baseline</span></code> 结合使用时，绘制基准与当前值分组对比的条形图：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">samples/net/zperf/scripts/zperf_regression.py --base-dir .. \</span>
+<span class="go">    --twister-json ../build/zperf_cur/twister.json \</span>
+<span class="go">    --baseline baseline.json --plot throughput.svg</span>
+</pre></div>
+</div>
+<p>当报告中包含多个平台时，平台名称会附加到每个文件名后，因此上例会写出 <code class="file docutils literal notranslate"><span class="pre">throughput-qemu_x86_atom.svg</span></code> 和 <code class="file docutils literal notranslate"><span class="pre">throughput-qemu_x86_64_atom.svg</span></code>。</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 8月 24, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

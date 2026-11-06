@@ -1,0 +1,446 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>多位 SPI 总线 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/hardware/peripherals/mspi.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="系统管理总线（SMBus）" href="smbus.html" />
+    <link rel="prev" title="管理数据输入/输出（MDIO）" href="mdio.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">硬件支持</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../arch/index.html">架构相关指南</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../barriers/index.html">屏障 API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cache/index.html">缓存</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../emulator/index.html">Zephyr 的设备仿真器/模拟器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../emulator/bus_emulators.html">外部总线及总线所连外设的仿真器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../firmware/index.html">固件</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">外设</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="analog.html">模拟</a></li>
+<li class="toctree-l3"><a class="reference internal" href="audio/index.html">音频</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="communication.html">通信</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="can/index.html">控制器局域网（CAN）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="i2c.html">Inter-Integrated Circuit（I2C）总线</a></li>
+<li class="toctree-l4"><a class="reference internal" href="i3c.html">改进型 Inter-Integrated Circuit（I3C）总线</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spi.html">串行外设接口（SPI）总线</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pcie.html">高速外设组件互连总线（PCIe）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="uart.html">通用异步收发器（UART）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="espi.html">增强型串行外设接口（eSPI）总线</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mdio.html">管理数据输入/输出（MDIO）</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">多位 SPI 总线</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#mspi-controller-api">MSPI 控制器 API</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#transceive">收发</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#device-tree">设备树</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#multi-peripheral">多外设</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#configuration-options">配置选项</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#api-reference">API 参考</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="smbus.html">系统管理总线（SMBus）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ipm.html">处理器间邮箱（IPM）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lin.html">局部互联网络（LIN）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mbox.html">多通道处理器间邮箱（MBOX）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="w1.html">1-Wire 总线</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pulse_io.html">脉冲 IO</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="display.html">显示</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gpio_input.html">GPIO 与输入</a></li>
+<li class="toctree-l3"><a class="reference internal" href="memory_storage.html">存储器与存储</a></li>
+<li class="toctree-l3"><a class="reference internal" href="power.html">电源</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sensors.html">传感器</a></li>
+<li class="toctree-l3"><a class="reference internal" href="motion_actuation.html">运动与执行</a></li>
+<li class="toctree-l3"><a class="reference internal" href="system_diagnostics.html">系统与诊断</a></li>
+<li class="toctree-l3"><a class="reference internal" href="timing.html">定时</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../pinctrl/index.html">引脚控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../porting/index.html">移植</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../virtualization/index.html">虚拟化</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">硬件支持</a> &raquo;</li>
+  
+     <li><a href="index.html">外设</a> &raquo;</li>
+  
+     <li><a href="communication.html">通信</a> &raquo;</li>
+  
+  <li>多位 SPI 总线</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="multi-bit-spi-bus">
+<span id="mspi-api"></span><h1>多位 SPI 总线<a class="headerlink" href="#multi-bit-spi-bus" title="链接到此标题。"></a></h1>
+<p>MSPI（多位 SPI，multi-bit SPI）是一套通用 API，用于支持高级 SPI 外设和设备。这类设备通常需要命令、地址和数据阶段，并在这些阶段使用多根信号线。该 API 支持 <a class="reference internal" href="../../glossary.html#term-XIP"><span class="xref std std-term">XIP</span></a> 和加扰等高级功能，同时也兼容通用 SPI。</p>
+<nav class="contents local" id="id1">
+<ul class="simple">
+<li><p><a class="reference internal" href="#mspi-controller-api" id="id3">MSPI 控制器 API</a></p>
+<ul>
+<li><p><a class="reference internal" href="#transceive" id="id4">收发</a></p></li>
+<li><p><a class="reference internal" href="#device-tree" id="id5">设备树</a></p></li>
+<li><p><a class="reference internal" href="#multi-peripheral" id="id6">多外设</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#configuration-options" id="id7">配置选项</a></p></li>
+<li><p><a class="reference internal" href="#api-reference" id="id8">API 参考</a></p></li>
+</ul>
+</nav>
+<section id="mspi-controller-api">
+<span id="id2"></span><h2><a class="toc-backref" href="#id3" role="doc-backlink">MSPI 控制器 API</a><a class="headerlink" href="#mspi-controller-api" title="链接到此标题。"></a></h2>
+<p>当系统中存在多位 SPI 控制器（例如 Ambiq MSPI、QSPI、OSPI、Flexspi 等）时，可以使用 Zephyr 的 MSPI 控制器 API。该 API 支持从单线到十六线的 SDR/DDR IO，支持可变延迟，以及 <a class="reference internal" href="../../glossary.html#term-XIP"><span class="xref std std-term">XIP</span></a> 和加扰等高级功能。适用的设备包括但不限于高速、高密度的 Flash/PSRAM 存储器设备、显示器和传感器。</p>
+<p>MSPI 接口包含两类驱动：SoC 平台特定、实现 MSPI API 的控制器驱动，以及引用这些 API 的设备驱动。控制器驱动与设备驱动之间是多对多关系，便于在不同平台之间切换。</p>
+<p>下面是在设备驱动初始化函数中初始化 MSPI 控制器和 MSPI 总线的通用步骤：</p>
+<ol class="arabic simple">
+<li><p>初始化 MSPI 控制器驱动实例的数据结构。可以使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">DEVICE_DT_INST_DEFINE</span></code> 等常用的设备定义宏，并将初始化函数、配置和数据作为参数传给该宏。</p></li>
+<li><p>初始化硬件，包括但不限于：</p>
+<ul class="simple">
+<li><p>根据硬件自身的能力检查 <code class="xref c c-struct docutils literal notranslate"><span class="pre">mspi_cfg</span></code>，防止错误使用。</p></li>
+<li><p>设置默认的引脚复用。</p></li>
+<li><p>为控制器设置时钟。</p></li>
+<li><p>为硬件上电。</p></li>
+<li><p>使用 <code class="xref c c-struct docutils literal notranslate"><span class="pre">mspi_cfg</span></code> 以及可能的其他平台特定设置配置硬件。</p></li>
+<li><p>通常，<code class="xref c c-struct docutils literal notranslate"><span class="pre">mspi_cfg</span></code> 由设备树填充，包含静态的启动时参数。不过如有需要，也可以在运行时使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">mspi_config()</span></code> 以新参数重新初始化硬件。</p></li>
+<li><p>如适用，释放所有锁。</p></li>
+</ul>
+</li>
+<li><p>执行设备驱动初始化。与往常一样，可以使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">DEVICE_DT_INST_DEFINE</span></code>。在设备驱动初始化函数中执行以下必要步骤。</p>
+<ol class="arabic simple">
+<li><p>使用从设备数据手册获得的设备特定硬件设置调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">mspi_dev_config()</span></code>。</p>
+<ul class="simple">
+<li><p><code class="xref c c-struct docutils literal notranslate"><span class="pre">mspi_dev_cfg</span></code> 应由设备树填充，可以使用辅助宏 <code class="xref c c-macro docutils literal notranslate"><span class="pre">MSPI_DEVICE_CONFIG_DT</span></code>。</p></li>
+<li><p>随后，控制器驱动应验证 <code class="xref c c-struct docutils literal notranslate"><span class="pre">mspi_dev_cfg</span></code> 的各成员，防止错误使用。</p></li>
+<li><p>控制器驱动应实现互斥量，防止意外访问。</p></li>
+<li><p>控制器驱动也可以根据 <code class="xref c c-struct docutils literal notranslate"><span class="pre">mspi_dev_id</span></code> 在不同设备之间切换。</p></li>
+</ul>
+</li>
+<li><p>如果硬件支持，调用 API 进行额外设置：</p>
+<ul class="simple">
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">mspi_memmap_config()</span></code> 用于存储器映射访问（例如 <a class="reference internal" href="../../glossary.html#term-XIP"><span class="xref std std-term">XIP</span></a>）</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">mspi_scramble_config()</span></code> 用于加扰功能</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">mspi_timing_config()</span></code> 用于平台特定的时序设置。</p></li>
+</ul>
+</li>
+<li><p>如有需要，使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">mspi_register_callback()</span></code> 注册回调。</p></li>
+<li><p>释放控制器的互斥锁。</p></li>
+</ol>
+</li>
+</ol>
+<section id="transceive">
+<h3><a class="toc-backref" href="#id4" role="doc-backlink">收发</a><a class="headerlink" href="#transceive" title="链接到此标题。"></a></h3>
+<p>收发请求的类型为 <code class="xref c c-struct docutils literal notranslate"><span class="pre">mspi_xfer</span></code>。在工作模式由 <code class="xref c c-func docutils literal notranslate"><span class="pre">mspi_dev_config()</span></code> 确定并配置之后，可以通过它动态修改与传输相关的设置。</p>
+<p>该 API 还通过 <code class="xref c c-struct docutils literal notranslate"><span class="pre">mspi_xfer_packet</span></code> 支持具有不同起始地址和大小的批量传输。不过，是否支持分散 IO 和回调管理取决于控制器实现。如果回调已通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">mspi_register_callback()</span></code> 注册，控制器可以在每次异步/同步传输完成时，根据 <code class="xref c c-enum docutils literal notranslate"><span class="pre">mspi_bus_event_cb_mask</span></code> 决定触发哪个用户回调；也可以使用 <code class="xref c c-enum docutils literal notranslate"><span class="pre">MSPI_BUS_NO_CB</span></code>，即使已注册回调也不触发任何回调。如果所实现的驱动支持，该 API 支持用 <code class="xref c c-enum docutils literal notranslate"><span class="pre">MSPI_BUS_XFER_COMPLETE_CB</span></code> 通知传输完成，用 <code class="xref c c-enum docutils literal notranslate"><span class="pre">MSPI_BUS_TIMEOUT_CB</span></code> 通知传输或请求超时。如果控制器支持硬件命令队列，并且驱动实现支持分散 IO 和回调管理，用户就可以充分发挥硬件性能。</p>
+</section>
+<section id="device-tree">
+<h3><a class="toc-backref" href="#id5" role="doc-backlink">设备树</a><a class="headerlink" href="#device-tree" title="链接到此标题。"></a></h3>
+<p>下面是在设备树中定义 MSPI 控制器的示例。mspi 控制器的绑定应将 mspi-controller.yaml 作为其基础绑定之一。</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nl">mspi0</span><span class="p">:</span><span class="w"> </span><span class="nf">mspi</span><span class="o">@</span><span class="mi">400</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">         </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"okay"</span><span class="p">;</span>
+<span class="w">         </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"zephyr,mspi-emul-controller"</span><span class="p">;</span>
+
+<span class="w">         </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x400</span><span class="w"> </span><span class="mh">0x4</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">         </span><span class="kr">#address-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">         </span><span class="kr">#size-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x0</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">         </span><span class="n">clock-frequency</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x17d7840</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">         </span><span class="n">op-mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"MSPI_CONTROLLER"</span><span class="p">;</span>
+<span class="w">         </span><span class="n">duplex</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"MSPI_HALF_DUPLEX"</span><span class="p">;</span>
+<span class="w">         </span><span class="n">ce-gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mh">0x5</span><span class="w"> </span><span class="mh">0x1</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">gpio0</span><span class="w"> </span><span class="mh">0x12</span><span class="w"> </span><span class="mh">0x1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">         </span><span class="n">dqs-support</span><span class="p">;</span>
+
+<span class="w">         </span><span class="n">pinctrl-0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">pinmux</span><span class="o">-</span><span class="na">mspi0</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">         </span><span class="n">pinctrl-names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"default"</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>下面是在设备树中定义 MSPI 设备的示例。mspi 设备的绑定应将 mspi-device.yaml 作为其基础绑定之一。</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="nf">mspi0</span><span class="cm"> </span><span class="p">{</span>
+
+<span class="w">         </span><span class="nl">mspi_dev0</span><span class="p">:</span><span class="w"> </span><span class="nf">mspi_dev0</span><span class="o">@</span><span class="mi">0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                  </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"okay"</span><span class="p">;</span>
+<span class="w">                  </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"zephyr,mspi-emul-device"</span><span class="p">;</span>
+
+<span class="w">                  </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x0</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                  </span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x10000</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">                  </span><span class="n">mspi-max-frequency</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x2dc6c00</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                  </span><span class="n">mspi-io-mode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"MSPI_IO_MODE_QUAD"</span><span class="p">;</span>
+<span class="w">                  </span><span class="n">mspi-data-rate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"MSPI_DATA_RATE_SINGLE"</span><span class="p">;</span>
+<span class="w">                  </span><span class="n">mspi-hardware-ce-num</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x0</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                  </span><span class="n">read-instruction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0xb</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                  </span><span class="n">write-instruction</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x2</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                  </span><span class="n">instruction-length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"INSTR_1_BYTE"</span><span class="p">;</span>
+<span class="w">                  </span><span class="n">address-length</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"ADDR_4_BYTE"</span><span class="p">;</span>
+<span class="w">                  </span><span class="n">rx-dummy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x8</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                  </span><span class="n">tx-dummy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x0</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                  </span><span class="n">memmap-config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x0</span><span class="w"> </span><span class="mh">0x0</span><span class="w"> </span><span class="mh">0x0</span><span class="w"> </span><span class="mh">0x0</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                  </span><span class="n">ce-break-config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x0</span><span class="w"> </span><span class="mh">0x0</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">         </span><span class="p">};</span>
+
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>用户应在 DTS 中指定目标工作参数，例如 <code class="docutils literal notranslate"><span class="pre">mspi-max-frequency</span></code>、<code class="docutils literal notranslate"><span class="pre">mspi-io-mode</span></code> 和 <code class="docutils literal notranslate"><span class="pre">mspi-data-rate</span></code>，即使这些参数在运行时可能改变。它们应代表设备在正常工作期间的典型配置。</p>
+</section>
+<section id="multi-peripheral">
+<h3><a class="toc-backref" href="#id6" role="doc-backlink">多外设</a><a class="headerlink" href="#multi-peripheral" title="链接到此标题。"></a></h3>
+<p>由于 <code class="xref c c-struct docutils literal notranslate"><span class="pre">mspi_dev_id</span></code> 定义为来自设备树的设备索引和 CE GPIO 的组合，该 API 支持在同一控制器实例上连接多个设备。控制器驱动实现可以支持也可以不支持设备切换，切换可以由软件或硬件完成。如果由软件处理切换，应在 <code class="xref c c-func docutils literal notranslate"><span class="pre">mspi_dev_config()</span></code> 调用中完成。</p>
+<p>为支持由软件控制的设备切换，设备驱动应通过保存和更新 <code class="xref c c-struct docutils literal notranslate"><span class="pre">mspi_dev_cfg</span></code> 及其他相关 mspi 结构体或私有数据结构，记录设备当前的工作状态。特别是，包含设备身份的 <code class="xref c c-struct docutils literal notranslate"><span class="pre">mspi_dev_id</span></code> 在每次 API 调用中都需要使用。</p>
+</section>
+</section>
+<section id="configuration-options">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">配置选项</a><a class="headerlink" href="#configuration-options" title="链接到此标题。"></a></h2>
+<p>相关配置选项：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_MSPI" title="CONFIG_MSPI"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MSPI</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_MSPI_ASYNC" title="CONFIG_MSPI_ASYNC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MSPI_ASYNC</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_MSPI_PERIPHERAL" title="CONFIG_MSPI_PERIPHERAL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MSPI_PERIPHERAL</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_MSPI_MEMMAP" title="CONFIG_MSPI_MEMMAP"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MSPI_MEMMAP</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_MSPI_SCRAMBLE" title="CONFIG_MSPI_SCRAMBLE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MSPI_SCRAMBLE</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_MSPI_TIMING" title="CONFIG_MSPI_TIMING"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MSPI_TIMING</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_MSPI_INIT_PRIORITY" title="CONFIG_MSPI_INIT_PRIORITY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MSPI_INIT_PRIORITY</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_MSPI_COMPLETION_TIMEOUT_TOLERANCE" title="CONFIG_MSPI_COMPLETION_TIMEOUT_TOLERANCE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MSPI_COMPLETION_TIMEOUT_TOLERANCE</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_MSPI_DMA" title="CONFIG_MSPI_DMA"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MSPI_DMA</span></code></a></p></li>
+</ul>
+</section>
+<section id="api-reference">
+<h2><a class="toc-backref" href="#id8" role="doc-backlink">API 参考</a><a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">mspi_interface</span></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/drivers/mspi/mspi_async/README.html#mspi-async" title="使用 MSPI API 与 MSPI 存储设备进行异步交互。">MSPI asynchronous transfer</a></span><span class="code-sample-description">使用 MSPI API 与 MSPI 存储设备进行异步交互。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/drivers/mspi/mspi_throughput/README.html#mspi-throughput" title="测量不同缓冲区大小和数据包数量下的 MSPI 吞吐量性能。">MSPI throughput performance test</a></span><span class="code-sample-description">测量不同缓冲区大小和数据包数量下的 MSPI 吞吐量性能。</span></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 7月 16, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

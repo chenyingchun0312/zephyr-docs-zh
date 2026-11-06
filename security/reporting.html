@@ -1,0 +1,377 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>信息安全漏洞报告 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/security/reporting.html" />
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../_static/translations.js?v=540d3cec"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="安全编码" href="secure-coding.html" />
+    <link rel="prev" title="Zephyr 信息安全概述" href="security-overview.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../project/index.html">项目与治理</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">信息安全</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="security-overview.html">Zephyr 信息安全概述</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">信息安全漏洞报告</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#introduction">简介</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vulnerability-reporting-guidelines">漏洞报告指南</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#reporting-expectations">报告要求</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#security-issue-management">信息安全问题管理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#vulnerability-notification">漏洞通知</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#backporting-of-security-vulnerabilities">信息安全漏洞的向后移植</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#need-to-know">知情必要原则</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="secure-coding.html">安全编码</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sensor-threat.html">传感器设备威胁模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hardening-tool.html">加固工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="control-flow-integrity.html">控制流完整性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vulnerabilities.html">漏洞</a></li>
+<li class="toctree-l2"><a class="reference internal" href="standards/index.html">信息安全标准与 Zephyr</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="index.html">信息安全</a> &raquo;</li>
+  
+  <li>信息安全漏洞报告</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="security-vulnerability-reporting">
+<span id="reporting"></span><h1>信息安全漏洞报告<a class="headerlink" href="#security-vulnerability-reporting" title="链接到此标题。"></a></h1>
+<section id="introduction">
+<h2>简介<a class="headerlink" href="#introduction" title="链接到此标题。"></a></h2>
+<p>Zephyr 项目中的漏洞最好通过在 Zephyr 仓库的 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/security/advisories">security advisories page</a> 上创建一个 <a class="reference external" href="https://docs.github.com/en/code-security/security-advisories/guidance-on-reporting-and-writing/privately-reporting-a-security-vulnerability#privately-reporting-a-security-vulnerability">security advisory</a> 草稿来报告。也可以通过电子邮件将报告发送至 <a class="reference external" href="mailto:vulnerabilities&#37;&#52;&#48;zephyrproject&#46;org">vulnerabilities<span>&#64;</span>zephyrproject<span>&#46;</span>org</a>，提交给项目信息安全事件响应团队。信息安全响应团队会在 1 周内确认并分析这些报告。</p>
+<p>所有漏洞都通过 GitHub 上 Zephyr 项目的 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/security/advisories">security advisories page</a> 进行跟踪和管理，原始提交者将被授予访问权限，以查看自己报告的问题。</p>
+</section>
+<section id="vulnerability-reporting-guidelines">
+<h2>漏洞报告指南<a class="headerlink" href="#vulnerability-reporting-guidelines" title="链接到此标题。"></a></h2>
+<p>信息安全研究和漏洞报告是对 Zephyr 项目有价值的贡献。为了让这一过程对每个人都安全且富有成效，所有报告及相关活动都必须遵守 Zephyr 项目的 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/main/CODE_OF_CONDUCT.md">Code of Conduct</a>。</p>
+<p>以下指南说明了在研究和报告 Zephyr 中的信息安全漏洞时应遵循的要求。</p>
+<section id="reporting-expectations">
+<h3>报告要求<a class="headerlink" href="#reporting-expectations" title="链接到此标题。"></a></h3>
+<p>为了帮助信息安全响应团队高效地对问题进行分诊和解决，报告应当：</p>
+<ul class="simple">
+<li><p>描述受影响的组件、版本、开发板或平台，以及复现该问题所需的配置。</p></li>
+<li><p>提供清晰的分步复现说明，并尽可能提供一个最小化的概念验证（proof-of-concept）。</p></li>
+<li><p>说明信息安全影响（例如机密性、完整性或可用性的丧失）以及任何已知的缓解措施。</p></li>
+<li><p>避免包含破坏性载荷，或在报告被意外泄露时可能对用户或系统造成危害的组件。</p></li>
+</ul>
+<p>报告者应本着善意，在任何公开披露之前给项目留出合理的机会来调查和修复问题，并遵循以下各节所述的禁止公开期（embargo）和披露流程。</p>
+</section>
+</section>
+<section id="security-issue-management">
+<h2>信息安全问题管理<a class="headerlink" href="#security-issue-management" title="链接到此标题。"></a></h2>
+<p>此缺陷跟踪系统中的问题会按照下图在若干状态之间转换：</p>
+digraph {
+   node [style = rounded];
+   init [shape = point];
+   New [shape = box];
+   Triage [shape = box];
+   {
+     rank = same;
+     rankdir = LR;
+     Assigned [shape = box];
+     Rejected [shape = box];
+   }
+   Review [shape = box];
+   Accepted [shape = box];
+   Public [shape = box];
+
+   init -&gt; New;
+   New -&gt; Triage;
+   Triage -&gt; Rejected [dir = both];
+   Triage -&gt; Assigned;
+   Assigned -&gt; Review [dir = both];
+   Review -&gt; Accepted;
+   Review -&gt; Rejected;
+   Accepted -&gt; Public;
+
+}<ul class="simple">
+<li><p>New（新建）：此状态表示由报告者直接录入的新报告。如果问题是由响应团队根据电子邮件录入的，则应直接转为 Triage 状态。</p></li>
+<li><p>Triage（分诊）：此问题正在等待响应团队分诊。响应团队会分析问题，确定负责方，将问题分配给相应的人员，并将问题转为 Assigned 状态。分诊的一部分工作是设置问题的优先级。</p></li>
+<li><p>Assigned（已分配）：问题已分配，正在等待被分配者修复。</p></li>
+<li><p>Review（审查）：一旦有针对该问题的 Zephyr PR，就会在问题的评论中添加该 PR 的链接，并将问题转为 Review 状态。</p></li>
+<li><p>Accepted（已接受）：表示针对该问题的修复已合并到 Zephyr 的相应分支中。</p></li>
+<li><p>Public（已公开）：禁止公开期已结束。问题将被设为公开可见，相关的 CVE 会被更新，文档中的漏洞页面也会更新以包含详细信息。</p></li>
+</ul>
+<p>由于信息安全报告的敏感性，创建的信息安全公告（security advisory）会保持私有。这些问题只对特定各方可见：</p>
+<ul class="simple">
+<li><p>PSIRT 邮件列表的成员</p></li>
+<li><p>报告者</p></li>
+<li><p>经 Zephyr 信息安全小组委员会（Security Subcommittee）提议并批准的其他人员。一般情况下包括：</p>
+<ul>
+<li><p>负责修复的代码所有者。</p></li>
+<li><p>受此漏洞影响的相关版本的 Zephyr 发布负责人。</p></li>
+</ul>
+</li>
+</ul>
+<p>Zephyr 信息安全小组委员会应在任何出席人数超过三人的会议上审查已报告的漏洞。审查过程中，委员会应确定新问题是否需要设置禁止公开期。</p>
+<p>是否设置禁止公开期的判断依据为：1. 问题的严重程度；2. 问题的可利用性。小组委员会认定不需要禁止公开期的问题，将在常规的 Zephyr 项目缺陷跟踪系统中重新记录。</p>
+<p id="vulnerability-timeline">信息安全敏感漏洞应在最长 90 天的禁止公开期之后公开。其目的是给 Zephyr 项目留出 30 天来修复问题，并给使用 Zephyr 构建产品的外部各方留出 60 天来应用和分发这些修复。</p>
+<p id="vulnerability-fix-recommendations">对代码的修复应通过 Zephyr 项目 GitHub 上的 PR 进行。开发者应尽量不透露所修复内容的敏感性质，并且不得提及已为该问题分配的 CVE 编号。开发者只需描述修复了什么即可。</p>
+<p>信息安全小组委员会将维护禁止公开期内的 CVE 与这些 PR 之间的对应信息（这些信息保存在 GitHub 信息安全公告中），并定期发布信息安全问题状态报告。</p>
+<p>每个被认定为信息安全漏洞的问题都应分配一个 CVE 编号。在制作修复的过程中，可能需要分配更多的 CVE 编号，或撤销已分配的编号。</p>
+</section>
+<section id="vulnerability-notification">
+<h2>漏洞通知<a class="headerlink" href="#vulnerability-notification" title="链接到此标题。"></a></h2>
+<p>每个 Zephyr 版本都应包含一份该版本中已修复 CVE 的报告。由于这些漏洞的敏感性，版本中只应包含已修复 CVE 的列表。禁止公开期结束后，应更新漏洞页面，加入这些漏洞的更多详细信息。漏洞页面应注明报告者的贡献，除非报告者明确要求匿名。</p>
+<p>Zephyr 项目应维护一个漏洞警报（vulnerability-alerts）邮件列表。该列表最初由每个项目成员各提供一名联系人。其他各方可以通过填写 <a class="reference external" href="https://www.zephyrproject.org/vulnerability-registry/">Vulnerability Registry</a> 中的表单申请加入此列表。项目总监将对这些申请方进行审核，以确定他们确有正当理由在禁止公开期内了解信息安全漏洞。</p>
+<p>信息安全小组委员会会定期向此邮件列表发送信息，说明已知的处于禁止公开期的问题及其在项目内的向后移植状态。这些信息旨在让列表成员判断是否需要将这些更改向后移植到他们的内部代码树中。</p>
+<p>问题完成分诊后，将向此列表通报：</p>
+<ul class="simple">
+<li><p>Zephyr 项目信息安全公告链接（GitHub）。</p></li>
+<li><p>分配的 CVE 编号。</p></li>
+<li><p>涉及的子系统。</p></li>
+<li><p>问题的严重程度。</p></li>
+</ul>
+<p>修复该问题的 PR 被接受（合并）后，除上述内容外，还将向此列表通报：</p>
+<ul class="simple">
+<li><p>CVE 编号与修复它的 PR 之间的对应关系。</p></li>
+<li><p>Zephyr 项目内的向后移植计划。</p></li>
+</ul>
+</section>
+<section id="backporting-of-security-vulnerabilities">
+<h2>信息安全漏洞的向后移植<a class="headerlink" href="#backporting-of-security-vulnerabilities" title="链接到此标题。"></a></h2>
+<p>在 Zephyr 中修复的每个信息安全问题都应向后移植到以下版本：</p>
+<ul class="simple">
+<li><p>当前的长期稳定（LTS）版本。</p></li>
+<li><p>最近的两个版本。</p></li>
+</ul>
+<p>修复的开发者应负责所有必要的向后移植，并将其应用到上面列出的各个发布分支，除非该修复不适用（即漏洞是在该版本发布之后引入的）。关于 <a class="reference internal" href="#vulnerability-fix-recommendations"><span class="std std-ref">漏洞修复</span></a> 的所有建议同样适用于向后移植的 PR（及相关问题）。此外，建议开发者私下告知相应的发布经理，该向后移植 PR 和问题是在处理一个漏洞。</p>
+<p>向后移植情况将在信息安全公告中跟踪。</p>
+</section>
+<section id="need-to-know">
+<h2>知情必要原则<a class="headerlink" href="#need-to-know" title="链接到此标题。"></a></h2>
+<p>由于信息安全漏洞的敏感性，重要的是只与有必要知情的各方共享细节和修复。以下各方需要在禁止公开期结束之前了解信息安全漏洞的详细信息：</p>
+<ul class="simple">
+<li><p>维护者只能访问其所负责领域内的全部信息。</p></li>
+<li><p>当前的发布经理，以及受该漏洞影响的历史版本的发布经理（参见上文的向后移植部分）。</p></li>
+<li><p>项目信息安全事件响应团队（PSIRT）可以完全访问所有信息。PSIRT 由白金会员的代表以及来自其他成员、从事分诊工作的志愿者组成。</p></li>
+<li><p>根据需要，可以邀请发布经理和维护者参加额外的信息安全会议来讨论漏洞。</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 6月 19, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

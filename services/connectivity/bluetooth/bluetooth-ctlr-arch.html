@@ -1,0 +1,906 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LE 控制器 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/connectivity/bluetooth/bluetooth-ctlr-arch.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" />
+    <link rel="next" title="应用程序开发" href="bluetooth-dev.html" />
+    <link rel="prev" title="LE Audio 协议栈" href="api/audio/bluetooth-le-audio-arch.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">服务</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">连接</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../networking/index.html">网络</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">Bluetooth</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="features.html">支持的功能</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bluetooth-qual.html">认证</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bluetooth-arch.html">协议栈架构</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bluetooth-le-host.html">LE 主机</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/audio/bluetooth-le-audio-arch.html">LE Audio 协议栈</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/audio/bluetooth-le-audio-arch.html#le-audio-resources">LE Audio 资源</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">LE 控制器</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#overview">概述</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#architecture">架构</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#execution-overview">执行概述</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#architecture-overview">架构概述</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#scheduling">调度</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#ticker">Ticker</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#upper-link-layer-and-lower-link-layer">上层链路层和下层链路层</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#scheduling-variants">调度变体</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#ull-and-lll-timing">ULL 和 LLL 时序</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#event-handling">事件处理</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#scheduling-closely-spaced-events">调度间隔很近的事件</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#aborting-active-event">中止活动事件</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#cancelling-pending-event">取消待处理事件</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#pre-emption-of-active-event">抢占活动事件</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#data-flow">数据流</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#transmit-data-flow">发送数据流</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#receive-data-flow">接收数据流</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#execution-priorities">执行优先级</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#link-layer-control-procedures">链路层控制过程</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#three-main-execution-contexts">三个主要执行上下文</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#data-structures-and-pdu-helpers">数据结构和 PDU 辅助函数</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#llcp-local-and-remote-request-procedure-state-machines">LLCP 本地和远端请求/过程状态机</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#miscellaneous-concepts">其他概念</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#miscellaneous-unit-test-concepts">其他单元测试概念</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#lower-link-layer">下层链路层</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#lll-execution">LLL 执行</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#bare-metal-utilities">裸机工具</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#memory-fifo-and-memory-queue">内存 FIFO 和内存队列</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#mayfly">Mayfly</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#legacy-controller">旧版控制器</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#bluetooth-low-energy-controller-vendor-specific-details">Bluetooth Low Energy 控制器：厂商特定细节</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#hardware-requirements">硬件要求</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="bluetooth-dev.html">应用程序开发</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/index.html">API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bluetooth-tools.html">工具</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bluetooth-shell.html">Shell</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../usb/index.html">USB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../canbus/index.html">控制器局域网（CAN）总线协议</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lora_lorawan/index.html">LoRa 和 LoRaWAN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modbus/index.html">Modbus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modem/index.html">调制解调器模块</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../index.html">连接</a> &raquo;</li>
+  
+     <li><a href="index.html">Bluetooth</a> &raquo;</li>
+  
+  <li>LE 控制器</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="le-controller">
+<span id="bluetooth-ctlr-arch"></span><h1>LE 控制器<a class="headerlink" href="#le-controller" title="链接到此标题。"></a></h1>
+<section id="overview">
+<h2>概述<a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<img alt="../../../_images/ctlr_overview.png" src="../../../_images/ctlr_overview.png" />
+<ol class="arabic simple">
+<li><p>HCI</p>
+<ul class="simple">
+<li><p>主机控制器接口，Bluetooth 标准</p></li>
+<li><p>提供 Zephyr Bluetooth HCI 驱动</p></li>
+</ul>
+</li>
+<li><p>HAL</p>
+<ul class="simple">
+<li><p>硬件抽象层</p></li>
+<li><p>厂商特定实现，以及 Zephyr 驱动的使用</p></li>
+</ul>
+</li>
+<li><p>Ticker</p>
+<ul class="simple">
+<li><p>软实时的无线电/资源调度</p></li>
+</ul>
+</li>
+<li><p>LL_SW</p>
+<ul class="simple">
+<li><p>基于软件的链路层实现</p></li>
+<li><p>状态和角色、控制过程、数据包控制器</p></li>
+</ul>
+</li>
+<li><p>Util</p>
+<ul class="simple">
+<li><p>裸机内存池管理</p></li>
+<li><p>数量可变的队列，无锁使用</p></li>
+<li><p>数量固定的 FIFO，无锁使用</p></li>
+<li><p>基于 Mayfly 概念的延迟 ISR 执行</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="architecture">
+<h2>架构<a class="headerlink" href="#architecture" title="链接到此标题。"></a></h2>
+<section id="execution-overview">
+<h3>执行概述<a class="headerlink" href="#execution-overview" title="链接到此标题。"></a></h3>
+<img alt="../../../_images/ctlr_exec_overview.png" src="../../../_images/ctlr_exec_overview.png" />
+</section>
+<section id="architecture-overview">
+<h3>架构概述<a class="headerlink" href="#architecture-overview" title="链接到此标题。"></a></h3>
+<img alt="../../../_images/ctlr_arch_overview.png" src="../../../_images/ctlr_arch_overview.png" />
+</section>
+</section>
+<section id="scheduling">
+<h2>调度<a class="headerlink" href="#scheduling" title="链接到此标题。"></a></h2>
+<img alt="../../../_images/ctlr_sched.png" src="../../../_images/ctlr_sched.png" />
+<section id="ticker">
+<h3>Ticker<a class="headerlink" href="#ticker" title="链接到此标题。"></a></h3>
+<img alt="../../../_images/ctlr_sched_ticker.png" src="../../../_images/ctlr_sched_ticker.png" />
+</section>
+<section id="upper-link-layer-and-lower-link-layer">
+<h3>上层链路层和下层链路层<a class="headerlink" href="#upper-link-layer-and-lower-link-layer" title="链接到此标题。"></a></h3>
+<img alt="../../../_images/ctlr_sched_ull_lll.png" src="../../../_images/ctlr_sched_ull_lll.png" />
+</section>
+<section id="scheduling-variants">
+<h3>调度变体<a class="headerlink" href="#scheduling-variants" title="链接到此标题。"></a></h3>
+<img alt="../../../_images/ctlr_sched_variant.png" src="../../../_images/ctlr_sched_variant.png" />
+</section>
+<section id="ull-and-lll-timing">
+<h3>ULL 和 LLL 时序<a class="headerlink" href="#ull-and-lll-timing" title="链接到此标题。"></a></h3>
+<img alt="../../../_images/ctlr_sched_ull_lll_timing.png" src="../../../_images/ctlr_sched_ull_lll_timing.png" />
+</section>
+</section>
+<section id="event-handling">
+<h2>事件处理<a class="headerlink" href="#event-handling" title="链接到此标题。"></a></h2>
+<img alt="../../../_images/ctlr_sched_event_handling.png" src="../../../_images/ctlr_sched_event_handling.png" />
+<section id="scheduling-closely-spaced-events">
+<h3>调度间隔很近的事件<a class="headerlink" href="#scheduling-closely-spaced-events" title="链接到此标题。"></a></h3>
+<img alt="../../../_images/ctlr_sched_msc_close_events.png" src="../../../_images/ctlr_sched_msc_close_events.png" />
+</section>
+<section id="aborting-active-event">
+<h3>中止活动事件<a class="headerlink" href="#aborting-active-event" title="链接到此标题。"></a></h3>
+<img alt="../../../_images/ctlr_sched_msc_event_abort.png" src="../../../_images/ctlr_sched_msc_event_abort.png" />
+</section>
+<section id="cancelling-pending-event">
+<h3>取消待处理事件<a class="headerlink" href="#cancelling-pending-event" title="链接到此标题。"></a></h3>
+<img alt="../../../_images/ctlr_sched_msc_event_cancel.png" src="../../../_images/ctlr_sched_msc_event_cancel.png" />
+</section>
+<section id="pre-emption-of-active-event">
+<h3>抢占活动事件<a class="headerlink" href="#pre-emption-of-active-event" title="链接到此标题。"></a></h3>
+<img alt="../../../_images/ctlr_sched_msc_event_preempt.png" src="../../../_images/ctlr_sched_msc_event_preempt.png" />
+</section>
+</section>
+<section id="data-flow">
+<h2>数据流<a class="headerlink" href="#data-flow" title="链接到此标题。"></a></h2>
+<section id="transmit-data-flow">
+<h3>发送数据流<a class="headerlink" href="#transmit-data-flow" title="链接到此标题。"></a></h3>
+<img alt="../../../_images/ctlr_dataflow_tx.png" src="../../../_images/ctlr_dataflow_tx.png" />
+</section>
+<section id="receive-data-flow">
+<h3>接收数据流<a class="headerlink" href="#receive-data-flow" title="链接到此标题。"></a></h3>
+<img alt="../../../_images/ctlr_dataflow_rx.png" src="../../../_images/ctlr_dataflow_rx.png" />
+</section>
+</section>
+<section id="execution-priorities">
+<h2>执行优先级<a class="headerlink" href="#execution-priorities" title="链接到此标题。"></a></h2>
+<img alt="../../../_images/ctlr_exec_prio.png" src="../../../_images/ctlr_exec_prio.png" />
+<ul class="simple">
+<li><p>事件处理（0, 1）&lt; 事件准备（2, 3）&lt; 事件/接收完成（4）&lt; 发送请求（5）&lt; 角色管理（6）&lt; 主机（7）。</p></li>
+<li><p>LLL 是厂商 ISR，ULL 采用 Mayfly ISR 概念，主机是内核线程。</p></li>
+</ul>
+</section>
+<section id="link-layer-control-procedures">
+<h2>链路层控制过程<a class="headerlink" href="#link-layer-control-procedures" title="链接到此标题。"></a></h2>
+<p>下面简要介绍 ULL 中控制过程处理实现的主要概念。</p>
+<section id="three-main-execution-contexts">
+<h3>三个主要执行上下文<a class="headerlink" href="#three-main-execution-contexts" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><dl class="simple">
+<dt>HCI/LLCP API</dt><dd><ul>
+<li><p>其他过程的发起 API</p></li>
+<li><p>来自 ull_llcp.c::ull_cp_&lt;proc&gt;()，用于发起本地过程</p></li>
+<li><p>与正在运行的本地和远端过程交互的接口</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>lll_prepare 上下文，驱动 ull_cp_run()</dt><dd><ul>
+<li><p>LLCP 主状态机入口/节拍驱动（tick'er）</p></li>
+<li><p>来自 ull_peripheral.c/ull_central.c::ticker_cb，经由 ull_conn_llcp()</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>rx_demux 上下文，驱动 ull_cp_tx_ack() 和 ull_cp_rx()</dt><dd><ul>
+<li><p>LLCP 发送确认处理和 PDU 接收</p></li>
+<li><p>来自 ull_conn.c::ull_conn_rx()</p></li>
+<li><p>负责将 PDU 传入正在运行的过程，并可能发起远端过程</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+<section id="data-structures-and-pdu-helpers">
+<h3>数据结构和 PDU 辅助函数<a class="headerlink" href="#data-structures-and-pdu-helpers" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><dl class="simple">
+<dt>struct llcp_struct</dt><dd><ul>
+<li><p>主 LLCP 数据存储</p></li>
+<li><p>定义在 ull_conn_types.h 中，并作为 struct ll_conn 的一部分声明</p></li>
+<li><p>保存本地和远端过程请求队列以及特定于连接的 LLCP 数据</p></li>
+<li><p>基本的连接级抽象</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>struct proc_ctx</dt><dd><ul>
+<li><p>通用过程上下文数据，包含各种过程数据和状态，以及用于排队的 sys_snode_t</p></li>
+<li><p>定义在 ull_llcp_internal.h 中，通过 ull_llcp.c::create_procedure() 声明/实例化</p></li>
+<li><p>还保存 tx_ack 中使用的节点引用以及 rx_node 保留机制</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>struct llcp_mem_pool</dt><dd><ul>
+<li><p>用于实现过程上下文资源的内存池，分别实例化了本地版本和远端版本</p></li>
+<li><p>通过 ull_llcp.c::create_procedure() 使用</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>各种 PDU 处理技巧</dt><dd><ul>
+<li><p>控制 PDU 的编码和解码由 ull_llcp_pdu.c::llcp_pdu_encode/decode_&lt;PDU&gt;() 完成</p></li>
+<li><p>各种 PDU 校验由 ull_llcp.c::pdu_validate_&lt;PDU&gt;() 经由 ull_llcp.c::pdu_is_valid() 处理</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+<section id="llcp-local-and-remote-request-procedure-state-machines">
+<h3>LLCP 本地和远端请求/过程状态机<a class="headerlink" href="#llcp-local-and-remote-request-procedure-state-machines" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><dl class="simple">
+<dt>ull_llcp_local.c</dt><dd><ul>
+<li><p>处理本地发起过程的状态机</p></li>
+<li><p>命名约定：lr _&lt;...&gt; =&gt; 本地请求状态机</p></li>
+<li><p>本地过程队列处理</p></li>
+<li><p>本地 run/rx/tx_ack 分发</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>ull_llcp_remote.c</dt><dd><ul>
+<li><p>上述内容的远端版本</p></li>
+<li><p>命名约定：rr_&lt;...&gt; =&gt; 远端请求状态机</p></li>
+<li><p>还通过 llcp_rx_new() 处理远端过程的发起</p></li>
+<li><p>各种过程冲突处理（在 rr_st_idle() 中）</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>ull_llcp_common/conn_upd/phy/enc/cc/chmu.c</dt><dd><ul>
+<li><p>各个过程的具体实现（较简单的过程集中在 ull_llcp_common.c 中）</p></li>
+<li><p>命名约定：lp_&lt;...&gt; =&gt; 本地发起的过程，rp_&lt;...&gt; =&gt; 远端发起的过程</p></li>
+<li><p>处理过程从发起（可能经过 instant）到完成的流程，以及在适用时通知主机</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+<section id="miscellaneous-concepts">
+<h3>其他概念<a class="headerlink" href="#miscellaneous-concepts" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><dl class="simple">
+<dt>过程冲突处理</dt><dd><ul>
+<li><p>详见 BT 规范中的说明</p></li>
+<li><p>基本上，有些过程可以并行存在，有些则不能。例如，同一时间只能有一个基于 instant 的过程</p></li>
+<li><p>规范规定了冲突发生时如何处理/解决的规则</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>终止处理</dt><dd><ul>
+<li><p>关于如何处理终止，有特定的规则。</p></li>
+<li><p>由于过程上下文存在资源管理，而终止过程必须始终可用，因此将其作为特殊情况处理</p></li>
+<li><p>另请注意，在多种情况下，对端的无效行为会触发连接终止</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>新远端过程处理</dt><dd><ul>
+<li><p>表 new_proc_lut[] 将 LLCP PDU 映射到 llcp_rr_new() 中使用的过程/角色</p></li>
+<li><p>注意：对于任意给定连接，远端过程队列中始终只能有一个远端过程</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>其他细节</dt><dd><ul>
+<li><p>暂停/恢复概念有两种（详见规范）</p></li>
+<li><p>过程执行可以被加密过程暂停</p></li>
+<li><p>数据发送可以被 PHY、DLE 和 ENC 过程暂停</p></li>
+<li><p>RX 节点保留：确保在需要发送通知时无需等待分配 RX 节点</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+<section id="miscellaneous-unit-test-concepts">
+<h3>其他单元测试概念<a class="headerlink" href="#miscellaneous-unit-test-concepts" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><dl class="simple">
+<dt>每个过程都有单独的 ZTEST 单元测试</dt><dd><ul>
+<li><p>zephyr/tests/bluetooth/controller/ctrl_&lt;proc&gt;</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>RX 节点处理采用模拟（mock）实现</dt><dd><ul>
+<li><p>不同的配置由单独的 conf 文件处理（例如参见 ctrl_conn_update）</p></li>
+<li><p>ZTEST(periph_rem_no_param_req, test_conn_update_periph_rem_accept_no_param_req)</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>单元测试中使用 rx_demux/prepare 上下文的仿真版本，仅测试过程的 PDU 流</dt><dd><ul>
+<li><p>event_prepare()/event_done() 辅助函数模拟 LLL 的 prepare/done 流程</p></li>
+<li><p>lt_rx()/lt_tx() 是 rx/tx 的“下层测试器（lower tester）”仿真</p></li>
+<li><p>ut_rx_node() 是通知流处理的“上层测试器（upper tester）”仿真</p></li>
+<li><p>一组用于生成和解析 PDU 的辅助函数，以及各种模拟的 ull_stuff()</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+</section>
+</section>
+<section id="lower-link-layer">
+<h2>下层链路层<a class="headerlink" href="#lower-link-layer" title="链接到此标题。"></a></h2>
+<section id="lll-execution">
+<h3>LLL 执行<a class="headerlink" href="#lll-execution" title="链接到此标题。"></a></h3>
+<img alt="../../../_images/ctlr_exec_lll.png" src="../../../_images/ctlr_exec_lll.png" />
+<section id="lll-resume">
+<h4>LLL 恢复<a class="headerlink" href="#lll-resume" title="链接到此标题。"></a></h4>
+<img alt="../../../_images/ctlr_exec_lll_resume_top.png" src="../../../_images/ctlr_exec_lll_resume_top.png" />
+<img alt="../../../_images/ctlr_exec_lll_resume_bottom.png" src="../../../_images/ctlr_exec_lll_resume_bottom.png" />
+</section>
+</section>
+</section>
+<section id="bare-metal-utilities">
+<h2>裸机工具<a class="headerlink" href="#bare-metal-utilities" title="链接到此标题。"></a></h2>
+<section id="memory-fifo-and-memory-queue">
+<h3>内存 FIFO 和内存队列<a class="headerlink" href="#memory-fifo-and-memory-queue" title="链接到此标题。"></a></h3>
+<img alt="../../../_images/ctlr_mfifo_memq.png" src="../../../_images/ctlr_mfifo_memq.png" />
+</section>
+<section id="mayfly">
+<h3>Mayfly<a class="headerlink" href="#mayfly" title="链接到此标题。"></a></h3>
+<img alt="../../../_images/ctlr_mayfly.png" src="../../../_images/ctlr_mayfly.png" />
+<ul class="simple">
+<li><p>Mayfly 是多实例、可扩展的 ISR 执行上下文</p></li>
+<li><p>Mayfly 之于 ISR，正如工作项之于线程</p></li>
+<li><p>在 ISR 中执行的函数列表</p></li>
+<li><p>执行优先级映射到 IRQ 优先级</p></li>
+<li><p>便于跨执行上下文调度</p></li>
+<li><p>尽快完成后进入空闲（race-to-idle）的执行方式</p></li>
+<li><p>无锁、裸机</p></li>
+</ul>
+</section>
+</section>
+<section id="legacy-controller">
+<h2>旧版控制器<a class="headerlink" href="#legacy-controller" title="链接到此标题。"></a></h2>
+<img alt="../../../_images/ctlr_legacy.png" src="../../../_images/ctlr_legacy.png" />
+</section>
+<section id="bluetooth-low-energy-controller-vendor-specific-details">
+<h2>Bluetooth Low Energy 控制器：厂商特定细节<a class="headerlink" href="#bluetooth-low-energy-controller-vendor-specific-details" title="链接到此标题。"></a></h2>
+<section id="hardware-requirements">
+<h3>硬件要求<a class="headerlink" href="#hardware-requirements" title="链接到此标题。"></a></h3>
+<section id="nordic-semiconductor">
+<h4>Nordic Semiconductor<a class="headerlink" href="#nordic-semiconductor" title="链接到此标题。"></a></h4>
+<p>Nordic Semiconductor 的 Bluetooth Low Energy 控制器实现需要以下硬件外设。</p>
+<table class="docutils align-default" id="id30">
+<caption><span class="caption-text">SoC 外设使用情况</span><a class="headerlink" href="#id30" title="链接到此表格。"></a></caption>
+<colgroup>
+<col style="width: 14.3%" />
+<col style="width: 14.3%" />
+<col style="width: 14.3%" />
+<col style="width: 9.5%" />
+<col style="width: 47.6%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>资源</p></th>
+<th class="head"><p>nRF 外设</p></th>
+<th class="head"><p>实例数</p></th>
+<th class="head"><p>Zephyr 驱动可访问</p></th>
+<th class="head"><p>描述</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>时钟</p></td>
+<td><p>NRF_CLOCK</p></td>
+<td><p>1</p></td>
+<td><p>是</p></td>
+<td><ul class="simple">
+<li><p>低频时钟（LFCLOCK）或睡眠时钟，用于在 Bluetooth 无线电事件之间保持低功耗</p></li>
+<li><p>高频时钟（HFCLOCK）或活动时钟，用于 Bluetooth 无线电事件内的高精度数据包定时，以及按帧间间隔（tIFS）定时进行的基于软件的收发器状态切换</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>RTC <a class="reference internal" href="#a" id="id1"><span>[a]</span></a></p></td>
+<td><p>NRF_RTC0</p></td>
+<td><p>1</p></td>
+<td><p><strong>否</strong></p></td>
+<td><ul class="simple">
+<li><p>使用 2 个捕获/比较寄存器</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>定时器</p></td>
+<td><p>NRF_TIMER0 或 NRF_TIMER4 <a class="footnote-reference brackets" href="#id25" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>，以及 NRF_TIMER1 <a class="footnote-reference brackets" href="#id24" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>0<span class="fn-bracket">]</span></a></p></td>
+<td><p>2 或 1 <a class="footnote-reference brackets" href="#id25" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></p></td>
+<td><p><strong>否</strong></p></td>
+<td><ul class="simple">
+<li><p>2 个实例，分别用于数据包定时和 tIFS 软件切换</p></li>
+<li><p>第一个实例使用 7 个捕获/比较寄存器（3 个必需，1 个可选用于 ISR 性能分析，4 个用于单定时器 tIFS 切换）</p></li>
+<li><p>如果不使用单 tIFS 定时器，第二个实例使用 4 个捕获/比较寄存器。</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>PPI <a class="reference internal" href="#b" id="id5"><span>[b]</span></a></p></td>
+<td><p>NRF_PPI</p></td>
+<td><p>21 个通道（20 个 <a class="footnote-reference brackets" href="#id26" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>），以及 2 个通道组 <a class="footnote-reference brackets" href="#id27" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a></p></td>
+<td><p>是 <a class="footnote-reference brackets" href="#id28" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a></p></td>
+<td><ul class="simple">
+<li><p>用于无线电模式切换以满足 tIFS 时序要求，以及 PA/LNA 控制</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>DPPI <a class="reference internal" href="#c" id="id9"><span>[c]</span></a></p></td>
+<td><p>NRF_DPPI</p></td>
+<td><p>20 个通道，以及 2 个通道组 <a class="footnote-reference brackets" href="#id27" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a></p></td>
+<td><p>是 <a class="footnote-reference brackets" href="#id28" id="id11" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a></p></td>
+<td><ul class="simple">
+<li><p>用于无线电模式切换以满足 tIFS 时序要求，以及 PA/LNA 控制</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>SWI <a class="reference internal" href="#d" id="id12"><span>[d]</span></a></p></td>
+<td><p>NRF_SWI4 和 NRF_SWI5，或 NRF_SWI2 和 NRF_SWI3 <a class="footnote-reference brackets" href="#id29" id="id13" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a></p></td>
+<td><p>2</p></td>
+<td><p><strong>否</strong></p></td>
+<td><ul class="simple">
+<li><p>2 个实例，分别用于下层链路层和上层链路层的低优先级执行上下文</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>无线电</p></td>
+<td><p>NRF_RADIO</p></td>
+<td><p>1</p></td>
+<td><p><strong>否</strong></p></td>
+<td><ul class="simple">
+<li><p>2.4 GHz 无线电收发器，支持多种无线电标准，例如 1 Mbps、2 Mbps 以及 Coded PHY S2/S8 远距离 Bluetooth Low Energy 技术</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>RNG <a class="reference internal" href="#e" id="id14"><span>[e]</span></a></p></td>
+<td><p>NRF_RNG</p></td>
+<td><p>1</p></td>
+<td><p>是</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>ECB <a class="reference internal" href="#f" id="id15"><span>[f]</span></a></p></td>
+<td><p>NRF_ECB</p></td>
+<td><p>1</p></td>
+<td><p><strong>否</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>CBC-CCM <a class="reference internal" href="#g" id="id16"><span>[g]</span></a></p></td>
+<td><p>NRF_CCM</p></td>
+<td><p>1</p></td>
+<td><p><strong>否</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>AAR <a class="reference internal" href="#h" id="id17"><span>[h]</span></a></p></td>
+<td><p>NRF_AAR</p></td>
+<td><p>1</p></td>
+<td><p><strong>否</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>GPIO <a class="reference internal" href="#i" id="id18"><span>[i]</span></a></p></td>
+<td><p>NRF_GPIO</p></td>
+<td><p>2 个 GPIO 引脚，PA 和 LNA 各 1 个</p></td>
+<td><p>是</p></td>
+<td><ul class="simple">
+<li><p>另外还有 10 个调试 GPIO 引脚（可选）</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>GPIOTE <a class="reference internal" href="#j" id="id19"><span>[j]</span></a></p></td>
+<td><p>NRF_GPIOTE</p></td>
+<td><p>1</p></td>
+<td><p>是</p></td>
+<td><ul class="simple">
+<li><p>用于 PA/LNA</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>TEMP <a class="reference internal" href="#k" id="id20"><span>[k]</span></a></p></td>
+<td><p>NRF_TEMP</p></td>
+<td><p>1</p></td>
+<td><p>是</p></td>
+<td><ul class="simple">
+<li><p>用于 RC 振荡源 LFCLOCK 的校准</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p>UART <a class="reference internal" href="#l" id="id21"><span>[l]</span></a></p></td>
+<td><p>NRF_UART0</p></td>
+<td><p>1</p></td>
+<td><p>是</p></td>
+<td><ul class="simple">
+<li><p>用于仅控制器构建中的 HCI 接口</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p>IPC <a class="reference internal" href="#m" id="id22"><span>[m]</span></a></p></td>
+<td><p>NRF_IPC <a class="footnote-reference brackets" href="#id29" id="id23" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a></p></td>
+<td><p>1</p></td>
+<td><p>是</p></td>
+<td><ul class="simple">
+<li><p>用于仅控制器构建中的 HCI 接口</p></li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+<div role="list" class="citation-list">
+<div class="citation" id="a" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">a</a><span class="fn-bracket">]</span></span>
+<p>实时计数器（RTC）</p>
+</div>
+<div class="citation" id="b" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">b</a><span class="fn-bracket">]</span></span>
+<p>可编程外设互连（PPI）</p>
+</div>
+<div class="citation" id="c" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id9">c</a><span class="fn-bracket">]</span></span>
+<p>分布式可编程外设互连（DPPI）</p>
+</div>
+<div class="citation" id="d" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id12">d</a><span class="fn-bracket">]</span></span>
+<p>软件中断（SWI）</p>
+</div>
+<div class="citation" id="e" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id14">e</a><span class="fn-bracket">]</span></span>
+<p>随机数发生器（RNG）</p>
+</div>
+<div class="citation" id="f" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id15">f</a><span class="fn-bracket">]</span></span>
+<p>AES 电子密码本模式加密（ECB）</p>
+</div>
+<div class="citation" id="g" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id16">g</a><span class="fn-bracket">]</span></span>
+<p>密码块链接（CBC）- 计数器模式加密消息认证码（CCM）</p>
+</div>
+<div class="citation" id="h" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id17">h</a><span class="fn-bracket">]</span></span>
+<p>加速地址解析器（AAR）</p>
+</div>
+<div class="citation" id="i" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id18">i</a><span class="fn-bracket">]</span></span>
+<p>通用输入输出（GPIO）</p>
+</div>
+<div class="citation" id="j" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id19">j</a><span class="fn-bracket">]</span></span>
+<p>GPIO 任务和事件（GPIOTE）</p>
+</div>
+<div class="citation" id="k" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id20">k</a><span class="fn-bracket">]</span></span>
+<p>温度传感器（TEMP）</p>
+</div>
+<div class="citation" id="l" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id21">l</a><span class="fn-bracket">]</span></span>
+<p>通用异步收发器（UART）</p>
+</div>
+<div class="citation" id="m" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id22">m</a><span class="fn-bracket">]</span></span>
+<p>进程间通信外设（IPC）</p>
+</div>
+</div>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id24" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">0</a><span class="fn-bracket">]</span></span>
+<p><a class="reference internal" href="../../../kconfig.html#CONFIG_BT_CTLR_TIFS_HW" title="CONFIG_BT_CTLR_TIFS_HW"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_CTLR_TIFS_HW</span></code></a> <code class="docutils literal notranslate"><span class="pre">=n</span></code></p>
+</aside>
+<aside class="footnote brackets" id="id25" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id2">1</a>,<a role="doc-backlink" href="#id4">2</a>)</span>
+<p><a class="reference internal" href="../../../kconfig.html#CONFIG_BT_CTLR_SW_SWITCH_SINGLE_TIMER" title="CONFIG_BT_CTLR_SW_SWITCH_SINGLE_TIMER"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_CTLR_SW_SWITCH_SINGLE_TIMER</span></code></a> <code class="docutils literal notranslate"><span class="pre">=y</span></code></p>
+</aside>
+<aside class="footnote brackets" id="id26" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">2</a><span class="fn-bracket">]</span></span>
+<p>不使用预定义 PPI 通道时</p>
+</aside>
+<aside class="footnote brackets" id="id27" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id7">1</a>,<a role="doc-backlink" href="#id10">2</a>)</span>
+<p>用于基于软件的 tIFS 切换</p>
+</aside>
+<aside class="footnote brackets" id="id28" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id8">1</a>,<a role="doc-backlink" href="#id11">2</a>)</span>
+<p>使用 nRFx 接口的驱动</p>
+</aside>
+<aside class="footnote brackets" id="id29" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id13">1</a>,<a role="doc-backlink" href="#id23">2</a>)</span>
+<p>用于 nRF53x 系列</p>
+</aside>
+</aside>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 4月 15, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

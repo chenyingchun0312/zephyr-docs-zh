@@ -1,0 +1,932 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>文件系统管理 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/tabs.css?v=a5c4661c" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/device_mgmt/smp_groups/smp_group_8.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script src="../../../_static/tabs.js?v=3030b3cb"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" />
+    <link rel="next" title="Shell 管理" href="smp_group_9.html" />
+    <link rel="prev" title="设置（配置）管理组" href="smp_group_3.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">服务</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../connectivity/index.html">连接</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../security.html">安全</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">设备管理</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../mcumgr.html">MCUmgr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../mcumgr_handlers.html">MCUmgr 处理程序</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../mcumgr_callbacks.html">MCUmgr 回调</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../smp_protocol.html">SMP 协议规范</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../smp_protocol.html#frame-the-envelope">帧：封装</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../smp_protocol.html#minimal-response">最小响应</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../smp_protocol.html#specifications-of-management-groups-supported-by-zephyr">Zephyr 所支持管理组的规范</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="smp_group_0.html">默认/操作系统管理组</a></li>
+<li class="toctree-l5"><a class="reference internal" href="smp_group_1.html">应用程序/软件镜像管理组</a></li>
+<li class="toctree-l5"><a class="reference internal" href="smp_group_2.html">统计信息管理</a></li>
+<li class="toctree-l5"><a class="reference internal" href="smp_group_3.html">设置（配置）管理组</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">文件系统管理</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#file-download">文件下载</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#file-upload">文件上传</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#file-status">文件状态</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#file-hash-checksum">文件哈希/校验和</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#supported-file-hash-checksum-types">支持的文件哈希/校验和类型</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#file-close">关闭文件</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="smp_group_9.html">Shell 管理</a></li>
+<li class="toctree-l5"><a class="reference internal" href="smp_group_10.html">枚举管理组</a></li>
+<li class="toctree-l5"><a class="reference internal" href="smp_group_11.html">传输管理组</a></li>
+<li class="toctree-l5"><a class="reference internal" href="smp_group_63.html">Zephyr 管理组</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../smp_transport.html">SMP 传输规范</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dfu.html">设备固件升级</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../ota.html">空中升级（OTA）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../fota_http.html">基于 HTTP 的固件空中升级</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../ec_host_cmd.html">EC 主机命令</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../binary_descriptors/index.html">二进制描述符</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../index.html">设备管理</a> &raquo;</li>
+  
+     <li><a href="../smp_protocol.html">SMP 协议规范</a> &raquo;</li>
+  
+  <li>文件系统管理</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="file-system-management">
+<span id="mcumgr-smp-group-8"></span><h1>文件系统管理<a class="headerlink" href="#file-system-management" title="链接到此标题。"></a></h1>
+<p>文件系统管理组提供的命令用于向设备上传文件和从设备下载文件。</p>
+<p>文件管理组定义了以下命令：</p>
+<table class="docutils align-center">
+<thead>
+<tr class="row-odd"><th class="head"><p><code class="docutils literal notranslate"><span class="pre">Command</span> <span class="pre">ID</span></code></p></th>
+<th class="head"><p>命令描述</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0</span></code></p></td>
+<td><p>文件下载/上传</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">1</span></code></p></td>
+<td><p>文件状态</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">2</span></code></p></td>
+<td><p>文件哈希/校验和</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">3</span></code></p></td>
+<td><p>支持的文件哈希/校验和类型</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">4</span></code></p></td>
+<td><p>关闭文件</p></td>
+</tr>
+</tbody>
+</table>
+<section id="file-download">
+<h2>文件下载<a class="headerlink" href="#file-download" title="链接到此标题。"></a></h2>
+<p>该命令用于从目标设备的指定路径下载现有文件的内容。客户端应用程序必须跟踪已下载的数据及其在文件中的位置（MCUmgr 也会缓存这些信息），并发出后续请求（使用修改后的偏移量）来获取整个文件。请求中不携带所请求数据块的大小，大小由应用程序自身决定。注意，文件句柄在连续的请求之间会保持打开状态（只要未达到空闲超时，并且没有其他传输使用 fs_mgmt 上传/下载文件），但在下载会话期间，文件并不由 MCUmgr 独占，可能会在请求之间发生变化，甚至被删除。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>默认情况下，所有文件上传/下载请求都会被无条件允许。但如果启用了 Kconfig 选项 <a class="reference internal" href="../../../kconfig.html#CONFIG_MCUMGR_GRP_FS_FILE_ACCESS_HOOK" title="CONFIG_MCUMGR_GRP_FS_FILE_ACCESS_HOOK"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MCUMGR_GRP_FS_FILE_ACCESS_HOOK</span></code></a>，应用程序就可以为 <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">MGMT_EVT_OP_FS_MGMT_FILE_ACCESS</span></code> 注册回调处理程序（参见 <a class="reference internal" href="../mcumgr_callbacks.html#mcumgr-callbacks"><span class="std std-ref">MCUmgr 回调</span></a>），从而允许或拒绝对特定文件的读/写访问，或者改写客户端提供的路径。</p>
+</div>
+<section id="file-download-request">
+<h3>文件下载请求<a class="headerlink" href="#file-download-request" title="链接到此标题。"></a></h3>
+<p>文件下载请求头部：</p>
+<table class="docutils align-center">
+<thead>
+<tr class="row-odd"><th class="head"><p><code class="docutils literal notranslate"><span class="pre">OP</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">Group</span> <span class="pre">ID</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">Command</span> <span class="pre">ID</span></code></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">8</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">0</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>请求的 CBOR 数据：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+    (str)"off" :  (uint)
+    (str)"name" : (str)
+}
+</pre></div>
+</div>
+<p>其中：</p>
+<table class="docutils align-center">
+<tbody>
+<tr class="row-odd"><td><p>&quot;off&quot;</p></td>
+<td><p>开始下载的偏移量</p></td>
+</tr>
+<tr class="row-even"><td><p>&quot;name&quot;</p></td>
+<td><p>文件的绝对路径</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="file-download-response">
+<h3>文件下载响应<a class="headerlink" href="#file-download-response" title="链接到此标题。"></a></h3>
+<p>文件下载响应头部：</p>
+<table class="docutils align-center">
+<thead>
+<tr class="row-odd"><th class="head"><p><code class="docutils literal notranslate"><span class="pre">OP</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">Group</span> <span class="pre">ID</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">Command</span> <span class="pre">ID</span></code></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">1</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">8</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">0</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>成功响应的 CBOR 数据：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+    (str)"off"      : (uint)
+    (str)"data"     : (byte str)
+    (str,opt)"len"  : (uint)
+}
+</pre></div>
+</div>
+<p>出错时，CBOR 数据采用以下形式：</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-U01QIHZlcnNpb24gMg==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-0-U01QIHZlcnNpb24gMg==" name="U01QIHZlcnNpb24gMg==" role="tab" tabindex="0">SMP version 2</button><button aria-controls="panel-0-U01QIHZlcnNpb24gMSAoYW5kIG5vbi1ncm91cCBTTVAgdmVyc2lvbiAyKQ==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-U01QIHZlcnNpb24gMSAoYW5kIG5vbi1ncm91cCBTTVAgdmVyc2lvbiAyKQ==" name="U01QIHZlcnNpb24gMSAoYW5kIG5vbi1ncm91cCBTTVAgdmVyc2lvbiAyKQ==" role="tab" tabindex="-1">SMP version 1 (and non-group SMP version 2)</button></div><div aria-labelledby="tab-0-U01QIHZlcnNpb24gMg==" class="sphinx-tabs-panel group-tab" id="panel-0-U01QIHZlcnNpb24gMg==" name="U01QIHZlcnNpb24gMg==" role="tabpanel" tabindex="0"><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+    (str)"err" : {
+        (str)"group"    : (uint)
+        (str)"rc"       : (uint)
+    }
+}
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-U01QIHZlcnNpb24gMSAoYW5kIG5vbi1ncm91cCBTTVAgdmVyc2lvbiAyKQ==" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-U01QIHZlcnNpb24gMSAoYW5kIG5vbi1ncm91cCBTTVAgdmVyc2lvbiAyKQ==" name="U01QIHZlcnNpb24gMSAoYW5kIG5vbi1ncm91cCBTTVAgdmVyc2lvbiAyKQ==" role="tabpanel" tabindex="0"><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+    (str)"rc"       : (int)
+}
+</pre></div>
+</div>
+</div></div>
+<p>其中：</p>
+<table class="docutils align-center">
+<tbody>
+<tr class="row-odd"><td><p>&quot;off&quot;</p></td>
+<td><p>该响应所对应的偏移量。</p></td>
+</tr>
+<tr class="row-even"><td><p>&quot;data&quot;</p></td>
+<td><p>从文件中读取的数据块；它是嵌入了大小信息的 CBOR 编码字节流；&quot;data&quot; 只出现在 &quot;rc&quot; 为 0 的响应中。</p></td>
+</tr>
+<tr class="row-odd"><td><p>&quot;len&quot;</p></td>
+<td><p>文件的长度，该字段仅在 &quot;off&quot; 为 0 时是必需的。</p></td>
+</tr>
+<tr class="row-even"><td><p>&quot;err&quot; -&gt; &quot;group&quot;</p></td>
+<td><p>基于组的错误码所属的 <code class="xref c c-enum docutils literal notranslate"><span class="pre">mcumgr_group_t</span></code> 组。仅在使用 SMP 版本 2 且返回错误时出现。</p></td>
+</tr>
+<tr class="row-odd"><td><p>&quot;err&quot; -&gt; &quot;rc&quot;</p></td>
+<td><p>包含基于组的错误码的索引。仅在使用 SMP 版本 2 且该值非零（出错）时出现。</p></td>
+</tr>
+<tr class="row-even"><td><p>&quot;rc&quot;</p></td>
+<td><p><code class="xref c c-enum docutils literal notranslate"><span class="pre">mcumgr_err_t</span></code>，仅在使用 SMP 版本 1 且该值非零（出错）时，或在使用 SMP 版本 2 时出现 SMP 错误的情况下出现。</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="file-upload">
+<h2>文件上传<a class="headerlink" href="#file-upload" title="链接到此标题。"></a></h2>
+<p>用于将文件上传到指定位置。如果指定路径上已存在文件，该命令会自动覆盖它；如果不存在，则创建新文件。该协议支持无状态上传，每个请求携带文件的不同数据块，由客户端负责跟踪上传进度。</p>
+<p>注意，文件句柄在连续的请求之间会保持打开状态（只要未达到空闲超时），但在下载会话期间，文件并不由 MCUmgr 独占，可能会在请求之间发生变化，甚至被删除。注意，文件句柄在连续的请求之间会保持打开状态（只要未达到空闲超时，并且没有其他传输使用 fs_mgmt 上传/下载文件），但在下载会话期间，文件并不由 MCUmgr 独占，可能会在请求之间发生变化，甚至被删除。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>奇怪的是，当前的 Zephyr 实现是半无状态的，因为它能够保存一个上传上下文，记录正在进行的上传的信息，其中只包括一个表示上传正在进行的布尔标志、最后成功上传的偏移量以及总长度。</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>默认情况下，所有文件上传/下载请求都会被无条件允许。但如果启用了 Kconfig 选项 <a class="reference internal" href="../../../kconfig.html#CONFIG_MCUMGR_GRP_FS_FILE_ACCESS_HOOK" title="CONFIG_MCUMGR_GRP_FS_FILE_ACCESS_HOOK"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MCUMGR_GRP_FS_FILE_ACCESS_HOOK</span></code></a>，应用程序就可以为 <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">MGMT_EVT_OP_FS_MGMT_FILE_ACCESS</span></code> 注册回调处理程序（参见 <a class="reference internal" href="../mcumgr_callbacks.html#mcumgr-callbacks"><span class="std std-ref">MCUmgr 回调</span></a>），从而允许或拒绝对特定文件的读/写访问，或者改写客户端提供的路径。</p>
+</div>
+<section id="file-upload-request">
+<h3>文件上传请求<a class="headerlink" href="#file-upload-request" title="链接到此标题。"></a></h3>
+<p>文件上传请求头部：</p>
+<table class="docutils align-center">
+<thead>
+<tr class="row-odd"><th class="head"><p><code class="docutils literal notranslate"><span class="pre">OP</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">Group</span> <span class="pre">ID</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">Command</span> <span class="pre">ID</span></code></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">2</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">8</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">0</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>请求的 CBOR 数据：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+    (str)"off"      : (uint)
+    (str)"data"     : (str)
+    (str)"name"     : (str)
+    (str,opt)"len"  : (uint)
+}
+</pre></div>
+</div>
+<p>其中：</p>
+<table class="docutils align-center">
+<tbody>
+<tr class="row-odd"><td><p>&quot;off&quot;</p></td>
+<td><p>开始/继续上传的偏移量。</p></td>
+</tr>
+<tr class="row-even"><td><p>&quot;data&quot;</p></td>
+<td><p>要写入文件的数据块；它采用 CBOR 编码，并嵌入了长度信息。</p></td>
+</tr>
+<tr class="row-odd"><td><p>&quot;name&quot;</p></td>
+<td><p>文件的绝对路径。</p></td>
+</tr>
+<tr class="row-even"><td><p>&quot;len&quot;</p></td>
+<td><p>文件的长度，该字段仅在 &quot;off&quot; 为 0 时是必需的。</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="file-upload-response">
+<h3>文件上传响应<a class="headerlink" href="#file-upload-response" title="链接到此标题。"></a></h3>
+<p>文件上传响应头部：</p>
+<table class="docutils align-center">
+<thead>
+<tr class="row-odd"><th class="head"><p><code class="docutils literal notranslate"><span class="pre">OP</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">Group</span> <span class="pre">ID</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">Command</span> <span class="pre">ID</span></code></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">3</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">8</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">0</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>成功响应的 CBOR 数据：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+    (str)"off"      : (uint)
+}
+</pre></div>
+</div>
+<p>出错时，CBOR 数据采用以下形式：</p>
+<p>其中：</p>
+<table class="docutils align-center">
+<tbody>
+<tr class="row-odd"><td><p>&quot;off&quot;</p></td>
+<td><p>最后成功写入数据的偏移量。</p></td>
+</tr>
+<tr class="row-even"><td><p>&quot;err&quot; -&gt; &quot;group&quot;</p></td>
+<td><p>基于组的错误码所属的 <code class="xref c c-enum docutils literal notranslate"><span class="pre">mcumgr_group_t</span></code> 组。仅在使用 SMP 版本 2 且返回错误时出现。</p></td>
+</tr>
+<tr class="row-odd"><td><p>&quot;err&quot; -&gt; &quot;rc&quot;</p></td>
+<td><p>包含基于组的错误码的索引。仅在使用 SMP 版本 2 且该值非零（出错）时出现。</p></td>
+</tr>
+<tr class="row-even"><td><p>&quot;rc&quot;</p></td>
+<td><p><code class="xref c c-enum docutils literal notranslate"><span class="pre">mcumgr_err_t</span></code>，仅在使用 SMP 版本 1 且该值非零（出错）时，或在使用 SMP 版本 2 时出现 SMP 错误的情况下出现。</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="file-status">
+<h2>文件状态<a class="headerlink" href="#file-status" title="链接到此标题。"></a></h2>
+<p>该命令用于从目标设备的指定路径获取现有文件的状态。</p>
+<section id="file-status-request">
+<h3>文件状态请求<a class="headerlink" href="#file-status-request" title="链接到此标题。"></a></h3>
+<p>文件状态请求头部：</p>
+<table class="docutils align-center">
+<thead>
+<tr class="row-odd"><th class="head"><p><code class="docutils literal notranslate"><span class="pre">OP</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">Group</span> <span class="pre">ID</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">Command</span> <span class="pre">ID</span></code></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">8</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">1</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>请求的 CBOR 数据：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+    (str)"name" : (str)
+}
+</pre></div>
+</div>
+<p>其中：</p>
+<table class="docutils align-center">
+<tbody>
+<tr class="row-odd"><td><p>&quot;name&quot;</p></td>
+<td><p>文件的绝对路径。</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="file-status-response">
+<h3>文件状态响应<a class="headerlink" href="#file-status-response" title="链接到此标题。"></a></h3>
+<p>文件状态响应头部：</p>
+<table class="docutils align-center">
+<thead>
+<tr class="row-odd"><th class="head"><p><code class="docutils literal notranslate"><span class="pre">OP</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">Group</span> <span class="pre">ID</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">Command</span> <span class="pre">ID</span></code></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">1</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">8</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">1</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>成功响应的 CBOR 数据：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+    (str)"len"      : (uint)
+}
+</pre></div>
+</div>
+<p>出错时，CBOR 数据采用以下形式：</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-U01QIHZlcnNpb24gMg==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-1-U01QIHZlcnNpb24gMg==" name="U01QIHZlcnNpb24gMg==" role="tab" tabindex="0">SMP version 2</button><button aria-controls="panel-1-U01QIHZlcnNpb24gMSAoYW5kIG5vbi1ncm91cCBTTVAgdmVyc2lvbiAyKQ==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-1-U01QIHZlcnNpb24gMSAoYW5kIG5vbi1ncm91cCBTTVAgdmVyc2lvbiAyKQ==" name="U01QIHZlcnNpb24gMSAoYW5kIG5vbi1ncm91cCBTTVAgdmVyc2lvbiAyKQ==" role="tab" tabindex="-1">SMP version 1 (and non-group SMP version 2)</button></div><div aria-labelledby="tab-1-U01QIHZlcnNpb24gMg==" class="sphinx-tabs-panel group-tab" id="panel-1-U01QIHZlcnNpb24gMg==" name="U01QIHZlcnNpb24gMg==" role="tabpanel" tabindex="0"><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+    (str)"err" : {
+        (str)"group"    : (uint)
+        (str)"rc"       : (uint)
+    }
+}
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-1-U01QIHZlcnNpb24gMSAoYW5kIG5vbi1ncm91cCBTTVAgdmVyc2lvbiAyKQ==" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-1-U01QIHZlcnNpb24gMSAoYW5kIG5vbi1ncm91cCBTTVAgdmVyc2lvbiAyKQ==" name="U01QIHZlcnNpb24gMSAoYW5kIG5vbi1ncm91cCBTTVAgdmVyc2lvbiAyKQ==" role="tabpanel" tabindex="0"><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+    (str)"rc"       : (int)
+}
+</pre></div>
+</div>
+</div></div>
+<p>其中：</p>
+<table class="docutils align-center">
+<tbody>
+<tr class="row-odd"><td><p>&quot;len&quot;</p></td>
+<td><p>文件的长度（以字节为单位）。</p></td>
+</tr>
+<tr class="row-even"><td><p>&quot;err&quot; -&gt; &quot;group&quot;</p></td>
+<td><p>基于组的错误码所属的 <code class="xref c c-enum docutils literal notranslate"><span class="pre">mcumgr_group_t</span></code> 组。仅在使用 SMP 版本 2 且返回错误时出现。</p></td>
+</tr>
+<tr class="row-odd"><td><p>&quot;err&quot; -&gt; &quot;rc&quot;</p></td>
+<td><p>包含基于组的错误码的索引。仅在使用 SMP 版本 2 且该值非零（出错）时出现。</p></td>
+</tr>
+<tr class="row-even"><td><p>&quot;rc&quot;</p></td>
+<td><p><code class="xref c c-enum docutils literal notranslate"><span class="pre">mcumgr_err_t</span></code>，仅在使用 SMP 版本 1 且该值非零（出错）时，或在使用 SMP 版本 2 时出现 SMP 错误的情况下出现。</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="file-hash-checksum">
+<h2>文件哈希/校验和<a class="headerlink" href="#file-hash-checksum" title="链接到此标题。"></a></h2>
+<p>该命令用于为目标设备上指定路径的现有文件生成哈希/校验和。注意，此功能需要内核堆内存来分配缓冲区，并且生成输出哈希/校验和需要较大的栈内存缓冲区。基本功能需要启用 <a class="reference internal" href="../../../kconfig.html#CONFIG_MCUMGR_GRP_FS_CHECKSUM_HASH" title="CONFIG_MCUMGR_GRP_FS_CHECKSUM_HASH"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MCUMGR_GRP_FS_CHECKSUM_HASH</span></code></a>，所支持的哈希/校验和需要通过 <a class="reference internal" href="../../../kconfig.html#CONFIG_MCUMGR_GRP_FS_CHECKSUM_IEEE_CRC32" title="CONFIG_MCUMGR_GRP_FS_CHECKSUM_IEEE_CRC32"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MCUMGR_GRP_FS_CHECKSUM_IEEE_CRC32</span></code></a> 或 <a class="reference internal" href="../../../kconfig.html#CONFIG_MCUMGR_GRP_FS_HASH_SHA256" title="CONFIG_MCUMGR_GRP_FS_HASH_SHA256"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MCUMGR_GRP_FS_HASH_SHA256</span></code></a> 选择启用。</p>
+<section id="file-hash-checksum-request">
+<h3>文件哈希/校验和请求<a class="headerlink" href="#file-hash-checksum-request" title="链接到此标题。"></a></h3>
+<p>文件哈希/校验和请求头部：</p>
+<table class="docutils align-center">
+<thead>
+<tr class="row-odd"><th class="head"><p><code class="docutils literal notranslate"><span class="pre">OP</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">Group</span> <span class="pre">ID</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">Command</span> <span class="pre">ID</span></code></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">8</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">2</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>请求的 CBOR 数据：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+    (str)"name"     : (str)
+    (str,opt)"type" : (str)
+    (str,opt)"off"  : (uint)
+    (str,opt)"len"  : (uint)
+}
+</pre></div>
+</div>
+<p>其中：</p>
+<table class="docutils align-center">
+<tbody>
+<tr class="row-odd"><td><p>&quot;name&quot;</p></td>
+<td><p>文件的绝对路径。</p></td>
+</tr>
+<tr class="row-even"><td><p>&quot;type&quot;</p></td>
+<td><p>要执行的哈希/校验和类型（参见 <a class="reference internal" href="#mcumgr-group-8-hash-checksum-types"><span class="std std-ref">哈希/校验和类型</span></a>），省略时使用默认类型。</p></td>
+</tr>
+<tr class="row-odd"><td><p>&quot;off&quot;</p></td>
+<td><p>开始计算哈希/校验和的偏移量（可选，未提供时为 0）。</p></td>
+</tr>
+<tr class="row-even"><td><p>&quot;len&quot;</p></td>
+<td><p>为生成哈希/校验和而从文件中读取的数据的最大长度（可选，未提供时为整个文件大小）。</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="hash-checksum-types">
+<span id="mcumgr-group-8-hash-checksum-types"></span><h3>哈希/校验和类型<a class="headerlink" href="#hash-checksum-types" title="链接到此标题。"></a></h3>
+<table class="docutils align-center">
+<thead>
+<tr class="row-odd"><th class="head"><p>字符串名称</p></th>
+<th class="head"><p>哈希/校验和</p></th>
+<th class="head"><p>字节字符串</p></th>
+<th class="head"><p>大小（字节）</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">crc32</span></code></p></td>
+<td><p>IEEE CRC32 校验和</p></td>
+<td><p>否</p></td>
+<td><p>4</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sha256</span></code></p></td>
+<td><p>SHA256（安全哈希算法）</p></td>
+<td><p>是</p></td>
+<td><p>32</p></td>
+</tr>
+</tbody>
+</table>
+<p>注意，如果启用了 crc32，默认类型为 crc32；如果未启用 crc32，则为 sha256。</p>
+</section>
+<section id="file-hash-checksum-response">
+<h3>文件哈希/校验和响应<a class="headerlink" href="#file-hash-checksum-response" title="链接到此标题。"></a></h3>
+<p>文件哈希/校验和响应头部：</p>
+<table class="docutils align-center">
+<thead>
+<tr class="row-odd"><th class="head"><p><code class="docutils literal notranslate"><span class="pre">OP</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">Group</span> <span class="pre">ID</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">Command</span> <span class="pre">ID</span></code></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">1</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">8</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">2</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>成功响应的 CBOR 数据：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+    (str)"type"     : (str)
+    (str,opt)"off"  : (uint)
+    (str)"len"      : (uint)
+    (str)"output"   : (uint or bstr)
+}
+</pre></div>
+</div>
+<p>出错时，CBOR 数据采用以下形式：</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-2-U01QIHZlcnNpb24gMg==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-2-U01QIHZlcnNpb24gMg==" name="U01QIHZlcnNpb24gMg==" role="tab" tabindex="0">SMP version 2</button><button aria-controls="panel-2-U01QIHZlcnNpb24gMSAoYW5kIG5vbi1ncm91cCBTTVAgdmVyc2lvbiAyKQ==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-2-U01QIHZlcnNpb24gMSAoYW5kIG5vbi1ncm91cCBTTVAgdmVyc2lvbiAyKQ==" name="U01QIHZlcnNpb24gMSAoYW5kIG5vbi1ncm91cCBTTVAgdmVyc2lvbiAyKQ==" role="tab" tabindex="-1">SMP version 1 (and non-group SMP version 2)</button></div><div aria-labelledby="tab-2-U01QIHZlcnNpb24gMg==" class="sphinx-tabs-panel group-tab" id="panel-2-U01QIHZlcnNpb24gMg==" name="U01QIHZlcnNpb24gMg==" role="tabpanel" tabindex="0"><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+    (str)"err" : {
+        (str)"group"    : (uint)
+        (str)"rc"       : (uint)
+    }
+}
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-2-U01QIHZlcnNpb24gMSAoYW5kIG5vbi1ncm91cCBTTVAgdmVyc2lvbiAyKQ==" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-2-U01QIHZlcnNpb24gMSAoYW5kIG5vbi1ncm91cCBTTVAgdmVyc2lvbiAyKQ==" name="U01QIHZlcnNpb24gMSAoYW5kIG5vbi1ncm91cCBTTVAgdmVyc2lvbiAyKQ==" role="tabpanel" tabindex="0"><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+    (str)"rc"       : (int)
+}
+</pre></div>
+</div>
+</div></div>
+<p>其中：</p>
+<table class="docutils align-center">
+<tbody>
+<tr class="row-odd"><td><p>&quot;type&quot;</p></td>
+<td><p>所执行的哈希/校验和类型（参见 <a class="reference internal" href="#mcumgr-group-8-hash-checksum-types"><span class="std std-ref">哈希/校验和类型</span></a>）。</p></td>
+</tr>
+<tr class="row-even"><td><p>&quot;off&quot;</p></td>
+<td><p>开始计算哈希/校验和的偏移量（仅在不为 0 时出现）。</p></td>
+</tr>
+<tr class="row-odd"><td><p>&quot;len&quot;</p></td>
+<td><p>用于生成哈希/校验和的输入数据长度（以字节为单位）。</p></td>
+</tr>
+<tr class="row-even"><td><p>&quot;output&quot;</p></td>
+<td><p>输出的哈希/校验和。</p></td>
+</tr>
+<tr class="row-odd"><td><p>&quot;err&quot; -&gt; &quot;group&quot;</p></td>
+<td><p>基于组的错误码所属的 <code class="xref c c-enum docutils literal notranslate"><span class="pre">mcumgr_group_t</span></code> 组。仅在使用 SMP 版本 2 且返回错误时出现。</p></td>
+</tr>
+<tr class="row-even"><td><p>&quot;err&quot; -&gt; &quot;rc&quot;</p></td>
+<td><p>包含基于组的错误码的索引。仅在使用 SMP 版本 2 且该值非零（出错）时出现。</p></td>
+</tr>
+<tr class="row-odd"><td><p>&quot;rc&quot;</p></td>
+<td><p><code class="xref c c-enum docutils literal notranslate"><span class="pre">mcumgr_err_t</span></code>，仅在使用 SMP 版本 1 且该值非零（出错）时，或在使用 SMP 版本 2 时出现 SMP 错误的情况下出现。</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="supported-file-hash-checksum-types">
+<h2>支持的文件哈希/校验和类型<a class="headerlink" href="#supported-file-hash-checksum-types" title="链接到此标题。"></a></h2>
+<p>该命令用于列出设备上可用的哈希和校验和类型。需要启用 Kconfig 选项 <a class="reference internal" href="../../../kconfig.html#CONFIG_MCUMGR_GRP_FS_CHECKSUM_HASH_SUPPORTED_CMD" title="CONFIG_MCUMGR_GRP_FS_CHECKSUM_HASH_SUPPORTED_CMD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MCUMGR_GRP_FS_CHECKSUM_HASH_SUPPORTED_CMD</span></code></a>。</p>
+<section id="supported-file-hash-checksum-types-request">
+<h3>支持的文件哈希/校验和类型请求<a class="headerlink" href="#supported-file-hash-checksum-types-request" title="链接到此标题。"></a></h3>
+<p>支持的文件哈希/校验和类型请求头部：</p>
+<table class="docutils align-center">
+<thead>
+<tr class="row-odd"><th class="head"><p><code class="docutils literal notranslate"><span class="pre">OP</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">Group</span> <span class="pre">ID</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">Command</span> <span class="pre">ID</span></code></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">0</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">8</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">3</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>该命令发送一个空的 CBOR 映射作为数据。</p>
+</section>
+<section id="supported-file-hash-checksum-types-response">
+<h3>支持的文件哈希/校验和类型响应<a class="headerlink" href="#supported-file-hash-checksum-types-response" title="链接到此标题。"></a></h3>
+<p>支持的文件哈希/校验和类型响应头部：</p>
+<table class="docutils align-center">
+<thead>
+<tr class="row-odd"><th class="head"><p><code class="docutils literal notranslate"><span class="pre">OP</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">Group</span> <span class="pre">ID</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">Command</span> <span class="pre">ID</span></code></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">1</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">8</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">3</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>成功响应的 CBOR 数据：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+    (str)"types" : {
+        (str)&lt;hash_checksum_name&gt; : {
+            (str)"format"       : (uint)
+            (str)"size"         : (uint)
+        }
+        ...
+    }
+}
+</pre></div>
+</div>
+<p>出错时，CBOR 数据采用以下形式：</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-3-U01QIHZlcnNpb24gMg==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-3-U01QIHZlcnNpb24gMg==" name="U01QIHZlcnNpb24gMg==" role="tab" tabindex="0">SMP version 2</button><button aria-controls="panel-3-U01QIHZlcnNpb24gMSAoYW5kIG5vbi1ncm91cCBTTVAgdmVyc2lvbiAyKQ==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-3-U01QIHZlcnNpb24gMSAoYW5kIG5vbi1ncm91cCBTTVAgdmVyc2lvbiAyKQ==" name="U01QIHZlcnNpb24gMSAoYW5kIG5vbi1ncm91cCBTTVAgdmVyc2lvbiAyKQ==" role="tab" tabindex="-1">SMP version 1 (and non-group SMP version 2)</button></div><div aria-labelledby="tab-3-U01QIHZlcnNpb24gMg==" class="sphinx-tabs-panel group-tab" id="panel-3-U01QIHZlcnNpb24gMg==" name="U01QIHZlcnNpb24gMg==" role="tabpanel" tabindex="0"><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+    (str)"err" : {
+        (str)"group"    : (uint)
+        (str)"rc"       : (uint)
+    }
+}
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-3-U01QIHZlcnNpb24gMSAoYW5kIG5vbi1ncm91cCBTTVAgdmVyc2lvbiAyKQ==" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-3-U01QIHZlcnNpb24gMSAoYW5kIG5vbi1ncm91cCBTTVAgdmVyc2lvbiAyKQ==" name="U01QIHZlcnNpb24gMSAoYW5kIG5vbi1ncm91cCBTTVAgdmVyc2lvbiAyKQ==" role="tabpanel" tabindex="0"><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+    (str)"rc"       : (int)
+}
+</pre></div>
+</div>
+</div></div>
+<p>其中：</p>
+<table class="docutils align-center">
+<tbody>
+<tr class="row-odd"><td><p>&lt;hash_checksum_name&gt;</p></td>
+<td><p>哈希/校验和类型的名称（参见 <a class="reference internal" href="#mcumgr-group-8-hash-checksum-types"><span class="std std-ref">哈希/校验和类型</span></a>）。</p></td>
+</tr>
+<tr class="row-even"><td><p>&quot;format&quot;</p></td>
+<td><p>哈希/校验和的返回格式，0 表示数值，1 表示字节数组。</p></td>
+</tr>
+<tr class="row-odd"><td><p>&quot;size&quot;</p></td>
+<td><p>输出的哈希/校验和响应的大小（以字节为单位）。</p></td>
+</tr>
+<tr class="row-even"><td><p>&quot;err&quot; -&gt; &quot;group&quot;</p></td>
+<td><p>基于组的错误码所属的 <code class="xref c c-enum docutils literal notranslate"><span class="pre">mcumgr_group_t</span></code> 组。仅在使用 SMP 版本 2 且返回错误时出现。</p></td>
+</tr>
+<tr class="row-odd"><td><p>&quot;err&quot; -&gt; &quot;rc&quot;</p></td>
+<td><p>包含基于组的错误码的索引。仅在使用 SMP 版本 2 且该值非零（出错）时出现。</p></td>
+</tr>
+<tr class="row-even"><td><p>&quot;rc&quot;</p></td>
+<td><p><code class="xref c c-enum docutils literal notranslate"><span class="pre">mcumgr_err_t</span></code>，仅在使用 SMP 版本 1 且该值非零（出错）时，或在使用 SMP 版本 2 时出现 SMP 错误的情况下出现。</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="file-close">
+<h2>关闭文件<a class="headerlink" href="#file-close" title="链接到此标题。"></a></h2>
+<p>该命令用于关闭 fs_mgmt 上传/下载请求所持有的、可能已停滞或未完成的所有打开的文件句柄。</p>
+<section id="file-close-request">
+<h3>关闭文件请求<a class="headerlink" href="#file-close-request" title="链接到此标题。"></a></h3>
+<p>关闭文件请求头部：</p>
+<table class="docutils align-center">
+<thead>
+<tr class="row-odd"><th class="head"><p><code class="docutils literal notranslate"><span class="pre">OP</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">Group</span> <span class="pre">ID</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">Command</span> <span class="pre">ID</span></code></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">2</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">8</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">4</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>该命令发送一个空的 CBOR 映射作为数据。</p>
+</section>
+<section id="file-close-response">
+<h3>关闭文件响应<a class="headerlink" href="#file-close-response" title="链接到此标题。"></a></h3>
+<p>关闭文件响应头部：</p>
+<table class="docutils align-center">
+<thead>
+<tr class="row-odd"><th class="head"><p><code class="docutils literal notranslate"><span class="pre">OP</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">Group</span> <span class="pre">ID</span></code></p></th>
+<th class="head"><p><code class="docutils literal notranslate"><span class="pre">Command</span> <span class="pre">ID</span></code></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">3</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">8</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">4</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>成功时，该命令发送一个空的 CBOR 映射作为数据。出错时，CBOR 数据采用以下形式：</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-4-U01QIHZlcnNpb24gMg==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-4-U01QIHZlcnNpb24gMg==" name="U01QIHZlcnNpb24gMg==" role="tab" tabindex="0">SMP version 2</button><button aria-controls="panel-4-U01QIHZlcnNpb24gMSAoYW5kIG5vbi1ncm91cCBTTVAgdmVyc2lvbiAyKQ==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-4-U01QIHZlcnNpb24gMSAoYW5kIG5vbi1ncm91cCBTTVAgdmVyc2lvbiAyKQ==" name="U01QIHZlcnNpb24gMSAoYW5kIG5vbi1ncm91cCBTTVAgdmVyc2lvbiAyKQ==" role="tab" tabindex="-1">SMP version 1 (and non-group SMP version 2)</button></div><div aria-labelledby="tab-4-U01QIHZlcnNpb24gMg==" class="sphinx-tabs-panel group-tab" id="panel-4-U01QIHZlcnNpb24gMg==" name="U01QIHZlcnNpb24gMg==" role="tabpanel" tabindex="0"><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+    (str)"err" : {
+        (str)"group"    : (uint)
+        (str)"rc"       : (uint)
+    }
+}
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-4-U01QIHZlcnNpb24gMSAoYW5kIG5vbi1ncm91cCBTTVAgdmVyc2lvbiAyKQ==" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-4-U01QIHZlcnNpb24gMSAoYW5kIG5vbi1ncm91cCBTTVAgdmVyc2lvbiAyKQ==" name="U01QIHZlcnNpb24gMSAoYW5kIG5vbi1ncm91cCBTTVAgdmVyc2lvbiAyKQ==" role="tabpanel" tabindex="0"><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{
+    (str)"rc"       : (int)
+}
+</pre></div>
+</div>
+</div></div>
+<p>其中：</p>
+<table class="docutils align-center">
+<tbody>
+<tr class="row-odd"><td><p>&quot;err&quot; -&gt; &quot;group&quot;</p></td>
+<td><p>基于组的错误码所属的 <code class="xref c c-enum docutils literal notranslate"><span class="pre">mcumgr_group_t</span></code> 组。仅在使用 SMP 版本 2 且返回错误时出现。</p></td>
+</tr>
+<tr class="row-even"><td><p>&quot;err&quot; -&gt; &quot;rc&quot;</p></td>
+<td><p>包含基于组的错误码的索引。仅在使用 SMP 版本 2 且该值非零（出错）时出现。</p></td>
+</tr>
+<tr class="row-odd"><td><p>&quot;rc&quot;</p></td>
+<td><p><code class="xref c c-enum docutils literal notranslate"><span class="pre">mcumgr_err_t</span></code>，仅在使用 SMP 版本 1 且该值非零（出错）时，或在使用 SMP 版本 2 时出现 SMP 错误的情况下出现。</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 9月 16, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,376 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zyclictest &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/debugging/zyclictest.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="性能剖析" href="../profiling/index.html" />
+    <link rel="prev" title="ARM Coresight 跟踪解格式化器" href="cs_trace_defmt.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">服务</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../connectivity/index.html">连接</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../messaging.html">进程间通信</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../observability.html">日志、跟踪与调试</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../logging/index.html">日志</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tracing/index.html">跟踪</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">调试</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="thread-analyzer.html">线程分析器</a></li>
+<li class="toctree-l4"><a class="reference internal" href="coredump.html">核心转储</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gdbstub.html">GDB stub</a></li>
+<li class="toctree-l4"><a class="reference internal" href="debugmon.html">Cortex-M 调试监视器</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mipi_stp_decoder.html">MIPI STP 解码器</a></li>
+<li class="toctree-l4"><a class="reference internal" href="symtab.html">符号表（Symtab）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cs_trace_defmt.html">ARM Coresight 跟踪解格式化器</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Zyclictest</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#mode-of-operation">工作模式</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#configuration">配置</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#usage">用法</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#example">示例</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../profiling/index.html">性能剖析</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../instrumentation/index.html">插桩</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cpu_load/index.html">CPU 负载</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../shell/index.html">Shell</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../task_wdt/index.html">任务看门狗</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../observability.html">日志、跟踪与调试</a> &raquo;</li>
+  
+     <li><a href="index.html">调试</a> &raquo;</li>
+  
+  <li>Zyclictest</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="zyclictest">
+<span id="id1"></span><h1>Zyclictest<a class="headerlink" href="#zyclictest" title="链接到此标题。"></a></h1>
+<p>zyclictest 模块用于估计实时线程的最坏情况延迟。它可以测量从硬件中断到中断服务例程、再到 Zephyr 线程所经历的时间。</p>
+<p>该模块及其名称的灵感来自 Linux 上的 cyclictest 程序，因此它是 Zephyr 版的 cyclictest。</p>
+<p>其思路是使用定时器中断作为中断源，因为我们确切地知道它发生的时间点。在中断服务例程中获取当前时间，并计算它与定时器中断编程时间之间的差值。</p>
+<p>此外，还有一个线程同样与定时器同步，并测量其与编程的定时器时间之间的差值。</p>
+<p>这两个时间都会存入一个数组，作为测量结束时打印的直方图的数据源。</p>
+<p>这种测量以一定的间隔时间循环进行。</p>
+<p>如果想知道优先级为 &lt;p&gt; 的任务的最坏情况延迟，需要让应用程序处于运行状态。在其运行时，以至少比被测应用程序线程低一级的优先级数值启动 zyclictest。例如，如果应用程序中我们关心的线程优先级为 -10，则需要以 -11 或更小的优先级启动 zyclictest。</p>
+<p>另一个重要参数是间隔时间。间隔不应小于测得的最坏情况延迟。因此，建议将间隔设为至少是预期或测得的最坏情况延迟的两倍。</p>
+<p>如果测量结束时显示有溢出，则意味着在直方图的范围内不存在确定的最坏情况延迟。</p>
+<p>为了得到有意义的输出，建议将 <a class="reference internal" href="../../kconfig.html#CONFIG_SYS_CLOCK_TICKS_PER_SEC" title="CONFIG_SYS_CLOCK_TICKS_PER_SEC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SYS_CLOCK_TICKS_PER_SEC</span></code></a> 设为至少 1000000，这意味着最小分辨率为 1 微秒。还需要无节拍（tickless）内核（<a class="reference internal" href="../../kconfig.html#CONFIG_TICKLESS_KERNEL" title="CONFIG_TICKLESS_KERNEL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TICKLESS_KERNEL</span></code></a>:）。</p>
+<section id="mode-of-operation">
+<h2>工作模式<a class="headerlink" href="#mode-of-operation" title="链接到此标题。"></a></h2>
+<p>zyclictest 可以以自由运行方式启动，不设固定的循环次数。这是默认方式。停止时会打印到目前为止的结果。</p>
+<p>在循环模式（使用 -l &lt;loops&gt; 选项启动）下，zyclictest 运行预先设定的循环次数。达到循环次数后，shell 上会显示一条表示测试结束的消息。不过也可以使用 zyclictest stop -c 提前取消测试。</p>
+</section>
+<section id="configuration">
+<h2>配置<a class="headerlink" href="#configuration" title="链接到此标题。"></a></h2>
+<p>使用以下选项配置该模块。</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZYCLICTEST_SHELL" title="CONFIG_ZYCLICTEST_SHELL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZYCLICTEST_SHELL</span></code></a>：启用 shell 命令。</p></li>
+</ul>
+</section>
+<section id="usage">
+<h2>用法<a class="headerlink" href="#usage" title="链接到此标题。"></a></h2>
+<dl>
+<dt>zyclictest start [options]</dt><dd><dl class="option-list">
+<dt><kbd><span class="option">-i <var>&lt;interval&gt;</var></span></kbd></dt>
+<dd><p>间隔，单位为微秒</p>
+</dd>
+<dt><kbd><span class="option">-l <var>&lt;loops&gt;</var></span></kbd></dt>
+<dd><p>使用预设循环次数的循环模式</p>
+</dd>
+<dt><kbd><span class="option">-p <var>&lt;prio&gt;</var></span></kbd></dt>
+<dd><p>设置线程的优先级</p>
+</dd>
+</dl>
+</dd>
+<dt>zyclictest stop [options]</dt><dd><dl class="option-list">
+<dt><kbd><span class="option">-c</span></kbd></dt>
+<dd><p>提前取消循环模式</p>
+</dd>
+<dt><kbd><span class="option">-q</span></kbd></dt>
+<dd><p>静默模式，打印摘要但不打印直方图数据</p>
+</dd>
+</dl>
+</dd>
+</dl>
+</section>
+<section id="example">
+<h2>示例<a class="headerlink" href="#example" title="链接到此标题。"></a></h2>
+<p>在本例中，我们想知道一个由中断唤醒、以协作式任务运行、优先级为 -10 的线程的最坏情况延迟。我们预期延迟小于 200 us。我们使用自由运行模式。</p>
+<p>1. Start the zyclictest thread with an interval of 400 us (double of expected
+worst case latency) and a priority of -11 (one digit higher than the
+application thread):</p>
+<blockquote>
+<div><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">zyclictest start -i 400 -p -11</span>
+</pre></div>
+</div>
+</div></blockquote>
+<ol class="arabic" start="2">
+<li><p>执行需要测试的操作……</p></li>
+<li><p>停止测量：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">zyclictest stop</span>
+</pre></div>
+</div>
+<p>zyclictest 的输出：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Count: 547329
+                   IRQ  Thread
+Max-Latency:        21      27
+Errors:              0       0
+Overflow:            0       0
+Histogram:
+[...]
+ 23                  0  547306
+ 24                  0       2
+ 25                  0       5
+ 26                  0       5
+ 27                  0       2
+ 28                  0       0
+[...]
+</pre></div>
+</div>
+</li>
+<li><p>解读结果：</p>
+<p>没有错误也没有溢出，这意味着测量结果可用。测试中共有 547329 个循环。中断的最坏情况延迟为 21 us，线程为 27 us。</p>
+</li>
+</ol>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 3月 31, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

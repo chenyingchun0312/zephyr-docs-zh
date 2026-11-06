@@ -1,0 +1,6 @@
+var structsensor__three__axis__data_1_1sensor__three__axis__sample__data_1_1_0fstruct_0e_8____unnamed0_____8____unnamed0____ =
+[
+    [ "x", "structsensor__three__axis__data_1_1sensor__three__axis__sample__data_1_1_0fstruct_0e_8____unnamed0_____8____unnamed0____.html#aaa05a0c014efd3c5703d579d6bd95b42", null ],
+    [ "y", "structsensor__three__axis__data_1_1sensor__three__axis__sample__data_1_1_0fstruct_0e_8____unnamed0_____8____unnamed0____.html#aaeec8246f865acfd09b76c451eae87a1", null ],
+    [ "z", "structsensor__three__axis__data_1_1sensor__three__axis__sample__data_1_1_0fstruct_0e_8____unnamed0_____8____unnamed0____.html#a1ed8e31aa72b7d04db4468b21a291bd3", null ]
+];

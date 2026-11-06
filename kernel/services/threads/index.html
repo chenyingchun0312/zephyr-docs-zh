@@ -1,0 +1,769 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>线程 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/kernel/services/threads/index.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" />
+    <link rel="next" title="调度" href="../scheduling/index.html" />
+    <link rel="prev" title="内核服务" href="../index.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">内核</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">内核服务</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html#scheduling-interrupts-and-synchronization">调度、中断与同步</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">线程</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#lifecycle">生命周期</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#thread-creation">线程创建</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#starting-a-thread">启动线程</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#thread-termination">线程终止</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#thread-aborting">线程中止</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#thread-suspension">线程挂起</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#thread-states">线程状态</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#thread-stack-objects">线程栈对象</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#kernel-only-stacks">仅内核栈</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#thread-stacks">线程栈</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#thread-priorities">线程优先级</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#meta-irq-priorities">Meta-IRQ 优先级</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#thread-options">线程选项</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#thread-custom-data">线程自定义数据</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#thread-name">线程名称</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#thread-introspection">线程内省</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#implementation">实现</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#spawning-a-thread">创建线程</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#dropping-permissions">降低权限</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#terminating-a-thread">终止线程</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#runtime-statistics">运行时统计</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#runtime-stack-safety">运行时栈安全</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#suggested-uses">建议用法</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#configuration-options">配置选项</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#api-reference">API 参考</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../scheduling/index.html">调度</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scheduling/index.html#cpu-idling">CPU 空闲</a></li>
+<li class="toctree-l4"><a class="reference internal" href="system_threads.html">系统线程</a></li>
+<li class="toctree-l4"><a class="reference internal" href="workqueue.html">工作队列线程</a></li>
+<li class="toctree-l4"><a class="reference internal" href="nothread.html">无线程运行</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../interrupts.html">中断</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../polling.html">轮询 API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../synchronization/semaphores.html">信号量</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../synchronization/mutexes.html">互斥量</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../synchronization/condvar.html">条件变量</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../synchronization/events.html">事件</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../synchronization/spinlocks.html">自旋锁</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../smp/smp.html">对称多处理</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#data-passing">数据传递</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#memory-management">内存管理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#timing">计时</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#other">其他</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../drivers/index.html">设备驱动模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../usermode/index.html">用户模式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../memory_management/index.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../data_structures/index.html">数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../timing_functions/index.html">计时函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../object_cores/index.html">对象核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../timeutil.html">时间工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../precision_timing.html">精密计时</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../util/index.html">实用工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../iterable_sections/index.html">可迭代段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../code-relocation.html">代码和数据重定位</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanup.html">基于作用域的清理辅助工具</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">内核</a> &raquo;</li>
+  
+     <li><a href="../index.html">内核服务</a> &raquo;</li>
+  
+  <li>线程</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="threads">
+<span id="threads-v2"></span><h1>线程<a class="headerlink" href="#threads" title="链接到此标题。"></a></h1>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>对 <a class="reference internal" href="nothread.html#nothread"><span class="std std-ref">无线程运行</span></a> 也有有限的支持。</p>
+</div>
+<nav class="contents local" id="id1">
+<ul class="simple">
+<li><p><a class="reference internal" href="#lifecycle" id="id4">生命周期</a></p>
+<ul>
+<li><p><a class="reference internal" href="#thread-creation" id="id5">线程创建</a></p></li>
+<li><p><a class="reference internal" href="#starting-a-thread" id="id6">启动线程</a></p></li>
+<li><p><a class="reference internal" href="#thread-termination" id="id7">线程终止</a></p></li>
+<li><p><a class="reference internal" href="#thread-aborting" id="id8">线程中止</a></p></li>
+<li><p><a class="reference internal" href="#thread-suspension" id="id9">线程挂起</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#thread-states" id="id10">线程状态</a></p></li>
+<li><p><a class="reference internal" href="#thread-stack-objects" id="id11">线程栈对象</a></p>
+<ul>
+<li><p><a class="reference internal" href="#kernel-only-stacks" id="id12">仅内核栈</a></p></li>
+<li><p><a class="reference internal" href="#thread-stacks" id="id13">线程栈</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#thread-priorities" id="id14">线程优先级</a></p>
+<ul>
+<li><p><a class="reference internal" href="#meta-irq-priorities" id="id15">Meta-IRQ 优先级</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#thread-options" id="id16">线程选项</a></p></li>
+<li><p><a class="reference internal" href="#thread-custom-data" id="id17">线程自定义数据</a></p></li>
+<li><p><a class="reference internal" href="#thread-name" id="id18">线程名称</a></p></li>
+<li><p><a class="reference internal" href="#thread-introspection" id="id19">线程内省</a></p></li>
+<li><p><a class="reference internal" href="#implementation" id="id20">实现</a></p>
+<ul>
+<li><p><a class="reference internal" href="#spawning-a-thread" id="id21">创建线程</a></p></li>
+<li><p><a class="reference internal" href="#dropping-permissions" id="id22">降低权限</a></p></li>
+<li><p><a class="reference internal" href="#terminating-a-thread" id="id23">终止线程</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#runtime-statistics" id="id24">运行时统计</a></p></li>
+<li><p><a class="reference internal" href="#runtime-stack-safety" id="id25">运行时栈安全</a></p></li>
+<li><p><a class="reference internal" href="#suggested-uses" id="id26">建议用法</a></p></li>
+<li><p><a class="reference internal" href="#configuration-options" id="id27">配置选项</a></p></li>
+<li><p><a class="reference internal" href="#api-reference" id="id28">API 参考</a></p></li>
+</ul>
+</nav>
+<p>本节介绍用于创建、调度和删除可独立执行的指令线程的内核服务。</p>
+<p>线程（<em class="dfn">thread</em>）是一种内核对象，用于执行过于冗长或复杂、不适合由 ISR 完成的应用程序处理。</p>
+<p>应用程序可以定义任意数量的线程（仅受可用 RAM 限制）。每个线程通过线程创建时分配的线程 ID（<em class="dfn">thread id</em>）引用。</p>
+<p>线程具有以下关键属性：</p>
+<ul class="simple">
+<li><p><strong>栈区域</strong>，即用作线程栈的一块内存区域。栈区域的 <strong>大小</strong> 可以根据线程处理的实际需要进行调整。有专门的宏用于创建和操作栈内存区域。</p></li>
+<li><p><strong>线程控制块</strong>，供内核私下记录线程的元数据。它是 <code class="xref c c-struct docutils literal notranslate"><span class="pre">k_thread</span></code> 类型的一个实例。</p></li>
+<li><p><strong>入口函数</strong>，在线程启动时被调用。最多可以向该函数传递 3 个 <strong>参数值</strong>。</p></li>
+<li><p><strong>调度优先级</strong>，指示内核调度器如何为该线程分配 CPU 时间。（参见 <a class="reference internal" href="../scheduling/index.html#scheduling-v2"><span class="std std-ref">调度</span></a>。）</p></li>
+<li><p>一组 <strong>线程选项</strong>，使线程在特定情况下得到内核的特殊处理。（参见 <a class="reference internal" href="#thread-options-v2"><span class="std std-ref">线程选项</span></a>。）</p></li>
+<li><p><strong>启动延迟</strong>，指定内核在启动该线程之前应等待多长时间。</p></li>
+<li><p><strong>执行模式</strong>，可以是特权模式（supervisor mode）或用户模式。默认情况下，线程以特权模式运行，可以访问特权 CPU 指令、整个内存地址空间和外设。用户模式线程的权限较少。这取决于 <a class="reference internal" href="../../../kconfig.html#CONFIG_USERSPACE" title="CONFIG_USERSPACE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USERSPACE</span></code></a> 选项。参见 <a class="reference internal" href="../../usermode/index.html#usermode-api"><span class="std std-ref">用户模式</span></a>。</p></li>
+</ul>
+<section id="lifecycle">
+<span id="lifecycle-v2"></span><h2><a class="toc-backref" href="#id4" role="doc-backlink">生命周期</a><a class="headerlink" href="#lifecycle" title="链接到此标题。"></a></h2>
+<section id="thread-creation">
+<span id="spawning-thread"></span><h3><a class="toc-backref" href="#id5" role="doc-backlink">线程创建</a><a class="headerlink" href="#thread-creation" title="链接到此标题。"></a></h3>
+<p>线程必须先创建才能使用。内核会初始化线程控制块以及栈的一端。线程栈的其余部分通常保持未初始化状态。</p>
+<p>将启动延迟指定为 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_NO_WAIT</span></code> 会指示内核立即开始执行线程。也可以通过指定超时值让内核延迟执行该线程，例如等待线程所用的设备硬件变为可用。</p>
+<p>内核允许在线程开始执行之前取消延迟启动。如果线程已经启动，取消请求没有任何效果。延迟启动被成功取消的线程必须重新创建才能使用。</p>
+</section>
+<section id="starting-a-thread">
+<h3><a class="toc-backref" href="#id6" role="doc-backlink">启动线程</a><a class="headerlink" href="#starting-a-thread" title="链接到此标题。"></a></h3>
+<p>以 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_FOREVER</span></code> 作为启动延迟创建的线程不会被加入调度器的就绪队列，在被显式启动之前不会开始执行。<code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_start()</span></code> 函数用于启动这样的非活动线程，使其可以被调度。启动一个已经启动的线程没有任何效果。</p>
+<p>当线程对象必须在某个时间点创建、但其执行需要推迟到应用程序完成额外的设置之后时，这种做法很有用。</p>
+</section>
+<section id="thread-termination">
+<h3><a class="toc-backref" href="#id7" role="doc-backlink">线程终止</a><a class="headerlink" href="#thread-termination" title="链接到此标题。"></a></h3>
+<p>线程一旦启动，通常会永久执行下去。不过，线程也可以通过从其入口函数返回来同步地结束执行，这称为 <strong>终止</strong>。</p>
+<p>终止的线程在返回之前负责释放它可能拥有的任何共享资源（例如互斥量和动态分配的内存），因为内核 <em>不会</em> 自动回收这些资源。</p>
+<p>在某些情况下，线程可能希望睡眠到另一个线程终止为止。这可以通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_join()</span></code> API 实现。它会阻塞调用线程，直到超时到期、目标线程自行退出或目标线程被中止（无论是由于 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_abort()</span></code> 调用还是触发了致命错误）。</p>
+<p>线程终止后，内核保证不会再使用该线程结构体。此后该结构体的内存可以用于任何用途，包括创建新线程。注意，线程必须已完全终止。这里存在竞态条件：线程自身的逻辑发出完成信号，另一个线程在内核处理完成之前就看到了这个信号。在正常情况下，应用程序代码应使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_join()</span></code> 或 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_abort()</span></code> 来同步线程的终止状态，而不应依赖应用程序逻辑内部发出的信号。</p>
+</section>
+<section id="thread-aborting">
+<h3><a class="toc-backref" href="#id8" role="doc-backlink">线程中止</a><a class="headerlink" href="#thread-aborting" title="链接到此标题。"></a></h3>
+<p>线程可以通过 <strong>中止</strong> 异步地结束执行。如果线程触发了致命错误条件（例如解引用空指针），内核会自动中止该线程。</p>
+<p>线程也可以被另一个线程（或它自己）通过调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_abort()</span></code> 中止。不过，通常更好的做法是通知线程优雅地自行终止，而不是中止它。</p>
+<p>与线程终止一样，内核不会回收被中止线程所拥有的共享资源。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>对于应用程序能否重新创建一个被中止的线程，内核目前不作任何保证。</p>
+</div>
+</section>
+<section id="thread-suspension">
+<h3><a class="toc-backref" href="#id9" role="doc-backlink">线程挂起</a><a class="headerlink" href="#thread-suspension" title="链接到此标题。"></a></h3>
+<p>线程被 <strong>挂起</strong> 后，可以在不确定的时间内不被执行。函数 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_suspend()</span></code> 可用于挂起任何线程，包括调用线程本身。挂起一个已经挂起的线程不会产生额外的效果。</p>
+<p>线程一旦被挂起，在另一个线程调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_resume()</span></code> 解除挂起之前，它不能被调度。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>线程可以使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_sleep()</span></code> 使自己在指定时间段内不执行。但这与挂起线程不同，因为睡眠的线程在到达时间限制时会自动变为可执行。</p>
+</div>
+</section>
+</section>
+<section id="thread-states">
+<span id="id2"></span><h2><a class="toc-backref" href="#id10" role="doc-backlink">线程状态</a><a class="headerlink" href="#thread-states" title="链接到此标题。"></a></h2>
+<p>没有任何因素阻止其执行的线程被视为 <strong>就绪</strong>，可以被选为当前线程。</p>
+<p>存在一个或多个阻止其执行的因素的线程被视为 <strong>非就绪</strong>，不能被选为当前线程。</p>
+<p>以下因素会使线程变为非就绪：</p>
+<ul>
+<li><p>线程尚未启动。</p></li>
+<li><p>线程正在等待某个内核对象完成操作。（例如，线程正在获取一个不可用的信号量。）</p></li>
+<li><p>线程正在等待超时发生。</p></li>
+<li><p>线程已被挂起。</p></li>
+<li><p>线程已终止或已中止。</p>
+<img alt="../../../_images/thread_states.svg" class="align-center" src="../../../_images/thread_states.svg" />
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>尽管上图看起来似乎表示 <strong>就绪</strong> 和 <strong>运行</strong> 是两种不同的线程状态，但这种理解并不正确。<strong>就绪</strong> 是一种线程状态，而 <strong>运行</strong> 是一种调度状态，只适用于处于 <strong>就绪</strong> 状态的线程。</p>
+</div>
+</section>
+<section id="thread-stack-objects">
+<h2><a class="toc-backref" href="#id11" role="doc-backlink">线程栈对象</a><a class="headerlink" href="#thread-stack-objects" title="链接到此标题。"></a></h2>
+<p>每个线程都需要自己的栈缓冲区，供 CPU 压入上下文。根据配置的不同，必须满足以下几项约束：</p>
+<ul class="simple">
+<li><p>可能需要为内存管理结构预留额外的内存</p></li>
+<li><p>如果启用了基于保护区的栈溢出检测，栈缓冲区前面必须紧邻一小块写保护的内存管理区域，用于捕获溢出。</p></li>
+<li><p>如果启用了用户空间，必须预留一个固定大小的独立特权提升栈，作为处理系统调用的私有内核栈。</p></li>
+<li><p>如果启用了用户空间，线程栈缓冲区的大小和对齐必须合适，以便能够设置一个与之完全吻合的内存保护区域。</p></li>
+</ul>
+<p>对齐约束可能相当严格，例如有些 MPU 要求其区域的大小为 2 的幂，并按自身大小对齐。</p>
+<p>因此，可移植代码不能简单地将任意字符缓冲区传给 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_create()</span></code>。有专门的宏用于静态实例化栈，它们以 <code class="docutils literal notranslate"><span class="pre">K_KERNEL_STACK</span></code> 和 <code class="docutils literal notranslate"><span class="pre">K_THREAD_STACK</span></code> 为前缀。</p>
+<p>此外，也可以使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_stack_alloc()</span></code> 动态实例化栈，之后用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_stack_free()</span></code> 释放。</p>
+<section id="kernel-only-stacks">
+<h3><a class="toc-backref" href="#id12" role="doc-backlink">仅内核栈</a><a class="headerlink" href="#kernel-only-stacks" title="链接到此标题。"></a></h3>
+<p>如果已知某个线程永远不会以用户模式运行，或者栈用于处理中断之类的特殊上下文，最好使用 <code class="docutils literal notranslate"><span class="pre">K_KERNEL_STACK</span></code> 宏定义栈。</p>
+<p>这种栈可以节省内存，因为永远不需要设置 MPU 区域来覆盖栈缓冲区本身，内核也不需要为特权提升栈或只与用户模式线程相关的内存管理数据结构预留额外空间。</p>
+<p>用户模式代码试图使用以这种方式声明的栈时，会使调用者发生致命错误。</p>
+<p>如果未启用 <code class="docutils literal notranslate"><span class="pre">CONFIG_USERSPACE</span></code>，<code class="docutils literal notranslate"><span class="pre">K_THREAD_STACK</span></code> 系列宏与 <code class="docutils literal notranslate"><span class="pre">K_KERNEL_STACK</span></code> 系列宏的效果完全相同。</p>
+</section>
+<section id="thread-stacks">
+<h3><a class="toc-backref" href="#id13" role="doc-backlink">线程栈</a><a class="headerlink" href="#thread-stacks" title="链接到此标题。"></a></h3>
+<p>如果已知某个栈需要承载用户线程，或者无法确定这一点，请使用 <code class="docutils literal notranslate"><span class="pre">K_THREAD_STACK</span></code> 宏定义该栈。这可能会占用更多内存，但这样的栈对象适合承载用户线程。</p>
+<p>如果未启用 <code class="docutils literal notranslate"><span class="pre">CONFIG_USERSPACE</span></code>，<code class="docutils literal notranslate"><span class="pre">K_THREAD_STACK</span></code> 系列宏与 <code class="docutils literal notranslate"><span class="pre">K_KERNEL_STACK</span></code> 系列宏的效果完全相同。</p>
+</section>
+</section>
+<section id="thread-priorities">
+<span id="id3"></span><h2><a class="toc-backref" href="#id14" role="doc-backlink">线程优先级</a><a class="headerlink" href="#thread-priorities" title="链接到此标题。"></a></h2>
+<p>线程的优先级是一个整数值，可以是负数，也可以是非负数。数值较小的优先级高于数值较大的优先级。例如，调度器认为优先级为 4 的线程 A 比优先级为 7 的线程 B 优先级 <em>更高</em>；同样，优先级为 -2 的线程 C 比线程 A 和线程 B 的优先级都高。</p>
+<p>调度器根据线程的优先级将线程分为两类。</p>
+<ul class="simple">
+<li><p>协作式线程（<em class="dfn">cooperative thread</em>）的优先级为负值。协作式线程一旦成为当前线程，就会一直保持为当前线程，直到它执行某个使自己变为非就绪的操作。</p></li>
+<li><p>可抢占线程（<em class="dfn">preemptible thread</em>）的优先级为非负值。可抢占线程成为当前线程后，只要有协作式线程或优先级更高或相同的可抢占线程变为就绪，它随时可能被取代。</p></li>
+</ul>
+<p>线程启动后，可以调高或调低其初始优先级值。因此，通过改变优先级，可抢占线程可以变为协作式线程，反之亦然。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>调度器不会依据启发式规则重新调整线程的优先级。线程优先级只会应应用程序的请求而设置和更改。</p>
+</div>
+<p>内核支持的线程优先级数量几乎不受限制。配置选项 <a class="reference internal" href="../../../kconfig.html#CONFIG_NUM_COOP_PRIORITIES" title="CONFIG_NUM_COOP_PRIORITIES"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NUM_COOP_PRIORITIES</span></code></a> 和 <a class="reference internal" href="../../../kconfig.html#CONFIG_NUM_PREEMPT_PRIORITIES" title="CONFIG_NUM_PREEMPT_PRIORITIES"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NUM_PREEMPT_PRIORITIES</span></code></a> 分别指定每类线程的优先级数量，由此得到以下可用的优先级范围：</p>
+<ul class="simple">
+<li><p>协作式线程：(-<a class="reference internal" href="../../../kconfig.html#CONFIG_NUM_COOP_PRIORITIES" title="CONFIG_NUM_COOP_PRIORITIES"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NUM_COOP_PRIORITIES</span></code></a>) 到 -1</p></li>
+<li><p>抢占式线程：0 到 (<a class="reference internal" href="../../../kconfig.html#CONFIG_NUM_PREEMPT_PRIORITIES" title="CONFIG_NUM_PREEMPT_PRIORITIES"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NUM_PREEMPT_PRIORITIES</span></code></a> - 1)</p></li>
+</ul>
+<img alt="../../../_images/priorities.svg" class="align-center" src="../../../_images/priorities.svg" />
+<p>例如，配置 5 个协作式优先级和 10 个抢占式优先级，得到的范围分别为 -5 到 -1 和 0 到 9。</p>
+<section id="meta-irq-priorities">
+<span id="metairq-priorities"></span><h3><a class="toc-backref" href="#id15" role="doc-backlink">Meta-IRQ 优先级</a><a class="headerlink" href="#meta-irq-priorities" title="链接到此标题。"></a></h3>
+<p>启用后（参见 <a class="reference internal" href="../../../kconfig.html#CONFIG_NUM_METAIRQ_PRIORITIES" title="CONFIG_NUM_METAIRQ_PRIORITIES"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NUM_METAIRQ_PRIORITIES</span></code></a>），在优先级空间的最高（数值最小）端会有一个特殊的协作式优先级子类：meta-IRQ 线程。它们按照其正常优先级进行调度，但还具有一种特殊能力：可以抢占所有较低优先级的其他线程（以及其他 meta-IRQ 线程），即使这些线程是协作式线程和/或已获取调度器锁。不过，meta-IRQ 线程仍然是线程，仍然可以被任何硬件中断打断。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>被 meta-IRQ 线程抢占的协作式（或已锁定调度器的）线程，在 meta-IRQ 线程完成后恢复执行时，会位于同一个 CPU 上（前提是它既没有被挂起也没有被中止）。这有助于确保这些线程在查询与自身 CPU 相关的属性的过程中，不会意外地被调换到另一个 CPU 上。</p>
+</div>
+<p>这种行为使得解除 meta-IRQ 线程的阻塞（通过任何方式，例如创建它、调用 k_sem_give() 等）在由较低优先级线程执行时相当于一次同步系统调用，在真正的中断上下文中执行时则相当于类似 ARM 的“挂起 IRQ”（pended IRQ）。该功能的用意是在驱动子系统中实现中断“下半部”（bottom half）处理和/或“tasklet”功能。线程一旦被唤醒，就保证会在当前 CPU 返回应用程序代码之前运行。</p>
+<p>与其他操作系统中的类似功能不同，meta-IRQ 线程是真正的线程，运行在自己的栈上（该栈必须按常规方式分配），而不是运行在每个 CPU 的中断栈上。在受支持的架构上使用 IRQ 栈的设计工作尚未完成。</p>
+<p>注意，由于这打破了 Zephyr API 对协作式线程的承诺（即在当前线程主动阻塞之前，操作系统不会调度其他线程），应用程序代码应当非常谨慎地使用它。这些线程并不只是优先级非常高的线程，也不应被当作这样的线程使用。</p>
+</section>
+</section>
+<section id="thread-options">
+<span id="thread-options-v2"></span><h2><a class="toc-backref" href="#id16" role="doc-backlink">线程选项</a><a class="headerlink" href="#thread-options" title="链接到此标题。"></a></h2>
+<p>内核支持一小组线程选项（<em class="dfn">thread options</em>），使线程在特定情况下得到特殊处理。与线程关联的选项集在创建线程时指定。</p>
+<p>不需要任何线程选项的线程，其选项值为零。需要线程选项的线程按名称指定选项；如果需要多个选项，使用 <code class="docutils literal notranslate"><span class="pre">|</span></code> 字符分隔（即使用按位或运算符组合选项）。</p>
+<p>支持以下线程选项。</p>
+<dl>
+<dt><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_ESSENTIAL</span></code></dt><dd><p>该选项将线程标记为关键线程（<em class="dfn">essential thread</em>）。这会指示内核将该线程的终止或中止视为致命系统错误。</p>
+<p>默认情况下，线程不被视为关键线程。</p>
+</dd>
+<dt><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_SSE_REGS</span></code></dt><dd><p>这个 x86 专用选项表示线程使用 CPU 的 SSE 寄存器。另请参见 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_FP_REGS</span></code>。</p>
+<p>默认情况下，内核在调度线程时不会尝试保存和恢复这些寄存器的内容。</p>
+</dd>
+<dt><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_FP_REGS</span></code></dt><dd><p>该选项表示线程使用 CPU 的浮点寄存器。这会指示内核在调度线程时采取额外步骤保存和恢复这些寄存器的内容。（更多信息参见 <a class="reference internal" href="../other/float.html#float-v2"><span class="std std-ref">浮点服务</span></a>。）</p>
+<p>默认情况下，内核在调度线程时不会尝试保存和恢复这些寄存器的内容。</p>
+</dd>
+<dt><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_USER</span></code></dt><dd><p>如果启用了 <a class="reference internal" href="../../../kconfig.html#CONFIG_USERSPACE" title="CONFIG_USERSPACE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USERSPACE</span></code></a>，该线程将以用户模式创建，权限较少。参见 <a class="reference internal" href="../../usermode/index.html#usermode-api"><span class="std std-ref">用户模式</span></a>。否则该标志不起作用。</p>
+</dd>
+<dt><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_INHERIT_PERMS</span></code></dt><dd><p>如果启用了 <a class="reference internal" href="../../../kconfig.html#CONFIG_USERSPACE" title="CONFIG_USERSPACE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USERSPACE</span></code></a>，该线程将继承父线程拥有的所有内核对象权限，但父线程对象本身除外。参见 <a class="reference internal" href="../../usermode/index.html#usermode-api"><span class="std std-ref">用户模式</span></a>。</p>
+</dd>
+</dl>
+</section>
+<section id="thread-custom-data">
+<span id="custom-data-v2"></span><h2><a class="toc-backref" href="#id17" role="doc-backlink">线程自定义数据</a><a class="headerlink" href="#thread-custom-data" title="链接到此标题。"></a></h2>
+<p>每个线程都有一个 32 位的自定义数据（<em class="dfn">custom data</em>）区域，只能由线程自身访问，应用程序可以将其用于任何用途。线程的自定义数据默认值为零。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>ISR 不支持自定义数据，因为它们在单一的共享内核中断处理上下文中运行。</p>
+</div>
+<p>默认情况下，线程自定义数据支持处于禁用状态。可以使用配置选项 <a class="reference internal" href="../../../kconfig.html#CONFIG_THREAD_CUSTOM_DATA" title="CONFIG_THREAD_CUSTOM_DATA"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_THREAD_CUSTOM_DATA</span></code></a> 启用该支持。</p>
+<p><code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_custom_data_set()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_custom_data_get()</span></code> 函数分别用于写入和读取线程的自定义数据。线程只能访问自己的自定义数据，而不能访问其他线程的自定义数据。</p>
+<p>以下代码使用自定义数据功能记录每个线程调用某个特定例程的次数。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>显然，只能有一个例程使用这种技术，因为它独占了自定义数据功能。</p>
+</div>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">call_tracking_routine</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">call_count</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">k_is_in_isr</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="cm">/* ignore any call made by an ISR */</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">call_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">uint32_t</span><span class="p">)</span><span class="n">k_thread_custom_data_get</span><span class="p">();</span>
+<span class="w">        </span><span class="n">call_count</span><span class="o">++</span><span class="p">;</span>
+<span class="w">        </span><span class="n">k_thread_custom_data_set</span><span class="p">((</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">call_count</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/* do rest of routine's processing */</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>可以将自定义数据用作指向线程所拥有的数据结构的指针，让例程借助线程自定义数据访问线程特定的信息。</p>
+</section>
+<section id="thread-name">
+<span id="thread-name-v2"></span><h2><a class="toc-backref" href="#id18" role="doc-backlink">线程名称</a><a class="headerlink" href="#thread-name" title="链接到此标题。"></a></h2>
+<p>启用 <a class="reference internal" href="../../../kconfig.html#CONFIG_THREAD_NAME" title="CONFIG_THREAD_NAME"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_THREAD_NAME</span></code></a> 后，可以为每个线程关联一个人类可读的名称。名称主要用于辅助调试、日志记录和 shell 内省；内核不会将其用于调度。</p>
+<p>可以通过以下两种方式之一分配线程名称：</p>
+<ul class="simple">
+<li><p>静态方式：向 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_THREAD_DEFINE</span></code> 传入名称。</p></li>
+<li><p>运行时方式：使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_name_set()</span></code>。所提供的字符串必须在线程的整个生命周期内保持有效，因为内核只保留指向它的指针。</p></li>
+</ul>
+<p>可以使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_name_get()</span></code> 获取线程名称，它返回指向名称字符串的指针；也可以使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_name_copy()</span></code>，它将名称复制到调用者提供的缓冲区中。在用户模式下，调用线程可能无权访问存放另一个线程名称的内存，因此复制版本是安全的选择。</p>
+<p>如果未启用 <a class="reference internal" href="../../../kconfig.html#CONFIG_THREAD_NAME" title="CONFIG_THREAD_NAME"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_THREAD_NAME</span></code></a>，<code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_name_set()</span></code> 会返回错误，<code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_name_get()</span></code> 会返回 <code class="docutils literal notranslate"><span class="pre">NULL</span></code>。</p>
+</section>
+<section id="thread-introspection">
+<h2><a class="toc-backref" href="#id19" role="doc-backlink">线程内省</a><a class="headerlink" href="#thread-introspection" title="链接到此标题。"></a></h2>
+<p>内核提供了多个用于在运行时检查线程的接口。</p>
+<dl class="simple">
+<dt><strong>识别当前线程</strong></dt><dd><p><code class="xref c c-func docutils literal notranslate"><span class="pre">k_current_get()</span></code> 返回当前正在执行的线程的线程 ID（<code class="xref c c-type docutils literal notranslate"><span class="pre">k_tid_t</span></code>）。可以将此 ID 传给其他线程 API，对调用线程进行操作。</p>
+</dd>
+<dt><strong>读取线程的优先级</strong></dt><dd><p><code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_priority_get()</span></code> 返回线程当前的调度优先级。它反映线程创建以来所做的任何更改，例如通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_priority_set()</span></code> 所做的更改。</p>
+</dd>
+<dt><strong>获取线程的状态</strong></dt><dd><p><code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_state_str()</span></code> 将线程当前状态的人类可读表示（例如 <code class="docutils literal notranslate"><span class="pre">pending</span></code>、<code class="docutils literal notranslate"><span class="pre">suspended</span></code> 或 <code class="docutils literal notranslate"><span class="pre">ready</span></code>）写入调用者提供的缓冲区。它用于诊断输出，不应由程序解析。</p>
+</dd>
+<dt><strong>遍历所有线程</strong></dt><dd><p>启用 <a class="reference internal" href="../../../kconfig.html#CONFIG_THREAD_MONITOR" title="CONFIG_THREAD_MONITOR"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_THREAD_MONITOR</span></code></a> 后，<code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_foreach()</span></code> 会为系统中的每个线程调用一次调用者提供的回调。在遍历期间，它持有一个内部锁，阻止线程的创建和终止。这保证了线程列表快照的一致性，但可能引入与线程数量成正比的延迟。<code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_foreach_unlocked()</span></code> 是一个延迟更低的变体，它在每次调用回调时释放该锁，代价是得到的视图一致性不那么严格。</p>
+</dd>
+<dt><strong>查询栈使用情况</strong></dt><dd><p>启用 <a class="reference internal" href="../../../kconfig.html#CONFIG_INIT_STACKS" title="CONFIG_INIT_STACKS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_INIT_STACKS</span></code></a> 和 <a class="reference internal" href="../../../kconfig.html#CONFIG_THREAD_STACK_INFO" title="CONFIG_THREAD_STACK_INFO"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_THREAD_STACK_INFO</span></code></a> 后，<code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_stack_space_get()</span></code> 会报告线程栈中剩余的未使用字节数，该值通过扫描栈中未使用（仍保持初始化值）的区域计算得出。它是对构建时栈分析工具以及下文所述运行时栈安全功能的补充。</p>
+</dd>
+<dt><strong>查询待处理的超时</strong></dt><dd><p>阻塞在定时操作（例如 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_sleep()</span></code> 或带超时的内核对象操作）上的线程有一个待处理的超时。可以用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_timeout_remaining_ticks()</span></code> 以节拍为单位查询其剩余时长，用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_timeout_expires_ticks()</span></code> 查询它将在哪个绝对系统节拍到期。如果线程没有待处理的超时，两者都返回零。</p>
+</dd>
+</dl>
+</section>
+<section id="implementation">
+<h2><a class="toc-backref" href="#id20" role="doc-backlink">实现</a><a class="headerlink" href="#implementation" title="链接到此标题。"></a></h2>
+<section id="spawning-a-thread">
+<h3><a class="toc-backref" href="#id21" role="doc-backlink">创建线程</a><a class="headerlink" href="#spawning-a-thread" title="链接到此标题。"></a></h3>
+<p>创建线程的步骤是：定义其栈区域和线程控制块，然后调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_create()</span></code>。</p>
+<p>栈区域可以使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_THREAD_STACK_DEFINE</span></code> 或 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_KERNEL_STACK_DEFINE</span></code> 静态分配，以确保它在内存中被正确设置。</p>
+<p>栈的大小参数必须是以下三种值之一：</p>
+<ul class="simple">
+<li><p>传给 <code class="docutils literal notranslate"><span class="pre">K_THREAD_STACK</span></code> 或 <code class="docutils literal notranslate"><span class="pre">K_KERNEL_STACK</span></code> 系列栈实例化宏的原始请求栈大小。</p></li>
+<li><p>对于使用 <code class="docutils literal notranslate"><span class="pre">K_THREAD_STACK</span></code> 系列宏定义的栈对象，取 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_THREAD_STACK_SIZEOF()</span></code> 对该对象的返回值。</p></li>
+<li><p>对于使用 <code class="docutils literal notranslate"><span class="pre">K_KERNEL_STACK</span></code> 系列宏定义的栈对象，取 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_KERNEL_STACK_SIZEOF()</span></code> 对该对象的返回值。</p></li>
+</ul>
+<p>另外，也可以使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_stack_alloc()</span></code> 动态分配栈区域，并使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_stack_free()</span></code> 释放。</p>
+<p>线程创建函数返回线程 ID，可用它引用该线程。</p>
+<p>以下代码创建一个立即启动的线程。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#define MY_STACK_SIZE 500</span>
+<span class="cp">#define MY_PRIORITY 5</span>
+
+<span class="k">extern</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">my_entry_point</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="p">);</span>
+
+<span class="n">K_THREAD_STACK_DEFINE</span><span class="p">(</span><span class="n">my_stack_area</span><span class="p">,</span><span class="w"> </span><span class="n">MY_STACK_SIZE</span><span class="p">);</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">k_thread</span><span class="w"> </span><span class="n">my_thread_data</span><span class="p">;</span>
+
+<span class="n">k_tid_t</span><span class="w"> </span><span class="n">my_tid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">k_thread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_thread_data</span><span class="p">,</span><span class="w"> </span><span class="n">my_stack_area</span><span class="p">,</span>
+<span class="w">                                 </span><span class="n">K_THREAD_STACK_SIZEOF</span><span class="p">(</span><span class="n">my_stack_area</span><span class="p">),</span>
+<span class="w">                                 </span><span class="n">my_entry_point</span><span class="p">,</span>
+<span class="w">                                 </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">                                 </span><span class="n">MY_PRIORITY</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">K_NO_WAIT</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>另外，也可以调用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_THREAD_DEFINE</span></code> 在编译时声明线程。注意，该宏会自动定义栈区域、控制块和线程 ID 变量。</p>
+<p>以下代码与上面的代码段效果相同。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#define MY_STACK_SIZE 500</span>
+<span class="cp">#define MY_PRIORITY 5</span>
+
+<span class="k">extern</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">my_entry_point</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="p">);</span>
+
+<span class="n">K_THREAD_DEFINE</span><span class="p">(</span><span class="n">my_tid</span><span class="p">,</span><span class="w"> </span><span class="n">MY_STACK_SIZE</span><span class="p">,</span>
+<span class="w">                </span><span class="n">my_entry_point</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">                </span><span class="n">MY_PRIORITY</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p><code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_create()</span></code> 的延迟参数是 <code class="xref c c-type docutils literal notranslate"><span class="pre">k_timeout_t</span></code> 值，因此 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_NO_WAIT</span></code> 表示立即启动线程。<code class="xref c c-macro docutils literal notranslate"><span class="pre">K_THREAD_DEFINE</span></code> 的对应参数是以整数毫秒表示的时长，因此等效的参数为 0。</p>
+</div>
+<p>以下代码动态分配一个线程栈，等待线程结束（join），然后释放动态分配的线程栈。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">extern</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">my_entry_point</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="p">);</span>
+
+<span class="n">k_tid_t</span><span class="w"> </span><span class="n">my_tid</span><span class="p">;</span>
+<span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">my_stack_area</span><span class="p">;</span>
+
+<span class="n">my_stack_area</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">k_thread_stack_alloc</span><span class="p">(</span><span class="n">CONFIG_DYNAMIC_THREAD_STACK_SIZE</span><span class="p">);</span>
+<span class="n">my_tid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">k_thread_create</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_thread_data</span><span class="p">,</span><span class="w"> </span><span class="n">my_stack_area</span><span class="p">,</span>
+<span class="w">                          </span><span class="n">CONFIG_DYNAMIC_THREAD_STACK_SIZE</span><span class="p">,</span>
+<span class="w">                          </span><span class="n">my_entry_point</span><span class="p">,</span>
+<span class="w">                          </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">                          </span><span class="n">MY_PRIORITY</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">K_NO_WAIT</span><span class="p">);</span>
+<span class="n">k_thread_join</span><span class="p">(</span><span class="n">my_tid</span><span class="p">,</span><span class="w"> </span><span class="n">K_FOREVER</span><span class="p">);</span>
+<span class="n">k_thread_stack_free</span><span class="p">(</span><span class="n">my_stack_area</span><span class="p">);</span>
+</pre></div>
+</div>
+<section id="user-mode-constraints">
+<h4>用户模式约束<a class="headerlink" href="#user-mode-constraints" title="链接到此标题。"></a></h4>
+<p>本节仅适用于启用了 <a class="reference internal" href="../../../kconfig.html#CONFIG_USERSPACE" title="CONFIG_USERSPACE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USERSPACE</span></code></a> 且用户线程试图创建新线程的情况。此时仍使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_create()</span></code> API，但必须满足额外的约束，否则调用线程将被终止：</p>
+<ul class="simple">
+<li><p>调用线程必须同时拥有子线程参数和栈参数的权限；两者都被内核作为内核对象进行跟踪。</p></li>
+<li><p>子线程对象和栈对象必须处于未初始化状态，即该线程当前未在运行，并且栈内存未被使用。</p></li>
+<li><p>传入的栈大小参数必须小于或等于栈对象声明时的边界。</p></li>
+<li><p>必须使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_USER</span></code> 选项，因为用户线程只能创建其他用户线程。</p></li>
+<li><p>不得使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_ESSENTIAL</span></code> 选项，用户线程不能被视为关键线程。</p></li>
+<li><p>子线程的优先级必须是有效的优先级值，并且等于或低于父线程的优先级。</p></li>
+</ul>
+</section>
+</section>
+<section id="dropping-permissions">
+<h3><a class="toc-backref" href="#id22" role="doc-backlink">降低权限</a><a class="headerlink" href="#dropping-permissions" title="链接到此标题。"></a></h3>
+<p>如果启用了 <a class="reference internal" href="../../../kconfig.html#CONFIG_USERSPACE" title="CONFIG_USERSPACE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USERSPACE</span></code></a>，以特权模式运行的线程可以使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_user_mode_enter()</span></code> API 单向转换为用户模式。这是一个单向操作，会重置线程的栈内存并将其清零。该线程将被标记为非关键线程。</p>
+</section>
+<section id="terminating-a-thread">
+<h3><a class="toc-backref" href="#id23" role="doc-backlink">终止线程</a><a class="headerlink" href="#terminating-a-thread" title="链接到此标题。"></a></h3>
+<p>线程通过从其入口函数返回来终止自身。</p>
+<p>以下代码演示线程终止的几种方式。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">my_entry_point</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">unused1</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">unused2</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">unused3</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">...</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">&lt;</span><span class="n">some</span><span class="w"> </span><span class="n">condition</span><span class="o">&gt;</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="p">;</span><span class="w"> </span><span class="cm">/* thread terminates from mid-entry point function */</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="p">...</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/* thread terminates at end of entry point function */</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>如果启用了 <a class="reference internal" href="../../../kconfig.html#CONFIG_USERSPACE" title="CONFIG_USERSPACE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USERSPACE</span></code></a>，中止线程还会将线程对象和栈对象标记为未初始化，以便重新使用。</p>
+</section>
+</section>
+<section id="runtime-statistics">
+<h2><a class="toc-backref" href="#id24" role="doc-backlink">运行时统计</a><a class="headerlink" href="#runtime-statistics" title="链接到此标题。"></a></h2>
+<p>如果启用了 <a class="reference internal" href="../../../kconfig.html#CONFIG_THREAD_RUNTIME_STATS" title="CONFIG_THREAD_RUNTIME_STATS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_THREAD_RUNTIME_STATS</span></code></a>，可以收集和获取线程运行时统计信息，例如线程执行的总周期数。</p>
+<p>默认情况下，运行时统计使用默认的内核定时器收集。对于某些架构、SoC 或开发板，可以通过计时函数（timing functions）使用分辨率更高的定时器。可以通过 <a class="reference internal" href="../../../kconfig.html#CONFIG_THREAD_RUNTIME_STATS_USE_TIMING_FUNCTIONS" title="CONFIG_THREAD_RUNTIME_STATS_USE_TIMING_FUNCTIONS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_THREAD_RUNTIME_STATS_USE_TIMING_FUNCTIONS</span></code></a> 启用这些定时器。</p>
+<p>示例如下：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">k_thread_runtime_stats_t</span><span class="w"> </span><span class="n">rt_stats_thread</span><span class="p">;</span>
+
+<span class="n">k_thread_runtime_stats_get</span><span class="p">(</span><span class="n">k_current_get</span><span class="p">(),</span><span class="w"> </span><span class="o">&amp;</span><span class="n">rt_stats_thread</span><span class="p">);</span>
+
+<span class="n">printk</span><span class="p">(</span><span class="s">"Cycles: %llu</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="w"> </span><span class="n">rt_stats_thread</span><span class="p">.</span><span class="n">execution_cycles</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>可以使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_runtime_stats_all_get()</span></code> 获取系统中所有线程的合计统计信息，它报告所有线程（包括空闲线程）的总运行时间使用情况。这对计算整体 CPU 利用率很有用。</p>
+<p>启用 <a class="reference internal" href="../../../kconfig.html#CONFIG_SCHED_THREAD_USAGE" title="CONFIG_SCHED_THREAD_USAGE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SCHED_THREAD_USAGE</span></code></a> 后，可以在运行时使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_runtime_stats_enable()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_runtime_stats_disable()</span></code> 按线程开启或关闭统计收集。可以使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_runtime_stats_is_enabled()</span></code> 检查某个线程当前是否正在收集统计信息。对不需要测量的线程禁用统计收集，可以减少每次上下文切换时的记录开销。</p>
+</section>
+<section id="runtime-stack-safety">
+<h2><a class="toc-backref" href="#id25" role="doc-backlink">运行时栈安全</a><a class="headerlink" href="#runtime-stack-safety" title="链接到此标题。"></a></h2>
+<p>启用 <a class="reference internal" href="../../../kconfig.html#CONFIG_THREAD_RUNTIME_STACK_SAFETY" title="CONFIG_THREAD_RUNTIME_STACK_SAFETY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_THREAD_RUNTIME_STACK_SAFETY</span></code></a> 后，内核提供在运行时扫描线程栈的例程，用于确定栈中还有多少未使用的空间。如果发现未使用的栈空间已低于某个可按线程配置的阈值，就会调用用户定义的处理函数。</p>
+<p>该功能供监控软件使用。例如，处理函数可以记录一条警告、挂起或中止出问题的线程，甚至重启系统。它让系统能够在栈耗尽 <em>之前</em> 做出反应，是对构建时栈分析工具和基于硬件的栈溢出检测的补充。</p>
+<p>每个线程都有一个以字节为单位的 <em>未使用栈阈值</em>。当栈安全检查发现线程的未使用栈空间低于该阈值时，就会调用所提供的处理函数。阈值为 0 字节（默认值）时，对该线程禁用该检查。新创建线程所用的默认阈值由 <a class="reference internal" href="../../../kconfig.html#CONFIG_THREAD_RUNTIME_STACK_SAFETY_DEFAULT_UNUSED_THRESHOLD_PCT" title="CONFIG_THREAD_RUNTIME_STACK_SAFETY_DEFAULT_UNUSED_THRESHOLD_PCT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_THREAD_RUNTIME_STACK_SAFETY_DEFAULT_UNUSED_THRESHOLD_PCT</span></code></a> 得出，该选项以每个线程栈总大小的百分比表示阈值。</p>
+<p>可以在运行时设置或查询单个线程的阈值：</p>
+<ul class="simple">
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_runtime_stack_unused_threshold_pct_set()</span></code> 以线程栈总大小的百分比（0 到 99）设置阈值。</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_runtime_stack_unused_threshold_set()</span></code> 以绝对字节数设置阈值。</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_runtime_stack_unused_threshold_get()</span></code> 获取当前阈值（以字节为单位）。</p></li>
+</ul>
+<p>实际的检查由两个例程执行。两者都接受一个指针，用于在返回时接收未使用的栈空间大小；还接受一个 <code class="xref c c-type docutils literal notranslate"><span class="pre">k_thread_stack_safety_handler_t</span></code> 处理函数（外加一个用户参数），在越过阈值时调用：</p>
+<ul class="simple">
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_runtime_stack_safety_full_check()</span></code> 扫描整个栈，计算未使用空间的确切大小。</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_runtime_stack_safety_threshold_check()</span></code> 执行简化扫描，只查找线程已越过其配置阈值的迹象。它比完整检查开销小，但无法得到未使用空间的确切值。</p></li>
+</ul>
+<p>以下示例将一个线程配置为：当其未使用栈空间低于栈总大小的 10% 时调用处理函数：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">stack_safety_handler</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">k_thread</span><span class="w"> </span><span class="o">*</span><span class="kr">thread</span><span class="p">,</span>
+<span class="w">                          </span><span class="kt">size_t</span><span class="w"> </span><span class="n">unused_space</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">arg</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="n">printk</span><span class="p">(</span><span class="s">"Thread %p low on stack: %zu bytes unused</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span>
+<span class="w">               </span><span class="kr">thread</span><span class="p">,</span><span class="w"> </span><span class="n">unused_space</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="cm">/* Trigger the handler once less than 10% of the stack remains unused */</span>
+<span class="n">k_thread_runtime_stack_unused_threshold_pct_set</span><span class="p">(</span><span class="n">my_tid</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">);</span>
+
+<span class="cm">/* Periodically check the thread from a monitoring context */</span>
+<span class="n">k_thread_runtime_stack_safety_full_check</span><span class="p">(</span><span class="n">my_tid</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">                                         </span><span class="n">stack_safety_handler</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="suggested-uses">
+<h2><a class="toc-backref" href="#id26" role="doc-backlink">建议用法</a><a class="headerlink" href="#suggested-uses" title="链接到此标题。"></a></h2>
+<p>使用线程处理无法在 ISR 中完成的处理工作。</p>
+<p>使用不同的线程处理逻辑上相互独立、可以并行执行的处理操作。</p>
+</section>
+<section id="configuration-options">
+<h2><a class="toc-backref" href="#id27" role="doc-backlink">配置选项</a><a class="headerlink" href="#configuration-options" title="链接到此标题。"></a></h2>
+<p>相关配置选项：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_MAIN_THREAD_PRIORITY" title="CONFIG_MAIN_THREAD_PRIORITY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MAIN_THREAD_PRIORITY</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_MAIN_STACK_SIZE" title="CONFIG_MAIN_STACK_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MAIN_STACK_SIZE</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_IDLE_STACK_SIZE" title="CONFIG_IDLE_STACK_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_IDLE_STACK_SIZE</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_THREAD_CUSTOM_DATA" title="CONFIG_THREAD_CUSTOM_DATA"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_THREAD_CUSTOM_DATA</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_NUM_COOP_PRIORITIES" title="CONFIG_NUM_COOP_PRIORITIES"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NUM_COOP_PRIORITIES</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_NUM_PREEMPT_PRIORITIES" title="CONFIG_NUM_PREEMPT_PRIORITIES"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NUM_PREEMPT_PRIORITIES</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_TIMESLICING" title="CONFIG_TIMESLICING"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TIMESLICING</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_TIMESLICE_SIZE" title="CONFIG_TIMESLICE_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TIMESLICE_SIZE</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_TIMESLICE_PRIORITY" title="CONFIG_TIMESLICE_PRIORITY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TIMESLICE_PRIORITY</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_USERSPACE" title="CONFIG_USERSPACE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USERSPACE</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_THREAD_RUNTIME_STACK_SAFETY" title="CONFIG_THREAD_RUNTIME_STACK_SAFETY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_THREAD_RUNTIME_STACK_SAFETY</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_THREAD_RUNTIME_STACK_SAFETY_DEFAULT_UNUSED_THRESHOLD_PCT" title="CONFIG_THREAD_RUNTIME_STACK_SAFETY_DEFAULT_UNUSED_THRESHOLD_PCT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_THREAD_RUNTIME_STACK_SAFETY_DEFAULT_UNUSED_THRESHOLD_PCT</span></code></a></p></li>
+</ul>
+</section>
+<section id="api-reference">
+<h2><a class="toc-backref" href="#id28" role="doc-backlink">API 参考</a><a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">thread_apis</span></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/synchronization/README.html#synchronization" title="操作基本的内核同步原语。">Basic Synchronization</a></span><span class="code-sample-description">操作基本的内核同步原语。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/basic/threads/README.html#multi-thread-blinky" title="创建多个线程，让 LED 闪烁并向控制台打印信息。">Basic thread manipulation</a></span><span class="code-sample-description">创建多个线程，让 LED 闪烁并向控制台打印信息。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/philosophers/README.html#dining-philosophers" title="使用 Zephyr 内核服务实现哲学家就餐问题的解决方案。">Dining Philosophers</a></span><span class="code-sample-description">使用 Zephyr 内核服务实现哲学家就餐问题的解决方案。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/net/sockets/dumb_http_server_mt/README.html#socket-dumb-http-server-mt" title="使用 BSD 套接字实现一个支持并发连接的简单 HTTP 服务器。">Dumb HTTP server (multi-threaded)</a></span><span class="code-sample-description">使用 BSD 套接字实现一个支持并发连接的简单 HTTP 服务器。</span></li>
+</ul>
+</div>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">thread_stack_api</span></dt>
+</dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 8月 25, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

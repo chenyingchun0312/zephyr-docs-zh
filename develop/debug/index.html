@@ -1,0 +1,525 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>调试 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/develop/debug/index.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="API 状态与准则" href="../api/index.html" />
+    <link rel="prev" title="应用程序开发" href="../application/index.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">使用 Zephyr 进行开发</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/index.html">入门指南</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beyond-GSG.html">入门指南之外</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../env_vars.html">环境变量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../application/index.html">应用程序开发</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">调试</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#application-debugging">应用程序调试</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#gdb-server">GDB 服务器</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#running-qemu-directly">直接运行 QEMU</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#running-qemu-via-ninja">通过 <strong class="command">ninja</strong> 运行 QEMU</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#running-qemu-via-west">通过 <strong class="command">west</strong> 运行 QEMU</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#configuring-the-gdbserver-listening-device">配置 <strong class="command">gdbserver</strong> 监听设备</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#gdb-client">GDB 客户端</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#alternate-interfaces">其他界面</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#id2">调试</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#debug-with-eclipse">使用 Eclipse 调试</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">概述</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#set-up-the-eclipse-development-environment">搭建 Eclipse 开发环境</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#generate-and-import-an-eclipse-project">生成并导入 Eclipse 项目</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#create-a-debugger-configuration">创建调试器配置</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#rtos-awareness">RTOS 感知</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#debugging-i2c-communication">调试 I2C 通信</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#filtering-the-i2c-communication-dump">过滤 I2C 通信转储</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../api/index.html">API 状态与准则</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../languages/index.html">编程语言支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../optimizations/index.html">优化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../flash_debug/index.html">烧录与硬件调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html">模块（外部项目）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../west/index.html">West（Zephyr 的元工具）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../twister/index.html">测试运行器（Twister）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../test/index.html">测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sca/index.html">静态代码分析（SCA）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../toolchains/index.html">工具链</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tools/index.html">工具与 IDE</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">使用 Zephyr 进行开发</a> &raquo;</li>
+  
+  <li>调试</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="debugging">
+<span id="develop-debug"></span><h1>调试<a class="headerlink" href="#debugging" title="链接到此标题。"></a></h1>
+<section id="application-debugging">
+<span id="id1"></span><h2>应用程序调试<a class="headerlink" href="#application-debugging" title="链接到此标题。"></a></h2>
+<p>本节是使用 QEMU 开始调试应用程序的快速上手参考。本节的大部分内容已在 <a class="reference external" href="https://wiki.qemu.org/Main_Page">QEMU</a> 和 <a class="reference external" href="https://www.gnu.org/software/gdb">GNU_Debugger</a> 参考手册中介绍过。</p>
+<p>在这份快速参考中，你会找到一些快捷方式、特定的环境变量和参数，帮助你快速搭建调试环境。</p>
+<p>调试在 QEMU 中运行的应用程序，最简单的方法是使用 GNU 调试器，并通过 QEMU 在开发系统中设置一个本地 GDB 服务器。</p>
+<p>调试时需要一个 <abbr title="Executable and Linkable Format">ELF</abbr> 二进制镜像。构建系统会在构建目录中生成该镜像。默认情况下，内核二进制文件名为 <code class="file docutils literal notranslate"><span class="pre">zephyr.elf</span></code>。可以通过 <a class="reference internal" href="../../kconfig.html#CONFIG_KERNEL_BIN_NAME" title="CONFIG_KERNEL_BIN_NAME"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_KERNEL_BIN_NAME</span></code></a> 修改该名称。</p>
+<section id="gdb-server">
+<h3>GDB 服务器<a class="headerlink" href="#gdb-server" title="链接到此标题。"></a></h3>
+<p>我们将使用标准的 1234 TCP 端口打开一个 <abbr title="GNU Debugger">GDB</abbr> 服务器实例。可以把该端口号改为最适合开发环境的端口。实现方式有多种，每种方式都会启动一个 QEMU 实例，处理器在启动时处于暂停状态，并有一个 GDB 服务器实例在监听连接。</p>
+<section id="running-qemu-directly">
+<h4>直接运行 QEMU<a class="headerlink" href="#running-qemu-directly" title="链接到此标题。"></a></h4>
+<p>可以让 QEMU 在开始执行任何代码之前监听“gdb 连接”，以便对其进行调试。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>qemu<span class="w"> </span>-s<span class="w"> </span>-S<span class="w"> </span>&lt;image&gt;
+</pre></div>
+</div>
+<p>会将 Qemu 设置为监听 1234 端口，并等待 GDB 连接。</p>
+<p>上面使用的选项含义如下：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-S</span></code> 启动时不启动 CPU；需要在监视器中输入 'c'。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-s</span></code> 是 <code class="docutils literal notranslate"><span class="pre">-gdb</span> <span class="pre">tcp::1234</span></code> 的简写：在 TCP 端口 1234 上打开 GDB 服务器。</p></li>
+</ul>
+</section>
+<section id="running-qemu-via-ninja">
+<h4>通过 <strong class="command">ninja</strong> 运行 QEMU<a class="headerlink" href="#running-qemu-via-ninja" title="链接到此标题。"></a></h4>
+<p>在应用程序的构建目录中运行以下命令：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ninja debugserver</span>
+</pre></div>
+</div>
+<p>QEMU 会将控制台输出写入通过 CMake 在 <strong class="makevar">${QEMU_PIPE}</strong> 中指定的路径，通常是构建目录下的 <code class="file docutils literal notranslate"><span class="pre">qemu-fifo</span></code>。运行期间可以用 <strong class="command">tail -f qemu-fifo</strong> 监视该文件。</p>
+</section>
+<section id="running-qemu-via-west">
+<h4>通过 <strong class="command">west</strong> 运行 QEMU<a class="headerlink" href="#running-qemu-via-west" title="链接到此标题。"></a></h4>
+<p>在项目根目录下运行以下命令：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">west build -t debugserver_qemu</span>
+</pre></div>
+</div>
+<p>QEMU 会将控制台输出写入调用 <strong class="command">west</strong> 的终端。</p>
+</section>
+<section id="configuring-the-gdbserver-listening-device">
+<h4>配置 <strong class="command">gdbserver</strong> 监听设备<a class="headerlink" href="#configuring-the-gdbserver-listening-device" title="链接到此标题。"></a></h4>
+<p>Kconfig 选项 <a class="reference internal" href="../../kconfig.html#CONFIG_QEMU_GDBSERVER_LISTEN_DEV" title="CONFIG_QEMU_GDBSERVER_LISTEN_DEV"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_QEMU_GDBSERVER_LISTEN_DEV</span></code></a> 控制监听设备，它可以是 TCP 端口号，也可以是字符设备的路径。GDB 9.0 及更新版本还支持 Unix 域套接字。</p>
+<p>如果未设置该选项，QEMU 调用中将不包含 <code class="docutils literal notranslate"><span class="pre">-s</span></code> 或 <code class="docutils literal notranslate"><span class="pre">-gdb</span></code> 参数。此时可以使用 shell 环境变量 <span class="target" id="index-2"></span><code class="xref std std-envvar docutils literal notranslate"><span class="pre">QEMU_EXTRA_FLAGS</span></code> 传入你自己的监听设备配置。</p>
+</section>
+</section>
+<section id="gdb-client">
+<h3>GDB 客户端<a class="headerlink" href="#gdb-client" title="链接到此标题。"></a></h3>
+<p>运行 <strong class="command">gdb</strong> 并输入以下命令连接到服务器：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>path/to/gdb<span class="w"> </span>path/to/zephyr.elf
+<span class="o">(</span>gdb<span class="o">)</span><span class="w"> </span>target<span class="w"> </span>remote<span class="w"> </span>localhost:1234
+<span class="o">(</span>gdb<span class="o">)</span><span class="w"> </span>dir<span class="w"> </span>ZEPHYR_BASE
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>请替换为适合你系统的 <a class="reference internal" href="../application/index.html#important-build-vars"><span class="std std-ref">ZEPHYR_BASE</span></a>。</p>
+</div>
+<p>可以使用本地 GDB 配置文件 <code class="file docutils literal notranslate"><span class="pre">.gdbinit</span></code>，在每次运行时初始化 GDB 实例。<code class="file docutils literal notranslate"><span class="pre">.gdbinit</span></code> 通常放在主目录中，但也可以配置 GDB 从其他位置加载，包括调用 <strong class="command">gdb</strong> 的目录。下面的示例文件执行与上文相同的配置：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>target remote localhost:1234
+dir ZEPHYR_BASE
+</pre></div>
+</div>
+<section id="alternate-interfaces">
+<h4>其他界面<a class="headerlink" href="#alternate-interfaces" title="链接到此标题。"></a></h4>
+<p>GDB 提供一个在终端中运行、基于 curses 的界面。调用 <strong class="command">gdb</strong> 时传入 <code class="docutils literal notranslate"><span class="pre">--tui</span></code> 选项，或在 <strong class="command">gdb</strong> 中输入 <code class="docutils literal notranslate"><span class="pre">tui</span> <span class="pre">enable</span></code> 命令即可。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>你开发系统上的 GDB 版本可能不支持 <code class="docutils literal notranslate"><span class="pre">--tui</span></code> 选项。请确保使用 SDK 中的 GDB 二进制文件，且它与构建该二进制文件所用的工具链相对应。</p>
+</div>
+<p>最后，下面的命令使用 GDB 的图形前端 <abbr title="Data Display Debugger">DDD</abbr> 连接到 GDB 服务器。该命令会从 ELF 二进制文件（本例中为 <code class="file docutils literal notranslate"><span class="pre">zephyr.elf</span></code>）加载符号表。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>ddd<span class="w"> </span>--gdb<span class="w"> </span>--debugger<span class="w"> </span><span class="s2">"gdb zephyr.elf"</span>
+</pre></div>
+</div>
+<p>这两条命令都会执行 <strong class="command">gdb</strong>。命令名称可能因所用的工具链和交叉开发工具而异。</p>
+<p>你的开发系统默认可能没有安装 <strong class="command">ddd</strong>。请按照系统说明进行安装。例如，在 Ubuntu 系统上使用 <strong class="command">sudo apt-get install ddd</strong>。</p>
+</section>
+</section>
+<section id="id2">
+<h3>调试<a class="headerlink" href="#id2" title="链接到此标题。"></a></h3>
+<p>按照上述配置，连接 GDB 客户端时，应用程序会停在系统启动处。你可以像直接在 <strong class="command">gdb</strong> 中运行应用程序时一样设置断点、单步执行代码等。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>与直接在 GDB 中运行本机应用程序不同，应用程序运行时 <strong class="command">gdb</strong> 不会打印系统控制台输出。如果连接客户端后只执行 <strong class="command">continue</strong>，应用程序会运行，但看起来什么都没有发生。请按上文所述查看控制台输出。</p>
+</div>
+</section>
+</section>
+<section id="debug-with-eclipse">
+<h2>使用 Eclipse 调试<a class="headerlink" href="#debug-with-eclipse" title="链接到此标题。"></a></h2>
+<section id="overview">
+<h3>概述<a class="headerlink" href="#overview" title="链接到此标题。"></a></h3>
+<p>CMake 支持生成项目描述文件，该文件可以导入 Eclipse 集成开发环境（IDE）并用于图形化调试。</p>
+<p><a class="reference external" href="https://gnu-mcu-eclipse.github.io/plugins/install/">GNU MCU Eclipse plug-ins</a> 提供了一种机制，可在 Eclipse 中使用 pyOCD、Segger J-Link 和 OpenOCD 调试工具调试 ARM 项目。</p>
+<p>下面的教程演示如何在 Windows 中使用 Eclipse 和 pyOCD 调试 Zephyr 应用程序。本教程假定你已安装 GCC ARM Embedded 工具链和 pyOCD。</p>
+</section>
+<section id="set-up-the-eclipse-development-environment">
+<h3>搭建 Eclipse 开发环境<a class="headerlink" href="#set-up-the-eclipse-development-environment" title="链接到此标题。"></a></h3>
+<ol class="arabic simple">
+<li><p>下载并安装 <a class="reference external" href="https://www.eclipse.org/downloads/packages/eclipse-ide-cc-developers/oxygen2">Eclipse IDE for C/C++ Developers</a>。</p></li>
+<li><p>在 Eclipse 中安装 <a class="reference external" href="https://gnu-mcu-eclipse.github.io/plugins/install/">GNU MCU Eclipse plug-ins</a>：打开菜单 <code class="docutils literal notranslate"><span class="pre">Window-&gt;Eclipse</span> <span class="pre">Marketplace...</span></code>，搜索 <code class="docutils literal notranslate"><span class="pre">GNU</span> <span class="pre">MCU</span> <span class="pre">Eclipse</span></code>，然后在匹配的结果上点击 <code class="docutils literal notranslate"><span class="pre">Install</span></code>。</p></li>
+<li><p>配置 pyOCD GDB 服务器的路径：打开菜单 <code class="docutils literal notranslate"><span class="pre">Window-&gt;Preferences</span></code>，导航到 <code class="docutils literal notranslate"><span class="pre">MCU</span></code>，然后设置 <code class="docutils literal notranslate"><span class="pre">Global</span> <span class="pre">pyOCD</span> <span class="pre">Path</span></code>。</p></li>
+</ol>
+</section>
+<section id="generate-and-import-an-eclipse-project">
+<h3>生成并导入 Eclipse 项目<a class="headerlink" href="#generate-and-import-an-eclipse-project" title="链接到此标题。"></a></h3>
+<ol class="arabic">
+<li><p>按照 <a class="reference internal" href="../toolchains/gnu_arm_embedded.html#toolchain-gnuarmemb"><span class="std std-ref">GNU Arm Embedded</span></a> 中的说明设置 GNU Arm Embedded 工具链。</p></li>
+<li><p>进入 Zephyr 源码树之外的某个文件夹来构建应用程序。</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>On<span class="w"> </span>Windows
+<span class="go">cd %userprofile%</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>如果构建目录是源码目录的子目录（Zephyr 中通常如此），CMake 会发出警告：</p>
+<p>“构建目录是源码目录的子目录。</p>
+<p>Eclipse 对此支持不佳。强烈建议使用与源码目录同级的构建目录。”</p>
+</div>
+</li>
+<li><p>使用 CMake 配置应用程序并用 ninja 构建。注意 <code class="docutils literal notranslate"><span class="pre">-G&quot;Eclipse</span> <span class="pre">CDT4</span> <span class="pre">-</span> <span class="pre">Ninja&quot;</span></code> 参数指定了不同的 CMake 生成器。除了常规的 ninja 构建文件之外，它还会生成 Eclipse 项目描述文件 <code class="file docutils literal notranslate"><span class="pre">.project</span></code>。</p>
+<p>Using west:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>frdm_k64f<span class="w"> </span>samples/synchronization<span class="w"> </span>--<span class="w"> </span>-G<span class="s2">"Eclipse CDT4 - Ninja"</span>
+</pre></div>
+</div>
+<p>Using CMake and ninja:</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>cmake<span class="w"> </span>-Bbuild<span class="w"> </span>-GNinja<span class="w"> </span>-DBOARD<span class="o">=</span>frdm_k64f<span class="w"> </span>-G<span class="s2">"Eclipse CDT4 - Ninja"</span><span class="w"> </span>samples/synchronization
+ninja<span class="w"> </span>-Cbuild
+</pre></div>
+</div>
+</li>
+<li><p>在 Eclipse 中导入生成的项目：打开菜单 <code class="docutils literal notranslate"><span class="pre">File-&gt;Import...</span></code>，选择 <code class="docutils literal notranslate"><span class="pre">Existing</span> <span class="pre">Projects</span> <span class="pre">into</span> <span class="pre">Workspace</span></code> 选项。在 <code class="docutils literal notranslate"><span class="pre">Select</span> <span class="pre">root</span> <span class="pre">directory:</span></code> 选项中浏览到应用程序的构建目录。在找到的项目列表中勾选你的项目，然后点击 <code class="docutils literal notranslate"><span class="pre">Finish</span></code> 按钮。</p></li>
+</ol>
+</section>
+<section id="create-a-debugger-configuration">
+<h3>创建调试器配置<a class="headerlink" href="#create-a-debugger-configuration" title="链接到此标题。"></a></h3>
+<ol class="arabic">
+<li><p>打开菜单 <code class="docutils literal notranslate"><span class="pre">Run-&gt;Debug</span> <span class="pre">Configurations...</span></code>。</p></li>
+<li><p>选择 <code class="docutils literal notranslate"><span class="pre">GDB</span> <span class="pre">PyOCD</span> <span class="pre">Debugging</span></code>，点击 <code class="docutils literal notranslate"><span class="pre">New</span></code> 按钮，然后配置以下选项：</p>
+<ul>
+<li><p>在 Main 选项卡中：</p>
+<ul class="simple">
+<li><p>Project：<code class="docutils literal notranslate"><span class="pre">my_zephyr_app&#64;build</span></code></p></li>
+<li><p>C/C++ Application：<code class="file docutils literal notranslate"><span class="pre">zephyr/zephyr.elf</span></code></p></li>
+</ul>
+</li>
+<li><p>在 Debugger 选项卡中：</p>
+<ul class="simple">
+<li><p>pyOCD Setup</p>
+<ul>
+<li><p>Executable path（可执行文件路径）：<code class="file docutils literal notranslate"><span class="pre">$</span><em><span class="pre">pyocd_path</span></em><span class="pre">\$</span><em><span class="pre">pyocd_executable</span></em></code></p></li>
+<li><p>取消勾选“Allocate console for semihosting”</p></li>
+</ul>
+</li>
+<li><p>Board Setup</p>
+<ul>
+<li><p>Bus speed（总线速度）：8000000 Hz</p></li>
+<li><p>取消勾选“Enable semihosting”</p></li>
+</ul>
+</li>
+<li><p>GDB Client Setup</p>
+<ul>
+<li><p>Executable path 示例（使用你的 <code class="docutils literal notranslate"><span class="pre">GNUARMEMB_TOOLCHAIN_PATH</span></code>）：<code class="file docutils literal notranslate"><span class="pre">C:\gcc-arm-none-eabi-6_2017-q2-update\bin\arm-none-eabi-gdb.exe</span></code></p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>在 SVD Path 选项卡中：</p>
+<ul class="simple">
+<li><p>File path（文件路径）：<code class="file docutils literal notranslate"><span class="pre">&lt;workspace</span> <span class="pre">top&gt;\modules\hal\nxp\mcux\devices\MK64F12\MK64F12.xml</span></code></p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>此项为可选。它向调试器提供 SoC 的内存映射寄存器地址和位域。</p>
+</div>
+</li>
+</ul>
+</li>
+<li><p>点击 <code class="docutils literal notranslate"><span class="pre">Debug</span></code> 按钮开始调试。</p></li>
+</ol>
+</section>
+<section id="rtos-awareness">
+<h3>RTOS 感知<a class="headerlink" href="#rtos-awareness" title="链接到此标题。"></a></h3>
+<p><a class="reference external" href="https://github.com/pyocd/pyOCD/releases/tag/v0.11.0">pyOCD v0.11.0</a> 及更高版本实现了对 Zephyr RTOS 感知的支持。它与 Eclipse 中的 GDB PyOCD Debugging 兼容，但必须在应用程序中启用 CONFIG_DEBUG_THREAD_INFO=y。</p>
+</section>
+</section>
+<section id="debugging-i2c-communication">
+<h2>调试 I2C 通信<a class="headerlink" href="#debugging-i2c-communication" title="链接到此标题。"></a></h2>
+<p>可以记录应用程序执行的全部或部分 I2C 事务。此功能由 Kconfig 选项 <a class="reference internal" href="../../kconfig.html#CONFIG_I2C_DUMP_MESSAGES" title="CONFIG_I2C_DUMP_MESSAGES"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_I2C_DUMP_MESSAGES</span></code></a> 启用，但它使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">LOG_DBG</span></code> 函数打印内容，因此还必须启用 <a class="reference internal" href="../../kconfig.html#CONFIG_I2C_LOG_LEVEL_DBG" title="CONFIG_I2C_LOG_LEVEL_DBG"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_I2C_LOG_LEVEL_DBG</span></code></a> 选项。</p>
+<p>转储输出示例如下:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>D: I2C msg: io_i2c_ctrl7_port0, addr=50
+D:    W      len=01: 00
+D:    R Sr P len=08:
+D: contents:
+D: 43 42 41 00 00 00 00 00 |CBA.....
+</pre></div>
+</div>
+<p>第一行表示 I2C 控制器和该事务的目标地址。在上面的示例中，I2C 控制器名为 <code class="docutils literal notranslate"><span class="pre">io_i2c_ctrl7_port0</span></code>，目标设备地址为 <code class="docutils literal notranslate"><span class="pre">0x50</span></code></p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>地址、长度和内容的值均为十六进制，但没有 <code class="docutils literal notranslate"><span class="pre">0x</span></code> 前缀</p>
+</div>
+<p>接下来的几行是发送和接收的消息。写消息的内容总会显示，而读消息的内容是否显示由函数 <code class="docutils literal notranslate"><span class="pre">i2c_dump_msgs_rw</span></code> 的一个参数控制。用户可以使用该函数，<code class="docutils literal notranslate"><span class="pre">i2c_transfer</span></code> API 函数也会在内部调用它，并启用读内容转储。在长度参数之前，会用缩写打印消息头：</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>W - 写消息</p></li>
+<li><p>R - 读消息</p></li>
+<li><p>Sr - 重复起始位</p></li>
+<li><p>P - 停止位</p></li>
+</ul>
+</div></blockquote>
+<p>上面的示例显示了一条写消息，其中字节 <code class="docutils literal notranslate"><span class="pre">0x00</span></code> 表示要从 I2C 目标读取的寄存器地址。之后，日志显示接收消息的长度，随后是从目标读取的字节 <code class="docutils literal notranslate"><span class="pre">43</span> <span class="pre">42</span> <span class="pre">41</span> <span class="pre">00</span> <span class="pre">00</span> <span class="pre">00</span> <span class="pre">00</span> <span class="pre">00</span></code>。内容转储同时包含十六进制和 ASCII 表示。</p>
+<section id="filtering-the-i2c-communication-dump">
+<h3>过滤 I2C 通信转储<a class="headerlink" href="#filtering-the-i2c-communication-dump" title="链接到此标题。"></a></h3>
+<p>默认情况下，所有 I2C 控制器与所有 I2C 目标之间的通信都会被记录。这可能会让日志充斥无关设备的信息，难以有效调试与目标设备的通信。</p>
+<p>启用 Kconfig 选项 <a class="reference internal" href="../../kconfig.html#CONFIG_I2C_DUMP_MESSAGES_ALLOWLIST" title="CONFIG_I2C_DUMP_MESSAGES_ALLOWLIST"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_I2C_DUMP_MESSAGES_ALLOWLIST</span></code></a>，可以创建要记录的 I2C 目标允许列表。设备允许列表通过设备树配置，例如:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>/ {
+    i2c {
+        display0: some-display@a {
+            ...
+        };
+        sensor3: some-sensor@b {
+            ...
+        };
+    };
+
+    i2c-dump-allowlist {
+        compatible = "zephyr,i2c-dump-allowlist";
+        devices = &lt;&amp;display0&gt;, &lt;&amp;sensor3&gt;;
+    };
+};
+</pre></div>
+</div>
+<p>过滤器节点通过值为 <code class="docutils literal notranslate"><span class="pre">zephyr,i2c-dump-allowlist</span></code> 的 compatible 字符串识别。通过 <code class="docutils literal notranslate"><span class="pre">devices</span></code> 属性中指向 I2C 总线上设备的 phandle 来选择设备。</p>
+<p>在上面的示例中，与设备 <code class="docutils literal notranslate"><span class="pre">display0</span></code> 和 <code class="docutils literal notranslate"><span class="pre">sensor3</span></code> 的通信会显示在日志中。</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 5月 30, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

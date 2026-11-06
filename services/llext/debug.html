@@ -1,0 +1,558 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>调试扩展 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/llext/debug.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="API 参考" href="api.html" />
+    <link rel="prev" title="加载扩展" href="load.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">服务</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../connectivity/index.html">连接</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../frameworks.html">框架</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">可链接可加载扩展（LLEXT）</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="config.html">配置</a></li>
+<li class="toctree-l4"><a class="reference internal" href="build.html">构建扩展</a></li>
+<li class="toctree-l4"><a class="reference internal" href="load.html">加载扩展</a></li>
+<li class="toctree-l4"><a class="reference internal" href="load.html#troubleshooting">故障排除</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">调试扩展</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#extension-debugging-process">扩展调试流程</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#symbol-lookup-issues">符号查找问题</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#discard-all-zephyr-symbols">丢弃所有 Zephyr 符号</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#edit-the-elf-file">编辑 ELF 文件</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#example-debugging-session">调试会话示例</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#discarding-symbols">丢弃符号</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#editing-the-elf-file">编辑 ELF 文件</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="api.html">API 参考</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../mpipe/index.html">多媒体流水线（mpipe）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sensing/index.html">传感子系统（Sensing Subsystem）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../smf/index.html">状态机框架</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../frameworks.html">框架</a> &raquo;</li>
+  
+     <li><a href="index.html">可链接可加载扩展（LLEXT）</a> &raquo;</li>
+  
+  <li>调试扩展</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="debugging-extensions">
+<span id="llext-debug"></span><h1>调试扩展<a class="headerlink" href="#debugging-extensions" title="链接到此标题。"></a></h1>
+<p>调试扩展是一项复杂的任务。按照定义，扩展代码不是与 Zephyr 应用程序一起构建的，因此最终的 Zephyr ELF 文件不包含扩展代码的符号。此外，扩展在运行时由 <code class="xref c c-func docutils literal notranslate"><span class="pre">llext_load()</span></code> 动态重定位，因此即使有这些符号，调试器也无法知道扩展代码中各符号的最终位置。</p>
+<p>在这种情况下，正确设置调试会话需要几个手动步骤。以下各节将介绍如何使用 Zephyr SDK 和 <code class="docutils literal notranslate"><span class="pre">west</span></code> 提供的调试功能完成这些步骤，不过这些说明也可以套用到任何基于 GDB 的调试环境。</p>
+<section id="extension-debugging-process">
+<h2>扩展调试流程<a class="headerlink" href="#extension-debugging-process" title="链接到此标题。"></a></h2>
+<ol class="arabic">
+<li><p>确保项目已设置为显示详细的 LLEXT 调试输出（已设置 <a class="reference internal" href="../../kconfig.html#CONFIG_LOG" title="CONFIG_LOG"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG</span></code></a> 和 <a class="reference internal" href="../../kconfig.html#CONFIG_LLEXT_LOG_LEVEL_DBG" title="CONFIG_LLEXT_LOG_LEVEL_DBG"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LLEXT_LOG_LEVEL_DBG</span></code></a>）。</p></li>
+<li><p>构建 Zephyr 应用程序和扩展。</p>
+<p>对于当前构建中包含的每个目标 <code class="docutils literal notranslate"><span class="pre">name</span></code>，会在构建根目录的 <code class="docutils literal notranslate"><span class="pre">llext</span></code> 子目录中生成两个文件：</p>
+<p><code class="docutils literal notranslate"><span class="pre">name_ext_debug.elf</span></code></p>
+<blockquote>
+<div><p>包含完整调试信息的中间 ELF 文件。</p>
+</div></blockquote>
+<p><code class="docutils literal notranslate"><span class="pre">name.llext</span></code></p>
+<blockquote>
+<div><p>最终的扩展二进制文件，经过剥离，只保留加载到 Zephyr 应用程序所必需的数据。</p>
+</div></blockquote>
+<p>根据目标架构和构建配置的不同，还可能存在其他文件。</p>
+</li>
+<li><p>启动 Zephyr 主应用程序的调试会话。文档的 <a class="reference internal" href="../../develop/west/build-flash-debug.html#west-debugging"><span class="std std-ref">调试</span></a> 一节对此有说明；在受支持的开发板上，只需运行 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">debug</span></code>（可能需要附加一些参数）即可。</p></li>
+<li><p>在代码中 <code class="xref c c-func docutils literal notranslate"><span class="pre">llext_load()</span></code> 函数之后设置一个断点，然后让程序运行。这会将扩展加载到内存中并对其重定位。输出日志中会有一行 <code class="docutils literal notranslate"><span class="pre">gdb</span> <span class="pre">add-symbol-file</span> <span class="pre">flags:</span></code>，其后是若干以 <code class="docutils literal notranslate"><span class="pre">-s</span></code> 开头的行。</p></li>
+<li><p>在 GDB 控制台中输入以下命令以加载该扩展的符号：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>add-symbol-file &lt;path-to-debug.elf&gt; &lt;load-addresses&gt;
+</pre></div>
+</div>
+<p>其中 <code class="docutils literal notranslate"><span class="pre">&lt;path-to-debug.elf&gt;</span></code> 是第 2 步中确定的带调试信息 ELF 文件的完整路径，<code class="docutils literal notranslate"><span class="pre">&lt;load-addresses&gt;</span></code> 是从上一步日志中收集的所有 <code class="docutils literal notranslate"><span class="pre">-s</span></code> 行，以空格分隔。</p>
+</li>
+<li><p>现在调试器已经可以使用扩展的符号。你可以像平常一样设置断点、查看变量和单步执行代码。</p></li>
+</ol>
+<p>如果应用程序加载了多个扩展，可以对每个扩展重复第 4-6 步。</p>
+</section>
+<section id="symbol-lookup-issues">
+<h2>符号查找问题<a class="headerlink" href="#symbol-lookup-issues" title="链接到此标题。"></a></h2>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>加载的符号几乎肯定会被主应用程序中的其他符号遮蔽；例如，它们可能位于 ELF 缓冲区或 LLEXT 堆的内存区域内。</p>
+<p>在这种情况下，GDB 会选择第一个已知的符号，因此会将地址关联到类似 <code class="docutils literal notranslate"><span class="pre">elf_buffer+0x123</span></code> 的位置，而不是预期的 <code class="docutils literal notranslate"><span class="pre">ext_fn</span></code>。这会进一步干扰源码级单步执行或查看局部变量之类的高层操作，因为在那种上下文中这些操作毫无意义。</p>
+</div>
+<p>下面几段讨论了解决此问题的两种可能方案。</p>
+<section id="discard-all-zephyr-symbols">
+<h3>丢弃所有 Zephyr 符号<a class="headerlink" href="#discard-all-zephyr-symbols" title="链接到此标题。"></a></h3>
+<p>最简单的办法是在第 5 步之前不带参数调用 <code class="docutils literal notranslate"><span class="pre">add-symbol-file</span></code>，从 GDB 中丢弃 Zephyr 应用程序的所有符号。但这样一来，调试会话就只能专注于 llext，因为有关 Zephyr 应用程序的所有信息都会丢失。例如，调试器可能无法正确跟踪扩展代码之外的栈回溯。</p>
+<p>可以在同一个会话中多次使用这一技巧，按需在主程序和扩展的符号表之间切换，但这很快就会变得繁琐。</p>
+</section>
+<section id="edit-the-elf-file">
+<h3>编辑 ELF 文件<a class="headerlink" href="#edit-the-elf-file" title="链接到此标题。"></a></h3>
+<p>这种方法更复杂，但能带来更流畅的调试体验。其思路是编辑 Zephyr 主 ELF 文件，删除与待调试扩展重叠的符号信息，这样在加载扩展符号时，GDB 就不会产生任何歧义。这可以通过带 <code class="docutils literal notranslate"><span class="pre">-N</span> <span class="pre">&lt;symbol&gt;</span></code> 选项的 <code class="docutils literal notranslate"><span class="pre">objcopy</span></code> 来完成。</p>
+<p>不过，找出引起冲突的符号是一个反复试错的过程，因为可能存在许多不同的层次；例如，ELF 缓冲区本身可能包含在数据段的某个符号中。幸运的是，由于对于给定项目这个列表不太可能变化，这些信息可以多次重复使用。</p>
+</section>
+</section>
+<section id="example-debugging-session">
+<h2>调试会话示例<a class="headerlink" href="#example-debugging-session" title="链接到此标题。"></a></h2>
+<p>本示例演示如何在基于 ARM Cortex-M3 的模拟 <code class="docutils literal notranslate"><span class="pre">mps2/an385</span></code> 开发板上调试 <code class="docutils literal notranslate"><span class="pre">tests/subsys/llext</span></code> 项目中的 <code class="docutils literal notranslate"><span class="pre">detached_fn</span></code> 扩展（具体为 <code class="docutils literal notranslate"><span class="pre">writable</span></code> 用例）。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>以下日志是使用 Zephyr 4.1 版本和 Zephyr SDK 0.17.0 版本获得的。不过，即使使用相同的版本，每次运行的具体地址仍可能不同。请调整下面的命令，使其与你自己会话的结果相符。</p>
+</div>
+<p>以下命令将构建项目，并以调试模式启动模拟器：</p>
+<div class="literal-block-wrapper docutils container" id="id1">
+<div class="code-block-caption"><span class="caption-text">终端 1（构建、QEMU 模拟器、GDB 服务器）</span><a class="headerlink" href="#id1" title="链接到此段代码"></a></div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>zephyr$ west build -p -b mps2/an385 tests/subsys/llext/ -T llext.writable -t debugserver_qemu
+-- west build: generating a build system
+[...]
+-- west build: running target debugserver_qemu
+[...]
+[186/187] To exit from QEMU enter: 'CTRL+a, x'[QEMU] CPU: cortex-m3
+</pre></div>
+</div>
+</div>
+<p>在另一个终端中，将 <code class="docutils literal notranslate"><span class="pre">ZEPHYR_SDK_INSTALL_DIR</span></code> 设置为你所安装 Zephyr SDK 的目录，然后启动针对该目标的 GDB 客户端：</p>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">终端 2（GDB 客户端）</span><a class="headerlink" href="#id2" title="链接到此段代码"></a></div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>zephyr$ export LLEXT_SDK_INSTALL_DIR=/opt/zephyr-sdk-0.17.0
+zephyr$ ${LLEXT_SDK_INSTALL_DIR}/arm-zephyr-eabi/bin/arm-zephyr-eabi-gdb build/zephyr/zephyr.elf
+GNU gdb (Zephyr SDK 0.17.0) 12.1
+[...]
+Reading symbols from build/zephyr/zephyr.elf...
+(gdb)
+</pre></div>
+</div>
+</div>
+<p>连接，在 <code class="docutils literal notranslate"><span class="pre">llext_load</span></code> 函数上设置断点，然后运行直至其完成：</p>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">终端 2（GDB 客户端）</span><a class="headerlink" href="#id3" title="链接到此段代码"></a></div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(gdb) target extended-remote :1234
+Remote debugging using :1234
+z_arm_reset () at zephyr/arch/arm/core/cortex_m/reset.S:124
+124         movs.n r0, #_EXC_IRQ_DEFAULT_PRIO
+(gdb) break llext_load
+Breakpoint 1 at 0x236c: file zephyr/subsys/llext/llext.c, line 168.
+(gdb) continue
+Continuing.
+
+Breakpoint 1, llext_load (ldr=ldr@entry=0x2000bef0 &lt;ztest_thread_stack+3488&gt;,
+                          name=name@entry=0x9d98 "test_detached",
+                          ext=ext@entry=0x2000abb8 &lt;detached_llext&gt;,
+                          ldr_parm=ldr_parm@entry=0x2000bee8 &lt;ztest_thread_stack+3480&gt;)
+              at zephyr/subsys/llext/llext.c:168
+168             *ext = llext_by_name(name);
+(gdb) finish
+Run till exit from #0  llext_load ([...])
+    at zephyr/subsys/llext/llext.c:168
+llext_test_detached () at zephyr/tests/subsys/llext/src/test_llext.c:481
+481             zassert_ok(res, "load should succeed");
+</pre></div>
+</div>
+</div>
+<p>第一个终端会打印大量与扩展加载相关的调试信息。找到包含地址的那一部分：</p>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text">终端 1（构建、QEMU 模拟器、GDB 服务器）</span><a class="headerlink" href="#id4" title="链接到此段代码"></a></div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[...]
+D: Allocate and copy regions...
+[...]
+D: gdb add-symbol-file flags:
+D: -s .text 0x20000034
+D: -s .data 0x200000b4
+D: -s .bss 0x2000c2e0
+D: -s .rodata 0x200000b8
+D: -s .detach 0x200001d0
+D: Counting exported symbols...
+[...]
+</pre></div>
+</div>
+</div>
+<p>使用这些地址将符号加载到 GDB 中：</p>
+<div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text">终端 2（GDB 客户端）</span><a class="headerlink" href="#id5" title="链接到此段代码"></a></div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(gdb) add-symbol-file build/llext/detached_fn_ext_debug.elf -s .text 0x20000034 -s .data 0x200000b4 -s .bss 0x2000c2e0 -s .rodata 0x200000b8 -s .detach 0x200001d0
+add symbol table from file "build/llext/detached_fn_ext_debug.elf" at
+        .text_addr = 0x20000034
+        .data_addr = 0x200000b4
+        .bss_addr = 0x2000c2e0
+        .rodata_addr = 0x200000b8
+        .detach_addr = 0x200001d0
+(y or n) y
+Reading symbols from build/llext/detached_fn_ext_debug.elf...
+(gdb) break detached_entry
+Breakpoint 2 at 0x200001d0 (2 locations)
+(gdb) continue
+Continuing.
+
+Breakpoint 2, 0x200001d0 in test_detached_ext ()
+(gdb) backtrace
+#0  0x200001d0 in test_detached_ext ()
+#1  0x200000ac in test_detached_ext ()
+#2  0x00000706 in llext_test_detached () at zephyr/tests/subsys/llext/src/test_llext.c:496
+#3  0x00001a36 in run_test_functions (suite=0x92bc &lt;z_ztest_test_node_llext&gt;, data=0x0 &lt;cbvprintf_package&gt;, test=0x92d8 &lt;z_ztest_unit_test.llext.test_detached&gt;) at zephyr/subsys/testsuite/ztest/src/ztest.c:328
+#4  test_cb (a=0x92bc &lt;z_ztest_test_node_llext&gt;, b=0x92d8 &lt;z_ztest_unit_test.llext.test_detached&gt;, c=0x0 &lt;cbvprintf_package&gt;) at zephyr/subsys/testsuite/ztest/src/ztest.c:662
+#5  0x00000e96 in z_thread_entry (entry=0x1a05 &lt;test_cb&gt;, p1=0x92bc &lt;z_ztest_test_node_llext&gt;, p2=0x92d8 &lt;z_ztest_unit_test.llext.test_detached&gt;, p3=0x0 &lt;cbvprintf_package&gt;) at zephyr/lib/os/thread_entry.c:48
+#6  0x00000000 in ?? ()
+</pre></div>
+</div>
+</div>
+<p>与断点位置关联的符号以及最后几个栈帧错误地引用了 Zephyr 应用程序中的 ELF 缓冲区，而不是扩展的符号。但请注意，GDB 其实两者都知道：</p>
+<div class="literal-block-wrapper docutils container" id="id6">
+<div class="code-block-caption"><span class="caption-text">终端 2（GDB 客户端）</span><a class="headerlink" href="#id6" title="链接到此段代码"></a></div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(gdb) info sym 0x200001d0
+test_detached_ext + 464 in section datas of zephyr/build/zephyr/zephyr.elf
+detached_entry in section .detach of zephyr/build/llext/detached_fn_ext_debug.elf
+(gdb) info sym 0x200000ac
+test_detached_ext + 172 in section datas of zephyr/build/zephyr/zephyr.elf
+test_entry + 8 in section .text of zephyr/build/llext/detached_fn_ext_debug.elf
+</pre></div>
+</div>
+</div>
+<p>同样也无法查看扩展中的变量或正确地单步执行代码：</p>
+<div class="literal-block-wrapper docutils container" id="id7">
+<div class="code-block-caption"><span class="caption-text">终端 2（GDB 客户端）</span><a class="headerlink" href="#id7" title="链接到此段代码"></a></div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(gdb) print bss_cnt
+No symbol "bss_cnt" in current context.
+(gdb) print data_cnt
+No symbol "data_cnt" in current context.
+(gdb) next
+Single stepping until exit from function test_detached_ext,
+which has no line number information.
+
+Breakpoint 2, 0x200001ea in test_detached_ext ()
+(gdb)
+</pre></div>
+</div>
+</div>
+<section id="discarding-symbols">
+<h3>丢弃符号<a class="headerlink" href="#discarding-symbols" title="链接到此标题。"></a></h3>
+<p>丢弃 Zephyr 符号、只专注于扩展，可以恢复完整的调试功能，代价是失去全局上下文（注意回溯在扩展之外就停止了）：</p>
+<div class="literal-block-wrapper docutils container" id="id8">
+<div class="code-block-caption"><span class="caption-text">终端 2（GDB 客户端）</span><a class="headerlink" href="#id8" title="链接到此段代码"></a></div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(gdb) symbol-file
+Discard symbol table from `zephyr/build/zephyr/zephyr.elf'? (y or n) y
+Error in re-setting breakpoint 1: No symbol table is loaded.  Use the "file" command.
+No symbol file now.
+(gdb) add-symbol-file build/llext/detached_fn_ext_debug.elf -s .text 0x20000034 -s .data 0x200000b4 -s .bss 0x2000c2e0 -s .rodata 0x200000b8 -s .detach 0x200001d0
+add symbol table from file "build/llext/detached_fn_ext_debug.elf" at
+        .text_addr = 0x20000034
+        .data_addr = 0x200000b4
+        .bss_addr = 0x2000c2e0
+        .rodata_addr = 0x200000b8
+        .detach_addr = 0x200001d0
+(y or n) y
+Reading symbols from build/llext/detached_fn_ext_debug.elf...
+(gdb) backtrace
+#0  detached_entry () at zephyr/tests/subsys/llext/src/detached_fn_ext.c:18
+#1  0x200000ac in test_entry () at zephyr/tests/subsys/llext/src/detached_fn_ext.c:26
+#2  0x00000706 in ?? ()
+Backtrace stopped: previous frame identical to this frame (corrupt stack?)
+(gdb) next
+19              zassert_true(data_cnt &lt; 0);
+(gdb) print bss_cnt
+$1 = 1
+(gdb) print data_cnt
+$2 = -2
+(gdb)
+</pre></div>
+</div>
+</div>
+</section>
+<section id="editing-the-elf-file">
+<h3>编辑 ELF 文件<a class="headerlink" href="#editing-the-elf-file" title="链接到此标题。"></a></h3>
+<p>在这种替代方法中，对 Zephyr ELF 文件的修补必须在终端 1 上构建 Zephyr 二进制文件并启动模拟器之后、在终端 2 上启动 GDB 客户端之前进行。</p>
+<p>上面的调试会话已经确定 <code class="docutils literal notranslate"><span class="pre">test_detached_ext</span></code>（保存 ELF 文件的 char 数组）是引起冲突的符号，因此第一轮先将其删除。多次执行相同的步骤后，还可以发现 <code class="docutils literal notranslate"><span class="pre">__data_start</span></code> 和 <code class="docutils literal notranslate"><span class="pre">__data_region_start</span></code> 也与所关注的内存区域重叠。</p>
+<p>以下命令将从 Zephyr ELF 文件中删除所有这些符号，然后在修改后的文件上启动调试会话：</p>
+<div class="literal-block-wrapper docutils container" id="id9">
+<div class="code-block-caption"><span class="caption-text">终端 2（GDB 客户端）</span><a class="headerlink" href="#id9" title="链接到此段代码"></a></div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>zephyr$ export LLEXT_SDK_INSTALL_DIR=/opt/zephyr-sdk-0.17.0
+zephyr$ ${LLEXT_SDK_INSTALL_DIR}/arm-zephyr-eabi/bin/arm-zephyr-eabi-objcopy -N test_detached_ext -N __data_start -N __data_region_start build/zephyr/zephyr.elf build/zephyr/zephyr-edit.elf
+zephyr$ ${LLEXT_SDK_INSTALL_DIR}/arm-zephyr-eabi/bin/arm-zephyr-eabi-gdb build/zephyr/zephyr-edit.elf
+GNU gdb (Zephyr SDK 0.17.0) 12.1
+[...]
+Reading symbols from build/zephyr/zephyr-edit.elf...
+(gdb)
+</pre></div>
+</div>
+</div>
+<p>可以再次执行上一次运行中使用的相同步骤，连接到 GDB 服务器并加载扩展及其调试符号。不过，这一次的结果大不相同：</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">break</span></code> 命令包含行号信息；</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">backtrace</span></code> 的输出同时包含扩展和 Zephyr 应用程序中的函数；</p></li>
+<li><p>可以正确查看局部变量。</p></li>
+</ul>
+</div></blockquote>
+<div class="literal-block-wrapper docutils container" id="id10">
+<div class="code-block-caption"><span class="caption-text">终端 2（GDB 客户端）</span><a class="headerlink" href="#id10" title="链接到此段代码"></a></div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(gdb) add-symbol-file build/llext/detached_fn_ext_debug.elf [...]
+[...]
+Reading symbols from build/llext/detached_fn_ext_debug.elf...
+(gdb) break detached_entry
+Breakpoint 2 at 0x200001d6: file zephyr/tests/subsys/llext/src/detached_fn_ext.c, line 17.
+(gdb) continue
+Continuing.
+
+Breakpoint 2, detached_entry () at zephyr/tests/subsys/llext/src/detached_fn_ext.c:17
+17              printk("bss %u @ %p\n", bss_cnt++, &amp;bss_cnt);
+(gdb) backtrace
+#0  detached_entry () at zephyr/tests/subsys/llext/src/detached_fn_ext.c:17
+#1  0x200000ac in test_entry () at zephyr/tests/subsys/llext/src/detached_fn_ext.c:26
+#2  0x00000706 in llext_test_detached () at zephyr/tests/subsys/llext/src/test_llext.c:496
+#3  0x00001a36 in run_test_functions (suite=0x92bc &lt;z_ztest_test_node_llext&gt;, data=0x0 &lt;cbvprintf_package&gt;, test=0x92d8 &lt;z_ztest_unit_test.llext.test_detached&gt;) at zephyr/subsys/testsuite/ztest/src/ztest.c:328
+#4  test_cb (a=0x92bc &lt;z_ztest_test_node_llext&gt;, b=0x92d8 &lt;z_ztest_unit_test.llext.test_detached&gt;, c=0x0 &lt;cbvprintf_package&gt;) at zephyr/subsys/testsuite/ztest/src/ztest.c:662
+#5  0x00000e96 in z_thread_entry (entry=0x1a05 &lt;test_cb&gt;, p1=0x92bc &lt;z_ztest_test_node_llext&gt;, p2=0x92d8 &lt;z_ztest_unit_test.llext.test_detached&gt;, p3=0x0 &lt;cbvprintf_package&gt;) at zephyr/lib/os/thread_entry.c:48
+#6  0x00000000 in ?? ()
+(gdb) print bss_cnt
+$1 = 0
+(gdb) print data_cnt
+$2 = -3
+(gdb)
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 1月 16, 2025.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

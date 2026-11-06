@@ -1,0 +1,28 @@
+var irq_8h =
+[
+    [ "IRQ_CONNECT", "group__isr__apis.html#ga131739d1faf501a15590053817aba984", null ],
+    [ "IRQ_DIRECT_CONNECT", "group__isr__apis.html#gac6c8746ac28da6ce02b24714f4144ff3", null ],
+    [ "irq_disable", "group__isr__apis.html#ga82c3a15d812f58e0f6525f358d031e6d", null ],
+    [ "irq_enable", "group__isr__apis.html#ga7ea700ee31e4ff036c997a554dbedfeb", null ],
+    [ "irq_is_enabled", "group__isr__apis.html#ga71fef3867ba9818cf0a5baf8410a6354", null ],
+    [ "irq_lock", "group__isr__apis.html#ga19fdde73c3b02fcca6cf1d1e67631228", null ],
+    [ "irq_unlock", "group__isr__apis.html#ga646045943b3b2a130738bcc48867bf57", null ],
+    [ "ISR_DIRECT_DECLARE", "group__isr__apis.html#gaf86866cd07fd37f381d98866f8874ebf", null ],
+    [ "ISR_DIRECT_FOOTER", "group__isr__apis.html#ga31581157c9dbacf935f0e6a8dd456335", null ],
+    [ "ISR_DIRECT_HEADER", "group__isr__apis.html#ga1ab99dbeb50b228001e1fca808cbaeea", null ],
+    [ "ISR_DIRECT_PM", "group__isr__apis.html#ga3c1327551dfca7818975e3fbf1470227", null ],
+    [ "K_IRQ_ACTIVE_NONE", "group__isr__apis.html#gade847221335f869809291f0dda33a710", null ],
+    [ "irq_connect_dynamic", "group__isr__apis.html#ga4e9915b92b09df49b99bc449f0cc31a1", null ],
+    [ "irq_disconnect_dynamic", "group__isr__apis.html#gabdab7745edc1e15862e1772d8673fc00", null ],
+    [ "k_irq_clear_pending", "group__isr__apis.html#gaa322248445f4914ff2093e7cadff0891", null ],
+    [ "k_irq_connect_dynamic", "group__isr__apis.html#ga2835209c4f3809b5d22fc84c1bdce935", null ],
+    [ "k_irq_disable", "group__isr__apis.html#ga432cfe25e5846d7a0a665043e623d3b6", null ],
+    [ "k_irq_disconnect_dynamic", "group__isr__apis.html#gae2f1cb1c6babc98ff59d9e87daccb0c5", null ],
+    [ "k_irq_enable", "group__isr__apis.html#ga502c7221c97faad1399465e21880fef1", null ],
+    [ "k_irq_get_active", "group__isr__apis.html#gaa62fbe4efebb343ed5ae494c9fcd13cb", null ],
+    [ "k_irq_is_enabled", "group__isr__apis.html#gabba768c3c87a40641982e4b0654c0d26", null ],
+    [ "k_irq_is_pending", "group__isr__apis.html#ga1afce7151e12971b53f7f522493b982c", null ],
+    [ "k_irq_lock", "group__isr__apis.html#gad4a27741fdbb40d4a7d1c7cea10eff03", null ],
+    [ "k_irq_set_pending", "group__isr__apis.html#gaa9f2e3357809d1bb734d0841cb3a9653", null ],
+    [ "k_irq_unlock", "group__isr__apis.html#ga4a5a523c81da5c75d25c58d7702b7144", null ]
+];

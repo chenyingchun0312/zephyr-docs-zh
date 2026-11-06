@@ -1,0 +1,406 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>自旋锁 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/kernel/services/synchronization/spinlocks.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" />
+    <link rel="next" title="对称多处理" href="../smp/smp.html" />
+    <link rel="prev" title="事件" href="events.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">内核</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">内核服务</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html#scheduling-interrupts-and-synchronization">调度、中断与同步</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../threads/index.html">线程</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scheduling/index.html">调度</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scheduling/index.html#cpu-idling">CPU 空闲</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../threads/system_threads.html">系统线程</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../threads/workqueue.html">工作队列线程</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../threads/nothread.html">无线程运行</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../interrupts.html">中断</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../polling.html">轮询 API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="semaphores.html">信号量</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mutexes.html">互斥量</a></li>
+<li class="toctree-l4"><a class="reference internal" href="condvar.html">条件变量</a></li>
+<li class="toctree-l4"><a class="reference internal" href="events.html">事件</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">自旋锁</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#usage">用法</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#acquiring-without-spinning">不自旋地获取锁</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#rules">规则</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#spinlocks-on-uniprocessor-systems">单处理器系统上的自旋锁</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#spinlock-validation">自旋锁校验</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#fair-spinlocks">公平自旋锁</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#suggested-uses">建议用法</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#api-reference">API 参考</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../smp/smp.html">对称多处理</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#data-passing">数据传递</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#memory-management">内存管理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#timing">计时</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#other">其他</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../drivers/index.html">设备驱动模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../usermode/index.html">用户模式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../memory_management/index.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../data_structures/index.html">数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../timing_functions/index.html">计时函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../object_cores/index.html">对象核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../timeutil.html">时间工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../precision_timing.html">精密计时</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../util/index.html">实用工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../iterable_sections/index.html">可迭代段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../code-relocation.html">代码和数据重定位</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanup.html">基于作用域的清理辅助工具</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">内核</a> &raquo;</li>
+  
+     <li><a href="../index.html">内核服务</a> &raquo;</li>
+  
+  <li>自旋锁</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="spinlocks">
+<span id="id1"></span><h1>自旋锁<a class="headerlink" href="#spinlocks" title="链接到此标题。"></a></h1>
+<nav class="contents local" id="id2">
+<ul class="simple">
+<li><p><a class="reference internal" href="#usage" id="id3">用法</a></p>
+<ul>
+<li><p><a class="reference internal" href="#acquiring-without-spinning" id="id4">不自旋地获取锁</a></p></li>
+<li><p><a class="reference internal" href="#rules" id="id5">规则</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#spinlocks-on-uniprocessor-systems" id="id6">单处理器系统上的自旋锁</a></p></li>
+<li><p><a class="reference internal" href="#spinlock-validation" id="id7">自旋锁校验</a></p></li>
+<li><p><a class="reference internal" href="#fair-spinlocks" id="id8">公平自旋锁</a></p></li>
+<li><p><a class="reference internal" href="#suggested-uses" id="id9">建议用法</a></p></li>
+<li><p><a class="reference internal" href="#api-reference" id="id10">API 参考</a></p></li>
+</ul>
+</nav>
+<p>自旋锁是 Zephyr 中最底层的互斥原语。它保护一段简短的临界区，使同一时刻只有一个执行上下文能够访问共享资源。发现锁已被持有的上下文会“自旋”，即忙等待直到锁变为可用，而不是阻塞并让出 CPU。因此，自旋锁只适用于很短的临界区。</p>
+<p>获取自旋锁还会在持锁期间屏蔽本地 CPU 上的中断。正因如此，自旋锁可以安全地在线程和中断处理程序之间共享：当某个上下文持有锁时，同一 CPU 上的任何 ISR 都无法抢占它，其他 CPU 也无法获取同一把锁，因此它们都无法在更新过程中观察到或破坏受保护的数据。基于这些原因，<code class="xref c c-struct docutils literal notranslate"><span class="pre">k_spinlock</span></code> 是 Zephyr 内核自身使用的主要同步原语，用于保护对其核心数据结构的访问。</p>
+<p>应用程序代码也可以直接使用自旋锁，但通常建议改用更高层的同步原语，例如 <code class="xref c c-struct docutils literal notranslate"><span class="pre">k_mutex</span></code> 或 <code class="xref c c-struct docutils literal notranslate"><span class="pre">k_sem</span></code>。</p>
+<section id="usage">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">用法</a><a class="headerlink" href="#usage" title="链接到此标题。"></a></h2>
+<p>为每个需要保护的独立资源声明一个 <code class="xref c c-struct docutils literal notranslate"><span class="pre">k_spinlock</span></code>。使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_spin_lock()</span></code> 获取锁，该函数返回一个 <code class="xref c c-type docutils literal notranslate"><span class="pre">k_spinlock_key_t</span></code>，释放锁时必须将其传回 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_spin_unlock()</span></code>：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">k_spinlock</span><span class="w"> </span><span class="n">lock</span><span class="p">;</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">update_shared_state</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="n">k_spinlock_key_t</span><span class="w"> </span><span class="n">key</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">k_spin_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lock</span><span class="p">);</span>
+
+<span class="w">        </span><span class="cm">/* critical section: exclusive access */</span>
+
+<span class="w">        </span><span class="n">k_spin_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lock</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>辅助宏 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_SPINLOCK</span></code> 在其包含的代码块执行期间持有锁，并在退出代码块时自动释放锁。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">K_SPINLOCK</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lock</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="cm">/* critical section: exclusive access */</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>该代码块必须执行到末尾，或者使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_SPINLOCK_BREAK</span></code> 退出。使用普通的 <code class="docutils literal notranslate"><span class="pre">break</span></code>、<code class="docutils literal notranslate"><span class="pre">goto</span></code> 或 <code class="docutils literal notranslate"><span class="pre">return</span></code> 退出会跳过释放操作，导致锁泄漏：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">K_SPINLOCK</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lock</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">nothing_to_do</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">K_SPINLOCK_BREAK</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="cm">/* critical section: exclusive access */</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<section id="acquiring-without-spinning">
+<h3><a class="toc-backref" href="#id4" role="doc-backlink">不自旋地获取锁</a><a class="headerlink" href="#acquiring-without-spinning" title="链接到此标题。"></a></h3>
+<p><code class="xref c c-func docutils literal notranslate"><span class="pre">k_spin_trylock()</span></code> 只尝试获取一次锁，失败时直接报告而不是等待。当调用者还有其他工作要做或不能停顿时，这很有用。成功时它会保存键值，释放方式与 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_spin_lock()</span></code> 完全相同：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">k_spinlock_key_t</span><span class="w"> </span><span class="n">key</span><span class="p">;</span>
+
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">k_spin_trylock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lock</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">key</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="cm">/* critical section: exclusive access */</span>
+<span class="w">        </span><span class="n">k_spin_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">lock</span><span class="p">,</span><span class="w"> </span><span class="n">key</span><span class="p">);</span>
+<span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="cm">/* lock is held elsewhere, do something else */</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="rules">
+<h3><a class="toc-backref" href="#id5" role="doc-backlink">规则</a><a class="headerlink" href="#rules" title="链接到此标题。"></a></h3>
+<p>使用自旋锁时请遵循以下规则：</p>
+<ul class="simple">
+<li><p>尽量缩短临界区。持锁期间本地 CPU 上的中断被屏蔽，而其他 CPU 可能正在该锁上自旋。</p></li>
+<li><p>持有自旋锁时，切勿执行任何阻塞或睡眠操作。</p></li>
+<li><p>不要递归获取自旋锁。已经持有某把锁的上下文不得再次尝试获取它，否则会发生死锁。允许嵌套获取 <strong>不同的</strong> 自旋锁，但必须遵循一致的加锁顺序以避免死锁。</p></li>
+</ul>
+</section>
+</section>
+<section id="spinlocks-on-uniprocessor-systems">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">单处理器系统上的自旋锁</a><a class="headerlink" href="#spinlocks-on-uniprocessor-systems" title="链接到此标题。"></a></h2>
+<p>在禁用 <a class="reference internal" href="../../../kconfig.html#CONFIG_SMP" title="CONFIG_SMP"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SMP</span></code></a> 构建的内核中，自旋锁实际上并不自旋。由于只有一个 CPU，不存在竞争，因此 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_spin_lock()</span></code> 退化为屏蔽本地 CPU 上的中断。这可以防止 ISR 和上下文切换在更新过程中观察到受保护的数据，而这正是单处理器上实现互斥所需的全部条件。</p>
+</section>
+<section id="spinlock-validation">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">自旋锁校验</a><a class="headerlink" href="#spinlock-validation" title="链接到此标题。"></a></h2>
+<p>可以通过 <a class="reference internal" href="../../../kconfig.html#CONFIG_SPIN_VALIDATE" title="CONFIG_SPIN_VALIDATE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SPIN_VALIDATE</span></code></a> 启用一个校验层，用于检测自旋锁的各种误用。它可以检测以下情况：</p>
+<ul class="simple">
+<li><p>递归获取自旋锁</p></li>
+<li><p>释放并非由当前上下文持有的自旋锁</p></li>
+<li><p>未按顺序释放自旋锁（在内层锁仍被持有时释放了外层锁）</p></li>
+<li><p>在持有自旋锁期间，或在中断被嵌套的 <code class="xref c c-func docutils literal notranslate"><span class="pre">irq_lock()</span></code> 屏蔽期间发生上下文切换</p></li>
+</ul>
+<p>在单处理器系统上，只有递归获取检查有意义。其他误用不可能发生，因为不存在竞争，并且持锁期间中断已被屏蔽。</p>
+</section>
+<section id="fair-spinlocks">
+<h2><a class="toc-backref" href="#id8" role="doc-backlink">公平自旋锁</a><a class="headerlink" href="#fair-spinlocks" title="链接到此标题。"></a></h2>
+<p>默认的自旋锁实现基于单个 <code class="docutils literal notranslate"><span class="pre">atomic_t</span></code> 变量，不保证竞争的 CPU 之间的公平性：某个 CPU 可能反复赢得竞争，从而使其他 CPU 陷入饥饿。如果这一点很重要，可以启用 <a class="reference internal" href="../../../kconfig.html#CONFIG_TICKET_SPINLOCKS" title="CONFIG_TICKET_SPINLOCKS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TICKET_SPINLOCKS</span></code></a>，切换为基于票号（ticket）的实现，按 FIFO 顺序将被争用的锁授予请求的 CPU，代价是锁对象略大。</p>
+</section>
+<section id="suggested-uses">
+<h2><a class="toc-backref" href="#id9" role="doc-backlink">建议用法</a><a class="headerlink" href="#suggested-uses" title="链接到此标题。"></a></h2>
+<p>使用自旋锁保护在线程与中断处理程序之间，或在 SMP 系统的多个 CPU 之间共享的短临界区。</p>
+<p>如果其他原语更合适，应优先使用：</p>
+<ul class="simple">
+<li><p><code class="xref c c-struct docutils literal notranslate"><span class="pre">k_mutex</span></code> 适用于可能较长、可能阻塞或可能睡眠的临界区。只有线程才能获取互斥量。</p></li>
+<li><p><code class="xref c c-struct docutils literal notranslate"><span class="pre">k_sem</span></code> 适用于上下文之间的信号通知，以及对资源池的访问计数。</p></li>
+<li><p>当共享状态是可以用一次原子操作更新的单个字时，使用 <a class="reference internal" href="../other/atomic.html#atomic-v2"><span class="std std-ref">原子服务</span></a>，此时无需加锁。</p></li>
+</ul>
+</section>
+<section id="api-reference">
+<h2><a class="toc-backref" href="#id10" role="doc-backlink">API 参考</a><a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">spinlock_apis</span></dt>
+</dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 8月 13, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

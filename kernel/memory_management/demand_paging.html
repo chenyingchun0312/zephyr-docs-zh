@@ -1,0 +1,392 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>按需分页 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/kernel/memory_management/demand_paging.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="虚拟内存" href="virtual_memory.html" />
+    <link rel="prev" title="内存块分配器" href="sys_mem_blocks.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">内核</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../services/index.html">内核服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../drivers/index.html">设备驱动模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usermode/index.html">用户模式</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">内存管理</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="heap.html">内存堆</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shared_multi_heap.html">共享多堆</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slabs.html">内存块（slab）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sys_mem_blocks.html">内存块分配器</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">按需分页</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#terminology">术语</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#paging-statistics">分页统计</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#eviction-algorithm">换出算法</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#backing-store">后备存储</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api-reference">API 参考</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#eviction-algorithm-apis">换出算法 API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#backing-store-apis">后备存储 API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="virtual_memory.html">虚拟内存</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../data_structures/index.html">数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../timing_functions/index.html">计时函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../object_cores/index.html">对象核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../timeutil.html">时间工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../precision_timing.html">精密计时</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../util/index.html">实用工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../iterable_sections/index.html">可迭代段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../code-relocation.html">代码和数据重定位</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanup.html">基于作用域的清理辅助工具</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">内核</a> &raquo;</li>
+  
+     <li><a href="index.html">内存管理</a> &raquo;</li>
+  
+  <li>按需分页</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="demand-paging">
+<span id="memory-management-api-demand-paging"></span><h1>按需分页<a class="headerlink" href="#demand-paging" title="链接到此标题。"></a></h1>
+<p>按需分页提供了一种机制：只有当前执行上下文需要时，才把数据调入物理内存。从概念上讲，物理内存被划分为页大小的页框，作为存放数据的区域。</p>
+<p>Zephyr 内核镜像本身始终驻留在物理内存中，永远不会成为换出的候选对象。按需分页仅适用于：</p>
+<ul class="simple">
+<li><p>在运行时通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_map()</span></code> 创建的匿名内存映射，以及</p></li>
+<li><p>启用 <a class="reference internal" href="../../kconfig.html#CONFIG_LINKER_USE_ONDEMAND_SECTION" title="CONFIG_LINKER_USE_ONDEMAND_SECTION"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LINKER_USE_ONDEMAND_SECTION</span></code></a> 时，通过 <code class="docutils literal notranslate"><span class="pre">__ondemand_func</span></code> / <code class="docutils literal notranslate"><span class="pre">__ondemand_rodata</span></code> 属性放入显式按需链接器段中的内存。</p></li>
+</ul>
+<p>这与所有主流操作系统使用的模型相同：异常或中断的分派路径永远不会位于可分页的页上，因此从结构上就不可能在处理缺页时再发生缺页。把代码或数据加入 <code class="docutils literal notranslate"><span class="pre">__ondemand_*</span></code> 段，意味着贡献者明确选择让该区域可分页，并且有责任确保缺页处理函数自身的执行路径不会访问到该区域。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>早期版本的 Zephyr 还支持一种基于 <code class="docutils literal notranslate"><span class="pre">__pinned_*</span></code> 链接器属性的选择性锁定方案，只让内核镜像中被标记的子集常驻内存，其余部分按需分页。后来发现该模型既不安全，又侵入性很强：CPU 异常分派的目标可能是位于可换出页上的线程特权栈，如果该页已被换出，在 x86 上会升级为双重故障，在 ARM64 上会导致嵌套中止；而要求缺页处理函数可达范围内（调度器、驱动、libc、锁原语）的每一个字节都被完整标记，这一约定既难以一次性建立，之后也无法维护。<code class="docutils literal notranslate"><span class="pre">__pinned_*</span></code> 属性系列、相应的 Kconfig 选项（<code class="docutils literal notranslate"><span class="pre">LINKER_USE_PINNED_SECTION</span></code> / <code class="docutils literal notranslate"><span class="pre">LINKER_GENERIC_SECTIONS_PRESENT_AT_BOOT</span></code>）以及 <code class="docutils literal notranslate"><span class="pre">K_*_PINNED_STACK_*</span></code> 栈宏已在 Zephyr 4.4 中移除。完整分析参见 <a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/108773">GitHub #108773</a>。</p>
+</div>
+<ul class="simple">
+<li><p>当处理器尝试访问数据，而该数据页位于某个页框中时，执行会继续进行，不会被打断。</p></li>
+<li><p>当处理器尝试访问不在任何页框中的数据页时，就会发生缺页。如果有空闲页框，分页代码会把对应的数据页从后备存储调入物理内存。如果没有空闲页框，则调用换出算法选择一个要调出的数据页，从而腾出一个页框供新数据调入。如果该数据页在首次调入后被修改过，其数据会被写回后备存储。如果没有修改，或者已经写回后备存储，该数据页即被视为已调出，对应的页框也随之空闲。然后分页代码调用后备存储，调入与所请求数据位置相对应的数据页。后备存储把该数据页复制到空闲页框中。此时数据页已位于物理内存中，执行可以继续。</p></li>
+</ul>
+<p>可以通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_page_in()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_page_out()</span></code> 函数手动调入和调出。<code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_page_in()</span></code> 可用于预先调入预计近期需要的数据页。由于这些数据页已在物理内存中，可以减少缺页次数，从而降低延迟。<code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_page_out()</span></code> 可用于调出相当长一段时间内不会被访问的数据页。这样可以腾出页框，使下一次调入执行得更快，因为分页代码无需调用换出算法。</p>
+<p>还可以使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_pin()</span></code> 把一个数据区域 <strong>锁定</strong> 在物理内存中。它会在必要时调入该区域，并标记其页框，使换出算法永远不会选中它们，从而保证该区域常驻内存，对它的访问永远不会产生缺页。这是比 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_page_in()</span></code> 更强的形式，适用于必须始终可用的、对延迟或安全要求严格的数据。被锁定的区域之后可以用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_unpin()</span></code> 释放，该函数把页框重新标记为可换出；解除锁定本身不会换出该区域，因此如果希望立即换出，可以随后调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_page_out()</span></code>。</p>
+<section id="terminology">
+<h2>术语<a class="headerlink" href="#terminology" title="链接到此标题。"></a></h2>
+<dl class="simple">
+<dt>数据页</dt><dd><p>数据页是页大小的一块数据区域。它可能位于某个页框中，也可能已被调出到某个后备存储。总是可以通过虚拟地址在 CPU 的页表（或等价结构）中查到它的位置。其数据类型总是 <code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span></code>，在做指针运算时某些情况下为 <code class="docutils literal notranslate"><span class="pre">uint8_t</span> <span class="pre">*</span></code>。</p>
+</dd>
+<dt>页框</dt><dd><p>页框是 RAM 中页大小的一块物理内存区域。它是可以放置数据页的容器，总是通过物理地址引用。Zephyr 的约定是使用 <code class="docutils literal notranslate"><span class="pre">uintptr_t</span></code> 表示物理地址。每个页框都会实例化一个 <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">k_mem_page_frame</span></code> 来存储元数据。每个页框的标志如下：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">K_MEM_PAGE_FRAME_FREE</span></code> 表示页框未被使用，位于空闲页框链表中。设置该标志时，其他标志都没有意义，并且不得修改。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">K_MEM_PAGE_FRAME_PINNED</span></code> 表示页框被锁定在内存中，永远不应被调出。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">K_MEM_PAGE_FRAME_RESERVED</span></code> 表示由硬件保留的物理页，完全不应使用。</p></li>
+<li><p>物理页被映射到虚拟内存地址时，会设置 <code class="docutils literal notranslate"><span class="pre">K_MEM_PAGE_FRAME_MAPPED</span></code>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">K_MEM_PAGE_FRAME_BUSY</span></code> 表示页框当前正处于调入/调出操作中。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">K_MEM_PAGE_FRAME_BACKED</span></code> 表示页框在后备存储中有一份干净的副本。</p></li>
+</ul>
+</dd>
+<dt>K_MEM_SCRATCH_PAGE</dt><dd><p>提供给后备存储的一个特殊页的虚拟地址，用于：* 把数据页从 <code class="docutils literal notranslate"><span class="pre">k_MEM_SCRATCH_PAGE</span></code> 复制到指定位置；或者 * 把数据页从所提供的位置复制到 <code class="docutils literal notranslate"><span class="pre">K_MEM_SCRATCH_PAGE</span></code>。它用作调入/调出操作的中间页。该暂存页需要映射为可读写，以便后备存储代码访问。但数据页本身在虚拟地址空间中可能只映射为只读。如果把该数据页原样提供给后备存储，就必须把它重新映射为可读写，这会带来安全隐患，因为该数据页对应用程序的其他部分不再是只读的。</p>
+</dd>
+</dl>
+</section>
+<section id="paging-statistics">
+<h2>分页统计<a class="headerlink" href="#paging-statistics" title="链接到此标题。"></a></h2>
+<p>启用 <a class="reference internal" href="../../kconfig.html#CONFIG_DEMAND_PAGING_TIMING_HISTOGRAM_NUM_BINS" title="CONFIG_DEMAND_PAGING_TIMING_HISTOGRAM_NUM_BINS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_DEMAND_PAGING_TIMING_HISTOGRAM_NUM_BINS</span></code></a> 后，可以通过以下各个函数调用获取分页统计信息：</p>
+<ul class="simple">
+<li><p>通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_stats_get()</span></code> 获取总体统计信息</p></li>
+<li><p>如果启用了 <a class="reference internal" href="../../kconfig.html#CONFIG_DEMAND_PAGING_THREAD_STATS" title="CONFIG_DEMAND_PAGING_THREAD_STATS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_DEMAND_PAGING_THREAD_STATS</span></code></a>，可通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_thread_stats_get()</span></code> 获取每个线程的统计信息</p></li>
+<li><p>启用 <a class="reference internal" href="../../kconfig.html#CONFIG_DEMAND_PAGING_TIMING_HISTOGRAM" title="CONFIG_DEMAND_PAGING_TIMING_HISTOGRAM"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_DEMAND_PAGING_TIMING_HISTOGRAM</span></code></a> 并定义了 <a class="reference internal" href="../../kconfig.html#CONFIG_DEMAND_PAGING_TIMING_HISTOGRAM_NUM_BINS" title="CONFIG_DEMAND_PAGING_TIMING_HISTOGRAM_NUM_BINS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_DEMAND_PAGING_TIMING_HISTOGRAM_NUM_BINS</span></code></a> 后，可以获取执行时间直方图。注意，计时结果在很大程度上取决于架构、SoC 或开发板。强烈建议针对特定应用程序定义 <code class="docutils literal notranslate"><span class="pre">k_mem_paging_eviction_histogram_bounds[]</span></code> 和 <code class="docutils literal notranslate"><span class="pre">k_mem_paging_backing_store_histogram_bounds[]</span></code>。</p>
+<ul>
+<li><p>通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_histogram_eviction_get()</span></code> 获取换出算法的执行时间直方图</p></li>
+<li><p>通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_histogram_backing_store_page_in_get()</span></code> 获取后备存储执行调入的时间直方图</p></li>
+<li><p>通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_histogram_backing_store_page_out_get()</span></code> 获取后备存储执行调出的时间直方图</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="eviction-algorithm">
+<h2>换出算法<a class="headerlink" href="#eviction-algorithm" title="链接到此标题。"></a></h2>
+<p>换出算法用于确定可以调出哪个数据页及其对应的页框，从而为下一次调入操作腾出页框。内核分页代码会调用以下四个函数：</p>
+<ul class="simple">
+<li><p>调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_eviction_init()</span></code> 初始化换出算法。它在 <code class="docutils literal notranslate"><span class="pre">POST_KERNEL</span></code> 阶段被调用。</p></li>
+<li><p>每当某个数据页可以在将来被换出时，都会调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_eviction_add()</span></code>。</p></li>
+<li><p>当某个数据页不再可以被换出时，会调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_eviction_remove()</span></code>。这可能发生在该数据页被锁定、被取消映射或即将被换出时。</p></li>
+<li><p>调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_eviction_select()</span></code> 选择一个要换出的数据页。函数参数 <code class="docutils literal notranslate"><span class="pre">dirty</span></code> 会被写入，用于告知调用者所选数据页在首次调入后是否被修改过。如果返回的 <code class="docutils literal notranslate"><span class="pre">dirty</span></code> 位被置位，分页代码会通知后备存储把该数据页写回存储（从而更新其内容）。该函数返回指向所选数据页对应页框的指针。</p></li>
+</ul>
+<p>此外还有一个函数 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_eviction_accessed()</span></code>，由架构的内存管理代码在数据页触发访问故障时调用，用于标记这些数据页。LRU 算法用它把“已使用”的页重新排队。</p>
+<p>目前有两种可用的换出算法：</p>
+<ul class="simple">
+<li><p>作为示例实现了一个 NRU（最近未使用，Not-Recently-Used）换出算法。这是一个非常简单的算法，根据数据页是否被访问和修改过对其进行排名，并基于该排名进行选择。</p></li>
+<li><p>还提供了一个 LRU（最近最少使用，Least-Recently-Used）换出算法。它基于一个已排序的数据页队列。LRU 代码比 NRU 代码复杂，但效率也高得多，推荐在生产环境中使用。</p></li>
+</ul>
+<p>要实现新的换出算法，必须实现 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_eviction_init()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_eviction_select()</span></code>。如果为某个算法启用了 <a class="reference internal" href="../../kconfig.html#CONFIG_EVICTION_TRACKING" title="CONFIG_EVICTION_TRACKING"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_EVICTION_TRACKING</span></code></a>，还必须实现以下函数：<code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_eviction_add()</span></code>、<code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_eviction_remove()</span></code>、<code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_eviction_accessed()</span></code>。</p>
+</section>
+<section id="backing-store">
+<h2>后备存储<a class="headerlink" href="#backing-store" title="链接到此标题。"></a></h2>
+<p>后备存储负责在数据页对应的页框与存储之间调入/调出数据页。必须实现以下函数：</p>
+<ul class="simple">
+<li><p>调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_backing_store_init()</span></code> 在 <code class="docutils literal notranslate"><span class="pre">POST_KERNEL</span></code> 阶段初始化后备存储。</p></li>
+<li><p>调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_backing_store_location_get()</span></code> 预留一个后备存储位置，以便调出数据页。该 <code class="docutils literal notranslate"><span class="pre">location</span></code> 令牌会传给 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_backing_store_page_out()</span></code>，以执行实际的调出操作。</p></li>
+<li><p>调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_backing_store_location_free()</span></code> 释放一个后备存储位置（即 <code class="docutils literal notranslate"><span class="pre">location</span></code> 令牌），之后该位置可用于后续的调出操作。</p></li>
+<li><p>调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_backing_store_location_query()</span></code> 获取与要进行虚拟映射并按需调入的存储内容相对应的 <code class="docutils literal notranslate"><span class="pre">location</span></code> 令牌。与 <a class="reference internal" href="../../kconfig.html#CONFIG_DEMAND_MAPPING" title="CONFIG_DEMAND_MAPPING"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_DEMAND_MAPPING</span></code></a> 搭配使用时最有用。</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_backing_store_page_in()</span></code> 把数据页从与所提供的 <code class="docutils literal notranslate"><span class="pre">location</span></code> 令牌关联的后备存储位置复制到 <code class="docutils literal notranslate"><span class="pre">K_MEM_SCRATCH_PAGE</span></code> 所指向的页。</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_backing_store_page_out()</span></code> 把数据页从 <code class="docutils literal notranslate"><span class="pre">K_MEM_SCRATCH_PAGE</span></code> 复制到与所提供的 <code class="docutils literal notranslate"><span class="pre">location</span></code> 令牌关联的后备存储位置。</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_backing_store_page_finalize()</span></code> 在 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_backing_store_page_in()</span></code> 之后调用，以便更新页框结构体，用于内部记账。它可以不执行任何操作。</p></li>
+</ul>
+<p>要实现新的后备存储，必须实现上述函数。如有需要，<code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_paging_backing_store_page_finalize()</span></code> 可以是空函数。</p>
+</section>
+<section id="api-reference">
+<h2>API 参考<a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">mem-demand-paging</span></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/subsys/demand_paging/README.html#demand-paging" title="利用按需分页处理大于可用 RAM 的代码。">Demand paging</a></span><span class="code-sample-description">利用按需分页处理大于可用 RAM 的代码。</span></li>
+</ul>
+</div>
+<section id="eviction-algorithm-apis">
+<h3>换出算法 API<a class="headerlink" href="#eviction-algorithm-apis" title="链接到此标题。"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">mem-demand-paging-eviction</span></dt>
+</dl>
+
+</section>
+<section id="backing-store-apis">
+<h3>后备存储 API<a class="headerlink" href="#backing-store-apis" title="链接到此标题。"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">mem-demand-paging-backing-store</span></dt>
+</dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 6月 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

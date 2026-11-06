@@ -1,0 +1,446 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nordic nRF5x Segger J-Link &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/develop/flash_debug/nordic_segger.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+  <li>Nordic nRF5x Segger J-Link</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="nordic-nrf5x-segger-j-link">
+<span id="nordic-segger"></span><h1>Nordic nRF5x Segger J-Link<a class="headerlink" href="#nordic-nrf5x-segger-j-link" title="链接到此标题。"></a></h1>
+<section id="overview">
+<h2>概述<a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>所有 Nordic nRF5x 开发套件、预览版开发套件和 Dongle 都配备了一颗调试 IC（Atmel ATSAM3U2C），它提供以下功能：</p>
+<ul class="simple">
+<li><p>Segger J-Link 固件和桌面工具</p></li>
+<li><p>nRF5x IC 的 SWD 调试</p></li>
+<li><p>用于拖放式镜像烧录的大容量存储设备</p></li>
+<li><p>桥接到 nRF5x UART 外设的 USB CDC ACM 串口</p></li>
+<li><p>Segger RTT 控制台</p></li>
+<li><p>Segger Ozone 调试器</p></li>
+</ul>
+</section>
+<section id="segger-j-link-software-installation">
+<h2>安装 Segger J-Link 软件<a class="headerlink" href="#segger-j-link-software-installation" title="链接到此标题。"></a></h2>
+<p>按以下步骤安装 J-Link 软件和文档包：</p>
+<ol class="arabic simple">
+<li><p>从 <a class="reference external" href="https://www.segger.com/jlink-software.html">J-Link Software and documentation pack</a> <a class="footnote-reference brackets" href="#id19" id="id20" role="doc-noteref"><span class="fn-bracket">[</span>9<span class="fn-bracket">]</span></a> 网站下载相应的软件包</p></li>
+<li><p>根据你的平台，安装该软件包或运行安装程序</p></li>
+<li><p>连接支持 J-Link 的开发板（如 nRF5x DK、PDK 或 Dongle）时，应当会出现一个对应 USB 大容量存储设备的驱动器以及一个串口</p></li>
+</ol>
+</section>
+<section id="nrf5x-command-line-tools-installation">
+<h2>安装 nRF5x 命令行工具<a class="headerlink" href="#nrf5x-command-line-tools-installation" title="链接到此标题。"></a></h2>
+<p>nRF5x 命令行工具可以让你从命令行控制 nRF5x 器件，包括复位器件、擦除或编程 Flash 存储器等。</p>
+<p>要安装这些工具，请访问 <a class="reference external" href="https://www.nordicsemi.com/Software-and-Tools/Development-Tools/nRF-Command-Line-Tools">nRF5x Command-Line Tools</a> <a class="footnote-reference brackets" href="#id3" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a> 并选择你的操作系统。</p>
+<p>安装后，确保 <code class="docutils literal notranslate"><span class="pre">nrfjprog</span></code> 位于可执行文件路径中，以便在任何位置调用它。</p>
+</section>
+<section id="flashing">
+<span id="nordic-segger-flashing"></span><h2>烧录<a class="headerlink" href="#flashing" title="链接到此标题。"></a></h2>
+<p>按照说明安装 Segger J-Link 软件和 nRF5x 命令行工具后，按以下步骤将编译好的 Zephyr 镜像烧录到 Flash：</p>
+<ul class="simple">
+<li><p>将 micro-USB 线连接到 nRF5x 开发板和你的计算机</p></li>
+<li><p>擦除 nRF5x IC 中的 Flash 存储器：</p></li>
+</ul>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">nrfjprog --eraseall -f nrf5&lt;x&gt;</span>
+</pre></div>
+</div>
+<p>其中 <code class="docutils literal notranslate"><span class="pre">&lt;x&gt;</span></code> 对于基于 nRF51 的开发板为 1，对于基于 nRF52 的开发板为 2</p>
+<ul class="simple">
+<li><p>从你选择的示例文件夹烧录 Zephyr 镜像：</p></li>
+</ul>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">nrfjprog --program outdir/&lt;board&gt;/zephyr.hex -f nrf5&lt;x&gt;</span>
+</pre></div>
+</div>
+<p>其中：<code class="docutils literal notranslate"><span class="pre">&lt;board&gt;</span></code> 是构建时在 BOARD 指令中使用的开发板名称（例如 nrf52dk/nrf52832），<code class="docutils literal notranslate"><span class="pre">&lt;x&gt;</span></code> 对于基于 nRF51 的开发板为 1，对于基于 nRF52 的开发板为 2</p>
+<ul class="simple">
+<li><p>复位并启动 Zephyr：</p></li>
+</ul>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">nrfjprog --reset -f nrf5&lt;x&gt;</span>
+</pre></div>
+</div>
+<p>其中 <code class="docutils literal notranslate"><span class="pre">&lt;x&gt;</span></code> 对于基于 nRF51 的开发板为 1，对于基于 nRF52 的开发板为 2</p>
+</section>
+<section id="usb-cdc-acm-serial-port-setup">
+<h2>USB CDC ACM 串口设置<a class="headerlink" href="#usb-cdc-acm-serial-port-setup" title="链接到此标题。"></a></h2>
+<p><strong>重要提示</strong>：nRF5x 开发板上 Segger J-Link 固件的一个问题，可能导致某些机器上 USB CDC ACM 串口出现数据丢失和/或损坏。要规避此问题，请按照 <a class="reference internal" href="#nordic-segger-msd"><span class="std std-ref">禁用大容量存储设备功能</span></a> 中的说明禁用开发板上的大容量存储设备。</p>
+<section id="windows">
+<h3>Windows<a class="headerlink" href="#windows" title="链接到此标题。"></a></h3>
+<p>串口会显示为 <code class="docutils literal notranslate"><span class="pre">COMxx</span></code>。只需在设备管理器中查看“端口 (COM 和 LPT)”部分即可。</p>
+</section>
+<section id="gnu-linux">
+<h3>GNU/Linux<a class="headerlink" href="#gnu-linux" title="链接到此标题。"></a></h3>
+<p>串口会显示为 <code class="docutils literal notranslate"><span class="pre">/dev/ttyACMx</span></code>。默认情况下，并非所有用户都能访问该端口。输入以下命令将你的用户添加到 dialout 组，使其可以访问串口。注意需要重新登录才能生效。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>usermod<span class="w"> </span>-a<span class="w"> </span>-G<span class="w"> </span>dialout<span class="w"> </span><span class="sb">`</span>whoami<span class="sb">`</span>
+</pre></div>
+</div>
+<p>新版本的 <a class="reference external" href="https://bugs.freedesktop.org/show_bug.cgi?id=85007">ModemManager send AT commands to TTY-like devices</a> <a class="footnote-reference brackets" href="#id15" id="id16" role="doc-noteref"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></a>，其中也包括 Nordic 开发套件。这会使你在几秒钟内无法使用串口，并且如果应用程序从 UART 读取数据，可能导致其行为异常。运行应用程序之前，可以运行以下命令临时禁用 ModemManager：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>systemctl<span class="w"> </span>stop<span class="w"> </span>ModemManager.service
+systemctl<span class="w"> </span>disable<span class="w"> </span>ModemManager.service
+</pre></div>
+</div>
+<p>也可以运行以下命令 <a class="reference external" href="http://www.at91.com/linux4sam/bin/view/Linux4SAM/SoftwareTools#Device_or_resource_busy_dev_ttyA">blocklist Segger devices by editing udev rules</a> <a class="footnote-reference brackets" href="#id17" id="id18" role="doc-noteref"><span class="fn-bracket">[</span>8<span class="fn-bracket">]</span></a>，让 ModemManager 忽略它们：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>sudo<span class="w"> </span>sh<span class="w"> </span>-c<span class="w"> </span><span class="s1">'echo "ATTRS{idVendor}==\"1366\", ENV{ID_MM_DEVICE_IGNORE}=\"1\" " \</span>
+<span class="s1">  &gt;&gt; /etc/udev/rules.d/99-segger-modemmanager-blocklist.rules'</span>
+sudo<span class="w"> </span>service<span class="w"> </span>udev<span class="w"> </span>restart
+</pre></div>
+</div>
+<p>预计 ModemManager 1.8 和新版 Segger IMCU 固件会修复此问题。</p>
+</section>
+<section id="apple-macos-os-x">
+<h3>Apple macOS (OS X)<a class="headerlink" href="#apple-macos-os-x" title="链接到此标题。"></a></h3>
+<p>串口会显示为 <code class="docutils literal notranslate"><span class="pre">/dev/tty.usbmodemXXXX</span></code>。</p>
+</section>
+</section>
+<section id="disabling-the-mass-storage-device-functionality">
+<span id="nordic-segger-msd"></span><h2>禁用大容量存储设备功能<a class="headerlink" href="#disabling-the-mass-storage-device-functionality" title="链接到此标题。"></a></h2>
+<p>由于 Segger J-Link 固件中的一个已知问题，取决于你的操作系统及其版本，如果通过 USB CDC ACM 串口传输大于 64 字节的数据包，可能会遇到数据损坏或丢失。在 GNU/Linux 和 macOS（OS X）上都观察到了这种情况。</p>
+<p>为避免此问题，只需打开以下程序禁用大容量存储设备：</p>
+<ul class="simple">
+<li><p>在 GNU/Linux 或 macOS（OS X）上，从终端打开 JLinkExe</p></li>
+<li><p>在 Microsoft Windows 上，打开“JLink Commander”应用程序</p></li>
+</ul>
+<p>然后输入以下内容：</p>
+<div class="highlight-bat notranslate"><div class="highlight"><pre><span></span>MSDDisable
+</pre></div>
+</div>
+<p>最后拔下开发板再重新插上。大容量存储设备应当不会再出现，此时应该可以通过虚拟串口发送长数据包了。更多信息请参阅 Segger 的 <a class="reference external" href="https://wiki.segger.com/J-Link-OB_SAM3U">Segger SAM3U Wiki</a> <a class="footnote-reference brackets" href="#id5" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>。</p>
+</section>
+<section id="rtt-console">
+<h2>RTT 控制台<a class="headerlink" href="#rtt-console" title="链接到此标题。"></a></h2>
+<p>Segger 的 J-Link 支持 <a class="reference external" href="https://www.segger.com/jlink-rtt.html">Real-Time Tracing (RTT)</a> <a class="footnote-reference brackets" href="#id7" id="id8" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>，这项技术可以在目标（nRF5x 开发板）与开发计算机之间建立终端连接（包括输入和输出），用于日志记录和输入。Zephyr 在 nRF5x 目标上支持 RTT；如果 UART（通过 USB CDC ACM）已被用于日志之外的用途（例如 hci_uart 应用程序中的 HCI 通信），RTT 会非常有用。要使用 RTT，首先需要在 <code class="docutils literal notranslate"><span class="pre">.conf</span></code> 文件中添加以下几行来启用它：</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">CONFIG_USE_SEGGER_RTT</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_RTT_CONSOLE</span><span class="o">=</span><span class="s">y</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>还有一个 <code class="docutils literal notranslate"><span class="pre">HAS_SEGGER_RTT</span></code> 符号，表示平台支持 SEGGER J-Link RTT。该符号由 SoC 的 Kconfig 文件自动设置。不要将它与 <code class="docutils literal notranslate"><span class="pre">USE_SEGGER_RTT</span></code> 混淆。</p>
+<p><code class="docutils literal notranslate"><span class="pre">USE_SEGGER_RTT</span></code> 依赖于 <code class="docutils literal notranslate"><span class="pre">HAS_SEGGER_RTT</span></code>。</p>
+</div>
+<p>如果没有 RTT 输出，并且你运行的示例或应用程序默认启用了与 RTT 冲突的其他控制台，则可能需要禁用这些控制台。例如，要禁用 UART 控制台，请在 <code class="docutils literal notranslate"><span class="pre">.conf</span></code> 文件中添加：</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">CONFIG_UART_CONSOLE</span><span class="o">=</span><span class="s">n</span>
+</pre></div>
+</div>
+<p>启用 RTT 并完成编译和烧录后，可以按以下方式显示 RTT 控制台消息：</p>
+<section id="id1">
+<h3>Windows<a class="headerlink" href="#id1" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p>打开“J-Link RTT Viewer”应用程序</p></li>
+<li><p>选择以下选项：</p>
+<ul>
+<li><p>Connection：USB</p></li>
+<li><p>Target Device：从列表中选择你的 IC</p></li>
+<li><p>Target Interface and Speed（目标接口与速度）：SWD，4000 KHz</p></li>
+<li><p>RTT Control Block（RTT 控制块）：Auto Detection（自动检测）</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="gnu-linux-and-macos-os-x">
+<h3>GNU/Linux 和 macOS（OS X）<a class="headerlink" href="#gnu-linux-and-macos-os-x" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p>从终端打开 <code class="docutils literal notranslate"><span class="pre">JLinkRTTLogger</span></code></p></li>
+<li><p>选择以下选项：</p>
+<ul>
+<li><p>Device Name：使用你的 IC 的完整器件名称</p></li>
+<li><p>Target Interface（目标接口）：SWD</p></li>
+<li><p>Interface Speed（接口速度）：4000 KHz</p></li>
+<li><p>RTT Control Block address：自动检测</p></li>
+<li><p>RTT Channel name or index（RTT 通道名称或索引）：0</p></li>
+<li><p>Output file：文件名，或 <code class="docutils literal notranslate"><span class="pre">/dev/stdout</span></code> 以直接在终端上显示</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="python-viewer">
+<h3>Python 查看器<a class="headerlink" href="#python-viewer" title="链接到此标题。"></a></h3>
+<p>Python 版 RTT 查看器工具可在 GitHub 仓库 <a class="reference external" href="https://github.com/thomasstenersen/pyrtt-viewer">pyrtt-viewer</a> <a class="footnote-reference brackets" href="#id9" id="id10" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a> 中找到。</p>
+</section>
+</section>
+<section id="segger-ozone">
+<h2>Segger Ozone<a class="headerlink" href="#segger-ozone" title="链接到此标题。"></a></h2>
+<p>Segger J-Link 兼容可视化调试器 <a class="reference external" href="https://www.segger.com/ozone.html">Segger Ozone</a> <a class="footnote-reference brackets" href="#id11" id="id12" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>，可从这里获取：</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.segger.com/downloads/jlink#Ozone">Segger Ozone Download</a> <a class="footnote-reference brackets" href="#id13" id="id14" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a></p></li>
+</ul>
+<p>下载后，可以按如下方式安装和配置：</p>
+<ul class="simple">
+<li><p>Target Device：从列表中选择你的 IC</p></li>
+<li><p>Target Interface（目标接口）：SWD</p></li>
+<li><p>Target Interface Speed（目标接口速度）：4 MHz</p></li>
+<li><p>Host Interface（主机接口）：USB</p></li>
+</ul>
+<p>配置完成后，可以通过 File-&gt;Open 菜单打开构建文件夹中的 <code class="docutils literal notranslate"><span class="pre">zephyr.elf</span></code> 文件。</p>
+</section>
+<section id="references">
+<h2>参考资料<a class="headerlink" href="#references" title="链接到此标题。"></a></h2>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id3" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">1</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://www.nordicsemi.com/Software-and-Tools/Development-Tools/nRF-Command-Line-Tools">https://www.nordicsemi.com/Software-and-Tools/Development-Tools/nRF-Command-Line-Tools</a></p>
+</aside>
+<aside class="footnote brackets" id="id5" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">2</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://wiki.segger.com/J-Link-OB_SAM3U">https://wiki.segger.com/J-Link-OB_SAM3U</a></p>
+</aside>
+<aside class="footnote brackets" id="id7" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id8">3</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://www.segger.com/jlink-rtt.html">https://www.segger.com/jlink-rtt.html</a></p>
+</aside>
+<aside class="footnote brackets" id="id9" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id10">4</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://github.com/thomasstenersen/pyrtt-viewer">https://github.com/thomasstenersen/pyrtt-viewer</a></p>
+</aside>
+<aside class="footnote brackets" id="id11" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id12">5</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://www.segger.com/ozone.html">https://www.segger.com/ozone.html</a></p>
+</aside>
+<aside class="footnote brackets" id="id13" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id14">6</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://www.segger.com/downloads/jlink#Ozone">https://www.segger.com/downloads/jlink#Ozone</a></p>
+</aside>
+<aside class="footnote brackets" id="id15" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id16">7</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://bugs.freedesktop.org/show_bug.cgi?id=85007">https://bugs.freedesktop.org/show_bug.cgi?id=85007</a></p>
+</aside>
+<aside class="footnote brackets" id="id17" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id18">8</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="http://www.at91.com/linux4sam/bin/view/Linux4SAM/SoftwareTools#Device_or_resource_busy_dev_ttyA">http://www.at91.com/linux4sam/bin/view/Linux4SAM/SoftwareTools#Device_or_resource_busy_dev_ttyA</a></p>
+</aside>
+<aside class="footnote brackets" id="id19" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id20">9</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://www.segger.com/jlink-software.html">https://www.segger.com/jlink-software.html</a></p>
+</aside>
+</aside>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 7月 13, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

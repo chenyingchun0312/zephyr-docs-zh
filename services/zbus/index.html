@@ -1,0 +1,1208 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zephyr 总线（zbus） &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/zbus/index.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="异步通知" href="../notify.html" />
+    <link rel="prev" title="使用动态分配缓冲区的 ICMsg 后端" href="../ipc/ipc_service/backends/ipc_service_icbmsg.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">服务</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../connectivity/index.html">连接</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../io.html">输入/输出</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../messaging.html">进程间通信</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../ipc/index.html">处理器间通信（IPC）</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Zephyr 总线（zbus）</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#concepts">概念</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#virtual-distributed-event-dispatcher">虚拟分布式事件分发器</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#hlp-priority-boost">HLP 优先级提升</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#limitations">限制</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#delivery-guarantees">投递保证</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#message-delivery-sequence">消息投递顺序</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#usage">用法</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#publishing-to-a-channel">向通道发布</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#reading-from-a-channel">从通道读取</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#notifying-a-channel">通知通道</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#declaring-channels-and-observers">声明通道和观察者</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#unique-channel-identifiers">唯一通道标识符</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runtime-channel-creation">运行时创建通道</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#iterating-over-channels-and-observers">遍历通道和观察者</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#advanced-channel-control">高级通道控制</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#listeners-message-access">监听者访问消息</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#async-listeners-message-access">异步监听者访问消息</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#user-data">用户数据</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#id5">占用和结束通道</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runtime-observer-registration">运行时注册观察者</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#proxy-agent-communication-experimental">代理通信（实验性）</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#id6">概念</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#transport-backends">传输后端</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#ipc-backend">IPC 后端</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#id7">用法</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#samples">示例</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#suggested-uses">建议用法</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#configuration-options">配置选项</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#proxy-agent-configuration-options">代理配置选项</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#api-reference">API 参考</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../notify.html">异步通知</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../virtualization/index.html">虚拟化</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../messaging.html">进程间通信</a> &raquo;</li>
+  
+  <li>Zephyr 总线（zbus）</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="zephyr-bus-zbus">
+<span id="zbus"></span><h1>Zephyr 总线（zbus）<a class="headerlink" href="#zephyr-bus-zbus" title="链接到此标题。"></a></h1>
+<p><em class="dfn">Zephyr bus - zbus</em>（Zephyr 总线）是一种轻量、灵活的软件总线，为线程之间以多对多方式通信提供了一种简单的途径。</p>
+<nav class="contents local" id="id1">
+<ul class="simple">
+<li><p><a class="reference internal" href="#concepts" id="id19">概念</a></p>
+<ul>
+<li><p><a class="reference internal" href="#virtual-distributed-event-dispatcher" id="id20">虚拟分布式事件分发器</a></p></li>
+<li><p><a class="reference internal" href="#limitations" id="id21">限制</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#usage" id="id22">用法</a></p>
+<ul>
+<li><p><a class="reference internal" href="#publishing-to-a-channel" id="id23">向通道发布</a></p></li>
+<li><p><a class="reference internal" href="#reading-from-a-channel" id="id24">从通道读取</a></p></li>
+<li><p><a class="reference internal" href="#notifying-a-channel" id="id25">通知通道</a></p></li>
+<li><p><a class="reference internal" href="#declaring-channels-and-observers" id="id26">声明通道和观察者</a></p></li>
+<li><p><a class="reference internal" href="#iterating-over-channels-and-observers" id="id27">遍历通道和观察者</a></p></li>
+<li><p><a class="reference internal" href="#advanced-channel-control" id="id28">高级通道控制</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#proxy-agent-communication-experimental" id="id29">代理通信（实验性）</a></p>
+<ul>
+<li><p><a class="reference internal" href="#id6" id="id30">概念</a></p></li>
+<li><p><a class="reference internal" href="#transport-backends" id="id31">传输后端</a></p></li>
+<li><p><a class="reference internal" href="#id7" id="id32">用法</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#samples" id="id33">示例</a></p></li>
+<li><p><a class="reference internal" href="#suggested-uses" id="id34">建议用法</a></p></li>
+<li><p><a class="reference internal" href="#configuration-options" id="id35">配置选项</a></p>
+<ul>
+<li><p><a class="reference internal" href="#proxy-agent-configuration-options" id="id36">代理配置选项</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#api-reference" id="id37">API 参考</a></p></li>
+</ul>
+</nav>
+<section id="concepts">
+<h2><a class="toc-backref" href="#id19" role="doc-backlink">概念</a><a class="headerlink" href="#concepts" title="链接到此标题。"></a></h2>
+<p>线程可以使用 zbus 向一个或多个观察者发送消息，从而实现多对多通信。该总线实现了消息传递和发布/订阅两种通信范式，使线程能够通过共享内存进行同步或异步通信。</p>
+<p>通过 zbus 的通信基于通道。线程（或回调）使用通道交换消息。此外，除其他操作外，线程还可以发布和观察通道。当线程在某个通道上发布消息时，总线会让该通道的所有观察者都能获得这条消息。根据观察者类型的不同，观察者可以直接访问消息、接收消息的副本，甚至只接收所发布通道的引用。</p>
+<p>下图展示了一个使用 zbus 的典型应用程序示例，其中（与硬件无关的）应用逻辑通过软件总线与其他线程通信。注意，这些线程之间是解耦的，因为它们只使用 zbus 通道，彼此无需了解对方即可通信。</p>
+<figure class="align-default" id="id8">
+<a class="reference internal image-reference" href="../../_images/zbus_overview.svg"><img alt="zbus 用法概览" src="../../_images/zbus_overview.svg" style="width: 75%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">典型的 zbus 应用程序架构。</span><a class="headerlink" href="#id8" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<p>总线由以下部分组成：</p>
+<ul class="simple">
+<li><p>一组通道，每个通道包含控制元数据信息和消息本身；</p></li>
+<li><p><em class="dfn">Virtual Distributed Event Dispatcher</em>（VDED，虚拟分布式事件分发器），即负责向观察者发送通知/消息的总线逻辑。VDED 逻辑在发布操作内部、于同一线程上下文中运行，使总线具有分布式执行的特点。当线程向某个通道发布时，它也会把通知传播给观察者；</p></li>
+<li><p>线程（订阅者和消息订阅者）、回调（监听者）以及异步监听者（推迟到工作队列中执行的回调），它们向总线发布、从总线读取并接收来自总线的通知。</p></li>
+</ul>
+<figure class="align-default" id="id9">
+<a class="reference internal image-reference" href="../../_images/zbus_anatomy.svg"><img alt="ZBus 结构剖析" src="../../_images/zbus_anatomy.svg" style="width: 70%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">ZBus 结构剖析。</span><a class="headerlink" href="#id9" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<p>总线在通道上提供发布（publish）、读取（read）、占用（claim）、结束（finish）、通知（notify）和订阅（subscribe）操作。发布、读取、占用和结束可在所有 RTOS 线程上下文和 ISR 中使用。发布和读取操作简单而快速：过程是先锁定通道，然后向共享内存区域复制或从中复制数据，最后解锁通道。zbus 另一个重要方面是观察者。观察者有四种类型：</p>
+<figure class="align-default" id="id10">
+<a class="reference internal image-reference" href="../../_images/zbus_type_of_observers.svg"><img alt="ZBus 观察者类型" src="../../_images/zbus_type_of_observers.svg" style="width: 70%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">ZBus 观察者。</span><a class="headerlink" href="#id10" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<ul class="simple">
+<li><p>监听者（Listener）：一个回调，每当被观察的通道被发布或通知时，事件分发器都会执行它；</p></li>
+<li><p>异步监听者（Async Listener）：一个回调，每当被观察的通道被发布或通知时，事件分发器都会把它调度到工作队列（默认为系统工作队列）中执行；</p></li>
+<li><p>订阅者（Subscriber）：一种基于线程的观察者，内部依赖一个消息队列，每当被观察的通道被发布或通知时，事件分发器都会把发生变化的通道的引用放入该队列。注意，这类观察者不接收消息本身，它应在收到通知后从通道中读取消息；</p></li>
+<li><p>消息订阅者（Message subscriber）：一种基于线程的观察者，内部依赖一个 FIFO，每当被观察的通道被发布或通知时，事件分发器都会把消息的副本放入该 FIFO。</p></li>
+</ul>
+<p>通道观察结构定义了通道与其观察者之间的关系。每一次观察都会创建一个通道/观察者对。开发者可以使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ZBUS_CHAN_DEFINE</span></code> 或 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ZBUS_CHAN_ADD_OBS</span></code> 静态分配观察关系。此外还有运行时观察者，开发者可以借此在运行时创建观察关系。可以完全禁用某个观察者，也可以单独禁用某些观察关系。事件分发器会忽略被禁用的观察者和观察关系。</p>
+<figure class="align-default" id="id11">
+<a class="reference internal image-reference" href="../../_images/zbus_observation_mask.svg"><img alt="ZBus 观察掩码。" src="../../_images/zbus_observation_mask.svg" style="width: 75%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">ZBus 观察掩码。</span><a class="headerlink" href="#id11" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<p>上图展示了从 <code class="docutils literal notranslate"><span class="pre">C1</span></code> 到 <code class="docutils literal notranslate"><span class="pre">C5</span></code> 的通道、<code class="docutils literal notranslate"><span class="pre">Subscriber</span> <span class="pre">1</span></code> 以及观察关系的几种状态，从 (a) 到 (d)。最后两个用橙色表示它们是动态分配的（运行时观察关系）。(a) 表示观察者和所有观察关系都已启用。(b) 表示观察者被禁用，因此事件分发器会忽略它。(c) 表示观察者已启用，但有一个静态观察关系被禁用，事件分发器只会停止发送来自通道 <code class="docutils literal notranslate"><span class="pre">C3</span></code> 的通知。在 (d) 中，事件分发器会停止把来自通道 <code class="docutils literal notranslate"><span class="pre">C3</span></code> 和 <code class="docutils literal notranslate"><span class="pre">C5</span></code> 的通知发送给 <code class="docutils literal notranslate"><span class="pre">Subscriber</span> <span class="pre">1</span></code>。</p>
+<p>为便于说明，假设下图是一个常见的基于传感器的方案。定时器触发时向 <code class="docutils literal notranslate"><span class="pre">Trigger</span></code> 通道发布。由于传感器线程订阅了 <code class="docutils literal notranslate"><span class="pre">Trigger</span></code> 通道，它会收到通知并获取传感器数据。注意，VDED 会执行 <code class="docutils literal notranslate"><span class="pre">Blink</span></code>，因为它也监听 <code class="docutils literal notranslate"><span class="pre">Trigger</span></code> 通道。传感器数据就绪后，传感器线程将其发布到 <code class="docutils literal notranslate"><span class="pre">Sensor</span> <span class="pre">data</span></code> 通道。核心线程作为 <code class="docutils literal notranslate"><span class="pre">Sensor</span> <span class="pre">data</span></code> 通道的消息订阅者收到消息，处理传感器数据并将其存入内部的样本缓冲区。如此重复，直到样本缓冲区写满；此时核心线程汇总样本缓冲区的信息，准备一个数据包，并将其发布到 <code class="docutils literal notranslate"><span class="pre">Payload</span></code> 通道。LoRa 线程是 <code class="docutils literal notranslate"><span class="pre">Payload</span></code> 通道的消息订阅者，因此会收到该数据包，并将有效载荷发送到云端。传输完成后，LoRa 线程向 <code class="docutils literal notranslate"><span class="pre">Transmission</span> <span class="pre">done</span></code> 通道发布。VDED 再次执行 <code class="docutils literal notranslate"><span class="pre">Blink</span></code>，因为它监听 <code class="docutils literal notranslate"><span class="pre">Transmission</span> <span class="pre">done</span></code> 通道。</p>
+<figure class="align-default" id="id12">
+<a class="reference internal image-reference" href="../../_images/zbus_operations.svg"><img alt="ZBus 基于传感器的应用程序" src="../../_images/zbus_operations.svg" style="width: 85%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">ZBus 基于传感器的应用程序。</span><a class="headerlink" href="#id12" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<p>以这种方式实现方案使应用程序更加灵活，让我们可以独立地修改各个部分。例如，我们想把触发源从定时器改为按键，这样做不会影响系统的其他部分。同样，如果想把通信接口从 LoRa 改为 Bluetooth，只需修改 LoRa 线程，无需做其他任何修改即可正常工作。开发者可以对图中的每个模块都这样做。由此可见，zbus 促进了系统架构的解耦。</p>
+<p>使用 zbus 的另一个重要方面是系统模块的复用。如果一段行为定义明确的代码（我们称之为模块）只使用 zbus 通道而不使用硬件接口，它就可以很容易地在其他方案中复用。新方案必须实现该模块工作所需的接口（一组通道）。这表明 zbus 可以提高模块的复用性。</p>
+<p>最后需要强调的是 zbus 的灵活性。zbus 提供了许多功能，让开发者可以自由地构建符合其特定需求的方案。这些功能包括：</p>
+<ul class="simple">
+<li><p>消息可以动态分配，也可以静态分配</p></li>
+<li><p>通知可以是同步的，也可以是异步的</p></li>
+<li><p>可以通过占用通道以多种方式控制通道</p></li>
+<li><p>可以使用 user-data 字段为通道添加自定义元数据</p></li>
+<li><p>可以使用可选的验证器来确保消息格式正确</p></li>
+</ul>
+<p>这些特性扩大了可以用 zbus 构建的方案范围，使其非常适合作为开源社区工具。</p>
+<section id="virtual-distributed-event-dispatcher">
+<span id="id2"></span><h3><a class="toc-backref" href="#id20" role="doc-backlink">虚拟分布式事件分发器</a><a class="headerlink" href="#virtual-distributed-event-dispatcher" title="链接到此标题。"></a></h3>
+<p>VDED 总是在发布者的上下文中执行，发布者可以是线程或 ISR。在 ISR 中发布时要小心，因为调度器不会抢占 VDED。请谨慎使用。执行的基本过程如下：</p>
+<ul class="simple">
+<li><p>获取通道锁；</p></li>
+<li><p>通道通过直接复制（使用原始的 <code class="xref c c-func docutils literal notranslate"><span class="pre">memcpy()</span></code>）接收新消息；</p></li>
+<li><p>事件分发器逻辑按照观察者在通道观察者列表中出现的顺序，依次执行监听者、向消息订阅者发送消息副本，并把通道的引用推入订阅者的通知消息队列。由于通道仍处于锁定状态，监听者可以直接（通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_chan_const_msg()</span></code> 函数）以无复制的方式快速访问常量消息引用；</p></li>
+<li><p>最后，发布函数解锁通道。</p></li>
+</ul>
+<p>为了说明 VDED 的执行过程，请看下面的示例。我们有四个线程，按优先级从低到高依次为 <code class="docutils literal notranslate"><span class="pre">S1</span></code>、<code class="docutils literal notranslate"><span class="pre">MS2</span></code>、<code class="docutils literal notranslate"><span class="pre">MS1</span></code> 和 <code class="docutils literal notranslate"><span class="pre">T1</span></code>（优先级最高）；两个监听者 <code class="docutils literal notranslate"><span class="pre">L1</span></code> 和 <code class="docutils literal notranslate"><span class="pre">L2</span></code>；以及通道 A。假设 <code class="docutils literal notranslate"><span class="pre">L1</span></code>、<code class="docutils literal notranslate"><span class="pre">L2</span></code>、<code class="docutils literal notranslate"><span class="pre">MS1</span></code>、<code class="docutils literal notranslate"><span class="pre">MS2</span></code> 和 <code class="docutils literal notranslate"><span class="pre">S1</span></code> 都观察通道 A。</p>
+<figure class="align-default" id="id13">
+<a class="reference internal image-reference" href="../../_images/zbus_publishing_process_example_scenario1.svg"><img alt="ZBus 示例场景" src="../../_images/zbus_publishing_process_example_scenario1.svg" style="width: 45%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">ZBus VDED 执行示例场景。</span><a class="headerlink" href="#id13" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<p>以下代码实现了通道 A。注意 <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">a_msg</span></code> 仅用于说明。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">ZBUS_CHAN_DEFINE</span><span class="p">(</span><span class="n">a_chan</span><span class="p">,</span><span class="w">                       </span><span class="cm">/* Name */</span>
+<span class="w">         </span><span class="k">struct</span><span class="w"> </span><span class="nc">a_msg</span><span class="p">,</span><span class="w">                         </span><span class="cm">/* Message type */</span>
+
+<span class="w">         </span><span class="nb">NULL</span><span class="p">,</span><span class="w">                                 </span><span class="cm">/* Validator */</span>
+<span class="w">         </span><span class="nb">NULL</span><span class="p">,</span><span class="w">                                 </span><span class="cm">/* User Data */</span>
+<span class="w">         </span><span class="n">ZBUS_OBSERVERS</span><span class="p">(</span><span class="n">L1</span><span class="p">,</span><span class="w"> </span><span class="n">L2</span><span class="p">,</span><span class="w"> </span><span class="n">MS1</span><span class="p">,</span><span class="w"> </span><span class="n">MS2</span><span class="p">,</span><span class="w"> </span><span class="n">S1</span><span class="p">),</span><span class="w"> </span><span class="cm">/* observers */</span>
+<span class="w">         </span><span class="n">ZBUS_MSG_INIT</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span><span class="w">                      </span><span class="cm">/* Initial value {0} */</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>在下图中，字母表示与 VDED 执行相关的某个动作。X 轴表示时间，Y 轴表示线程的优先级。通道 A 的消息用对话气泡表示，它只是一块内存（共享内存）。它出现多次只是为了表示该时刻的消息。</p>
+<figure class="align-default" id="id14">
+<a class="reference internal image-reference" href="../../_images/zbus_publishing_process_example.svg"><img alt="ZBus 发布处理细节" src="../../_images/zbus_publishing_process_example.svg" style="width: 85%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">优先级为 T1 &gt; MS1 &gt; MS2 &gt; S1 时的 ZBus VDED 执行细节。</span><a class="headerlink" href="#id14" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<p>上图展示了 T1 向通道 A 发布时，VDED 执行期间所进行的动作。下表描述了 VDED 执行中的各项活动（用字母表示）。该场景的优先级为：T1 &gt; MS1 &gt; MS2 &gt; S1。T1 的优先级最高。</p>
+<table class="docutils align-default" id="id15">
+<caption><span class="caption-text">优先级为 T1 &gt; MS1 &gt; MS2 &gt; S1 时 VDED 执行步骤详解。</span><a class="headerlink" href="#id15" title="链接到此表格。"></a></caption>
+<colgroup>
+<col style="width: 7.1%" />
+<col style="width: 92.9%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>动作</p></th>
+<th class="head"><p>描述</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>a</p></td>
+<td><p>T1 开始运行，并在某个时刻向通道 A 发布。</p></td>
+</tr>
+<tr class="row-odd"><td><p>b</p></td>
+<td><p>发布（VDED）过程开始。VDED 锁定通道 A。</p></td>
+</tr>
+<tr class="row-even"><td><p>c</p></td>
+<td><p>VDED 把 T1 的消息复制到通道 A 的消息中。</p></td>
+</tr>
+<tr class="row-odd"><td><p>d, e</p></td>
+<td><p>VDED 依次执行 L1 和 L2。在监听者内部，通常会调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_chan_const_msg()</span></code> 函数，该函数提供对通道 A 消息的直接常量引用。这很快，这里不需要复制。</p></td>
+</tr>
+<tr class="row-even"><td><p>f, g</p></td>
+<td><p>VDED 复制消息并依次发送给 MS1 和 MS2。注意，这些线程在收到通知后立即进入就绪状态。但由于它们的优先级低于 T1，因此进入等待状态。</p></td>
+</tr>
+<tr class="row-odd"><td><p>h</p></td>
+<td><p>VDED 把通知消息推入 S1 的队列。注意，该线程在收到通知后立即进入就绪状态。但由于通道仍处于锁定状态，它无法访问通道，因此进入等待状态。</p></td>
+</tr>
+<tr class="row-even"><td><p>i</p></td>
+<td><p>VDED 解锁通道 A，完成发布。MS1 离开等待状态并开始执行。</p></td>
+</tr>
+<tr class="row-odd"><td><p>j</p></td>
+<td><p>MS1 执行完毕。MS2 离开等待状态并开始执行。</p></td>
+</tr>
+<tr class="row-even"><td><p>k</p></td>
+<td><p>MS2 执行完毕。S1 离开等待状态并开始执行。</p></td>
+</tr>
+<tr class="row-odd"><td><p>l, m, n</p></td>
+<td><p>由于通道 A 未被锁定，S1 离开等待状态，再次获得 CPU 并开始执行。由于它收到了来自通道 A 的通知，它执行一次通道读取（就是简单的加锁、内存复制、解锁），继续执行，然后让出 CPU。</p></td>
+</tr>
+<tr class="row-even"><td><p>o</p></td>
+<td><p>S1 完成其工作。</p></td>
+</tr>
+</tbody>
+</table>
+<p>下图展示了 T1 向通道 A 发布时，VDED 执行期间所进行的动作。该场景的优先级为：T1 &lt; MS1 &lt; MS2 &lt; S1。</p>
+<figure class="align-default" id="id16">
+<a class="reference internal image-reference" href="../../_images/zbus_publishing_process_example2.svg"><img alt="ZBus 发布处理细节" src="../../_images/zbus_publishing_process_example2.svg" style="width: 85%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">优先级为 T1 &lt; MS1 &lt; MS2 &lt; S1 时的 ZBus VDED 执行细节。</span><a class="headerlink" href="#id16" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<p>下表描述了 VDED 执行中的各项活动（用字母表示）。</p>
+<table class="docutils align-default" id="id17">
+<caption><span class="caption-text">优先级为 T1 &lt; MS1 &lt; MS2 &lt; S1 时 VDED 执行步骤详解。</span><a class="headerlink" href="#id17" title="链接到此表格。"></a></caption>
+<colgroup>
+<col style="width: 7.1%" />
+<col style="width: 92.9%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>动作</p></th>
+<th class="head"><p>描述</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>a</p></td>
+<td><p>T1 开始运行，并在某个时刻向通道 A 发布。</p></td>
+</tr>
+<tr class="row-odd"><td><p>b</p></td>
+<td><p>发布（VDED）过程开始。VDED 锁定通道 A。</p></td>
+</tr>
+<tr class="row-even"><td><p>c</p></td>
+<td><p>VDED 把 T1 的消息复制到通道 A 的消息中。</p></td>
+</tr>
+<tr class="row-odd"><td><p>d, e</p></td>
+<td><p>VDED 依次执行 L1 和 L2。在监听者内部，通常会调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_chan_const_msg()</span></code> 函数，该函数提供对通道 A 消息的直接常量引用。这很快，这里不需要复制。</p></td>
+</tr>
+<tr class="row-even"><td><p>f</p></td>
+<td><p>VDED 复制消息并发送给 MS1。MS1 抢占 T1 并开始工作。之后 T1 重新获得 CPU。</p></td>
+</tr>
+<tr class="row-odd"><td><p>g</p></td>
+<td><p>VDED 复制消息并发送给 MS2。MS2 抢占 T1 并开始工作。之后 T1 重新获得 CPU。</p></td>
+</tr>
+<tr class="row-even"><td><p>h</p></td>
+<td><p>VDED 把通知消息推入 S1 的队列。</p></td>
+</tr>
+<tr class="row-odd"><td><p>i</p></td>
+<td><p>VDED 解锁通道 A，完成发布。</p></td>
+</tr>
+<tr class="row-even"><td><p>j, k, l</p></td>
+<td><p>由于通道 A 未被锁定，S1 离开等待状态，再次获得 CPU 并开始执行。由于它收到了来自通道 A 的通知，它执行一次通道读取（就是简单的加锁、内存复制、解锁），继续执行，然后让出 CPU。</p></td>
+</tr>
+</tbody>
+</table>
+<section id="hlp-priority-boost">
+<h4>HLP 优先级提升<a class="headerlink" href="#hlp-priority-boost" title="链接到此标题。"></a></h4>
+<p>ZBus 实现了最高锁定者协议（Highest Locker Protocol，HLP），它根据观察者线程的优先级来确定发布者的临时优先级。该协议考虑通道的最高观察者优先级（Highest Observer Priority，HOP）；即使观察者并未在该通道上等待消息，也会被纳入计算。VDED 会根据 HOP 提升发布者的优先级，以确保较低的延迟并尽量减少抢占。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>优先级提升默认启用。要停用它，请禁用 <a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_PRIORITY_BOOST" title="CONFIG_ZBUS_PRIORITY_BOOST"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_PRIORITY_BOOST</span></code></a> 配置选项。</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>ZBus 优先级提升在计算 HOP 时不考虑运行时观察者。</p>
+</div>
+<p>下图展示了 T1 向通道 A 发布时，VDED 执行期间所进行的动作。该场景考虑了优先级提升功能，优先级为：T1 &lt; MS1 &lt; MS2 &lt; S1。</p>
+<figure class="align-default" id="id18">
+<a class="reference internal image-reference" href="../../_images/zbus_publishing_process_example_HLP.svg"><img alt="使用优先级提升的 ZBus 发布过程细节。" src="../../_images/zbus_publishing_process_example_HLP.svg" style="width: 85%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">启用优先级提升且优先级为 T1 &lt; MS1 &lt; MS2 &lt; S1 时的 ZBus VDED 执行细节。</span><a class="headerlink" href="#id18" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<p>要正确使用优先级提升，需要把观察者附加到线程上。订阅者附加到线程后，就采用该线程的优先级，优先级提升算法会考虑该观察者的优先级。以下代码演示了附加线程的函数。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">ZBUS_SUBSCRIBER_DEFINE</span><span class="p">(</span><span class="n">s1</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">s1_thread</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">ptr1</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">ptr2</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">ptr3</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="n">ARG_UNUSED</span><span class="p">(</span><span class="n">ptr1</span><span class="p">);</span>
+<span class="w">        </span><span class="n">ARG_UNUSED</span><span class="p">(</span><span class="n">ptr2</span><span class="p">);</span>
+<span class="w">        </span><span class="n">ARG_UNUSED</span><span class="p">(</span><span class="n">ptr3</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">zbus_channel</span><span class="w"> </span><span class="o">*</span><span class="n">chan</span><span class="p">;</span>
+
+<span class="hll"><span class="w">        </span><span class="n">zbus_obs_attach_to_thread</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s1</span><span class="p">);</span>
+</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">zbus_sub_wait</span><span class="p">(</span><span class="o">&amp;</span><span class="n">s1</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">chan</span><span class="p">,</span><span class="w"> </span><span class="n">K_FOREVER</span><span class="p">);</span>
+
+<span class="w">                </span><span class="cm">/* Subscriber implementation */</span>
+
+<span class="w">        </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="n">K_THREAD_DEFINE</span><span class="p">(</span><span class="n">s1_id</span><span class="p">,</span><span class="w"> </span><span class="n">CONFIG_MAIN_STACK_SIZE</span><span class="p">,</span><span class="w"> </span><span class="n">s1_thread</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>在上面的代码中，由于线程的优先级为 2，<code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_obs_attach_to_thread()</span></code> 会把观察者 <code class="docutils literal notranslate"><span class="pre">s1</span></code> 的优先级设为 2。可以使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_obs_detach_from_thread()</span></code> 分离观察者来撤销这一设置。计算通道 HOP 时只考虑已启用的观察者和观察关系。屏蔽通道的某个特定观察关系会影响该通道的 HOP。</p>
+<p>总之，该功能的优点如下：</p>
+<ul class="simple">
+<li><p>对 zbus 而言，HLP 比互斥量的优先级继承更有效；</p></li>
+<li><p>发布者与观察者之间不会发生有界的优先级反转；</p></li>
+<li><p>优先级介于 T1 和 S1 之间、且不参与通信的其他线程无法抢占 T1，从而避免了无界的优先级反转；</p></li>
+<li><p>消息订阅者会等待 VDED 完成消息投递过程，因此 VDED 的执行更快、更稳定；</p></li>
+<li><p>HLP 优先级是动态的，可以在执行过程中变化；</p></li>
+<li><p>ZBus 操作可以在 ISR 中使用；</p></li>
+<li><p>可以关闭优先级提升功能，改用普通信号量作为通道锁机制；</p></li>
+<li><p>最高锁定者协议的主要缺点是与继承相关的优先级反转，但在 zbus 场景中这是可以接受的，因为它能确保较低的总线延迟。</p></li>
+</ul>
+</section>
+</section>
+<section id="limitations">
+<h3><a class="toc-backref" href="#id21" role="doc-backlink">限制</a><a class="headerlink" href="#limitations" title="链接到此标题。"></a></h3>
+<p>由于开发者可以用 zbus 解决许多不同的问题，也就带来了一些挑战。ZBus 并不能解决所有问题，因此需要分析具体情况，确认 zbus 是否适用。例如，根据 zbus 的基准测试结果，它不太适合在线程之间传输高速字节流。<a class="reference internal" href="../../kernel/services/data_passing/pipes.html#pipes-v2"><span class="std std-ref">管道</span></a> 内核对象可以满足这类需求。</p>
+<section id="delivery-guarantees">
+<h4>投递保证<a class="headerlink" href="#delivery-guarantees" title="链接到此标题。"></a></h4>
+<p>ZBus 总是会把消息投递给监听者、消息订阅者和异步监听者。但对于订阅者，消息投递没有保证，因为 zbus 只发送通知，而消息的读取取决于订阅者的实现。遵循以下设计建议可以提高投递率：</p>
+<ul class="simple">
+<li><p>让监听者尽可能快（像对待 ISR 一样对待它们）。如果需要耗时的处理，可以考虑使用异步监听者把部分或全部处理转移到工作队列中。</p></li>
+<li><p>尽量给消费者设置较高的优先级，以避免丢失。</p></li>
+<li><p>为观察者留出空闲的 CPU 来处理生成的数据。</p></li>
+<li><p>对于大量字节传输，可以考虑使用消息队列或管道。</p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>ZBus 使用 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/net_buf.h">include/zephyr/net_buf.h</a>（网络缓冲区）与消息订阅者交换数据。因此，考虑到消息订阅者和异步监听者，请谨慎选择 <a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_MSG_SUBSCRIBER_NET_BUF_POOL_SIZE" title="CONFIG_ZBUS_MSG_SUBSCRIBER_NET_BUF_POOL_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_MSG_SUBSCRIBER_NET_BUF_POOL_SIZE</span></code></a> 和 <a class="reference internal" href="../../kconfig.html#CONFIG_HEAP_MEM_POOL_ADD_SIZE_ZBUS" title="CONFIG_HEAP_MEM_POOL_ADD_SIZE_ZBUS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HEAP_MEM_POOL_ADD_SIZE_ZBUS</span></code></a> 这两个配置，它们对 VDED 的正确执行（投递保证）至关重要。如果想为一组特定的通道保留一个隔离的池，可以使用 <a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_MSG_SUBSCRIBER_NET_BUF_POOL_ISOLATION" title="CONFIG_ZBUS_MSG_SUBSCRIBER_NET_BUF_POOL_ISOLATION"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_MSG_SUBSCRIBER_NET_BUF_POOL_ISOLATION</span></code></a> 和专用的池。请参阅 <a class="reference internal" href="../../samples/subsys/zbus/msg_subscriber/README.html#zbus-msg-subscriber" title="使用 zbus 消息订阅者监听发布到通道的消息。">Message subscriber</a> 和 <a class="reference internal" href="../../samples/subsys/zbus/async_listeners/README.html#zbus-async-listeners" title="演示 zbus 异步监听器的用法。">zbus Async Listeners</a>，了解隔离的实际效果。</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>订阅者只会收到发生变化的通道的引用。如果在订阅者读取之前通道被发布了两次，就可能出现数据丢失：第二次发布会覆盖第一次的值。因此，订阅者会收到两次通知，但只能读到最后的数据。</p>
+</div>
+</section>
+<section id="message-delivery-sequence">
+<span id="zbus-delivery-sequence"></span><h4>消息投递顺序<a class="headerlink" href="#message-delivery-sequence" title="链接到此标题。"></a></h4>
+<p>消息投递按以下优先顺序进行：</p>
+<ol class="arabic simple">
+<li><p>使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ZBUS_CHAN_DEFINE</span></code> 在通道中定义的观察者（按定义顺序）；</p></li>
+<li><p>使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ZBUS_CHAN_ADD_OBS</span></code> 定义的观察者（按顺序优先级，即该宏的参数）；</p></li>
+<li><p>最后是使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_chan_add_obs()</span></code> 按添加顺序加入的运行时观察者。</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>VDED 会忽略所有被禁用的观察者或观察关系。</p>
+</div>
+</section>
+</section>
+</section>
+<section id="usage">
+<h2><a class="toc-backref" href="#id22" role="doc-backlink">用法</a><a class="headerlink" href="#usage" title="链接到此标题。"></a></h2>
+<p>ZBus 的运行依赖于通道和观察者。因此，在定义通道时需要确定通道的消息及其观察者列表，观察者可以静态指定（在通道定义中，或使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ZBUS_CHAN_ADD_OBS</span></code>），也可以在运行时指定（参见 <a class="reference internal" href="#runtime-observers">runtime observers</a>）。消息是一个普通的 C 结构体；观察者可以是监听者（同步）、异步监听者（异步）、订阅者（异步）或消息订阅者（异步）。</p>
+<p>以下代码定义并初始化了一个普通通道及其依赖项。例如，该通道用于交换加速度计数据。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">acc_msg</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">y</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">z</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="n">ZBUS_CHAN_DEFINE</span><span class="p">(</span><span class="n">acc_chan</span><span class="p">,</span><span class="w">                           </span><span class="cm">/* Name */</span>
+<span class="w">         </span><span class="k">struct</span><span class="w"> </span><span class="nc">acc_msg</span><span class="p">,</span><span class="w">                             </span><span class="cm">/* Message type */</span>
+
+<span class="w">         </span><span class="nb">NULL</span><span class="p">,</span><span class="w">                                       </span><span class="cm">/* Validator */</span>
+<span class="w">         </span><span class="nb">NULL</span><span class="p">,</span><span class="w">                                       </span><span class="cm">/* User Data */</span>
+<span class="w">         </span><span class="n">ZBUS_OBSERVERS</span><span class="p">(</span><span class="n">my_listener</span><span class="p">,</span><span class="w"> </span><span class="n">my_subscriber</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">my_msg_subscriber</span><span class="p">),</span><span class="w">          </span><span class="cm">/* observers */</span>
+<span class="w">         </span><span class="n">ZBUS_MSG_INIT</span><span class="p">(.</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w">       </span><span class="cm">/* Initial value */</span>
+<span class="p">);</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">listener_callback_example</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">zbus_channel</span><span class="w"> </span><span class="o">*</span><span class="n">chan</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">acc_msg</span><span class="w"> </span><span class="o">*</span><span class="n">acc</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">&amp;</span><span class="n">acc_chan</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">chan</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">acc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zbus_chan_const_msg</span><span class="p">(</span><span class="n">chan</span><span class="p">);</span><span class="w"> </span><span class="c1">// Direct message access</span>
+<span class="w">                </span><span class="n">LOG_DBG</span><span class="p">(</span><span class="s">"From listener -&gt; Acc x=%d, y=%d, z=%d"</span><span class="p">,</span><span class="w"> </span><span class="n">acc</span><span class="o">-&gt;</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">acc</span><span class="o">-&gt;</span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">acc</span><span class="o">-&gt;</span><span class="n">z</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">ZBUS_LISTENER_DEFINE</span><span class="p">(</span><span class="n">my_listener</span><span class="p">,</span><span class="w"> </span><span class="n">listener_callback_example</span><span class="p">);</span>
+
+<span class="n">ZBUS_LISTENER_DEFINE</span><span class="p">(</span><span class="n">my_listener2</span><span class="p">,</span><span class="w"> </span><span class="n">listener_callback_example</span><span class="p">);</span>
+
+<span class="n">ZBUS_CHAN_ADD_OBS</span><span class="p">(</span><span class="n">acc_chan</span><span class="p">,</span><span class="w"> </span><span class="n">my_listener2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">);</span>
+
+<span class="n">ZBUS_SUBSCRIBER_DEFINE</span><span class="p">(</span><span class="n">my_subscriber</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">subscriber_task</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">zbus_channel</span><span class="w"> </span><span class="o">*</span><span class="n">chan</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">zbus_sub_wait</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_subscriber</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">chan</span><span class="p">,</span><span class="w"> </span><span class="n">K_FOREVER</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">struct</span><span class="w"> </span><span class="nc">acc_msg</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">&amp;</span><span class="n">acc_chan</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">chan</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="c1">// Indirect message access</span>
+<span class="w">                        </span><span class="n">zbus_chan_read</span><span class="p">(</span><span class="o">&amp;</span><span class="n">acc_chan</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">acc</span><span class="p">,</span><span class="w"> </span><span class="n">K_NO_WAIT</span><span class="p">);</span>
+<span class="w">                        </span><span class="n">LOG_DBG</span><span class="p">(</span><span class="s">"From subscriber -&gt; Acc x=%d, y=%d, z=%d"</span><span class="p">,</span><span class="w"> </span><span class="n">acc</span><span class="p">.</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">acc</span><span class="p">.</span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">acc</span><span class="p">.</span><span class="n">z</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="n">K_THREAD_DEFINE</span><span class="p">(</span><span class="n">subscriber_task_id</span><span class="p">,</span><span class="w"> </span><span class="mi">512</span><span class="p">,</span><span class="w"> </span><span class="n">subscriber_task</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+
+<span class="n">ZBUS_MSG_SUBSCRIBER_DEFINE</span><span class="p">(</span><span class="n">my_msg_subscriber</span><span class="p">);</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">msg_subscriber_task</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">ptr1</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">ptr2</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">ptr3</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="n">ARG_UNUSED</span><span class="p">(</span><span class="n">ptr1</span><span class="p">);</span>
+<span class="w">        </span><span class="n">ARG_UNUSED</span><span class="p">(</span><span class="n">ptr2</span><span class="p">);</span>
+<span class="w">        </span><span class="n">ARG_UNUSED</span><span class="p">(</span><span class="n">ptr3</span><span class="p">);</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">zbus_channel</span><span class="w"> </span><span class="o">*</span><span class="n">chan</span><span class="p">;</span>
+
+<span class="w">        </span><span class="k">struct</span><span class="w"> </span><span class="nc">acc_msg</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">zbus_sub_wait_msg</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_msg_subscriber</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">chan</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">acc</span><span class="p">,</span><span class="w"> </span><span class="n">K_FOREVER</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">&amp;</span><span class="n">acc_chan</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">chan</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">LOG_INF</span><span class="p">(</span><span class="s">"From msg subscriber -&gt; Acc x=%d, y=%d, z=%d"</span><span class="p">,</span><span class="w"> </span><span class="n">acc</span><span class="p">.</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">acc</span><span class="p">.</span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">acc</span><span class="p">.</span><span class="n">z</span><span class="p">);</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="n">K_THREAD_DEFINE</span><span class="p">(</span><span class="n">msg_subscriber_task_id</span><span class="p">,</span><span class="w"> </span><span class="mi">1024</span><span class="p">,</span><span class="w"> </span><span class="n">msg_subscriber_task</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>可以使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ZBUS_CHAN_ADD_OBS</span></code> 向通道添加静态观察者，我们称之为定义后的静态观察者。该命令允许我们指定一个初始化优先级，它会影响观察者的初始化顺序。顺序优先级参数只影响定义后的静态观察者。静态观察者的消息投递顺序无法被覆盖。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>在监听者内部访问消息之前，无需占用/锁定通道，因为事件分发器调用监听者时，发出通知的通道已经处于锁定状态。但订阅者在收到通知后，必须占用/锁定通道，或使用常规的读操作来访问消息。</p>
+</div>
+<p>通道可以有一个 <em>验证函数（validator function）</em>，使通道只接受有效的消息。被硬通道判定为无效的发布尝试会立即返回错误码。这样，通道的原始创建者可以对其他想借用其通道的开发者/发布者施加一定的约束。以下代码定义并初始化了一个 <em class="dfn">hard channel</em> （硬通道）及其依赖项。只有有效的消息才能发布到 <em class="dfn">hard channel</em>。之所以能做到这一点，是因为在通道定义中传入了一个 <em>验证函数</em>。在本例中，只有 <code class="docutils literal notranslate"><span class="pre">move</span></code> 等于 0、-1 和 1 的消息才有效。发布函数会丢弃 <code class="docutils literal notranslate"><span class="pre">move</span></code> 为其他值的消息。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">control_msg</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="n">move</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kt">bool</span><span class="w"> </span><span class="nf">control_validator</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="o">*</span><span class="w"> </span><span class="n">msg</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">msg_size</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">control_msg</span><span class="o">*</span><span class="w"> </span><span class="n">cm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">msg</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">bool</span><span class="w"> </span><span class="n">is_valid</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">cm</span><span class="o">-&gt;</span><span class="n">move</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">-1</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">cm</span><span class="o">-&gt;</span><span class="n">move</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="o">||</span><span class="w"> </span><span class="p">(</span><span class="n">cm</span><span class="o">-&gt;</span><span class="n">move</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">is_valid</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">message_count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="n">ZBUS_CHAN_DEFINE</span><span class="p">(</span><span class="n">control_chan</span><span class="p">,</span><span class="w">    </span><span class="cm">/* Name */</span>
+<span class="w">         </span><span class="k">struct</span><span class="w"> </span><span class="nc">control_msg</span><span class="p">,</span><span class="w">      </span><span class="cm">/* Message type */</span>
+
+<span class="w">         </span><span class="n">control_validator</span><span class="p">,</span><span class="w">       </span><span class="cm">/* Validator */</span>
+<span class="w">         </span><span class="o">&amp;</span><span class="n">message_count</span><span class="p">,</span><span class="w">          </span><span class="cm">/* User data */</span>
+<span class="w">         </span><span class="n">ZBUS_OBSERVERS_EMPTY</span><span class="p">,</span><span class="w">    </span><span class="cm">/* observers */</span>
+<span class="w">         </span><span class="n">ZBUS_MSG_INIT</span><span class="p">(.</span><span class="n">move</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="cm">/* Initial value */</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>以下各节详细介绍如何使用 zbus 的各项功能。</p>
+<section id="publishing-to-a-channel">
+<span id="id3"></span><h3><a class="toc-backref" href="#id23" role="doc-backlink">向通道发布</a><a class="headerlink" href="#publishing-to-a-channel" title="链接到此标题。"></a></h3>
+<p>在 zbus 中，通过调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_chan_pub()</span></code> 向通道发布消息。例如，以下代码在上面示例的基础上向通道 <code class="docutils literal notranslate"><span class="pre">acc_chan</span></code> 发布。该代码尝试将消息 <code class="docutils literal notranslate"><span class="pre">acc1</span></code> 发布到通道 <code class="docutils literal notranslate"><span class="pre">acc_chan</span></code>，最多等待一秒钟完成发布，否则操作失败。从代码示例可以看出，使用在栈上分配的消息是可以的，因为 VDED 会在内部复制数据。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">acc_msg</span><span class="w"> </span><span class="n">acc1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{.</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="p">.</span><span class="n">z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">};</span>
+<span class="n">zbus_chan_pub</span><span class="p">(</span><span class="o">&amp;</span><span class="n">acc_chan</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">acc1</span><span class="p">,</span><span class="w"> </span><span class="n">K_SECONDS</span><span class="p">(</span><span class="mi">1</span><span class="p">));</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>在 ISR 中只能以 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_NO_WAIT</span></code> 超时使用此函数。</p>
+</div>
+</section>
+<section id="reading-from-a-channel">
+<span id="id4"></span><h3><a class="toc-backref" href="#id24" role="doc-backlink">从通道读取</a><a class="headerlink" href="#reading-from-a-channel" title="链接到此标题。"></a></h3>
+<p>在 zbus 中，通过调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_chan_read()</span></code> 从通道读取消息。例如，以下代码尝试读取通道 <code class="docutils literal notranslate"><span class="pre">acc_chan</span></code>，最多等待 500 毫秒读取消息，否则操作失败。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">acc_msg</span><span class="w"> </span><span class="n">acc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+<span class="n">zbus_chan_read</span><span class="p">(</span><span class="o">&amp;</span><span class="n">acc_chan</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">acc</span><span class="p">,</span><span class="w"> </span><span class="n">K_MSEC</span><span class="p">(</span><span class="mi">500</span><span class="p">));</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>在 ISR 中只能以 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_NO_WAIT</span></code> 超时使用此函数。</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>在收到来自 <code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_sub_wait()</span></code> 的通知后，请谨慎选择 <code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_chan_read()</span></code> 的超时，因为在 VDED 执行期间通道总是不可用的。如果有多个订阅者，使用 <code class="docutils literal notranslate"><span class="pre">K_NO_WAIT</span></code> 读取很可能返回超时错误。例如，再看一下 VDED 的示意图，注意 <code class="docutils literal notranslate"><span class="pre">S1</span></code> 使用 K_NO_WAIT 的读取尝试必然会失败。更多详情请参阅 <a class="reference internal" href="#virtual-distributed-event-dispatcher">Virtual Distributed Event Dispatcher</a> 一节。</p>
+</div>
+</section>
+<section id="notifying-a-channel">
+<h3><a class="toc-backref" href="#id25" role="doc-backlink">通知通道</a><a class="headerlink" href="#notifying-a-channel" title="链接到此标题。"></a></h3>
+<p>可以调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_chan_notify()</span></code> 强制 zbus 通知通道的观察者。例如，以下代码在上面示例的基础上，对通道 <code class="docutils literal notranslate"><span class="pre">acc_chan</span></code> 强制发出一次通知。注意，这可以发送不带消息的事件，不需要任何数据交换。<a class="reference internal" href="#claim-and-finish-a-channel">Claim and finish a channel</a> 一节中的代码示例展示了这种用法可能有用的场景。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">zbus_chan_notify</span><span class="p">(</span><span class="o">&amp;</span><span class="n">acc_chan</span><span class="p">,</span><span class="w"> </span><span class="n">K_NO_WAIT</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>在 ISR 中只能以 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_NO_WAIT</span></code> 超时使用此函数。</p>
+</div>
+</section>
+<section id="declaring-channels-and-observers">
+<h3><a class="toc-backref" href="#id26" role="doc-backlink">声明通道和观察者</a><a class="headerlink" href="#declaring-channels-and-observers" title="链接到此标题。"></a></h3>
+<p>要在定义通道或观察者的文件之外访问它们，需要调用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ZBUS_CHAN_DECLARE</span></code> 和 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ZBUS_OBS_DECLARE</span></code> 进行声明。换言之，不同文件中同名的 zbus 通道定义和声明会指向同一个（全局）通道。因此，开发者在为新通道命名时应注意已有的通道，否则链接会失败。可以在一次调用中声明多个通道或观察者。以下代码在上面示例的基础上展示了已定义的通道和观察者。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">ZBUS_OBS_DECLARE</span><span class="p">(</span><span class="n">my_listener</span><span class="p">,</span><span class="w"> </span><span class="n">my_subscriber</span><span class="p">);</span>
+<span class="n">ZBUS_CHAN_DECLARE</span><span class="p">(</span><span class="n">acc_chan</span><span class="p">,</span><span class="w"> </span><span class="n">version_chan</span><span class="p">);</span>
+</pre></div>
+</div>
+<section id="unique-channel-identifiers">
+<h4>唯一通道标识符<a class="headerlink" href="#unique-channel-identifiers" title="链接到此标题。"></a></h4>
+<p>为了简化与外部实体的集成，可以为通道分配一个唯一的数字标识符。这样用户就可以通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_chan_from_id()</span></code> 使用该标识符获取通道引用，而不必在编译时通过 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ZBUS_CHAN_DECLARE</span></code> 获取。使用此功能的通道通过 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ZBUS_CHAN_DEFINE_WITH_ID</span></code> 声明。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">ZBUS_CHAN_DEFINE_WITH_ID</span><span class="p">(</span><span class="n">control_chan</span><span class="p">,</span><span class="w">    </span><span class="cm">/* Name */</span>
+<span class="w">    </span><span class="mh">0x12345678</span><span class="p">,</span><span class="w">              </span><span class="cm">/* Unique channel identifier */</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">control_msg</span><span class="p">,</span><span class="w">      </span><span class="cm">/* Message type */</span>
+<span class="w">    </span><span class="n">control_validator</span><span class="p">,</span><span class="w">       </span><span class="cm">/* Validator */</span>
+<span class="w">    </span><span class="o">&amp;</span><span class="n">message_count</span><span class="p">,</span><span class="w">          </span><span class="cm">/* User data */</span>
+<span class="w">    </span><span class="n">ZBUS_OBSERVERS_EMPTY</span><span class="p">,</span><span class="w">    </span><span class="cm">/* observers */</span>
+<span class="w">    </span><span class="n">ZBUS_MSG_INIT</span><span class="p">(.</span><span class="n">move</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="cm">/* Initial value */</span>
+<span class="p">);</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">channel_retrieve</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">zbus_channel</span><span class="w"> </span><span class="o">*</span><span class="n">chan</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zbus_chan_from_id</span><span class="p">(</span><span class="mh">0x12345678</span><span class="p">);</span>
+
+<span class="w">    </span><span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="runtime-channel-creation">
+<h4>运行时创建通道<a class="headerlink" href="#runtime-channel-creation" title="链接到此标题。"></a></h4>
+<p>启用 <a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_RUNTIME_CHANNEL_REGISTRATION" title="CONFIG_ZBUS_RUNTIME_CHANNEL_REGISTRATION"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_RUNTIME_CHANNEL_REGISTRATION</span></code></a> 后，ZBus 允许在运行时创建通道。这在编译时不知道通道数量或其配置的场景中很有用。以下代码演示了如何在运行时创建通道。注意，传给 <code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_runtime_channel_register()</span></code> 的 <code class="xref c c-struct docutils literal notranslate"><span class="pre">zbus_runtime_channel</span></code>、<code class="xref c c-struct docutils literal notranslate"><span class="pre">zbus_channel_data</span></code> 以及消息结构体，在调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_runtime_channel_unregister()</span></code> 之前必须一直在内存中有效。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">runtime_msg</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">data</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">create_runtime_channel</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">zbus_runtime_channel</span><span class="w"> </span><span class="n">runtime_chan</span><span class="p">;</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">zbus_channel_data</span><span class="w"> </span><span class="n">data</span><span class="p">;</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">runtime_msg</span><span class="w"> </span><span class="n">msg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">};</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+
+<span class="w">    </span><span class="cm">/* Initialise and register the runtime channel */</span>
+<span class="w">    </span><span class="n">zbus_runtime_channel_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">runtime_chan</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="s">"chan"</span><span class="p">,</span><span class="w"> </span><span class="mh">0x12345678</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">msg</span><span class="p">,</span>
+<span class="w">                              </span><span class="k">sizeof</span><span class="p">(</span><span class="n">msg</span><span class="p">),</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+<span class="w">    </span><span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zbus_runtime_channel_register</span><span class="p">(</span><span class="o">&amp;</span><span class="n">runtime_chan</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">ret</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">LOG_ERR</span><span class="p">(</span><span class="s">"Failed to register runtime channel (%d)"</span><span class="p">,</span><span class="w"> </span><span class="n">ret</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/* Use the runtime channel here */</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">runtime_msg</span><span class="w"> </span><span class="n">pub_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mi">42</span><span class="p">};</span>
+
+<span class="w">    </span><span class="n">zbus_chan_pub</span><span class="p">(</span><span class="o">&amp;</span><span class="n">runtime_chan</span><span class="p">.</span><span class="n">channel</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">pub_data</span><span class="p">,</span><span class="w"> </span><span class="n">K_MSEC</span><span class="p">(</span><span class="mi">100</span><span class="p">));</span>
+<span class="w">    </span><span class="p">...</span>
+
+<span class="w">    </span><span class="cm">/* Unregister the runtime channel when done */</span>
+<span class="w">    </span><span class="n">zbus_runtime_channel_unregister</span><span class="p">(</span><span class="o">&amp;</span><span class="n">runtime_chan</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="iterating-over-channels-and-observers">
+<h3><a class="toc-backref" href="#id27" role="doc-backlink">遍历通道和观察者</a><a class="headerlink" href="#iterating-over-channels-and-observers" title="链接到此标题。"></a></h3>
+<p>ZBus 子系统还为通道和观察者实现了 <a class="reference internal" href="../../kernel/iterable_sections/index.html#iterable-sections-api"><span class="std std-ref">可迭代段</span></a>，并提供了相应的 API，例如 <code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_iterate_over_channels()</span></code>、<code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_iterate_over_channels_with_user_data()</span></code>、<code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_iterate_over_observers()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_iterate_over_observers_with_user_data()</span></code>。借助此功能，开发者可以对所有已声明的通道调用某个过程，该过程的参数是一个 <code class="xref c c-struct docutils literal notranslate"><span class="pre">zbus_channel</span></code>。执行顺序按通道名称的字母顺序（详情请参阅 <a class="reference internal" href="../../kernel/iterable_sections/index.html#iterable-sections-api"><span class="std std-ref">可迭代段</span></a> 文档）。ZBus 也为 <code class="xref c c-struct docutils literal notranslate"><span class="pre">zbus_observer</span></code> 实现了此功能。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">print_channel_data_iterator</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">zbus_channel</span><span class="w"> </span><span class="o">*</span><span class="n">chan</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">user_data</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">      </span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">user_data</span><span class="p">;</span>
+
+<span class="w">      </span><span class="n">LOG_INF</span><span class="p">(</span><span class="s">"%d - Channel %s:"</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">count</span><span class="p">,</span><span class="w"> </span><span class="n">zbus_chan_name</span><span class="p">(</span><span class="n">chan</span><span class="p">));</span>
+<span class="w">      </span><span class="n">LOG_INF</span><span class="p">(</span><span class="s">"      Message size: %d"</span><span class="p">,</span><span class="w"> </span><span class="n">zbus_chan_msg_size</span><span class="p">(</span><span class="n">chan</span><span class="p">));</span>
+<span class="w">      </span><span class="n">LOG_INF</span><span class="p">(</span><span class="s">"      Observers:"</span><span class="p">);</span>
+
+<span class="w">      </span><span class="o">++</span><span class="p">(</span><span class="o">*</span><span class="n">count</span><span class="p">);</span>
+
+<span class="w">      </span><span class="k">struct</span><span class="w"> </span><span class="nc">zbus_channel_observation</span><span class="w"> </span><span class="o">*</span><span class="n">observation</span><span class="p">;</span>
+
+<span class="w">      </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int16_t</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="n">chan</span><span class="o">-&gt;</span><span class="n">observers_start_idx</span><span class="p">,</span><span class="w"> </span><span class="n">limit</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">*</span><span class="n">chan</span><span class="o">-&gt;</span><span class="n">observers_end_idx</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">limit</span><span class="p">;</span>
+<span class="w">            </span><span class="o">++</span><span class="n">i</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">STRUCT_SECTION_GET</span><span class="p">(</span><span class="n">zbus_channel_observation</span><span class="p">,</span><span class="w"> </span><span class="n">i</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">observation</span><span class="p">);</span>
+
+<span class="w">            </span><span class="n">LOG_INF</span><span class="p">(</span><span class="s">"      - %s"</span><span class="p">,</span><span class="w"> </span><span class="n">observation</span><span class="o">-&gt;</span><span class="n">obs</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+
+<span class="w">      </span><span class="k">struct</span><span class="w"> </span><span class="nc">zbus_observer_node</span><span class="w"> </span><span class="o">*</span><span class="n">obs_nd</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">tmp</span><span class="p">;</span>
+
+<span class="w">      </span><span class="n">SYS_SLIST_FOR_EACH_CONTAINER_SAFE</span><span class="p">(</span><span class="n">chan</span><span class="o">-&gt;</span><span class="n">observers</span><span class="p">,</span><span class="w"> </span><span class="n">obs_nd</span><span class="p">,</span><span class="w"> </span><span class="n">tmp</span><span class="p">,</span><span class="w"> </span><span class="n">node</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">LOG_INF</span><span class="p">(</span><span class="s">"      - %s"</span><span class="p">,</span><span class="w"> </span><span class="n">obs_nd</span><span class="o">-&gt;</span><span class="n">obs</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">);</span>
+<span class="w">      </span><span class="p">}</span>
+
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">print_observer_data_iterator</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">zbus_observer</span><span class="w"> </span><span class="o">*</span><span class="n">obs</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">user_data</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">      </span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">user_data</span><span class="p">;</span>
+
+<span class="w">      </span><span class="n">LOG_INF</span><span class="p">(</span><span class="s">"%d - %s %s"</span><span class="p">,</span><span class="w"> </span><span class="o">*</span><span class="n">count</span><span class="p">,</span><span class="w"> </span><span class="n">obs</span><span class="o">-&gt;</span><span class="n">queue</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">"Subscriber"</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="s">"Listener"</span><span class="p">,</span><span class="w"> </span><span class="n">zbus_obs_name</span><span class="p">(</span><span class="n">obs</span><span class="p">));</span>
+
+<span class="w">      </span><span class="o">++</span><span class="p">(</span><span class="o">*</span><span class="n">count</span><span class="p">);</span>
+
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">      </span><span class="kt">int</span><span class="w"> </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="w">      </span><span class="n">LOG_INF</span><span class="p">(</span><span class="s">"Channel list:"</span><span class="p">);</span>
+
+<span class="w">      </span><span class="n">zbus_iterate_over_channels_with_user_data</span><span class="p">(</span><span class="n">print_channel_data_iterator</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">count</span><span class="p">);</span>
+
+<span class="w">      </span><span class="n">count</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+
+<span class="w">      </span><span class="n">LOG_INF</span><span class="p">(</span><span class="s">"Observers list:"</span><span class="p">);</span>
+
+<span class="w">      </span><span class="n">zbus_iterate_over_observers_with_user_data</span><span class="p">(</span><span class="n">print_observer_data_iterator</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">count</span><span class="p">);</span>
+
+<span class="w">      </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>该代码会输出以下日志：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">D: Channel list:</span>
+<span class="go">D: 0 - Channel acc_chan:</span>
+<span class="go">D:       Message size: 12</span>
+<span class="go">D:       Observers:</span>
+<span class="go">D:       - my_listener</span>
+<span class="go">D:       - my_subscriber</span>
+<span class="go">D: 1 - Channel version_chan:</span>
+<span class="go">D:       Message size: 4</span>
+<span class="go">D:       Observers:</span>
+<span class="go">D: Observers list:</span>
+<span class="go">D: 0 - Listener my_listener</span>
+<span class="go">D: 1 - Subscriber my_subscriber</span>
+</pre></div>
+</div>
+</section>
+<section id="advanced-channel-control">
+<span id="claim-and-finish-a-channel"></span><h3><a class="toc-backref" href="#id28" role="doc-backlink">高级通道控制</a><a class="headerlink" href="#advanced-channel-control" title="链接到此标题。"></a></h3>
+<p>ZBus 的设计目标是尽可能灵活和可扩展。因此，它提供了一些功能，用于对总线进行一定的控制和扩展。</p>
+<section id="listeners-message-access">
+<h4>监听者访问消息<a class="headerlink" href="#listeners-message-access" title="链接到此标题。"></a></h4>
+<p>出于性能考虑，监听者可以直接访问接收通道的消息，因为通道已经为它们锁定了。要访问通道的消息，监听者应使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_chan_const_msg()</span></code>，因为作为参数传给监听者函数的通道是一个指向该通道的常量指针。常量指针返回类型告诉开发者不要修改消息。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">listener_callback_example</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">zbus_channel</span><span class="w"> </span><span class="o">*</span><span class="n">chan</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">acc_msg</span><span class="w"> </span><span class="o">*</span><span class="n">acc</span><span class="p">;</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">&amp;</span><span class="n">acc_chan</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">chan</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">acc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zbus_chan_const_msg</span><span class="p">(</span><span class="n">chan</span><span class="p">);</span><span class="w"> </span><span class="c1">// Use this</span>
+<span class="w">                </span><span class="c1">// instead of zbus_chan_read(chan, &amp;acc, K_MSEC(200))</span>
+<span class="w">                </span><span class="c1">// or zbus_chan_msg(chan)</span>
+
+<span class="w">                </span><span class="n">LOG_DBG</span><span class="p">(</span><span class="s">"From listener -&gt; Acc x=%d, y=%d, z=%d"</span><span class="p">,</span><span class="w"> </span><span class="n">acc</span><span class="o">-&gt;</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">acc</span><span class="o">-&gt;</span><span class="n">y</span><span class="p">,</span><span class="w"> </span><span class="n">acc</span><span class="o">-&gt;</span><span class="n">z</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="async-listeners-message-access">
+<h4>异步监听者访问消息<a class="headerlink" href="#async-listeners-message-access" title="链接到此标题。"></a></h4>
+<p>异步监听者是利用现有的消息订阅者基础设施实现的。它们在工作队列上下文中执行，而不是在发布者的上下文中执行。使用系统工作队列时，用户感受到的行为与普通监听者相似。由于系统工作队列默认是优先级为 -1 的协作式线程，异步监听者会在 VDED 执行之后、先于所有其他应用程序线程（通常是抢占式线程）运行。</p>
+<p>异步监听者可以通过传给回调的消息副本引用直接访问接收通道的消息。注意，消息副本在异步监听者执行完毕后立即被释放。要访问通道的消息，异步监听者只需将其强制转换为正确的常量消息格式。以下示例演示了如何在异步监听者中访问消息。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">async_listener_callback</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">zbus_channel</span><span class="w"> </span><span class="o">*</span><span class="n">chan</span><span class="p">,</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">message</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">chan</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">chan_event</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">LOG_ERR</span><span class="p">(</span><span class="s">"Unexpected channel"</span><span class="p">);</span>
+<span class="w">                </span><span class="k">return</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">msg_event</span><span class="w"> </span><span class="o">*</span><span class="n">msg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">message</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">LOG_INF</span><span class="p">(</span><span class="s">"From async listener -&gt; Evt=%d | %s"</span><span class="p">,</span><span class="w"> </span><span class="n">msg</span><span class="o">-&gt;</span><span class="n">type</span><span class="p">,</span>
+<span class="w">                </span><span class="n">k_thread_name_get</span><span class="p">(</span><span class="n">k_current_get</span><span class="p">()));</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="user-data">
+<h4>用户数据<a class="headerlink" href="#user-data" title="链接到此标题。"></a></h4>
+<p>可以把自定义数据传入通道的 <code class="docutils literal notranslate"><span class="pre">user_data</span></code>，用于各种目的，例如写入通道元数据。为此，可以向通道定义宏的 <code class="docutils literal notranslate"><span class="pre">user_data</span></code> 字段传入一个指针，之后其他人就可以访问它。注意，每个通道的 <code class="docutils literal notranslate"><span class="pre">user_data</span></code> 是独立的。另外，访问 <code class="docutils literal notranslate"><span class="pre">user_data</span></code> 不是线程安全的。关于线程安全地访问 <code class="docutils literal notranslate"><span class="pre">user_data</span></code>，请参阅下一节。</p>
+</section>
+<section id="id5">
+<h4>占用和结束通道<a class="headerlink" href="#id5" title="链接到此标题。"></a></h4>
+<p>为了更好地控制通道，新增了两个函数：<code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_chan_claim()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_chan_finish()</span></code>。借助这两个函数，可以安全地访问通道的元数据。通道被占用期间，该通道上的任何操作都不可用。结束对通道的占用后，所有操作恢复可用。</p>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>切勿直接修改通道结构体的字段，否则可能导致 zbus 行为不一致和调度问题。</p>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>在 ISR 中只能以 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_NO_WAIT</span></code> 超时使用此函数。</p>
+</div>
+<p>以下代码在上面示例的基础上占用 <code class="docutils literal notranslate"><span class="pre">acc_chan</span></code>，以设置通道的 <code class="docutils literal notranslate"><span class="pre">user_data</span></code>。假设我们想统计通道交换消息的次数。我们将 <code class="docutils literal notranslate"><span class="pre">user_data</span></code> 定义为一个 32 位整数。这段代码可以加入到上面描述的监听者代码中。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">zbus_chan_claim</span><span class="p">(</span><span class="o">&amp;</span><span class="n">acc_chan</span><span class="p">,</span><span class="w"> </span><span class="n">K_MSEC</span><span class="p">(</span><span class="mi">200</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">message_counting</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">zbus_chan_user_data</span><span class="p">(</span><span class="o">&amp;</span><span class="n">acc_chan</span><span class="p">);</span>
+<span class="w">        </span><span class="o">*</span><span class="n">message_counting</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="n">zbus_chan_finish</span><span class="p">(</span><span class="o">&amp;</span><span class="n">acc_chan</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>以下代码的行为与 <a class="reference internal" href="#publishing-to-a-channel"><span class="std std-ref">向通道发布</span></a> 中的代码完全相同。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">zbus_chan_claim</span><span class="p">(</span><span class="o">&amp;</span><span class="n">acc_chan</span><span class="p">,</span><span class="w"> </span><span class="n">K_MSEC</span><span class="p">(</span><span class="mi">200</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">struct</span><span class="w"> </span><span class="nc">acc_msg</span><span class="w"> </span><span class="o">*</span><span class="n">acc1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">acc_msg</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">zbus_chan_msg</span><span class="p">(</span><span class="o">&amp;</span><span class="n">acc_chan</span><span class="p">);</span>
+<span class="w">        </span><span class="n">acc1</span><span class="o">-&gt;</span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="n">acc1</span><span class="o">-&gt;</span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="n">acc1</span><span class="o">-&gt;</span><span class="n">z</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="n">zbus_chan_finish</span><span class="p">(</span><span class="o">&amp;</span><span class="n">acc_chan</span><span class="p">);</span>
+<span class="w">        </span><span class="n">zbus_chan_notify</span><span class="p">(</span><span class="o">&amp;</span><span class="n">acc_chan</span><span class="p">,</span><span class="w"> </span><span class="n">K_SECONDS</span><span class="p">(</span><span class="mi">1</span><span class="p">));</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>以下代码的行为与 <a class="reference internal" href="#reading-from-a-channel"><span class="std std-ref">从通道读取</span></a> 中的代码完全相同。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">zbus_chan_claim</span><span class="p">(</span><span class="o">&amp;</span><span class="n">acc_chan</span><span class="p">,</span><span class="w"> </span><span class="n">K_MSEC</span><span class="p">(</span><span class="mi">200</span><span class="p">)))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">acc_msg</span><span class="w"> </span><span class="o">*</span><span class="n">acc1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">acc_msg</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="w"> </span><span class="n">zbus_chan_const_msg</span><span class="p">(</span><span class="o">&amp;</span><span class="n">acc_chan</span><span class="p">);</span>
+<span class="w">        </span><span class="c1">// access the acc_msg fields directly.</span>
+<span class="w">        </span><span class="n">zbus_chan_finish</span><span class="p">(</span><span class="o">&amp;</span><span class="n">acc_chan</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="runtime-observer-registration">
+<span id="runtime-observers"></span><h4>运行时注册观察者<a class="headerlink" href="#runtime-observer-registration" title="链接到此标题。"></a></h4>
+<p>可以在运行时向通道添加观察者。设置 <a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_RUNTIME_OBSERVERS" title="CONFIG_ZBUS_RUNTIME_OBSERVERS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_RUNTIME_OBSERVERS</span></code></a> 即可启用此功能。该功能可以使用堆动态分配节点，使用内存块（slab）静态分配节点，或使用用户提供的节点。这取决于 <a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC" title="CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC</span></code></a>，其取值可以是 <a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_DYNAMIC" title="CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_DYNAMIC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_DYNAMIC</span></code></a>、<a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_STATIC" title="CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_STATIC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_STATIC</span></code></a> 和 <a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_NONE" title="CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_NONE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_NONE</span></code></a>，默认为动态分配。启用 <a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_STATIC" title="CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_STATIC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_STATIC</span></code></a> 时，需要通过 <a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_POOL_SIZE" title="CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_POOL_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_POOL_SIZE</span></code></a> 配置设置要使用的运行时观察者数量。以下示例展示了运行时注册的用法。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">ZBUS_LISTENER_DEFINE</span><span class="p">(</span><span class="n">my_listener</span><span class="p">,</span><span class="w"> </span><span class="n">callback</span><span class="p">);</span>
+<span class="c1">// ...</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">thread_entry</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// ...</span>
+<span class="w">        </span><span class="cm">/* Adding the observer to channel chan1 */</span>
+<span class="w">        </span><span class="n">zbus_chan_add_obs</span><span class="p">(</span><span class="o">&amp;</span><span class="n">chan1</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">my_listener</span><span class="p">,</span><span class="w"> </span><span class="n">K_NO_WAIT</span><span class="p">);</span>
+<span class="w">        </span><span class="cm">/* Removing the observer from channel chan1 */</span>
+<span class="w">        </span><span class="n">zbus_chan_rm_obs</span><span class="p">(</span><span class="o">&amp;</span><span class="n">chan1</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">my_listener</span><span class="p">,</span><span class="w"> </span><span class="n">K_NO_WAIT</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p><code class="xref c c-struct docutils literal notranslate"><span class="pre">zbus_observer_node</span></code> 只有在通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_chan_rm_obs()</span></code> 移除其最初关联的通道观察者之后，才能在 <code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_chan_add_obs_with_node()</span></code> 中重复使用。</p>
+</div>
+</section>
+</section>
+</section>
+<section id="proxy-agent-communication-experimental">
+<span id="zbus-proxy-agent"></span><h2><a class="toc-backref" href="#id29" role="doc-backlink">代理通信（实验性）</a><a class="headerlink" href="#proxy-agent-communication-experimental" title="链接到此标题。"></a></h2>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>代理通信是实验性功能，可能会在不经弃用流程的情况下发生变化。</p>
+</div>
+<p>ZBus 支持代理转发，可以在不同的执行域（例如 CPU 内核或独立设备）之间传递消息。</p>
+<figure class="align-default">
+<a class="reference internal image-reference" href="../../_images/zbus_proxy_agent.svg"><img alt="ZBus 代理通信" src="../../_images/zbus_proxy_agent.svg" style="width: 75%;" />
+</a>
+</figure>
+<section id="id6">
+<h3><a class="toc-backref" href="#id30" role="doc-backlink">概念</a><a class="headerlink" href="#id6" title="链接到此标题。"></a></h3>
+<p>代理通信引入了以下几个关键概念：</p>
+<ul class="simple">
+<li><p><strong>影子通道（Shadow channels）</strong>：镜像其他域中通道的只读通道</p></li>
+<li><p><strong>代理（Proxy agents）</strong>：在域之间同步通道数据的后台服务</p></li>
+<li><p><strong>传输后端（Transport backends）</strong>：代理所使用的通信机制</p></li>
+</ul>
+<p>在代码中使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ZBUS_PROXY_AGENT_DEFINE</span></code> 设置代理，并指定传输后端和配置参数。通道使用标准的 zbus 宏（<code class="xref c c-macro docutils literal notranslate"><span class="pre">ZBUS_CHAN_DEFINE</span></code> 或 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ZBUS_CHAN_DEFINE_WITH_ID</span></code>）定义，影子通道则使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ZBUS_SHADOW_CHAN_DEFINE</span></code> 创建与特定代理关联的只读镜像。</p>
+</section>
+<section id="transport-backends">
+<h3><a class="toc-backref" href="#id31" role="doc-backlink">传输后端</a><a class="headerlink" href="#transport-backends" title="链接到此标题。"></a></h3>
+<p>ZBus 代理通信依靠传输后端在不同的执行域之间转发消息。</p>
+<section id="ipc-backend">
+<h4>IPC 后端<a class="headerlink" href="#ipc-backend" title="链接到此标题。"></a></h4>
+<p>IPC 后端使用进程间通信机制，在同一系统内的 CPU 内核之间转发消息。</p>
+<p>完整的实现请参阅 <a class="reference internal" href="../../samples/subsys/zbus/proxy_agent_ipc/README.html#zbus-proxy-agent-ipc" title="使用 IPC 代理在不同域之间转发 zbus 消息。">zbus Proxy agent - IPC</a> 示例。</p>
+</section>
+</section>
+<section id="id7">
+<h3><a class="toc-backref" href="#id32" role="doc-backlink">用法</a><a class="headerlink" href="#id7" title="链接到此标题。"></a></h3>
+<ol class="arabic simple">
+<li><p>启用 <a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_PROXY_AGENT" title="CONFIG_ZBUS_PROXY_AGENT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_PROXY_AGENT</span></code></a> 以及所需的后端选项。</p></li>
+<li><p>在设备树中提供后端设备。</p></li>
+<li><p>实例化代理：</p></li>
+</ol>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/zbus/proxy_agent/zbus_proxy_agent.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/zbus/proxy_agent/zbus_proxy_agent_ipc.h&gt;</span>
+
+<span class="cp">#define IPC_DEV_NODE DT_NODELABEL(ipc0)</span>
+
+<span class="n">ZBUS_PROXY_AGENT_DEFINE</span><span class="p">(</span><span class="n">proxy_agent</span><span class="p">,</span><span class="w">                   </span><span class="cm">/* Proxy agent name */</span>
+<span class="w">                        </span><span class="n">ZBUS_PROXY_AGENT_BACKEND_IPC</span><span class="p">,</span><span class="w">  </span><span class="cm">/* Proxy agent type */</span>
+<span class="w">                        </span><span class="n">IPC_DEV_NODE</span><span class="w">                   </span><span class="cm">/* Backend node */</span>
+<span class="p">);</span>
+</pre></div>
+</div>
+<p>其中：</p>
+<ul class="simple">
+<li><p>&quot;proxy_agent&quot;：代理实例的名称</p></li>
+<li><p>&quot;ZBUS_PROXY_AGENT_BACKEND_IPC&quot;：传输后端类型（本例中为 IPC）</p></li>
+<li><p>&quot;IPC_DEV_NODE&quot;：后端设备的设备树节点</p></li>
+</ul>
+<ol class="arabic simple" start="4">
+<li><p>通过代理转发本地通道：</p></li>
+</ol>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">ZBUS_CHAN_DEFINE</span><span class="p">(</span><span class="n">my_channel</span><span class="p">,</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">my_msg</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="w">                 </span><span class="n">ZBUS_OBSERVERS_EMPTY</span><span class="p">,</span><span class="w"> </span><span class="n">ZBUS_MSG_INIT</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+<span class="n">ZBUS_PROXY_ADD_CHAN</span><span class="p">(</span><span class="n">proxy_agent</span><span class="p">,</span><span class="w"> </span><span class="n">my_channel</span><span class="p">);</span>
+
+<span class="n">zbus_chan_pub</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_channel</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">msg</span><span class="p">,</span><span class="w"> </span><span class="n">K_MSEC</span><span class="p">(</span><span class="mi">100</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>发布到 &quot;my_channel&quot; 的任何消息都会被 &quot;proxy_agent&quot; 转发到远程域。</p>
+<ol class="arabic simple" start="5">
+<li><p>使用影子通道镜像远程通道：</p></li>
+</ol>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">ZBUS_SHADOW_CHAN_DEFINE</span><span class="p">(</span><span class="n">my_channel_shadow</span><span class="p">,</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">my_msg</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">proxy_agent</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="n">ZBUS_OBSERVERS_EMPTY</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">ZBUS_MSG_INIT</span><span class="p">(</span><span class="mi">0</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>影子通道可以像普通通道一样使用，但它是只读的。例如，添加一个监听者：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">my_listener_cb</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">zbus_channel</span><span class="w"> </span><span class="o">*</span><span class="n">chan</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">my_msg</span><span class="w"> </span><span class="o">*</span><span class="n">data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zbus_chan_const_msg</span><span class="p">(</span><span class="n">chan</span><span class="p">);</span>
+<span class="w">    </span><span class="n">printk</span><span class="p">(</span><span class="s">"Received: %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">ZBUS_LISTENER_DEFINE</span><span class="p">(</span><span class="n">my_listener</span><span class="p">,</span><span class="w"> </span><span class="n">my_listener_cb</span><span class="p">);</span>
+<span class="n">ZBUS_CHAN_ADD_OBS</span><span class="p">(</span><span class="n">my_channel_shadow</span><span class="p">,</span><span class="w"> </span><span class="n">my_listener</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="samples">
+<h2><a class="toc-backref" href="#id33" role="doc-backlink">示例</a><a class="headerlink" href="#samples" title="链接到此标题。"></a></h2>
+<p>要全面了解 zbus 的用法，请查看示例。目前提供以下示例：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../samples/subsys/zbus/hello_world/README.html#zbus-hello-world" title="使用 zbus 让三个线程相互通信。">zbus Hello World</a> 展示了上面所用代码的实际运行；</p></li>
+<li><p><a class="reference internal" href="../../samples/subsys/zbus/work_queue/README.html#zbus-work-queue" title="使用工作队列以多种方式处理 zbus 消息。">Work queue</a> 展示了如何定义和使用不同类型的观察者。注意其中有一个示例，作为一种执行方式，使用工作队列代替直接执行监听者；</p></li>
+<li><p><a class="reference internal" href="../../samples/subsys/zbus/msg_subscriber/README.html#zbus-msg-subscriber" title="使用 zbus 消息订阅者监听发布到通道的消息。">Message subscriber</a> 展示了如何使用消息订阅者；</p></li>
+<li><p><a class="reference internal" href="../../samples/subsys/zbus/async_listeners/README.html#zbus-async-listeners" title="演示 zbus 异步监听器的用法。">zbus Async Listeners</a> 展示了如何使用异步监听者；</p></li>
+<li><p><a class="reference internal" href="../../samples/subsys/zbus/dyn_channel/README.html#zbus-dyn-channel" title="使用消息为动态分配的 zbus 通道。">Dynamic channel</a> 演示了如何在 zbus 中使用动态分配的数据进行交换；</p></li>
+<li><p><a class="reference internal" href="../../samples/subsys/zbus/uart_bridge/README.html#zbus-uart-bridge" title="通过 UART 将通道事件重定向到主机。">UART bridge</a> 展示了一个通过串口把通道的操作发送到主机的示例；</p></li>
+<li><p><a class="reference internal" href="../../samples/subsys/zbus/remote_mock/README.html#zbus-remote-mock" title="以 UART 为桥梁向 zbus 实例发布消息。">Remote mock sample</a> 展示了如何实现一个外部模拟器（mock，运行在主机上），用于向总线发送消息和从总线接收消息；</p></li>
+<li><p><a class="reference internal" href="../../samples/subsys/zbus/priority_boost/README.html#zbus-priority-boost" title="通过一个优先级反转场景演示 zbus 优先级提升功能。">zbus Priority Boost</a> 通过一个优先级反转场景展示了 zbus 的优先级提升功能；</p></li>
+<li><p><a class="reference internal" href="../../samples/subsys/zbus/runtime_obs_registration/README.html#zbus-runtime-obs-registration" title="使用 zbus 的运行时观察者注册来过滤生产者生成的数据。">Runtime observer registration</a> 展示了一种使用运行时观察者注册功能的方法；</p></li>
+<li><p><a class="reference internal" href="../../samples/subsys/zbus/confirmed_channel/README.html#zbus-confirmed-channel" title="使用 zbus 确认通道，确保所有订阅者都消费了消息。">Confirmed channel</a> 实现了一种只使用订阅者来实现确认通道的方法；</p></li>
+<li><p><a class="reference internal" href="../../samples/subsys/zbus/benchmark/README.html#zbus-benchmark" title="测量从一个生产者向 N 个消费者发送 256KB 数据所需的时间。">Benchmarking</a> 实现了一个使用不同输入组合的基准测试。</p></li>
+<li><p><a class="reference internal" href="../../samples/subsys/zbus/proxy_agent_ipc/README.html#zbus-proxy-agent-ipc" title="使用 IPC 代理在不同域之间转发 zbus 消息。">zbus Proxy agent - IPC</a> 演示了使用 IPC 代理进行多核通信；</p></li>
+</ul>
+</section>
+<section id="suggested-uses">
+<h2><a class="toc-backref" href="#id34" role="doc-backlink">建议用法</a><a class="headerlink" href="#suggested-uses" title="链接到此标题。"></a></h2>
+<p>使用 zbus 在线程之间以一对一、一对多和多对多的方式同步或异步地传输数据（消息）。选择合适的观察者类型至关重要。对于能够容忍消息丢失和重复的场景，使用订阅者；如果不能容忍，则使用消息订阅者（如果需要线程）或监听者（如果需要精简和快速）。除监听者外，可能还需要另一种异步消息处理机制（例如 <a class="reference internal" href="../../kernel/services/data_passing/message_queues.html#message-queues-v2"><span class="std std-ref">消息队列</span></a>）来保存待处理的消息，直到其被处理。</p>
+<p>对于代理场景，使用 zbus 实现跨执行边界的通信：</p>
+<ul class="simple">
+<li><p><strong>多核系统</strong>：使用 IPC 后端代理在应用处理器和网络处理器之间进行协调，或在多个 CPU 内核之间分配工作负载。</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>ZBus 可以用于从生产者向消费者传输数据流。但这可能增加 zbus 的通信延迟。因此，对于这种通信拓扑，不妨考虑把管道作为一个不错的替代方案。</p>
+</div>
+</section>
+<section id="configuration-options">
+<h2><a class="toc-backref" href="#id35" role="doc-backlink">配置选项</a><a class="headerlink" href="#configuration-options" title="链接到此标题。"></a></h2>
+<p>要启用 zbus，需要启用 <a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS" title="CONFIG_ZBUS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS</span></code></a> 选项。</p>
+<p>相关配置选项：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_PRIORITY_BOOST" title="CONFIG_ZBUS_PRIORITY_BOOST"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_PRIORITY_BOOST</span></code></a>：zbus 的最高锁定者协议实现；</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_CHANNELS_SYS_INIT_PRIORITY" title="CONFIG_ZBUS_CHANNELS_SYS_INIT_PRIORITY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_CHANNELS_SYS_INIT_PRIORITY</span></code></a>：确定 zbus 按通道组织通道观察关系时所用的 <code class="xref c c-macro docutils literal notranslate"><span class="pre">SYS_INIT</span></code> 优先级；</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_CHANNEL_NAME" title="CONFIG_ZBUS_CHANNEL_NAME"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_CHANNEL_NAME</span></code></a>：使通道名称在通道元数据中可用。日志使用这一信息显示通道名称；</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_OBSERVER_NAME" title="CONFIG_ZBUS_OBSERVER_NAME"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_OBSERVER_NAME</span></code></a>：使观察者名称在通道元数据中可用；</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_PREFER_DYNAMIC_ALLOCATION" title="CONFIG_ZBUS_PREFER_DYNAMIC_ALLOCATION"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_PREFER_DYNAMIC_ALLOCATION</span></code></a>：让 zbus 在内部使用动态分配。用户可以禁用它并在之后进行调整；</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_MSG_SUBSCRIBER" title="CONFIG_ZBUS_MSG_SUBSCRIBER"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_MSG_SUBSCRIBER</span></code></a>：启用消息订阅者这一观察者类型；</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_MSG_SUBSCRIBER_BUF_ALLOC_DYNAMIC" title="CONFIG_ZBUS_MSG_SUBSCRIBER_BUF_ALLOC_DYNAMIC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_MSG_SUBSCRIBER_BUF_ALLOC_DYNAMIC</span></code></a>：使用堆分配消息缓冲区；</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_MSG_SUBSCRIBER_BUF_ALLOC_STATIC" title="CONFIG_ZBUS_MSG_SUBSCRIBER_BUF_ALLOC_STATIC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_MSG_SUBSCRIBER_BUF_ALLOC_STATIC</span></code></a>：使用栈分配消息缓冲区；</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_MSG_SUBSCRIBER_NET_BUF_POOL_SIZE" title="CONFIG_ZBUS_MSG_SUBSCRIBER_NET_BUF_POOL_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_MSG_SUBSCRIBER_NET_BUF_POOL_SIZE</span></code></a>：可同时使用的消息缓冲区数量；</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_MSG_SUBSCRIBER_NET_BUF_POOL_ISOLATION" title="CONFIG_ZBUS_MSG_SUBSCRIBER_NET_BUF_POOL_ISOLATION"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_MSG_SUBSCRIBER_NET_BUF_POOL_ISOLATION</span></code></a>：允许开发者为一组通道的消息订阅者隔离出一个池；只有在对某个通道调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">zbus_chan_set_msg_sub_pool()</span></code> 之后，该通道才会切换到专用池；</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_MSG_SUBSCRIBER_NET_BUF_STATIC_DATA_SIZE" title="CONFIG_ZBUS_MSG_SUBSCRIBER_NET_BUF_STATIC_DATA_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_MSG_SUBSCRIBER_NET_BUF_STATIC_DATA_SIZE</span></code></a>：要放入消息缓冲区传输的 zbus 通道中最大的消息大小；</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_HEAP_MEM_POOL_ADD_SIZE_ZBUS" title="CONFIG_HEAP_MEM_POOL_ADD_SIZE_ZBUS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HEAP_MEM_POOL_ADD_SIZE_ZBUS</span></code></a>：为 ZBus 整体保留的堆大小，包括消息缓冲区分配；</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_ASYNC_LISTENER" title="CONFIG_ZBUS_ASYNC_LISTENER"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_ASYNC_LISTENER</span></code></a>：启用异步监听者这一观察者类型；</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_RUNTIME_OBSERVERS" title="CONFIG_ZBUS_RUNTIME_OBSERVERS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_RUNTIME_OBSERVERS</span></code></a>：启用运行时观察者注册；</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_DYNAMIC" title="CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_DYNAMIC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_DYNAMIC</span></code></a>：使用堆动态分配运行时观察者；</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_STATIC" title="CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_STATIC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_STATIC</span></code></a>：使用内存块（slab）静态分配运行时观察者；</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_POOL_SIZE" title="CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_POOL_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_POOL_SIZE</span></code></a>：要静态分配的已启用运行时观察者数量；</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_NONE" title="CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_NONE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_RUNTIME_OBSERVERS_NODE_ALLOC_NONE</span></code></a>：使用用户提供的运行时观察者节点；</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_PROXY_AGENT" title="CONFIG_ZBUS_PROXY_AGENT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_PROXY_AGENT</span></code></a>：启用代理通信支持。</p></li>
+</ul>
+<section id="proxy-agent-configuration-options">
+<h3><a class="toc-backref" href="#id36" role="doc-backlink">代理配置选项</a><a class="headerlink" href="#proxy-agent-configuration-options" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_PROXY_AGENT_LOG_LEVEL</span></code>：代理通信的日志级别；</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_PROXY_AGENT_IPC" title="CONFIG_ZBUS_PROXY_AGENT_IPC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_PROXY_AGENT_IPC</span></code></a>：为代理通信启用 IPC 后端；</p></li>
+<li><p><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_PROXY_AGENT_IPC_LOG_LEVEL</span></code>：IPC 后端代理通信的日志级别；</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_PROXY_AGENT_MAX_MESSAGE_SIZE" title="CONFIG_ZBUS_PROXY_AGENT_MAX_MESSAGE_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_PROXY_AGENT_MAX_MESSAGE_SIZE</span></code></a>：代理通道的最大消息大小；</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_PROXY_AGENT_MAX_CHANNEL_NAME_SIZE" title="CONFIG_ZBUS_PROXY_AGENT_MAX_CHANNEL_NAME_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_PROXY_AGENT_MAX_CHANNEL_NAME_SIZE</span></code></a>：代理通信中通道名称的最大长度；</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_PROXY_AGENT_INIT_PRIORITY" title="CONFIG_ZBUS_PROXY_AGENT_INIT_PRIORITY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_PROXY_AGENT_INIT_PRIORITY</span></code></a>：代理设置的初始化优先级。</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_PROXY_AGENT_WORK_QUEUE_STACK_SIZE" title="CONFIG_ZBUS_PROXY_AGENT_WORK_QUEUE_STACK_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_PROXY_AGENT_WORK_QUEUE_STACK_SIZE</span></code></a>：代理接收工作队列线程的栈大小；</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_PROXY_AGENT_WORK_QUEUE_PRIORITY" title="CONFIG_ZBUS_PROXY_AGENT_WORK_QUEUE_PRIORITY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_PROXY_AGENT_WORK_QUEUE_PRIORITY</span></code></a>：代理接收工作队列线程的优先级。</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZBUS_PROXY_AGENT_RX_QUEUE_DEPTH" title="CONFIG_ZBUS_PROXY_AGENT_RX_QUEUE_DEPTH"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZBUS_PROXY_AGENT_RX_QUEUE_DEPTH</span></code></a>：代理接收队列的深度，用于接收来自远程域的消息。</p></li>
+</ul>
+</section>
+</section>
+<section id="api-reference">
+<h2><a class="toc-backref" href="#id37" role="doc-backlink">API 参考</a><a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">zbus_apis</span></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/subsys/zbus/benchmark/README.html#zbus-benchmark" title="测量从一个生产者向 N 个消费者发送 256KB 数据所需的时间。">Benchmarking</a></span><span class="code-sample-description">测量从一个生产者向 N 个消费者发送 256KB 数据所需的时间。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/subsys/zbus/confirmed_channel/README.html#zbus-confirmed-channel" title="使用 zbus 确认通道，确保所有订阅者都消费了消息。">Confirmed channel</a></span><span class="code-sample-description">使用 zbus 确认通道，确保所有订阅者都消费了消息。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/subsys/zbus/dyn_channel/README.html#zbus-dyn-channel" title="使用消息为动态分配的 zbus 通道。">Dynamic channel</a></span><span class="code-sample-description">使用消息为动态分配的 zbus 通道。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/subsys/zbus/msg_subscriber/README.html#zbus-msg-subscriber" title="使用 zbus 消息订阅者监听发布到通道的消息。">Message subscriber</a></span><span class="code-sample-description">使用 zbus 消息订阅者监听发布到通道的消息。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/subsys/zbus/remote_mock/README.html#zbus-remote-mock" title="以 UART 为桥梁向 zbus 实例发布消息。">Remote mock sample</a></span><span class="code-sample-description">以 UART 为桥梁向 zbus 实例发布消息。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/subsys/zbus/runtime_obs_registration/README.html#zbus-runtime-obs-registration" title="使用 zbus 的运行时观察者注册来过滤生产者生成的数据。">Runtime observer registration</a></span><span class="code-sample-description">使用 zbus 的运行时观察者注册来过滤生产者生成的数据。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/subsys/zbus/uart_bridge/README.html#zbus-uart-bridge" title="通过 UART 将通道事件重定向到主机。">UART bridge</a></span><span class="code-sample-description">通过 UART 将通道事件重定向到主机。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/subsys/zbus/work_queue/README.html#zbus-work-queue" title="使用工作队列以多种方式处理 zbus 消息。">Work queue</a></span><span class="code-sample-description">使用工作队列以多种方式处理 zbus 消息。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/subsys/zbus/async_listeners/README.html#zbus-async-listeners" title="演示 zbus 异步监听器的用法。">zbus Async Listeners</a></span><span class="code-sample-description">演示 zbus 异步监听器的用法。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/subsys/zbus/hello_world/README.html#zbus-hello-world" title="使用 zbus 让三个线程相互通信。">zbus Hello World</a></span><span class="code-sample-description">使用 zbus 让三个线程相互通信。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/subsys/zbus/priority_boost/README.html#zbus-priority-boost" title="通过一个优先级反转场景演示 zbus 优先级提升功能。">zbus Priority Boost</a></span><span class="code-sample-description">通过一个优先级反转场景演示 zbus 优先级提升功能。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/subsys/zbus/proxy_agent_ipc/README.html#zbus-proxy-agent-ipc" title="使用 IPC 代理在不同域之间转发 zbus 消息。">zbus Proxy agent - IPC</a></span><span class="code-sample-description">使用 IPC 代理在不同域之间转发 zbus 消息。</span></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 7月 09, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

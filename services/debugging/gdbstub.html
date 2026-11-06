@@ -1,0 +1,522 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GDB stub &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/debugging/gdbstub.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="Cortex-M 调试监视器" href="debugmon.html" />
+    <link rel="prev" title="UDP coredump via shell" href="../../samples/subsys/debug/coredump_udp_demos/demo_shell/README.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">服务</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../connectivity/index.html">连接</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../messaging.html">进程间通信</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../observability.html">日志、跟踪与调试</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../logging/index.html">日志</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tracing/index.html">跟踪</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">调试</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="thread-analyzer.html">线程分析器</a></li>
+<li class="toctree-l4"><a class="reference internal" href="coredump.html">核心转储</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">GDB stub</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#overview">概述</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#features">功能</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#enabling-gdb-stub">启用 GDB Stub</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#using-serial-backend">使用串口后端</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#debugging">调试</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#id2">使用串口后端</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#example">示例</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="debugmon.html">Cortex-M 调试监视器</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mipi_stp_decoder.html">MIPI STP 解码器</a></li>
+<li class="toctree-l4"><a class="reference internal" href="symtab.html">符号表（Symtab）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cs_trace_defmt.html">ARM Coresight 跟踪解格式化器</a></li>
+<li class="toctree-l4"><a class="reference internal" href="zyclictest.html">Zyclictest</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../profiling/index.html">性能剖析</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../instrumentation/index.html">插桩</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cpu_load/index.html">CPU 负载</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../shell/index.html">Shell</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../task_wdt/index.html">任务看门狗</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../observability.html">日志、跟踪与调试</a> &raquo;</li>
+  
+     <li><a href="index.html">调试</a> &raquo;</li>
+  
+  <li>GDB stub</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="gdb-stub">
+<span id="gdbstub"></span><h1>GDB stub<a class="headerlink" href="#gdb-stub" title="链接到此标题。"></a></h1>
+<nav class="contents local" id="id1">
+<ul class="simple">
+<li><p><a class="reference internal" href="#overview" id="id3">概述</a></p></li>
+<li><p><a class="reference internal" href="#features" id="id4">功能</a></p></li>
+<li><p><a class="reference internal" href="#enabling-gdb-stub" id="id5">启用 GDB Stub</a></p>
+<ul>
+<li><p><a class="reference internal" href="#using-serial-backend" id="id6">使用串口后端</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#debugging" id="id7">调试</a></p>
+<ul>
+<li><p><a class="reference internal" href="#id2" id="id8">使用串口后端</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#example" id="id9">示例</a></p></li>
+</ul>
+</nav>
+<section id="overview">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">概述</a><a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>gdbstub 功能提供了 GDB 远程串行协议（Remote Serial Protocol，RSP）的实现，让你可以使用 GDB 远程调试 Zephyr。</p>
+<p>该协议支持不同的连接类型：串口、UDP/IP 和 TCP/IP。Zephyr 目前只支持串口设备通信。</p>
+<p>GDB 程序充当客户端，而 Zephyr gdbstub 充当服务器。启用此功能后，<code class="xref c c-func docutils literal notranslate"><span class="pre">gdb_init()</span></code> 启动 gdbstub 服务后 Zephyr 会停止执行，等待 GDB 连接。建立连接后，就可以与 Zephyr 进行同步交互。注意，目前无法向目标异步发送命令。</p>
+</section>
+<section id="features">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">功能</a><a class="headerlink" href="#features" title="链接到此标题。"></a></h2>
+<p>支持以下功能：</p>
+<ul class="simple">
+<li><p>添加和删除断点</p></li>
+<li><p>让目标继续运行和单步执行</p></li>
+<li><p>打印回溯</p></li>
+<li><p>读写通用寄存器</p></li>
+<li><p>读写内存</p></li>
+</ul>
+</section>
+<section id="enabling-gdb-stub">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">启用 GDB Stub</a><a class="headerlink" href="#enabling-gdb-stub" title="链接到此标题。"></a></h2>
+<p>可以通过 <a class="reference internal" href="../../kconfig.html#CONFIG_GDBSTUB" title="CONFIG_GDBSTUB"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_GDBSTUB</span></code></a> 选项启用 GDB stub。</p>
+<section id="using-serial-backend">
+<h3><a class="toc-backref" href="#id6" role="doc-backlink">使用串口后端</a><a class="headerlink" href="#using-serial-backend" title="链接到此标题。"></a></h3>
+<p>可以通过 <a class="reference internal" href="../../kconfig.html#CONFIG_GDBSTUB_SERIAL_BACKEND" title="CONFIG_GDBSTUB_SERIAL_BACKEND"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_GDBSTUB_SERIAL_BACKEND</span></code></a> 选项启用 GDB stub 的串口后端。</p>
+<p>由于串口后端使用 UART 设备收发 GDB 命令，</p>
+<ul class="simple">
+<li><p>如果开发板上有空闲的 UART 设备，请将 chosen 节点的 <code class="docutils literal notranslate"><span class="pre">zephyr,gdbstub-uart</span></code> 属性设为该空闲 UART 设备，这样 <code class="xref c c-func docutils literal notranslate"><span class="pre">printk()</span></code> 和日志消息就不会打印到 GDB 所用的同一个 UART 设备上。</p></li>
+<li><p>对于只有一个 UART 设备的开发板，如果 <code class="xref c c-func docutils literal notranslate"><span class="pre">printk()</span></code> 和日志也使用同一个 UART 设备输出，则必须禁用它们。GDB 相关的消息可能与日志消息交错，从而产生意想不到的后果。通常可以通过禁用 <a class="reference internal" href="../../kconfig.html#CONFIG_PRINTK" title="CONFIG_PRINTK"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PRINTK</span></code></a> 和 <a class="reference internal" href="../../kconfig.html#CONFIG_LOG" title="CONFIG_LOG"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG</span></code></a> 来实现。</p></li>
+</ul>
+</section>
+</section>
+<section id="debugging">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">调试</a><a class="headerlink" href="#debugging" title="链接到此标题。"></a></h2>
+<section id="id2">
+<h3><a class="toc-backref" href="#id8" role="doc-backlink">使用串口后端</a><a class="headerlink" href="#id2" title="链接到此标题。"></a></h3>
+<ol class="arabic">
+<li><p>在启用 GDB stub 和串口后端的情况下构建。</p></li>
+<li><p>将构建好的镜像烧录到开发板上并复位开发板。</p>
+<ul class="simple">
+<li><p>此时执行应暂停在 <code class="xref c c-func docutils literal notranslate"><span class="pre">gdb_init()</span></code> 处。</p></li>
+</ul>
+</li>
+<li><p>在开发机上运行 GDB 并连接到 GDB stub。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>target<span class="w"> </span>remote<span class="w"> </span>&lt;serial<span class="w"> </span>device&gt;
+</pre></div>
+</div>
+<p>例如，</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>target<span class="w"> </span>remote<span class="w"> </span>/dev/ttyUSB1
+</pre></div>
+</div>
+</li>
+<li><p>可以使用 GDB 命令开始调试。</p></li>
+</ol>
+</section>
+</section>
+<section id="example">
+<h2><a class="toc-backref" href="#id9" role="doc-backlink">示例</a><a class="headerlink" href="#example" title="链接到此标题。"></a></h2>
+<p>测试应用程序 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/tests/subsys/debug/gdbstub">tests/subsys/debug/gdbstub</a> 中的测试用例 <code class="docutils literal notranslate"><span class="pre">debug.gdbstub.breakpoints</span></code> 演示了如何使用 Zephyr GDB stub。该测试还有一个用例连接到 QEMU 的 GDB stub 实现（使用自定义端口 <code class="docutils literal notranslate"><span class="pre">tcp:1235</span></code>），作为验证测试脚本本身的参照。</p>
+<p>在 <span class="target" id="index-2"></span><a class="reference internal" href="../../develop/env_vars.html#envvar-ZEPHYR_BASE"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">ZEPHYR_BASE</span></code></a> 目录下使用以下命令运行测试：</p>
+<blockquote>
+<div><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">west twister -p qemu_x86 -T tests/subsys/debug/gdbstub</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>测试应能成功运行。下面我们一步一步地做类似的操作，从 GDB 用户的角度演示 Zephyr GDB stub 是如何工作的。</p>
+<p>在下面的代码片段中，请使用你自己的相应目录代替 <code class="docutils literal notranslate"><span class="pre">&lt;SDK</span> <span class="pre">install</span> <span class="pre">directory&gt;</span></code>、<code class="docutils literal notranslate"><span class="pre">&lt;build_directory&gt;</span></code>、<code class="docutils literal notranslate"><span class="pre">&lt;ZEPHYR_BASE&gt;</span></code>。</p>
+<ol class="arabic">
+<li><p>打开两个终端窗口。</p></li>
+<li><p>在第一个终端中，构建并运行测试应用程序：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>qemu_x86<span class="w"> </span>tests/subsys/debug/gdbstub<span class="w"> </span>--<span class="w"> </span><span class="s1">'-DCONFIG_QEMU_EXTRA_FLAGS="-serial tcp:localhost:5678,server"'</span>
+west<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>run
+</pre></div>
+</div>
+<p>注意，这里设置了 <a class="reference internal" href="../../kconfig.html#CONFIG_QEMU_EXTRA_FLAGS" title="CONFIG_QEMU_EXTRA_FLAGS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_QEMU_EXTRA_FLAGS</span></code></a>，将 QEMU 串口控制台端口定向到 <code class="docutils literal notranslate"><span class="pre">localhost</span></code> 的 TCP 端口 <code class="docutils literal notranslate"><span class="pre">5678</span></code>，以等待我们在后续步骤中通过 GDB <code class="docutils literal notranslate"><span class="pre">remote</span></code> 命令发起的连接。</p>
+</li>
+<li><p>在第二个终端中启动 GDB：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>&lt;SDK<span class="w"> </span>install<span class="w"> </span>directory&gt;/x86_64-zephyr-elf/bin/x86_64-zephyr-elf-gdb
+</pre></div>
+</div>
+<ol class="arabic">
+<li><p>告诉 GDB 在哪里查找构建好的 ELF 文件：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>(gdb) symbol-file &lt;build directory&gt;/zephyr/zephyr.elf
+</pre></div>
+</div>
+<p>GDB 的响应：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Reading symbols from &lt;build directory&gt;/zephyr/zephyr.elf...
+</pre></div>
+</div>
+</li>
+<li><p>让 GDB 连接到 Zephyr gdbstub 串口后端，该后端之前已通过 QEMU 的 <code class="docutils literal notranslate"><span class="pre">-serial</span></code> 重定向作为服务器暴露在 TCP 端口上。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>(gdb) target remote localhost:5678
+</pre></div>
+</div>
+<p>GDB 的响应：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Remote debugging using localhost:5678
+arch_gdb_init () at &lt;ZEPHYR_BASE&gt;/arch/x86/core/ia32/gdbstub.c:252
+252     }
+</pre></div>
+</div>
+<p>GDB 还会显示代码执行停止的位置。本例中停在 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/arch/x86/core/ia32/gdbstub.c">arch/x86/core/ia32/gdbstub.c</a> 的第 252 行。</p>
+</li>
+<li><p>使用 <code class="docutils literal notranslate"><span class="pre">bt</span></code> 或 <code class="docutils literal notranslate"><span class="pre">backtrace</span></code> 命令显示栈帧回溯。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>(gdb) bt
+#0  arch_gdb_init () at &lt;ZEPHYR_BASE&gt;/arch/x86/core/ia32/gdbstub.c:252
+#1  0x00104140 in gdb_init () at &lt;ZEPHYR_BASE&gt;/zephyr/subsys/debug/gdbstub.c:852
+#2  0x00109c13 in z_sys_init_run_level (level=INIT_LEVEL_PRE_KERNEL_2) at &lt;ZEPHYR_BASE&gt;/kernel/init.c:360
+#3  0x00109e73 in z_cstart () at &lt;ZEPHYR_BASE&gt;/kernel/init.c:630
+#4  0x00104422 in z_prep_c (arg=0x1245bc &lt;x86_cpu_boot_arg&gt;) at &lt;ZEPHYR_BASE&gt;/arch/x86/core/prep_c.c:80
+#5  0x001000c9 in __csSet () at &lt;ZEPHYR_BASE&gt;/arch/x86/core/ia32/crt0.S:290
+#6  0x001245bc in uart_dev ()
+#7  0x00134988 in z_interrupt_stacks ()
+#8  0x00000000 in ?? ()
+</pre></div>
+</div>
+</li>
+<li><p>使用 <code class="docutils literal notranslate"><span class="pre">list</span></code> 命令显示代码执行停止处及其附近的源代码。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>(gdb) list
+247             __asm__ volatile ("int3");
+248
+249     #ifdef CONFIG_GDBSTUB_TRACE
+250             printk("gdbstub:%s GDB is connected\n", __func__);
+251     #endif
+252     }
+253
+254     /* Hook current IDT. */
+255     _EXCEPTION_CONNECT_NOCODE(z_gdb_debug_isr, IV_DEBUG, 3);
+256     _EXCEPTION_CONNECT_NOCODE(z_gdb_break_isr, IV_BREAKPOINT, 3);
+</pre></div>
+</div>
+</li>
+<li><p>使用 <code class="docutils literal notranslate"><span class="pre">s</span></code> 或 <code class="docutils literal notranslate"><span class="pre">step</span></code> 命令单步执行程序，直到到达另一行源代码。此时它已执行完 <code class="xref c c-func docutils literal notranslate"><span class="pre">arch_gdb_init()</span></code>，并在 <code class="xref c c-func docutils literal notranslate"><span class="pre">gdb_init()</span></code> 中继续执行。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>(gdb) s
+gdb_init () at &lt;ZEPHYR_BASE&gt;/subsys/debug/gdbstub.c:857
+857     return 0;
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>(gdb) list
+852             arch_gdb_init();
+853
+854     #ifdef CONFIG_GDBSTUB_TRACE
+855             printk("gdbstub:%s exit\n", __func__);
+856     #endif
+857             return 0;
+858     }
+859
+860     #ifdef CONFIG_XTENSA
+861     /*
+</pre></div>
+</div>
+</li>
+<li><p>使用 <code class="docutils literal notranslate"><span class="pre">br</span></code> 或 <code class="docutils literal notranslate"><span class="pre">break</span></code> 命令设置断点。本例在 <code class="xref c c-func docutils literal notranslate"><span class="pre">main()</span></code> 处设置断点，然后使用 <code class="docutils literal notranslate"><span class="pre">c</span></code>（或 <code class="docutils literal notranslate"><span class="pre">continue</span></code>）命令让代码继续执行而不加干预。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>(gdb) break main
+Breakpoint 1 at 0x10064d: file &lt;ZEPHYR_BASE&gt;/tests/subsys/debug/gdbstub/src/main.c, line 27.
+</pre></div>
+</div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>(gdb) continue
+Continuing.
+</pre></div>
+</div>
+<p>代码执行到 <code class="xref c c-func docutils literal notranslate"><span class="pre">main()</span></code> 时会停止，并返回 GDB 提示符。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>Breakpoint 1, main () at &lt;ZEPHYR_BASE&gt;/tests/subsys/debug/gdbstub/src/main.c:27
+27              printk("%s():enter\n", __func__);
+</pre></div>
+</div>
+<p>现在 GDB 停在 <code class="xref c c-func docutils literal notranslate"><span class="pre">main()</span></code> 的开头：</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>(gdb) list
+22
+23      int main(void)
+24      {
+25              int ret;
+26
+27              printk("%s():enter\n", __func__);
+28              ret = test();
+29              printk("ret=%d\n", ret);
+30              return 0;
+31      }
+</pre></div>
+</div>
+</li>
+<li><p>可以使用 <code class="docutils literal notranslate"><span class="pre">p</span></code> 或 <code class="docutils literal notranslate"><span class="pre">print</span></code> 命令查看 <code class="docutils literal notranslate"><span class="pre">ret</span></code> 的值。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>(gdb) p ret
+$1 = 1273788
+</pre></div>
+</div>
+<p>由于 <code class="docutils literal notranslate"><span class="pre">ret</span></code> 尚未初始化，它包含某个随机值。</p>
+</li>
+<li><p>如果此时使用单步（<code class="docutils literal notranslate"><span class="pre">s</span></code> 或 <code class="docutils literal notranslate"><span class="pre">step</span></code>），执行会跳过 <code class="xref c c-func docutils literal notranslate"><span class="pre">test()</span></code> 的内部继续进行。要查看 <code class="xref c c-func docutils literal notranslate"><span class="pre">test()</span></code> 内部的代码执行，可以为 <code class="xref c c-func docutils literal notranslate"><span class="pre">test()</span></code> 设置断点，或者直接使用 <code class="docutils literal notranslate"><span class="pre">si</span></code>（或 <code class="docutils literal notranslate"><span class="pre">stepi</span></code>）执行一条机器指令，其副作用是进入该函数。GDB 命令 <code class="docutils literal notranslate"><span class="pre">finish</span></code> 可用于在不加干预的情况下继续执行，直到函数返回。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>(gdb) finish
+Run till exit from #0  test () at &lt;ZEPHYR_BASE&gt;/tests/subsys/debug/gdbstub/src/main.c:17
+0x00100667 in main () at &lt;ZEPHYR_BASE&gt;/tests/subsys/debug/gdbstub/src/main.c:28
+28              ret = test();
+Value returned is $2 = 30
+</pre></div>
+</div>
+</li>
+<li><p>再次查看 <code class="docutils literal notranslate"><span class="pre">ret</span></code>，它应当包含 <code class="xref c c-func docutils literal notranslate"><span class="pre">test()</span></code> 的返回值。有时像本例这样，要再执行一次 <code class="docutils literal notranslate"><span class="pre">step</span></code> 才会完成赋值。这是因为赋值代码在函数返回之后才执行。赋值代码由工具链生成为机器指令，在查看对应的 C 源文件时是看不到的。</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>(gdb) p ret
+$3 = 1273788
+(gdb) step
+29              printk("ret=%d\n", ret);
+(gdb) p ret
+$4 = 30
+</pre></div>
+</div>
+</li>
+<li><p>如果此时执行 <code class="docutils literal notranslate"><span class="pre">continue</span></code>，代码会一直执行下去，因为没有断点可以再次停止执行。目前无法在 GDB 中通过 <kbd class="kbd docutils literal notranslate">Ctrl</kbd>-<kbd class="kbd docutils literal notranslate">C</kbd> 中断执行，因为 Zephyr gdbstub 尚不支持该功能。请切换到运行着 Zephyr 镜像的 QEMU 所在的第一个控制台，使用 <kbd class="kbd docutils literal notranslate">Ctrl</kbd>+<kbd class="kbd docutils literal notranslate">a</kbd> <kbd class="kbd docutils literal notranslate">x</kbd> 手动停止它。当 Twister 执行同一个测试时，它会自动负责停止 QEMU 实例。</p></li>
+</ol>
+</li>
+</ol>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 8月 04, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

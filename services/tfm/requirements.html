@@ -1,0 +1,356 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TF-M 要求 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/tfm/requirements.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="TF-M 构建系统" href="build.html" />
+    <link rel="prev" title="Trusted Firmware-M 概述" href="overview.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">服务</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../connectivity/index.html">连接</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../power_management.html">电源管理</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../security.html">安全</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../crypto/index.html">密码学</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../authentication/index.html">身份认证</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../jwt/index.html">JSON Web 令牌（JWT）</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">Trusted Firmware-M (TF-M)</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="overview.html">Trusted Firmware-M 概述</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">TF-M 要求</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#software-requirements">软件要求</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="build.html">TF-M 构建系统</a></li>
+<li class="toctree-l4"><a class="reference internal" href="integration.html">Trusted Firmware-M 集成</a></li>
+<li class="toctree-l4"><a class="reference internal" href="testsuites.html">测试套件</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../uuid/index.html">UUID</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../security.html">安全</a> &raquo;</li>
+  
+     <li><a href="index.html">Trusted Firmware-M (TF-M)</a> &raquo;</li>
+  
+  <li>TF-M 要求</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="tf-m-requirements">
+<h1>TF-M 要求<a class="headerlink" href="#tf-m-requirements" title="链接到此标题。"></a></h1>
+<p>以下是部分可与 TF-M 配合使用的开发板：</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>开发板</p></th>
+<th class="head"><p>NSPE 开发板名称</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="../../boards/arm/mps2/doc/mps2_an521.html#mps2-an521-board"><span class="std std-ref">ARM MPS2+ AN521</span></a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mps2/an521/cpu0/ns</span></code> （支持 qemu）</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../boards/arm/mps3/doc/index.html#mps3">MPS3 FPGA/Corstone FVP</a></p></td>
+<td><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">mps3/corstone300/fvp/ns</span></code> （支持 armfvp）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mps3/corstone310/fvp/ns</span></code> （支持 armfvp）</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../boards/arm/mps4/doc/index.html#mps4">MPS4 Corstone FVP</a></p></td>
+<td><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">mps4/corstone315/fvp/ns</span></code> （支持 armfvp）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mps4/corstone320/fvp/ns</span></code> （支持 armfvp）</p></li>
+</ul>
+</td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../boards/ezurio/bl5340_dvk/doc/index.html#bl5340_dvk">BL5340 DVK</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">bl5340_dvk/nrf5340/cpuapp/ns</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../boards/nxp/lpcxpresso55s69/doc/index.html#lpcxpresso55s69">LPCXPRESSO55S69</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">lpcxpresso55s69_ns</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../boards/nordic/nrf9160dk/doc/index.html#nrf9160dk"><span class="xref zephyr zephyr-board">nrf9160dk_nrf9160</span></a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">nrf9160dk/nrf9160/ns</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../boards/nordic/nrf5340dk/doc/index.html#nrf5340dk">nRF5340 DK</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">nrf5340dk/nrf5340/cpuapp/ns</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../boards/st/b_u585i_iot02a/doc/index.html#b_u585i_iot02a">B-U585I-IOT02A Discovery kit</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">b_u585i_iot02a/stm32u585xx/ns</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../boards/st/nucleo_l552ze_q/doc/nucleol552ze_q.html#nucleo_l552ze_q">Nucleo L552ZE Q</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">nucleo_l552ze_q/stm32l552xx/ns</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../boards/st/stm32l562e_dk/doc/index.html#stm32l562e_dk">STM32L562E-DK Discovery</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">stm32l562e_dk/stm32l562xx/ns</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../boards/arm/v2m_musca_b1/doc/index.html#v2m_musca_b1">V2M Musca B1</a></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">v2m_musca_b1/musca_b1/ns</span></code></p></td>
+</tr>
+</tbody>
+</table>
+<p>要确认某块开发板在其输出中支持 TF-M，请检查该开发板的默认配置中 <a class="reference internal" href="../../kconfig.html#CONFIG_TRUSTED_EXECUTION_NONSECURE" title="CONFIG_TRUSTED_EXECUTION_NONSECURE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TRUSTED_EXECUTION_NONSECURE</span></code></a> 是否设置为 <code class="docutils literal notranslate"><span class="pre">y</span></code>。</p>
+<section id="software-requirements">
+<h2>软件要求<a class="headerlink" href="#software-requirements" title="链接到此标题。"></a></h2>
+<p>构建 TF-M 二进制文件所需的 Python 模块列在 TF-M 仓库的 <code class="docutils literal notranslate"><span class="pre">tools/requirements.txt</span></code> 中。</p>
+<p>可以通过以下命令安装：</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>pip3<span class="w"> </span>install<span class="w"> </span>-r<span class="w"> </span><span class="s2">"</span><span class="k">$(</span>west<span class="w"> </span>list<span class="w"> </span>trusted-firmware-m<span class="w"> </span>-f<span class="w"> </span><span class="s1">'{abspath}'</span><span class="k">)</span><span class="s2">/tools/requirements.txt"</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>TF-M 的签名工具使用这些模块来准备固件镜像，以供引导加载程序验证。</p>
+<p>在某些平台上，为 QEMU 生成二进制文件以及合并已签名的安全和非安全二进制文件的过程中，还需要用到 <code class="docutils literal notranslate"><span class="pre">srec_cat</span></code> 工具。</p>
+<p>在 Linux 上可以通过以下命令安装：</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>sudo<span class="w"> </span>apt-get<span class="w"> </span>install<span class="w"> </span>srecord
+</pre></div>
+</div>
+</div></blockquote>
+<p>在 OS X 上可以通过以下命令安装：</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>brew<span class="w"> </span>install<span class="w"> </span>srecord
+</pre></div>
+</div>
+</div></blockquote>
+<p>对于基于 Windows 的系统，请确保系统路径中有该工具的副本。例如，请参阅：<a class="reference external" href="https://sourceforge.net/projects/srecord/files/srecord-win32">SRecord for Windows</a></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 7月 07, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

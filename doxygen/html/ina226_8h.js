@@ -1,0 +1,28 @@
+var ina226_8h =
+[
+    [ "INA226_AVG_MODE_1", "group__ina226__interface.html#ga5fb596bda9235774ae63f602366b7f75", null ],
+    [ "INA226_AVG_MODE_1024", "group__ina226__interface.html#ga035c1834dcf1ae41135371b2d9e64110", null ],
+    [ "INA226_AVG_MODE_128", "group__ina226__interface.html#ga22345ffb861e057d34a31e4df7340d04", null ],
+    [ "INA226_AVG_MODE_16", "group__ina226__interface.html#ga55785fdf8ae4aa57531dc5107303dce6", null ],
+    [ "INA226_AVG_MODE_256", "group__ina226__interface.html#gadc89cd11a9ece7a53f85c5fb2d81842c", null ],
+    [ "INA226_AVG_MODE_4", "group__ina226__interface.html#ga23954364dead3a9df1a878c106939275", null ],
+    [ "INA226_AVG_MODE_512", "group__ina226__interface.html#gaf02590f29166255a35e63305e39be4e0", null ],
+    [ "INA226_AVG_MODE_64", "group__ina226__interface.html#ga6d0365e097575da1f80cc9dfa20a69f3", null ],
+    [ "INA226_CONV_TIME_1100", "group__ina226__interface.html#gae063a0b167607657e1ffc1f8e68b2a6c", null ],
+    [ "INA226_CONV_TIME_140", "group__ina226__interface.html#ga95a71cdbb30e0eddfd05f336c53a0bbb", null ],
+    [ "INA226_CONV_TIME_204", "group__ina226__interface.html#ga49a08f6e61463403ac18fd89f9f6facb", null ],
+    [ "INA226_CONV_TIME_2116", "group__ina226__interface.html#ga83b8bb8b54b2e4857793bf014d9f57af", null ],
+    [ "INA226_CONV_TIME_332", "group__ina226__interface.html#ga6f45151cb3e367e9b2a66184fbd1ebf8", null ],
+    [ "INA226_CONV_TIME_4156", "group__ina226__interface.html#ga02b694b57e4304736d88639d64cebec4", null ],
+    [ "INA226_CONV_TIME_588", "group__ina226__interface.html#ga445eaee2b6aa6bbdb1caa106580b6036", null ],
+    [ "INA226_CONV_TIME_8244", "group__ina226__interface.html#gaf3037329e3f8b9c984308bf8f4fef851", null ],
+    [ "INA226_OPER_MODE_BUS_VOLTAGE_CONT", "group__ina226__interface.html#gadcf4265f1272f33a8385cf6a8c20bc42", null ],
+    [ "INA226_OPER_MODE_BUS_VOLTAGE_TRIG", "group__ina226__interface.html#ga88aa0c1378cfe356b643c89bf1418e3e", null ],
+    [ "INA226_OPER_MODE_POWER_DOWN", "group__ina226__interface.html#ga8780c1da54c2e5ae863efb7ef1b310b9", null ],
+    [ "INA226_OPER_MODE_SHUNT_BUS_VOLTAGE_CONT", "group__ina226__interface.html#gaba344632242e46fcd392eaf7f114f820", null ],
+    [ "INA226_OPER_MODE_SHUNT_BUS_VOLTAGE_TRIG", "group__ina226__interface.html#ga7e88c1ab79bed8425f3074b37903113b", null ],
+    [ "INA226_OPER_MODE_SHUNT_VOLTAGE_CONT", "group__ina226__interface.html#gafad378147deb5e1789a40e5dd7611de9", null ],
+    [ "INA226_OPER_MODE_SHUNT_VOLTAGE_TRIG", "group__ina226__interface.html#gaed00293346e09e6ef3114dd3167d1ce5", null ],
+    [ "INA226_RST_NORMAL_OPERATION", "group__ina226__interface.html#ga8174524d294a89bcedeec335538cc373", null ],
+    [ "INA226_RST_SYSTEM_RESET", "group__ina226__interface.html#ga1369ecef1266f83dd93f970002ff61b7", null ]
+];

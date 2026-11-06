@@ -1,0 +1,380 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>USB 设备 CDC ACM &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/connectivity/usb/device_next/cdc_acm.html" />
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../../search.html" />
+    <link rel="next" title="USB 设备支持 API" href="api/index.html" />
+    <link rel="prev" title="USB 厂商标识符和产品标识符" href="vid_pid.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html">
+            
+              <img src="../../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">服务</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">连接</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../networking/index.html">网络</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../bluetooth/index.html">Bluetooth</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">USB</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../device/usb_device.html">USB 设备支持（已弃用）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../device/api/index.html">USB 设备支持 API（已弃用）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../guidelines.html">USB 测试和示例的通用准则</a></li>
+<li class="toctree-l4"><a class="reference internal" href="usb_device.html">USB 设备支持</a></li>
+<li class="toctree-l4"><a class="reference internal" href="vid_pid.html">USB 厂商标识符和产品标识符</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">USB 设备 CDC ACM</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#cdc-acm-uart-configuration">CDC ACM UART 配置</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#cdc-acm-uart-as-serial-backend">将 CDC ACM UART 用作串行后端</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#using-cdc-acm-uart-in-the-application">在应用程序中使用 CDC ACM UART</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#interrupt-driven-uart-api">中断驱动 UART API</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#polling-uart-api">轮询 UART API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="api/index.html">USB 设备支持 API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../host/api/index.html">USB 主机支持 API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../host/usbip.html">USB/IP 协议支持</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../pd/ucds.html">USB-C 设备协议栈</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/hid.html">人机接口设备（HID）</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../canbus/index.html">控制器局域网（CAN）总线协议</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lora_lorawan/index.html">LoRa 和 LoRaWAN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modbus/index.html">Modbus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modem/index.html">调制解调器模块</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../../index.html">连接</a> &raquo;</li>
+  
+     <li><a href="../index.html">USB</a> &raquo;</li>
+  
+  <li>USB 设备 CDC ACM</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="usb-device-cdc-acm">
+<span id="usbd-cdc-acm"></span><h1>USB 设备 CDC ACM<a class="headerlink" href="#usb-device-cdc-acm" title="链接到此标题。"></a></h1>
+<p>USB 设备协议栈提供的 CDC ACM 功能只实现了抽象控制模型（Abstract Control Model）串口仿真。顾名思义，它的唯一用途是仿真串行线路。大多数现代操作系统都应开箱即用地支持它。</p>
+<p>CDC ACM 功能在主机端和设备端都表现为一个串行接口，而面向用户或应用程序的接口是 <a class="reference internal" href="../../../../hardware/peripherals/uart.html#uart-api"><span class="std std-ref">通用异步收发器（UART）</span></a> 驱动 API。这样，已经使用 UART API 的应用程序无需修改负责数据通信的代码，即可使用 CDC ACM 功能提供的串行接口，只需额外进行配置并初始化 USB 设备协议栈。</p>
+<section id="cdc-acm-uart-configuration">
+<h2>CDC ACM UART 配置<a class="headerlink" href="#cdc-acm-uart-configuration" title="链接到此标题。"></a></h2>
+<p>与真实的 UART 控制器一样，虚拟 CDC ACM UART 也在设备树中描述。CDC ACM UART 的设备树 compatible 属性为 <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,cdc-acm-uart</span></code>。</p>
+<p>当启用 USB 设备支持且设备树源文件中存在兼容节点时，会自动选中 CDC ACM 支持。如有需要，可以通过 <a class="reference internal" href="../../../../kconfig.html#CONFIG_USBD_CDC_ACM_CLASS" title="CONFIG_USBD_CDC_ACM_CLASS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USBD_CDC_ACM_CLASS</span></code></a> 显式禁用 CDC ACM 支持。可创建的 CDC ACM 实例数量取决于 USB 设备控制器支持的端点数量。每个 CDC ACM 实例需要三个端点：两个批量端点（一个 IN、一个 OUT）和一个 MaxPacketSize 为 16 的中断 IN 端点。CDC ACM 节点可以使用 <code class="docutils literal notranslate"><span class="pre">label</span></code> 属性在主机端区分不同的接口。下面是设备树覆盖文件的示例。</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="nf">zephyr_udc0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nl">cdc_acm_uart0</span><span class="p">:</span><span class="w"> </span><span class="nf">cdc_acm_uart0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"zephyr,cdc-acm-uart"</span><span class="p">;</span>
+<span class="w">                </span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"CDC_ACM_0"</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>应用程序在使用 CDC ACM UART 之前，可能需要等待 DTR 信号。关于如何实现该功能，请参阅 <a class="reference internal" href="../../../../samples/subsys/usb/cdc_acm/README.html#usb-cdc-acm" title="使用 USB CDC ACM UART 驱动实现串口回显。">USB CDC ACM UART sample</a>。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>要与主机通信，除了 UART 配置之外，应用程序还必须启用 USB 设备协议栈，相关内容请参阅 <a class="reference internal" href="usb_device.html#usb-device-next-howto-configure"><span class="std std-ref">如何配置和启用 USB 设备支持</span></a>，并仔细阅读下一章。对于从旧版协议栈迁移的用户和应用程序，这是唯一需要调整的部分。</p>
+</div>
+</section>
+<section id="cdc-acm-uart-as-serial-backend">
+<span id="id1"></span><h2>将 CDC ACM UART 用作串行后端<a class="headerlink" href="#cdc-acm-uart-as-serial-backend" title="链接到此标题。"></a></h2>
+<p>使用上面的示例和 <code class="docutils literal notranslate"><span class="pre">zephyr,console</span></code> chosen 节点属性，可以将 CDC ACM UART 配置为控制台设备。</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">/</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nf">chosen</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">zephyr</span><span class="p">,</span><span class="n">console</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">cdc_acm_uart0</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="p">};</span>
+
+<span class="o">&amp;</span><span class="nf">zephyr_udc0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nl">cdc_acm_uart0</span><span class="p">:</span><span class="w"> </span><span class="nf">cdc_acm_uart0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"zephyr,cdc-acm-uart"</span><span class="p">;</span>
+<span class="w">                </span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"CDC_ACM_0"</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>与上例中将控制台配置为使用 CDC ACM UART 的方式相同，可以使用 <code class="docutils literal notranslate"><span class="pre">zephyr,shell-uart</span></code> chosen 节点属性将 Shell 配置为使用 CDC ACM UART 作为串行后端。请参阅示例 <a class="reference internal" href="../../../../samples/subsys/shell/shell_module/README.html#shell-module" title="使用 Shell API 注册 shell 命令">Custom Shell module</a> 和 <a class="reference internal" href="../../../../build/dts/api/api.html#devicetree-chosen-nodes"><span class="std std-ref">chosen 节点文档</span></a>。</p>
+<p>由于用作串行后端的场景非常常见，且 CDC ACM UART 在运行时无需任何配置，协议栈提供了一个辅助功能，用于执行 <a class="reference internal" href="usb_device.html#usb-device-next-howto-configure"><span class="std std-ref">如何配置和启用 USB 设备支持</span></a> 中描述的步骤。该辅助功能通过 <a class="reference internal" href="../../../../kconfig.html#CONFIG_CDC_ACM_SERIAL_INITIALIZE_AT_BOOT" title="CONFIG_CDC_ACM_SERIAL_INITIALIZE_AT_BOOT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CDC_ACM_SERIAL_INITIALIZE_AT_BOOT</span></code></a> 启用，会以单个 CDC ACM 实例初始化 USB 设备协议栈。示例 <a class="reference internal" href="../../../../samples/subsys/usb/console/README.html#usb-cdc-acm-console" title="通过 USB CDC ACM 向控制台输出 &quot;Hello World!&quot;。">Console over USB CDC ACM</a> 演示了其用法。</p>
+<p>像 <a class="reference internal" href="../../../../boards/nordic/nrf52840dongle/doc/index.html#nrf52840dongle">nRF52840 Dongle</a> 这类没有调试适配器、但带有 USB 设备控制器，并希望将 CDC ACM UART 用作日志和 Shell 默认串行后端的开发板，也应使用 <a class="reference internal" href="../../../../kconfig.html#CONFIG_CDC_ACM_SERIAL_INITIALIZE_AT_BOOT" title="CONFIG_CDC_ACM_SERIAL_INITIALIZE_AT_BOOT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CDC_ACM_SERIAL_INITIALIZE_AT_BOOT</span></code></a>。由于该配置对任何开发板都相同，代码树中提供了通用的 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/boards/common/usb/cdc_acm_serial.dtsi">devicetree file</a> 和 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/boards/common/usb/Kconfig.cdc_acm_serial.defconfig">Kconfig file</a>，必须在开发板的设备树和 Kconfig.defconfig 文件中包含它们。</p>
+</section>
+<section id="using-cdc-acm-uart-in-the-application">
+<h2>在应用程序中使用 CDC ACM UART<a class="headerlink" href="#using-cdc-acm-uart-in-the-application" title="链接到此标题。"></a></h2>
+<p>CDC ACM 实现了一个虚拟 UART 控制器，提供中断驱动 UART API 和轮询 UART API，暂不支持 ASYNC API。如果应用程序要通过 CDC ACM UART 通信，推荐使用中断驱动 UART API。理解 API 文档至关重要，此外下面还给出一些说明。</p>
+<section id="interrupt-driven-uart-api">
+<h3>中断驱动 UART API<a class="headerlink" href="#interrupt-driven-uart-api" title="链接到此标题。"></a></h3>
+<p>CDC ACM UART 的实现在内部使用两个环形缓冲区，它们承担 <a class="reference internal" href="../../../../hardware/peripherals/uart.html#uart-interrupt-api"><span class="std std-ref">中断驱动 API</span></a> 中 TX/RX FIFO（TX/RX 缓冲区）的功能。</p>
+<p>如 <a class="reference internal" href="../../../../hardware/peripherals/uart.html#uart-interrupt-api"><span class="std std-ref">中断驱动 API</span></a> 所述，函数 <code class="xref c c-func docutils literal notranslate"><span class="pre">uart_irq_update()</span></code>、<code class="xref c c-func docutils literal notranslate"><span class="pre">uart_irq_is_pending()</span></code>、<code class="xref c c-func docutils literal notranslate"><span class="pre">uart_irq_rx_ready()</span></code>、<code class="xref c c-func docutils literal notranslate"><span class="pre">uart_irq_tx_ready()</span></code>、<code class="xref c c-func docutils literal notranslate"><span class="pre">uart_fifo_read()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">uart_fifo_fill()</span></code> 应在中断处理函数中调用，参见 <code class="xref c c-func docutils literal notranslate"><span class="pre">uart_irq_callback_user_data_set()</span></code>。为防止未定义行为，这些函数的实现会检查自身的调用上下文，如果不是在中断处理函数中调用则返回失败。</p>
+<p>此外，如 UART API 所述，<code class="xref c c-func docutils literal notranslate"><span class="pre">uart_irq_is_pending()</span></code>、<code class="xref c c-func docutils literal notranslate"><span class="pre">uart_irq_rx_ready()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">uart_irq_tx_ready()</span></code> 只能在 <code class="xref c c-func docutils literal notranslate"><span class="pre">uart_irq_update()</span></code> 之后调用。</p>
+<p>简化来说，应用程序的中断处理函数大致如下：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">interrupt_handler</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">user_data</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nb">true</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">uart_irq_update</span><span class="p">(</span><span class="n">dev</span><span class="p">);</span>
+
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">uart_irq_is_pending</span><span class="p">(</span><span class="n">dev</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">                </span><span class="p">}</span>
+
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">uart_irq_rx_ready</span><span class="p">(</span><span class="n">dev</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="kt">int</span><span class="w"> </span><span class="n">len</span><span class="p">;</span>
+<span class="w">                        </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="p">;</span>
+
+<span class="w">                        </span><span class="cm">/* ... */</span>
+<span class="w">                        </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">uart_fifo_read</span><span class="p">(</span><span class="n">dev</span><span class="p">,</span><span class="w"> </span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="n">len</span><span class="p">);</span>
+<span class="w">                        </span><span class="cm">/* ... */</span>
+<span class="w">                </span><span class="p">}</span>
+
+<span class="w">                </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">uart_irq_tx_ready</span><span class="p">(</span><span class="n">dev</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="kt">int</span><span class="w"> </span><span class="n">len</span><span class="p">;</span>
+<span class="w">                        </span><span class="kt">int</span><span class="w"> </span><span class="n">n</span><span class="p">;</span>
+
+<span class="w">                        </span><span class="cm">/* ... */</span>
+<span class="w">                        </span><span class="n">n</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">uart_fifo_fill</span><span class="p">(</span><span class="n">dev</span><span class="p">,</span><span class="w"> </span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="n">len</span><span class="p">);</span>
+<span class="w">                  </span><span class="cm">/* ... */</span>
+<span class="w">                </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>所有这些函数都不直接依赖于 USB 设备的状态。填充 TX FIFO 并不意味着数据正在发送到主机；成功读取 RX FIFO 也不意味着设备仍与主机连接。如果 TX FIFO 中有空间且 TX 中断已启用，<code class="xref c c-func docutils literal notranslate"><span class="pre">uart_irq_tx_ready()</span></code> 就会成功。如果 RX FIFO 中有数据且 RX 中断已启用，<code class="xref c c-func docutils literal notranslate"><span class="pre">uart_irq_rx_ready()</span></code> 就会成功。函数 <code class="xref c c-func docutils literal notranslate"><span class="pre">uart_irq_tx_complete()</span></code> 尚未实现。</p>
+</section>
+<section id="polling-uart-api">
+<h3>轮询 UART API<a class="headerlink" href="#polling-uart-api" title="链接到此标题。"></a></h3>
+<p>CDC ACM 的 poll out 实现遵循 <a class="reference internal" href="../../../../hardware/peripherals/uart.html#uart-polling-api"><span class="std std-ref">轮询 API</span></a>，仅当启用了 hw-flow-control 属性且在非 ISR 上下文中调用时，才会在 TX FIFO 已满时阻塞。</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 3月 11, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,322 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>设备树与 Kconfig 的对比 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/build/dts/dt-vs-kconfig.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="设备树 API" href="api/api.html" />
+    <link rel="prev" title="设备树故障排除" href="troubleshooting.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">构建与配置系统</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../cmake/index.html">构建系统（CMake）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cmake-ref/index.html">CMake 参考</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">设备树</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="index.html#devicetree-guide">设备树指南</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="intro.html">设备树简介</a></li>
+<li class="toctree-l4"><a class="reference internal" href="design.html">设计目标</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bindings.html">设备树绑定</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api-usage.html">从 C/C++ 访问设备树</a></li>
+<li class="toctree-l4"><a class="reference internal" href="phandles.html">phandle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="zephyr-user-node.html"><code class="docutils literal notranslate"><span class="pre">/zephyr,user</span></code> 节点</a></li>
+<li class="toctree-l4"><a class="reference internal" href="howtos.html">设备树 HOWTO</a></li>
+<li class="toctree-l4"><a class="reference internal" href="troubleshooting.html">设备树故障排除</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">设备树与 Kconfig 的对比</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#automatic-kconfig-symbols-from-devicetree">由设备树自动生成的 Kconfig 符号</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#devicetree-reference">设备树参考</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../kconfig/index.html">配置系统（Kconfig）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../snippets/index.html">代码片段（snippet）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../zephyr_cmake_package.html">Zephyr CMake 包</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sysbuild/index.html">Sysbuild（系统构建）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../version/index.html">应用程序版本管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../flashing/index.html">烧录</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../signing/index.html">对二进制文件签名</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">构建与配置系统</a> &raquo;</li>
+  
+     <li><a href="index.html">设备树</a> &raquo;</li>
+  
+  <li>设备树与 Kconfig 的对比</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="devicetree-versus-kconfig">
+<span id="dt-vs-kconfig"></span><h1>设备树与 Kconfig 的对比<a class="headerlink" href="#devicetree-versus-kconfig" title="链接到此标题。"></a></h1>
+<p>除设备树外，Zephyr 还使用 Kconfig 语言来配置源代码。对于某个具体用途应该使用设备树还是 Kconfig，有时会令人困惑。本节可以帮助你决定使用哪一个。</p>
+<p>简而言之：</p>
+<ul class="simple">
+<li><p>使用设备树描述 <strong>硬件</strong> 及其 <strong>启动时配置</strong>，例如开发板上的外设、启动时的时钟频率、中断线等。</p></li>
+<li><p>使用 Kconfig 配置要编译进最终镜像的 <strong>软件支持</strong>，例如是否添加网络支持、应用程序需要哪些驱动等。</p></li>
+</ul>
+<p>换言之，设备树主要处理硬件，而 Kconfig 主要处理软件。</p>
+<p>例如，考虑一块开发板，其 SoC 包含 2 个 UART（即串口）实例。</p>
+<ul class="simple">
+<li><p>开发板具有这些 UART <strong>硬件</strong> 这一事实，由设备树中的两个 UART 节点描述。这些节点提供 UART 类型（通过 <code class="docutils literal notranslate"><span class="pre">compatible</span></code> 属性）以及某些设置，例如硬件外设寄存器在内存中的地址范围（通过 <code class="docutils literal notranslate"><span class="pre">reg</span></code> 属性）。</p></li>
+<li><p>此外，UART 的 <strong>启动时配置</strong> 也由设备树描述，例如 RX IRQ 线的优先级和 UART 波特率。这些配置可能可以在运行时修改，但其启动时配置是在设备树中描述的。</p></li>
+<li><p>从应用程序代码的角度看，这两个 UART 可以互换，使用哪一个都没有影响，这只是开发板设计的问题。这属于纯粹的 <strong>硬件配置</strong>，应使用设备树完成。</p></li>
+<li><p>是否在构建中包含 UART 的 <strong>软件支持</strong> 由 Kconfig 控制。不需要使用 UART 的应用程序可以通过 Kconfig 从构建中移除驱动源代码，即使开发板的设备树中仍然包含 UART 节点。</p></li>
+</ul>
+<p>再举一个例子，考虑一个带有 2.4GHz 多协议无线电的设备，它同时支持低功耗蓝牙（Bluetooth Low Energy）和 802.15.4 无线技术。</p>
+<ul class="simple">
+<li><p>应使用设备树描述无线电 <strong>硬件</strong> 的存在、它与哪个或哪些驱动兼容等。</p></li>
+<li><p>无线电的 <strong>启动时配置</strong>，例如以 dBm 为单位的发射功率，也应使用设备树指定。</p></li>
+<li><p>在应用程序中，使用不同的协议会启用不同的代码，但使用的是同一硬件。这属于 <strong>软件配置</strong> 的范畴。</p></li>
+<li><p>应由 Kconfig 决定为该无线电构建哪些 <strong>软件功能</strong>，例如选择 BLE 或 802.15.4 协议栈。</p></li>
+</ul>
+<p>再举一个例子，以前用于启用某个驱动（该驱动本身由 Kconfig 启用）特定实例的 Kconfig 选项已被移除。现在通过在相应硬件实例上使用设备树的 <a class="reference internal" href="intro-syntax-structure.html#dt-important-props"><span class="std std-ref">status</span></a> 关键字来逐个选择设备。</p>
+<p>这些规则也有 <strong>例外</strong>：</p>
+<ul class="simple">
+<li><p>由于 Kconfig 无法灵活地控制某些与实例相关的驱动配置参数（例如内部缓冲区的大小），这些选项可以在设备树中定义。不过，为了表明它们是 Zephyr 驱动特有的，而不是硬件描述或配置，这些属性应加上 <code class="docutils literal notranslate"><span class="pre">zephyr,</span></code> 前缀，例如通用以太网设备树属性中的 <code class="docutils literal notranslate"><span class="pre">zephyr,random-mac-address</span></code>。</p></li>
+<li><p>设备树的 <code class="docutils literal notranslate"><span class="pre">chosen</span></code> 关键字，它允许用户选择某个硬件设备的特定实例用于特定用途，例如选择某个 UART 作为系统控制台。</p></li>
+</ul>
+<section id="automatic-kconfig-symbols-from-devicetree">
+<span id="auto-dts-kconfig"></span><h2>由设备树自动生成的 Kconfig 符号<a class="headerlink" href="#automatic-kconfig-symbols-from-devicetree" title="链接到此标题。"></a></h2>
+<p>在设备树处理步骤中，CMake 会运行 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/scripts/dts/gen_driver_kconfig_dts.py">scripts/dts/gen_driver_kconfig_dts.py</a>，该脚本扫描所有 <a class="reference internal" href="../../develop/application/index.html#dts-root"><span class="std std-ref">DTS 根目录</span></a>（包括 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/dts/bindings">dts/bindings</a>），并将 <code class="docutils literal notranslate"><span class="pre">Kconfig.dts</span></code> 写入构建的 <code class="docutils literal notranslate"><span class="pre">KCONFIG_BINARY_DIR</span></code>（例如 <code class="docutils literal notranslate"><span class="pre">&lt;build&gt;/zephyr</span></code>，在使用 <a class="reference internal" href="../sysbuild/index.html#sysbuild"><span class="std std-ref">Sysbuild（系统构建）</span></a> 时为 <code class="docutils literal notranslate"><span class="pre">&lt;build&gt;/&lt;image&gt;/zephyr</span></code>）。对于绑定中出现的每个 <code class="docutils literal notranslate"><span class="pre">compatible</span> <span class="pre">=</span> <span class="pre">&quot;vendor,chip&quot;</span></code>，生成的文件包含：</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span>DT_COMPAT_VENDOR_CHIP<span class="w"> </span>:=<span class="w"> </span>vendor,chip
+
+<span class="k">config</span><span class="w"> </span>DT_HAS_VENDOR_CHIP_ENABLED
+<span class="w">        </span>def_bool<span class="w"> </span>$(dt_compat_enabled,$(DT_COMPAT_VENDOR_CHIP))
+</pre></div>
+</div>
+<p>该赋值使 <code class="docutils literal notranslate"><span class="pre">compatible</span></code> 字面字符串可供 <a class="reference internal" href="../kconfig/preprocessor-functions.html#kconfig-functions"><span class="std std-ref">自定义 Kconfig 预处理器函数</span></a> 中介绍的预处理函数使用，这样 Kconfig 文件就可以调用 <code class="docutils literal notranslate"><span class="pre">$(dt_compat_on_bus,$(DT_COMPAT_&lt;compatible&gt;),i2c)</span></code> 之类的辅助函数。创建符号名时，<code class="docutils literal notranslate"><span class="pre">-</span></code>、<code class="docutils literal notranslate"><span class="pre">,</span></code> 和 <code class="docutils literal notranslate"><span class="pre">&#64;</span></code> 等字符会被转换为下划线。</p>
+<p>Kconfig 运行后，该隐藏的布尔符号会成为 <code class="docutils literal notranslate"><span class="pre">CONFIG_DT_HAS_&lt;compatible&gt;_ENABLED</span></code>。其值反映当前设备树中是否至少有一个具有该 <code class="docutils literal notranslate"><span class="pre">compatible</span></code> 且 <a class="reference internal" href="intro-syntax-structure.html#dt-important-props"><span class="std std-ref">status</span></a> 为 <code class="docutils literal notranslate"><span class="pre">okay</span></code> 的节点。用于启用驱动的符号几乎都应设为 <code class="docutils literal notranslate"><span class="pre">default</span> <span class="pre">y</span></code>，并带有 <code class="docutils literal notranslate"><span class="pre">depends</span> <span class="pre">on</span> <span class="pre">CONFIG_DT_HAS_&lt;compatible&gt;_ENABLED</span></code>，例如：</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span><span class="k">config</span><span class="w"> </span>SENSOR_VENDOR_CHIP
+<span class="w">        </span><span class="nb">bool</span><span class="w"> </span><span class="s2">"Vendor Chip sensor"</span>
+<span class="w">        </span><span class="k">default</span><span class="w"> </span>y
+<span class="w">        </span><span class="k">depends on</span><span class="w"> </span>DT_HAS_VENDOR_CHIP_ENABLED
+</pre></div>
+</div>
+<p>由于这些符号是自动生成的，只需添加一个带有 <code class="docutils literal notranslate"><span class="pre">compatible</span></code> 属性的新绑定，相应的 <code class="docutils literal notranslate"><span class="pre">DT_HAS_&lt;compatible&gt;_ENABLED</span></code> 和 <code class="docutils literal notranslate"><span class="pre">DT_COMPAT_&lt;compatible&gt;</span></code> 结构即可在 Kconfig 中使用。</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 1月 27, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

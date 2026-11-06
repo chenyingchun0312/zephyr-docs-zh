@@ -1,0 +1,437 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>监视网络流量 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/connectivity/networking/network_monitoring.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" />
+    <link rel="next" title="网络跟踪" href="network_tracing.html" />
+    <link rel="prev" title="使用 Arm FVP 用户模式联网" href="armfvp_user_networking_setup.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">服务</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">连接</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">网络</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="overview.html">概述</a></li>
+<li class="toctree-l4"><a class="reference internal" href="net-stack-architecture.html">网络协议栈架构</a></li>
+<li class="toctree-l4"><a class="reference internal" href="net_config_guide.html">网络配置指南</a></li>
+<li class="toctree-l4"><a class="reference internal" href="networking_with_host.html">与主机系统联网</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">监视网络流量</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#host-configuration">主机配置</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#zephyr-configuration">Zephyr 配置</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#wireshark-configuration">Wireshark 配置</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="network_tracing.html">网络跟踪</a></li>
+<li class="toctree-l4"><a class="reference internal" href="conformance/index.html">使用 TTCN-3 进行协议一致性测试</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/index.html">网络 API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="conn_mgr/index.html">连接管理器</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dsa.html">分布式交换架构（DSA）</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../bluetooth/index.html">Bluetooth</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../usb/index.html">USB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../canbus/index.html">控制器局域网（CAN）总线协议</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lora_lorawan/index.html">LoRa 和 LoRaWAN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modbus/index.html">Modbus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modem/index.html">调制解调器模块</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../index.html">连接</a> &raquo;</li>
+  
+     <li><a href="index.html">网络</a> &raquo;</li>
+  
+  <li>监视网络流量</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="monitor-network-traffic">
+<span id="network-monitoring"></span><h1>监视网络流量<a class="headerlink" href="#monitor-network-traffic" title="链接到此标题。"></a></h1>
+<nav class="contents local" id="id1">
+<ul class="simple">
+<li><p><a class="reference internal" href="#host-configuration" id="id2">主机配置</a></p></li>
+<li><p><a class="reference internal" href="#zephyr-configuration" id="id3">Zephyr 配置</a></p></li>
+<li><p><a class="reference internal" href="#wireshark-configuration" id="id4">Wireshark 配置</a></p></li>
+</ul>
+</nav>
+<p>能够监视网络流量很有用，尤其是在调试连接问题或在 Zephyr 中开发新的协议支持时。本页介绍如何设置网络流量捕获，以便用户在远程主机上使用 Wireshark 或类似工具查看 Zephyr 设备发送或接收的网络数据包。</p>
+<p>需要启用的配置选项另请参见 Zephyr 源码中的 <a class="reference internal" href="../../../samples/net/capture/README.html#net-capture" title="捕获网络数据包，并通过 IPIP 隧道发送到远程主机。">Network packet capture</a> 示例应用程序。</p>
+<section id="host-configuration">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">主机配置</a><a class="headerlink" href="#host-configuration" title="链接到此标题。"></a></h2>
+<p>这里的说明介绍如何设置 Linux 主机来捕获 Zephyr 的网络 RX 和 TX 流量。类似的步骤在其他操作系统中应该也适用。</p>
+<p>在 Linux 主机上找到 Zephyr <a class="reference external" href="https://github.com/zephyrproject-rtos/net-tools">net-tools</a> 项目。它位于 Zephyr 标准安装的 <code class="docutils literal notranslate"><span class="pre">tools/net-tools</span></code> 目录下，也可以从其独立的 git 仓库单独安装：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">git clone https://github.com/zephyrproject-rtos/net-tools</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">net-tools</span></code> 项目提供了一个配置文件，用于设置 IP-to-IP 隧道接口，以便将监视数据从 Zephyr 传送到主机。</p>
+<p>在终端 #1 中输入：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./net-setup.sh -c zeth-tunnel.conf</span>
+</pre></div>
+</div>
+<p>该脚本会创建以下 IPIP 隧道接口：</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>接口名称</p></th>
+<th class="head"><p>说明</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">zeth-ip6ip</span></code></p></td>
+<td><p>IPv6-over-IPv4 隧道</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">zeth-ipip</span></code></p></td>
+<td><p>IPv4-over-IPv4 隧道</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">zeth-ipip6</span></code></p></td>
+<td><p>IPv4-over-IPv6 隧道</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">zeth-ip6ip6</span></code></p></td>
+<td><p>IPv6-over-IPv6 隧道</p></td>
+</tr>
+</tbody>
+</table>
+<p>Zephyr 会将捕获的网络数据包发送到其中一个接口，具体是哪个接口取决于捕获的配置方式。然后可以使用 Wireshark 监视相应的网络接口。</p>
+<p>创建隧道接口后，可以使用 <code class="docutils literal notranslate"><span class="pre">net-tools</span></code> 项目中的 <code class="docutils literal notranslate"><span class="pre">net-capture.py</span></code> 等脚本打印或保存捕获的网络数据包。<code class="docutils literal notranslate"><span class="pre">net-capture.py</span></code> 提供一个 UDP 监听器，可以将捕获的数据打印到屏幕，也可以选择将数据保存到 pcap 文件。</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./net-capture.py<span class="w"> </span>-i<span class="w"> </span>zeth-ip6ip<span class="w"> </span>-w<span class="w"> </span>capture.pcap
+<span class="go">[20210408Z14:33:08.959589] Ether / IP / ICMP 192.0.2.1 &gt; 192.0.2.2 echo-request 0 / Raw</span>
+<span class="go">[20210408Z14:33:08.976178] Ether / IP / ICMP 192.0.2.2 &gt; 192.0.2.1 echo-reply 0 / Raw</span>
+<span class="go">[20210408Z14:33:16.176303] Ether / IPv6 / ICMPv6 Echo Request (id: 0x9feb seq: 0x0)</span>
+<span class="go">[20210408Z14:33:16.195326] Ether / IPv6 / ICMPv6 Echo Reply (id: 0x9feb seq: 0x0)</span>
+<span class="go">[20210408Z14:33:21.194979] Ether / IPv6 / ICMPv6ND_NS / ICMPv6 Neighbor Discovery Option - Source Link-Layer Address 02:00:5e:00:53:3b</span>
+<span class="go">[20210408Z14:33:21.217528] Ether / IPv6 / ICMPv6ND_NA / ICMPv6 Neighbor Discovery Option - Destination Link-Layer Address 00:00:5e:00:53:ff</span>
+<span class="go">[20210408Z14:34:10.245408] Ether / IPv6 / UDP 2001:db8::2:47319 &gt; 2001:db8::1:4242 / Raw</span>
+<span class="go">[20210408Z14:34:10.266542] Ether / IPv6 / UDP 2001:db8::1:4242 &gt; 2001:db8::2:47319 / Raw</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">net-capture.py</span></code> 有以下命令行选项：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Listen captured network data from Zephyr and save it optionally to pcap file.</span>
+<span class="go">./net-capture.py \</span>
+<span class="go">     -i | --interface &lt;network interface&gt;</span>
+<span class="go">             Listen this interface for the data</span>
+<span class="go">     [-p | --port &lt;UDP port&gt;]</span>
+<span class="go">             UDP port (default is 4242) where the capture data is received</span>
+<span class="go">     [-q | --quiet]</span>
+<span class="go">             Do not print packet information</span>
+<span class="go">     [-t | --type &lt;L2 type of the data&gt;]</span>
+<span class="go">             Scapy L2 type name of the UDP payload, default is Ether</span>
+<span class="go">     [-w | --write &lt;pcap file name&gt;]</span>
+<span class="go">             Write the received data to file in PCAP format</span>
+</pre></div>
+</div>
+<p>除了 <code class="docutils literal notranslate"><span class="pre">net-capture.py</span></code> 脚本，也可以使用 <code class="docutils literal notranslate"><span class="pre">netcat</span></code> 等工具提供 UDP 监听器，这样主机就不会向 Zephyr 发送端口不可达消息：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">nc -l -u 2001:db8:200::2 4242 &gt; /dev/null</span>
+</pre></div>
+</div>
+<p>上面的 IP 地址是隧道内层端点，可以更改，具体取决于 Zephyr 的配置方式。Zephyr 会将包含所捕获网络数据包的 UDP 数据包发送到配置的 IP 隧道，因此需要像这样终结该网络连接。</p>
+</section>
+<section id="zephyr-configuration">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">Zephyr 配置</a><a class="headerlink" href="#zephyr-configuration" title="链接到此标题。"></a></h2>
+<p>本例使用 <code class="docutils literal notranslate"><span class="pre">native_sim</span></code> 开发板。也可以使用任何其他支持网络的开发板。</p>
+<p>在终端 #3 中输入：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>native_sim<span class="w"> </span>samples/net/capture<span class="w"> </span>--<span class="w"> </span>-DCONFIG_UART_NATIVE_PTY_AUTOATTACH_DEFAULT_CMD<span class="o">=</span><span class="se">\"</span><span class="s2">"gnome-terminal -- screen %s"</span><span class="se">\"</span>
+</pre></div>
+</div>
+<p>要查看 Zephyr 控制台和 shell，请按如下方式启动 Zephyr 实例：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">build/zephyr/zephyr.exe -attach_uart</span>
+</pre></div>
+</div>
+<p>也可以使用任何其他应用程序，只要确保启用了合适的配置选项即可（示例参见 <code class="docutils literal notranslate"><span class="pre">samples/net/capture/prj.conf</span></code> 文件）。</p>
+<p>如有需要，网络捕获可以自动配置，但目前 <code class="docutils literal notranslate"><span class="pre">capture</span></code> 示例应用程序并不这样做。用户需要使用 <code class="docutils literal notranslate"><span class="pre">net-shell</span></code> 来设置并启用监视。</p>
+<p>首先需要设置网络数据包监视。<code class="docutils literal notranslate"><span class="pre">net-shell</span></code> 提供了 <code class="docutils literal notranslate"><span class="pre">net</span> <span class="pre">capture</span> <span class="pre">setup</span></code> 命令来完成此操作。命令语法为</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">net capture setup &lt;remote-ip-addr&gt; &lt;local-ip-addr&gt; &lt;peer-ip-addr&gt;</span>
+<span class="go">     &lt;remote&gt; is the (outer) endpoint IP address</span>
+<span class="go">     &lt;local&gt; is the (inner) local IP address</span>
+<span class="go">     &lt;peer&gt; is the (inner) peer IP address</span>
+<span class="go">     Local and Peer IP addresses can have UDP port number in them (optional)</span>
+<span class="go">     like 198.0.51.2:9000 or [2001:db8:100::2]:4242</span>
+</pre></div>
+</div>
+<p>在 Zephyr 控制台中输入：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">net capture setup 192.0.2.2 2001:db8:200::1 2001:db8:200::2</span>
+</pre></div>
+</div>
+<p>该命令会创建隧道接口。<code class="docutils literal notranslate"><span class="pre">192.0.2.2</span></code> 是隧道终结所在的远程主机，该地址用于选择隧道接口所附加的本地网络接口。<code class="docutils literal notranslate"><span class="pre">2001:db8:200::1</span></code> 指定隧道的本地 IP 地址，<code class="docutils literal notranslate"><span class="pre">2001:db8:200::2</span></code> 是接收所捕获网络数据包的对端 IP 地址。对于 IPv6-over-IPv4 隧道，可以在 setup 命令中像这样指定 UDP 数据包的端口号</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">net capture setup 192.0.2.2 [2001:db8:200::1]:9999 [2001:db8:200::2]:9998</span>
+</pre></div>
+</div>
+<p>对于 IPv4-over-IPv4 隧道则像这样指定</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">net capture setup 192.0.2.2 198.51.100.1:9999 198.51.100.2:9998</span>
+</pre></div>
+</div>
+<p>如果省略端口号，默认使用 UDP 端口 <code class="docutils literal notranslate"><span class="pre">4242</span></code>。</p>
+<p>可以像这样检查当前的监视配置：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>net<span class="w"> </span>capture
+<span class="go">Network packet capture disabled</span>
+<span class="go">                Capture  Tunnel</span>
+<span class="go">Device          iface    iface   Local                  Peer</span>
+<span class="go">NET_CAPTURE0    -        1      [2001:db8:200::1]:4242  [2001:db8:200::2]:4242</span>
+</pre></div>
+</div>
+<p>该命令会打印当前配置。由于尚未启用监视，<code class="docutils literal notranslate"><span class="pre">Capture</span> <span class="pre">iface</span></code> 未设置。</p>
+<p>然后需要像这样启用网络数据包监视：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">net capture enable 2</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">2</span></code> 指定要捕获其流量的网络接口。本例中，<code class="docutils literal notranslate"><span class="pre">2</span></code> 是 <code class="docutils literal notranslate"><span class="pre">native_sim</span></code> 开发板的以太网接口。注意，本例将网络流量发送到正在监视的同一个接口。监视系统会避免捕获已捕获的网络流量，否则会导致递归。可以使用 <code class="docutils literal notranslate"><span class="pre">net</span> <span class="pre">iface</span></code> 命令查看有哪些可用的网络接口。注意，不能捕获隧道接口的流量，因为这会导致递归循环。如果进行了相应配置，捕获的网络流量可以发送到其他网络接口，只需在 <code class="docutils literal notranslate"><span class="pre">net</span> <span class="pre">capture</span> <span class="pre">setup</span></code> 中正确设置 <code class="docutils literal notranslate"><span class="pre">&lt;remote-ip-addr&gt;</span></code> 选项，使 IP 隧道附加到所需的网络接口。可以再次像这样检查捕获状态：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>net<span class="w"> </span>capture
+<span class="go">Network packet capture enabled</span>
+<span class="go">                Capture  Tunnel</span>
+<span class="go">Device          iface    iface   Local                  Peer</span>
+<span class="go">NET_CAPTURE0    2        1      [2001:db8:200::1]:4242  [2001:db8:200::2]:4242</span>
+</pre></div>
+</div>
+<p>启用监视后，系统会将捕获的（接收或发送的）网络数据包发送到隧道接口以作进一步处理。</p>
+<p>可以像这样禁用监视：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">net capture disable</span>
+</pre></div>
+</div>
+<p>该命令会关闭当前正在运行的监视。可以像这样清除监视设置：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">net capture cleanup</span>
+</pre></div>
+</div>
+<p>配置监视不一定要使用 <code class="docutils literal notranslate"><span class="pre">net-shell</span></code>。如有需要，应用程序可以调用 <a class="reference internal" href="api/capture.html#net-capture-interface"><span class="std std-ref">网络捕获 API</span></a> 函数。</p>
+</section>
+<section id="wireshark-configuration">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">Wireshark 配置</a><a class="headerlink" href="#wireshark-configuration" title="链接到此标题。"></a></h2>
+<p>可以使用 <a class="reference external" href="https://www.wireshark.org/">Wireshark</a> 工具方便地监视捕获的网络流量。</p>
+<p>可以监视隧道接口，也可以监视 <code class="docutils literal notranslate"><span class="pre">zeth</span></code> 接口。要查看 UDP 数据包内实际捕获的数据，请参阅 <a class="reference external" href="https://osqa-ask.wireshark.org/questions/28138/decoding-ethernet-encapsulated-in-tcp-or-udp/">Wireshark decapsulate UDP</a> 文档中的说明。</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 4月 15, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

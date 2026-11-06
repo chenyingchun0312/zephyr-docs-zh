@@ -1,0 +1,1173 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>发布流程 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../_static/tabs.css?v=a5c4661c" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/project/release_process.html" />
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../_static/translations.js?v=540d3cec"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@12.1.0/dist/mermaid.esm.min.mjs";
+
+
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = "pre.mermaid {\n    /* Same as .mermaid-container > pre */\n    display: block;\n    width: 100%;\n}\n\npre.mermaid > svg {\n    /* Same as .mermaid-container > pre > svg */\n    height: auto;\n    width: 100%;\n    max-width: 100% !important;\n}";
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = ".mermaid-container {\n    position: relative;\n    display: flex;\n    flex-direction: row;\n    width: 100%;\n}\n\n.mermaid-container > pre {\n    display: block;\n    width: 100%;\n}\n\n.mermaid-container > pre > svg {\n    height: auto;\n    width: 100%;\n    max-width: 100% !important;\n}\n\n.mermaid-fullscreen-btn {\n    position: absolute;\n    width: 28px;\n    height: 28px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.3);\n    border-radius: 4px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    transition: all 0.2s;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);\n    font-size: 14px;\n    line-height: 1;\n    padding: 0;\n    color: #333;\n}\n\n.mermaid-fullscreen-btn:hover {\n    opacity: 100% !important;\n    background: rgba(255, 255, 255, 1);\n    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-btn.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.3);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-btn.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal {\n    display: none;\n    position: fixed !important;\n    top: 0 !important;\n    left: 0 !important;\n    width: 95vw;\n    height: 100vh;\n    background: rgba(255, 255, 255, 0.98);\n    z-index: 9999;\n    padding: 20px;\n    overflow: auto;\n}\n\n.mermaid-fullscreen-modal.dark-theme {\n    background: rgba(0, 0, 0, 0.98);\n}\n\n.mermaid-fullscreen-modal.active {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen {\n    position: relative;\n    width: 95vw;\n    height: 90vh;\n    max-width: 95vw;\n    max-height: 90vh;\n    background: white;\n    border-radius: 8px;\n    padding: 20px;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);\n    overflow: auto;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen.dark-theme {\n    background: #1a1a1a;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);\n}\n\n.mermaid-container-fullscreen pre.mermaid {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen .mermaid svg {\n    height: 100% !important;\n    width: 100% !important;\n    cursor: grab;\n}\n\n.mermaid-fullscreen-close {\n    position: fixed !important;\n    top: 20px !important;\n    right: 20px !important;\n    width: 40px;\n    height: 40px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.2);\n    border-radius: 50%;\n    cursor: pointer;\n    z-index: 10000;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);\n    transition: all 0.2s;\n    font-size: 24px;\n    line-height: 1;\n    color: #333;\n}\n\n.mermaid-fullscreen-close:hover {\n    background: white;\n    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-close.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.2);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-close.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal .mermaid-fullscreen-btn {\n    display: none !important;\n}";
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+let _lazyObserver = null;
+let _renderQueue = Promise.resolve();
+let closeModal = () => {};
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('active')) {
+        closeModal();
+    }
+});
+
+// Apply d3 zoom to each SVG. Idempotent: an SVG already wrapped is skipped,
+// so this is safe to call both for the initial batch and for diagrams that
+// render lazily once they become visible.
+const addZoomToSvgs = (svgs) => {
+    svgs.each(function() {
+        if (this.getAttribute('data-zoom-applied') === 'true') return;
+        var svg = d3.select(this);
+        svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+        var inner = svg.select("g");
+        var zoom = d3.zoom().on("zoom", function(event) {
+            inner.attr("transform", event.transform);
+        });
+        svg.call(zoom);
+        this.setAttribute('data-zoom-applied', 'true');
+    });
+};
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        // Disconnect any previous lazy rendering observer
+        if (_lazyObserver) {
+            _lazyObserver.disconnect();
+            _lazyObserver = null;
+        }
+
+        all_mermaids.forEach((el) => {
+            el.removeAttribute('data-mermaid-deferred');
+            el.removeAttribute('data-mermaid-render-failed');
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+
+        // Separate visible and hidden elements. Mermaid's layout engine measures
+        // text dimensions via the DOM, which fails for elements hidden by a parent
+        // (e.g., Reveal.js non-active slides, sphinx-design unopened tabs),
+        // producing broken SVGs. Render visible elements now, defer hidden ones.
+        const visible = [];
+        const hidden = [];
+        all_mermaids.forEach((el) => {
+            // offsetParent is null for display:none ancestors.
+            // getClientRects().length > 0 catches position:fixed elements
+            // (which also have null offsetParent but are still visible).
+            if (el.offsetParent !== null || el.getClientRects().length > 0) {
+                visible.push(el);
+            } else {
+                hidden.push(el);
+                el.setAttribute('data-mermaid-deferred', 'true');
+            }
+        });
+
+        if (visible.length > 0) {
+            try {
+                await mermaid.run({ nodes: visible });
+            } catch (e) {
+                console.error("Mermaid rendering failed:", e);
+            }
+        }
+
+        // Lazily render hidden elements when they become visible.
+        // Uses a promise chain (_renderQueue) to serialize rendering,
+        // since IntersectionObserver may report multiple entries at once
+        // and mermaid.run() is not safe to call concurrently.
+        if (hidden.length > 0) {
+            if (typeof IntersectionObserver === 'undefined') {
+                console.warn("IntersectionObserver not available; hidden mermaid diagrams will not render.");
+            } else {
+                _renderQueue = Promise.resolve();
+                _lazyObserver = new IntersectionObserver((entries) => {
+                    for (const entry of entries) {
+                        if (entry.isIntersecting && entry.target.getAttribute("data-processed") !== "true") {
+                            _lazyObserver.unobserve(entry.target);
+                            const el = entry.target;
+                            _renderQueue = _renderQueue.then(async () => {
+                                try {
+                                    await mermaid.run({ nodes: [el] });
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    // Apply zoom to the now-rendered diagram, matching
+                                    // the decoration visible diagrams receive.
+                                    if (false) {
+                                        addZoomToSvgs(d3.selectAll("").select(function() {
+                                            return this.querySelector("svg");
+                                        }));
+                                    }
+                                } catch (e) {
+                                    console.error("Mermaid deferred rendering failed:", e);
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    el.setAttribute('data-mermaid-render-failed', 'true');
+                                }
+                            });
+                        }
+                    }
+                });
+                hidden.forEach((el) => _lazyObserver.observe(el));
+            }
+        }
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    // Exclude deferred (hidden) and render-failed elements from completion checks
+    const mermaids_active = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])");
+    const mermaids_processed = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])[data-processed='true']");
+
+    if (false) {
+        const mermaids_to_add_zoom = 0 === -1 ? mermaids_active.length : 0;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("").select(function() {
+                return this.querySelector("svg");
+            });
+            // Wait until every active (visible) diagram has rendered. Deferred
+            // diagrams are excluded, so a fixed d3_node_count that counts a
+            // hidden diagram no longer loops forever waiting for its SVG.
+            if(mermaids_active.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            }
+            addZoomToSvgs(svgs);
+        }
+    } else if(mermaids_active.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if (!true) return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = "\u26f6";
+        fullscreenBtn.style.opacity = "50%";
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scrollX, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.display = 'block';
+
+                if (false) {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+
+
+const load = async () => {
+    initStyles();
+
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...{"startOnLoad": false},
+                ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...{"startOnLoad": false},
+    ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+    }
+);
+
+window.addEventListener("load", load);
+window.runMermaid = runMermaid;</script>
+      <script src="../_static/tabs.js?v=3030b3cb"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="功能跟踪" href="proposals.html" />
+    <link rel="prev" title="TSC 工作组" href="working_groups.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">项目与治理</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="tsc.html">技术指导委员会（TSC）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="project_roles.html">TSC 项目角色</a></li>
+<li class="toctree-l2"><a class="reference internal" href="working_groups.html">TSC 工作组</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">发布流程</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#release-phases-overview">发布阶段概述</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#merge-window-development-phase">合并窗口（开发阶段）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#feature-freeze-stabilization-phase">功能冻结（稳定阶段）</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#allowed-changes">允许的变更</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#disallowed-changes">不允许的变更</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#issue-tracking-during-feature-freeze">功能冻结期间的问题跟踪</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#mandatory-issue-usage">必须使用 issue 的情况</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#review-and-approval">审查与批准</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#risk-expectations">风险要求</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pull-request-merge-criteria">PR 合并标准</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#release-quality-criteria">发布质量标准</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#blocker-bugs">阻塞缺陷</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#release-milestones">发布里程碑</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#long-term-support-lts-releases">长期支持（LTS）版本</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#product-focused">面向产品</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#extended-stabilisation-period">延长的稳定期</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#stable-apis">稳定的 API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#quality-driven-process">质量驱动的流程</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#long-term-support-and-maintenance">长期支持与维护</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#auditable-code-base">可审计代码库</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#host-tools-support-policy">主机工具支持政策</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#python-version-policy">Python 版本政策</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#hardware-support-tiers">硬件支持等级</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#tier-0-emulation-platforms">Tier 0：仿真平台</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tier-1-supported-platforms">Tier 1：受支持平台</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tier-2-community-platforms">Tier 2：社区平台</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tier-3-deprecated-and-unsupported-platforms">Tier 3：已弃用和不受支持的平台</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#release-procedure">发布程序</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#release-checklist">发布检查清单</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tagging">打标签</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="proposals.html">功能跟踪</a></li>
+<li class="toctree-l2"><a class="reference internal" href="code_flow.html">代码流程与分支</a></li>
+<li class="toctree-l2"><a class="reference internal" href="dev_env_and_tools.html">开发环境与工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="issues.html">缺陷报告</a></li>
+<li class="toctree-l2"><a class="reference internal" href="communication.html">沟通与协作</a></li>
+<li class="toctree-l2"><a class="reference internal" href="documentation.html">代码文档</a></li>
+<li class="toctree-l2"><a class="reference internal" href="index.html#terminology">术语</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="index.html">项目与治理</a> &raquo;</li>
+  
+  <li>发布流程</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="release-process">
+<span id="id1"></span><h1>发布流程<a class="headerlink" href="#release-process" title="链接到此标题。"></a></h1>
+<p>Zephyr 项目按基于时间的周期发布版本，而不是由功能驱动。Zephyr 的每个版本汇集了来自社区的众多贡献者、公司和个人的工作成果。</p>
+<p>基于时间的发布流程使 Zephyr 项目能够在为用户提供最新技术和功能与保证出色的整体质量之间取得平衡。大约 6 个月的发布周期使项目能够围绕已实际实现的功能协调开发，从而在保持整个版本质量的同时，不会因为一两个尚未就绪的功能而推迟发布。</p>
+<section id="release-phases-overview">
+<h2>发布阶段概述<a class="headerlink" href="#release-phases-overview" title="链接到此标题。"></a></h2>
+<p>每个发布周期由一个 <em>开发阶段</em> 和随后的 <em>稳定阶段</em> 组成。候选版本（release candidate）会在稳定阶段创建。</p>
+<p>在开发阶段，可以合并各种变更，因此这一阶段被称为 main 分支的 <em>合并窗口</em>。在稳定阶段，项目及其维护者专注于修复缺陷和编写版本文档。在此期间，一般不接受新功能。稳定阶段期间，main 分支处于 <em>功能冻结</em> 状态。</p>
+<figure class="align-center" id="id5">
+<a class="reference internal image-reference" href="../_images/release_cycle.svg"><img alt="发布周期" src="../_images/release_cycle.svg" style="width: 80%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">发布周期</span><a class="headerlink" href="#id5" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<p>当前主版本的里程碑可以在 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/wiki/Release-Management">官方 GitHub Wiki</a> 上找到。以往版本的信息请参见 <a class="reference internal" href="../releases/index.html#zephyr-release-notes"><span class="std std-ref">此处</span></a>。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>每个稳定版本发布后，都会为该版本创建一个新的“发布分支”。</p>
+<p>例如，在 Zephyr 稳定版本 v4.4.0 发布后，创建了新分支 <code class="docutils literal notranslate"><span class="pre">v4.4-branch</span></code>。用于 v4.4.x 补丁版本（v4.4.1、v4.4.2 等）的提交，应以该分支为目标提出。</p>
+<p>本页目前没有详细说明补丁版本的发布流程。</p>
+</div>
+<section id="merge-window-development-phase">
+<span id="merge-window"></span><h3>合并窗口（开发阶段）<a class="headerlink" href="#merge-window-development-phase" title="链接到此标题。"></a></h3>
+<p>为某个版本打上标签后，发布经理会开放 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/tree/main">main 分支</a>，用于下一个发布周期的开发。我们将这段时间称为每个版本的 <em>合并窗口</em> 或 <em>开发阶段</em>。在合并窗口期间，任何符合 <a class="reference internal" href="#merge-criteria"><span class="std std-ref">PR 合并标准</span></a> 的代码都可以合并到 main 分支。每个版本的大部分变更都是在其合并窗口期间完成的。</p>
+<p>每个版本的合并窗口持续约五个月。</p>
+<p>合并窗口结束后，发布团队为即将发布的版本打上第一个 <em>候选版本</em> 标签。此时，main 分支对大多数功能开发关闭，项目进入下一个版本的 <a class="reference internal" href="#feature-freeze"><span class="std std-ref">功能冻结</span></a>。功能冻结将在下一节中介绍。</p>
+<p>下面是一个合并窗口的时间线示例：</p>
+<ul class="simple">
+<li><p>2025 年 11 月 13 日打上 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/tree/v4.3.0">v4.3.0</a> 标签时，合并窗口开放。此时，main 分支开放合并，用于下一个版本 v4.4.0。</p></li>
+<li><p>2026 年 3 月 24 日打上 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/tree/v4.4.0-rc1">v4.4.0-rc1</a> 标签时，v4.4.0 的合并窗口关闭。此时，项目进入 v4.4.0 版本的功能冻结。</p></li>
+</ul>
+</section>
+<section id="feature-freeze-stabilization-phase">
+<span id="feature-freeze"></span><h3>功能冻结（稳定阶段）<a class="headerlink" href="#feature-freeze-stabilization-phase" title="链接到此标题。"></a></h3>
+<p>第一个候选版本打上标签后，该版本的合并窗口即告关闭。这被称为该版本的 <em>功能冻结</em> 或 <em>稳定阶段</em>。在功能冻结期间，除非获得 <a class="reference internal" href="tsc.html#tsc"><span class="std std-ref">技术指导委员会（TSC）</span></a> 批准的例外，否则不会为该版本合并任何新功能。</p>
+<p>在稳定阶段，等待新功能 PR 审查时请耐心。</p>
+<p>如前所述，在功能冻结期间合并功能的例外流程需要 TSC 批准并给出理由。一般来说，如果你的 PR 尚未合并而功能冻结已经宣布，最好的做法是等待下一个 <a class="reference internal" href="#merge-window"><span class="std std-ref">合并窗口</span></a> 开放。</p>
+<p>如果你认为你的功能值得破例、应在功能冻结期间合并，请联系 TSC。一般联系方式请参见 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/wiki/Technical-Steering-Committee-%28TSC%29">TSC wiki</a> 页面。</p>
+<p>下面是一个功能冻结的时间线示例：</p>
+<ul class="simple">
+<li><p>2026 年 3 月 24 日打上 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/tree/v4.4.0-rc1">v4.4.0-rc1</a> 标签时，v4.4.0 的功能冻结开始。从那时起，新功能需要获得 TSC 例外批准才能合并到 main 分支。</p></li>
+<li><p>2026 年 4 月 14 日打上 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/tree/v4.4.0">v4.4.0</a> 标签时，v4.4.0 的功能冻结结束。此时，main 分支再次开放，进入下一个版本的 <a class="reference internal" href="#merge-window"><span class="std std-ref">合并窗口</span></a>。</p></li>
+</ul>
+<p>以下各节更详细地介绍功能冻结。</p>
+<section id="allowed-changes">
+<h4>允许的变更<a class="headerlink" href="#allowed-changes" title="链接到此标题。"></a></h4>
+<p>功能冻结之后， <strong>只应</strong> 接受与稳定相关的变更：</p>
+<ul class="simple">
+<li><p>解决功能缺陷的缺陷修复</p></li>
+<li><p>提高可靠性、构建稳定性或测试行为的稳定性修复</p></li>
+<li><p>文档更新（澄清、更正、改进）</p></li>
+<li><p>针对现有功能的测试（不启用新功能）</p></li>
+</ul>
+<p>关于何时接受哪些变更的更多细节，请参见 <a class="reference internal" href="#release-milestones"><span class="std std-ref">表格</span></a>。</p>
+<p>对这些允许变更的例外很少见，需要明确的理由并获得 TSC 批准。一般来说，如果某个功能错过了开发阶段窗口，就应等待下一个开发周期。</p>
+</section>
+<section id="disallowed-changes">
+<h4>不允许的变更<a class="headerlink" href="#disallowed-changes" title="链接到此标题。"></a></h4>
+<p>功能冻结之后， <strong>不应</strong> 接受以下变更：</p>
+<ul class="simple">
+<li><p>新功能或功能增强</p></li>
+<li><p>API 变更，除非是为了解决严重缺陷所必需</p></li>
+<li><p>与缺陷修复或稳定工作没有直接关联的重构</p></li>
+<li><p>新的子系统、驱动、开发板或架构变更</p></li>
+</ul>
+</section>
+</section>
+</section>
+<section id="issue-tracking-during-feature-freeze">
+<h2>功能冻结期间的问题跟踪<a class="headerlink" href="#issue-tracking-during-feature-freeze" title="链接到此标题。"></a></h2>
+<p>在功能冻结期间，<strong>建议</strong> 在 PR 中引用 GitHub issue，但 <strong>不强制要求</strong>。</p>
+<p>PR <strong>必须</strong> 清楚说明：</p>
+<ul class="simple">
+<li><p>所解决的问题</p></li>
+<li><p>问题的影响</p></li>
+<li><p>该变更如何解决问题</p></li>
+</ul>
+<p>当 PR 的意图或范围不明确时，维护者和发布工程师 <strong>可以</strong> 要求进一步澄清。</p>
+<section id="mandatory-issue-usage">
+<h3>必须使用 issue 的情况<a class="headerlink" href="#mandatory-issue-usage" title="链接到此标题。"></a></h3>
+<p>以下情况 <strong>必须</strong> 有 GitHub issue：</p>
+<ul class="simple">
+<li><p>发布阻塞问题（release blocker）</p></li>
+<li><p>针对已发布分支维护工作的修复</p></li>
+</ul>
+</section>
+<section id="review-and-approval">
+<h3>审查与批准<a class="headerlink" href="#review-and-approval" title="链接到此标题。"></a></h3>
+<p>所有 PR <strong>必须</strong> 遵循标准的审查和批准流程。</p>
+<p>维护者 <strong>必须</strong> 确保：</p>
+<ul class="simple">
+<li><p>变更符合本政策</p></li>
+<li><p>范围最小，且专注于稳定工作</p></li>
+<li><p>风险与所处的发布阶段相适应</p></li>
+</ul>
+<p>发布工程师 <strong>可以</strong>：</p>
+<ul class="simple">
+<li><p>根据风险评估拒绝或推迟变更</p></li>
+<li><p>要求修改或补充理由</p></li>
+</ul>
+</section>
+<section id="risk-expectations">
+<h3>风险要求<a class="headerlink" href="#risk-expectations" title="链接到此标题。"></a></h3>
+<p>稳定阶段接受的变更 <strong>必须</strong>：</p>
+<ul class="simple">
+<li><p>范围最小</p></li>
+<li><p>风险低</p></li>
+<li><p>经过充分测试</p></li>
+</ul>
+<p>引入重大风险的变更 <strong>可能</strong> 会被推迟到将来的版本，即使它们属于缺陷修复。</p>
+</section>
+</section>
+<section id="pull-request-merge-criteria">
+<span id="merge-criteria"></span><h2>PR 合并标准<a class="headerlink" href="#pull-request-merge-criteria" title="链接到此标题。"></a></h2>
+<p>以下标准适用于所有发布阶段。</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../_images/img_release_activity.png"><img alt="发布活动" src="../_images/img_release_activity.png" style="width: 663px;" />
+</a>
+</figure>
+<ul class="simple">
+<li><p>必须满足所有 <a class="reference internal" href="../contribute/contributor_expectations.html#pr-requirements"><span class="std std-ref">PR 要求</span></a>。</p></li>
+<li><p>至少获得 2 个批准，其中包括指定指派人的批准。</p></li>
+<li><p>PR 应至少由每个受影响领域的一名维护者或协作者审查；除非对某个领域的变更被认为足够琐碎，这种情况下，获得其他受影响子系统的维护者/协作者的批准即可。</p></li>
+<li><p>组织层面的四眼原则。我们已经要求至少 2 个批准（基本的四眼原则），但如果提交者与批准者来自同一组织，这类审查和批准可能会无意中带有偏向。为了实现全项目范围的审查和批准，合并标准按以下准则进行了扩展：</p>
+<ul>
+<li><p>对公共和共享代码的修改或新增，应获得来自不同组织的批准（至少有一个批准来自提交者所在组织以外的组织）。公共和共享代码是指不属于 <code class="file docutils literal notranslate"><span class="pre">soc</span></code>、<code class="file docutils literal notranslate"><span class="pre">boards</span></code> 和 <code class="file docutils literal notranslate"><span class="pre">drivers/*/*</span></code> 的任何内容。</p></li>
+<li><p>对硬件支持（驱动、SoC、开发板）的修改或新增，至少应由来自不同组织的人员执行合并。这仅适用于支持特定厂商硬件的 API 实现，不适用于 API 本身。</p></li>
+<li><p>对于贡献主要来自一个组织、且无法获得其他组织审查的领域，发布工程师可以破例，但合并应由来自不同组织的人员完成。在这种情况下，应严格遵守至少 2 天的最短审查期，以便进行更多审查。</p></li>
+<li><p>发布工程师不得合并仅由其本组织发起并审查的代码变更。要合并此类变更，至少应有一个审查来自不同组织。</p></li>
+</ul>
+</li>
+<li><p>最短审查期为 2 个工作日，琐碎变更为 4 小时（参见 <a class="reference internal" href="dev_env_and_tools.html#review-time"><span class="std std-ref">在代码合并前给审查者留出审查时间</span></a>）。</p></li>
+<li><p>紧急修复在 CI 通过后可以随时合并，不受上述大部分条件的约束。</p></li>
+<li><p>所有必需的检查均已通过：</p>
+<ul>
+<li><p>设备树</p></li>
+<li><p>文档</p></li>
+<li><p>代码检查工具（Gitlint、Pylint、Ruff、Sphinx 等）</p></li>
+<li><p>身份/电子邮件</p></li>
+<li><p>Kconfig</p></li>
+<li><p>许可证检查</p></li>
+<li><p>Checkpatch（代码风格）</p></li>
+<li><p>在模拟/仿真平台上（通过 twister）进行的集成测试</p></li>
+<li><p>模拟的 Bluetooth 测试</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="release-quality-criteria">
+<span id="id3"></span><h2>发布质量标准<a class="headerlink" href="#release-quality-criteria" title="链接到此标题。"></a></h2>
+<p>主要目的是明确制定一个版本发布前必须满足的标准。这有助于以大多数人都能理解的方式定义一个版本何时算“完成”，也有助于新人了解流程并参与打造成功的版本：</p>
+<ul class="simple">
+<li><p>发布标准记录了 Zephyr 每个版本的目标受众的所有要求</p></li>
+<li><p>每个版本的目标受众可能各不相同，也可能有所重叠</p></li>
+<li><p>任何时候的标准都不是一成不变的：可能有被遗漏的要求，也可能出现新的要求，这种情况下应扩充标准，以确保涵盖所有需求。</p></li>
+</ul>
+<p>以下是每个版本需要满足的高层标准：</p>
+<ul class="simple">
+<li><p>没有阻塞缺陷/阻塞问题</p></li>
+<li><p>所有相关测试都应在 <code class="docutils literal notranslate"><span class="pre">Tier</span> <span class="pre">0</span></code> 平台上通过</p></li>
+<li><p>所有相关测试都应在 Tier 0 和 Tier 1 平台上通过（每种架构/架构变体/硬件特性至少 1 个平台）</p></li>
+<li><p>所有适用的示例/测试都应能在 Tier 0、1 和 2 平台上构建</p></li>
+<li><p>所有高危和严重的静态分析问题及安全问题均已处理</p></li>
+<li><p>发布说明是最新的。</p></li>
+</ul>
+<section id="blocker-bugs">
+<h3>阻塞缺陷<a class="headerlink" href="#blocker-bugs" title="链接到此标题。"></a></h3>
+<p>阻塞缺陷流程在发布过程中启动，在功能冻结里程碑之后生效。标记为阻塞问题的 issue 实际上会阻止版本发布。所有阻塞缺陷都应在创建版本之前解决。</p>
+<p>被授予 <code class="docutils literal notranslate"><span class="pre">blocker</span></code> 状态的缺陷，其修复可以一直合并到 'main' 并纳入该版本，直到最终发布日期。</p>
+<p>中等及以上严重程度、且影响所有用户的缺陷，通常是升级为阻塞缺陷的候选对象</p>
+<p>贡献者和发布工程团队成员在处理发布阻塞缺陷时应遵循以下准则：</p>
+<ul class="simple">
+<li><p>只有当软件（Zephyr）绝不能带着该缺陷发布时，才将缺陷标记为阻塞缺陷。</p></li>
+<li><p>所有协作者都可以添加或移除阻塞标签。</p></li>
+<li><p>根据缺陷的严重程度和普遍程度，评估其是否可能成为阻塞缺陷。</p></li>
+<li><p>每次添加或移除阻塞标签时，都要提供详细的理由。</p></li>
+<li><p>确保所有阻塞问题都标记了里程碑。</p></li>
+<li><p>阻塞状态由发布经理最终决定；如有任何疑问，请联系他们。</p></li>
+</ul>
+</section>
+</section>
+<section id="release-milestones">
+<span id="id4"></span><h2>发布里程碑<a class="headerlink" href="#release-milestones" title="链接到此标题。"></a></h2>
+<p>下表记录了与每个版本相关的里程碑。</p>
+<table class="docutils align-default" id="id6">
+<caption><span class="caption-text">发布里程碑</span><a class="headerlink" href="#id6" title="链接到此表格。"></a></caption>
+<colgroup>
+<col style="width: 9.1%" />
+<col style="width: 15.2%" />
+<col style="width: 60.6%" />
+<col style="width: 15.2%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>时间线</p></th>
+<th class="head"><p>检查点</p></th>
+<th class="head"><p>描述</p></th>
+<th class="head"><p>负责人</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>T-5M</p></td>
+<td><p>规划</p></td>
+<td><p>确定版本发布日期，指派版本负责人，并就本版本的全项目目标达成一致。</p></td>
+<td><p>TSC</p></td>
+</tr>
+<tr class="row-odd"><td><p>T-7W</p></td>
+<td><p>审查目标里程碑</p></td>
+<td><p>为正在开发中的功能确定目标里程碑。</p></td>
+<td><p>发布工程团队</p></td>
+</tr>
+<tr class="row-even"><td><p>T-5W</p></td>
+<td><p>发布公告</p></td>
+<td><p>版本负责人宣布功能冻结及发布时间线。</p></td>
+<td><p>发布经理</p></td>
+</tr>
+<tr class="row-odd"><td><p>T-4W</p></td>
+<td><p>发布时间线提醒</p></td>
+<td><p>版本负责人发送功能冻结及发布时间线的提醒。</p></td>
+<td><p>发布经理</p></td>
+</tr>
+<tr class="row-even"><td><p>T-3W</p></td>
+<td><p>功能冻结（RC1）</p></td>
+<td><p>RC1 之后不得引入新功能。只允许稳定性改进、外观性更新、缺陷修复、文档改进以及针对现有功能的新测试。</p></td>
+<td><p>发布工程团队</p></td>
+</tr>
+<tr class="row-odd"><td><p>T-2W</p></td>
+<td><p>第二个候选版本</p></td>
+<td><p>RC2 之后不得有新功能，只允许稳定性改进和外观性变更、缺陷修复以及文档修复。</p></td>
+<td><p>发布经理</p></td>
+</tr>
+<tr class="row-even"><td><p>T-1W</p></td>
+<td><p>硬冻结（RC3）</p></td>
+<td><p>RC3 之后只允许阻塞缺陷修复、文档改进和发布说明的修改。发布说明需要在此检查点之前完成。满足发布标准。</p></td>
+<td><p>发布经理</p></td>
+</tr>
+<tr class="row-odd"><td><p>T-0W</p></td>
+<td><p>发布</p></td>
+<td></td>
+<td><p>发布经理</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="long-term-support-lts-releases">
+<span id="release-process-lts"></span><h2>长期支持（LTS）版本<a class="headerlink" href="#long-term-support-lts-releases" title="链接到此标题。"></a></h2>
+<p>长期支持版本旨在获得较长时间的支持和维护，是推荐用于产品的版本，也是用于认证的可审计分支。</p>
+<p>LTS 版本的定义如下：</p>
+<ul class="simple">
+<li><p><strong>面向产品</strong></p></li>
+<li><p><strong>延长的稳定期</strong>：留出更多时间进行测试和缺陷修复</p></li>
+<li><p><strong>稳定的 API</strong></p></li>
+<li><p><strong>质量驱动的流程</strong></p></li>
+<li><p><strong>长期</strong>：在较长时间内（至少 5 年）持续维护。</p></li>
+</ul>
+<section id="product-focused">
+<h3>面向产品<a class="headerlink" href="#product-focused" title="链接到此标题。"></a></h3>
+<p>Zephyr LTS 是推荐给产品制造商使用的版本，提供延长的支持和维护，包括常规的稳定性修复、缺陷修复和安全修复。</p>
+<p>LTS 既包含成熟的功能，也包含新功能。API 和功能的成熟度会被记录和跟踪。随着从一个 LTS 过渡到下一个 LTS，成熟稳定 API 的覆盖面和范围会不断扩大，使用户既能使用最前沿的功能和新硬件，又能拥有一个随时间演进的稳定基础。</p>
+</section>
+<section id="extended-stabilisation-period">
+<h3>延长的稳定期<a class="headerlink" href="#extended-stabilisation-period" title="链接到此标题。"></a></h3>
+<p>Zephyr LTS 的开发周期与常规版本不同，它有一个延长的稳定期。常规版本的功能冻结发生在计划发布日期前 3-4 周。LTS 的稳定期延长 3 周，功能冻结发生在预期发布日期前 6-7 周。在这种情况下，代码冻结到发布日期之间的时间会延长。</p>
+</section>
+<section id="stable-apis">
+<h3>稳定的 API<a class="headerlink" href="#stable-apis" title="链接到此标题。"></a></h3>
+<p>Zephyr LTS 为产品开发提供了一个稳定且长期可用的基础。为保证 API 及其实现的稳定性，要求构成操作系统核心的所有发布软件都已经历 Zephyr API 生命周期，并至少在 2 个版本中保持稳定。这保证了我们发布的许多重点功能和核心功能都具有成熟可靠的实现和稳定的 API，并在 LTS 版本的整个生命周期内获得支持。</p>
+<ul>
+<li><p>API 冻结（LTS - 2）</p>
+<ul class="simple">
+<li><p>所有稳定 API 都需要在 LTS 之前 2 个版本冻结。API 可以通过新增功能进行扩展，但不修改核心实现。这适用于以下子系统，例如：</p>
+<ul>
+<li><p>设备驱动（i2c.h、spi.h）……</p></li>
+<li><p>内核（k_*）：</p></li>
+<li><p>操作系统服务（日志、调试等）</p></li>
+<li><p>DTS：API 和绑定的稳定性</p></li>
+<li><p>Kconfig</p></li>
+</ul>
+</li>
+<li><p>只要实验性功能的新 API 是独立的，并被记录为实验性或不稳定的功能/API，就可以随时添加。</p></li>
+</ul>
+</li>
+<li><p>功能冻结（LTS - 1）：不得有新功能，也不得对涵盖主要 LTS 功能的代码进行大规模改造或重构。</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>内核 + 基础操作系统</p></li>
+<li><p>其他已宣传的 LTS 功能</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><p>构建在基础操作系统和已宣传的 LTS 功能之上和/或对其进行扩展的辅助功能可以随时添加，并在适用时标记为实验性</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="quality-driven-process">
+<h3>质量驱动的流程<a class="headerlink" href="#quality-driven-process" title="链接到此标题。"></a></h3>
+<p>Zephyr 项目遵循行业标准和流程，目标是提供以质量为导向的版本。为此，项目提供以下产出物，用于跟踪项目所提供软件组件的进展、完整性和质量：</p>
+<ul class="simple">
+<li><p>遵守已发布的编码准则、风格指南和命名约定，并记录偏差。</p></li>
+<li><p>静态分析报告</p>
+<ul>
+<li><p>使用现有的商业和开源工具定期对整个代码树进行静态分析，并记录偏差和误报。</p></li>
+</ul>
+</li>
+<li><p>已记录文档的组件和 API</p></li>
+<li><p>需求目录</p></li>
+<li><p>验证计划</p></li>
+<li><p>验证报告</p></li>
+<li><p>覆盖率报告</p></li>
+<li><p>需求追溯矩阵（RTM）</p></li>
+<li><p>SPDX 许可证报告</p></li>
+</ul>
+<p>每个版本都会附带上述产出物，用于记录软件在发布时的质量和状态。</p>
+</section>
+<section id="long-term-support-and-maintenance">
+<h3>长期支持与维护<a class="headerlink" href="#long-term-support-and-maintenance" title="链接到此标题。"></a></h3>
+<p>LTS 版本每 2.5 到 3 年发布一次，并从主代码树中创建分支，在发布后独立维护约 5 年。</p>
+<p>支持分为三个主要阶段：</p>
+<ul class="simple">
+<li><p><strong>第 1 阶段（前 2 年）：</strong> 一般缺陷修复和安全修复，包括平台和驱动修复。</p></li>
+<li><p><strong>第 2 阶段（之后 3 年以上）：</strong> 仅提供安全修复和操作系统稳定性修复。</p></li>
+<li><p><strong>第 3 阶段：</strong> 可能通过第三方提供延长支持（细节待定）。</p></li>
+</ul>
+<p>对某个 LTS 版本（LTS <em>N</em>）的支持将持续到其后第二个 LTS 版本（LTS <em>N+2</em>）首次发布为止。LTS <em>N</em> 的最终版本会在 LTS <em>N+2</em> 首次发布后不久发布。</p>
+<p>当前受支持的 LTS 版本及其停止支持（EOL）日期列表请参见 <a class="reference internal" href="../releases/index.html#supported-releases"><span class="std std-ref">此处</span></a>。</p>
+<figure class="align-default" id="id7">
+<pre  class="mermaid">
+        gitGraph
+    commit id: &quot;3.5&quot;
+    commit id: &quot;3.6&quot;
+    commit id: &quot;3.7&quot;
+    branch &quot;LTS&quot;
+    checkout &quot;LTS&quot;
+    commit id: &quot;3.7.1&quot;
+    commit id: &quot;3.7.2&quot;
+    checkout main
+    commit id: &quot;4.0&quot;
+    commit id: &quot;4.1&quot;
+    </pre><figcaption>
+<p><span class="caption-text">长期支持版本</span><a class="headerlink" href="#id7" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<p>变更和修复在两个方向上流动。但是，从 main 分支到 LTS 分支的变更将仅限于同时适用于两个分支、且只针对现有功能的修复。</p>
+<p>LTS 分支的所有修复如果适用于主线代码树，也应提交到主线代码树。</p>
+</section>
+<section id="auditable-code-base">
+<h3>可审计代码库<a class="headerlink" href="#auditable-code-base" title="链接到此标题。"></a></h3>
+<p>可审计代码库将基于 Zephyr 操作系统功能的一个明确子集建立，其范围有限。创建审计分支后，LTS、开发代码树和可审计代码库应保持同步，但向用于认证的审计分支中添加新功能时，会采用更严格的流程。</p>
+<p>新功能进入可审计代码库之前，将应用该流程。</p>
+<p>初始及后续的认证目标将由 Zephyr 项目理事会决定。</p>
+<p>实现所选认证的流程将由信息安全工作组和功能安全工作组确定，并与 TSC 协调。</p>
+</section>
+</section>
+<section id="host-tools-support-policy">
+<h2>主机工具支持政策<a class="headerlink" href="#host-tools-support-policy" title="链接到此标题。"></a></h2>
+<p>本节记录与开发 zephyr 应用程序所需的主机工具相关的政策。</p>
+<section id="python-version-policy">
+<h3>Python 版本政策<a class="headerlink" href="#python-version-policy" title="链接到此标题。"></a></h3>
+<p>Zephyr 在确定其支持的最低 Python 版本时，会参照 <a class="reference external" href="https://devguide.python.org/versions/">Python upstream release schedule</a>。</p>
+<p>所选的最低支持版本旨在兼顾长期支持与在主流、仍受积极支持的 Linux 发行版（例如当前的 Ubuntu LTS 和 Debian Stable 版本）中的实际可用性。</p>
+<p>满足以下条件时，会考虑移除对某个 Python 版本的支持：</p>
+<ul class="simple">
+<li><p>该版本即将或已经到达上游的停止支持（EOL）日期，并且</p></li>
+<li><p>在当前仍受积极支持的主要 Linux 发行版中已普遍提供更新的 Python 版本。</p></li>
+</ul>
+</section>
+</section>
+<section id="hardware-support-tiers">
+<h2>硬件支持等级<a class="headerlink" href="#hardware-support-tiers" title="链接到此标题。"></a></h2>
+<p>本节记录与硬件平台相关的一套大致等级划分。这些标准目前并未在开发板、架构或 SoC 层面正式执行或评估。</p>
+<section id="tier-0-emulation-platforms">
+<h3>Tier 0：仿真平台<a class="headerlink" href="#tier-0-emulation-platforms" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p>测试会在 CI 中针对这些平台进行构建和运行，因此运行时失败可能会阻塞 PR。</p></li>
+<li><p>由 Zephyr 项目本身提供支持，承诺在版本中修复缺陷。</p></li>
+<li><p>每个新架构都需要一个 Tier 0 平台。</p></li>
+<li><p>针对该等级平台报告的缺陷，应作为 Zephyr 的一般缺陷进行评估和处理，并以最高优先级处理。</p></li>
+</ul>
+</section>
+<section id="tier-1-supported-platforms">
+<h3>Tier 1：受支持平台<a class="headerlink" href="#tier-1-supported-platforms" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p>由特定团队承诺使用开源且公开可用的驱动，定期通过 twister 设备测试运行“Zephyr 兼容性测试套件”（细节待定）。</p></li>
+<li><p>承诺及时修复缺陷以赶上版本发布。不由“Zephyr 项目”本身提供支持。</p></li>
+<li><p>可公开购买</p></li>
+<li><p>针对该等级平台报告的缺陷，应作为 Zephyr 的一般缺陷进行评估和处理，并以中到高优先级处理。</p></li>
+</ul>
+</section>
+<section id="tier-2-community-platforms">
+<h3>Tier 2：社区平台<a class="headerlink" href="#tier-2-community-platforms" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p>平台实现已在上游提供，但没有测试承诺，也可能无法公开购买。</p></li>
+<li><p>有一名专门的维护者，承诺回应问题、审查补丁。</p></li>
+<li><p>针对该等级平台报告的缺陷 <strong>不</strong> 被视为 Zephyr 的一般缺陷。</p></li>
+</ul>
+</section>
+<section id="tier-3-deprecated-and-unsupported-platforms">
+<h3>Tier 3：已弃用和不受支持的平台<a class="headerlink" href="#tier-3-deprecated-and-unsupported-platforms" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p>平台实现已提供，但没有所有者，或所有者没有响应。</p></li>
+<li><p>不承诺提供支持。</p></li>
+<li><p>如果没有人努力将其提升到 Tier 2 或更高等级，可能会从上游移除。</p></li>
+<li><p>针对该等级平台报告的缺陷 <strong>不</strong> 被视为 Zephyr 的一般缺陷。</p></li>
+</ul>
+</section>
+</section>
+<section id="release-procedure">
+<h2>发布程序<a class="headerlink" href="#release-procedure" title="链接到此标题。"></a></h2>
+<p>本节记录发布经理的职责，作为发布经理的知识库。</p>
+<section id="release-checklist">
+<h3>发布检查清单<a class="headerlink" href="#release-checklist" title="链接到此标题。"></a></h3>
+<p>每个版本都关联一个 GitHub issue，其中包含完整的检查清单。一个版本完成后，会为下一个版本创建检查清单。</p>
+</section>
+<section id="tagging">
+<h3>打标签<a class="headerlink" href="#tagging" title="链接到此标题。"></a></h3>
+<p>Git 中的版本和标签应使用以下语法：</p>
+<ul class="simple">
+<li><p>版本 [Major].[Minor].[Patch Level]</p></li>
+<li><p>候选版本 [Major].[Minor].[Patch Level]-rc[RC Number]</p></li>
+<li><p>标签：</p>
+<ul>
+<li><p>v[Major].[Minor].[Patch Level]-rc[RC Number]</p></li>
+<li><p>v[Major].[Minor].[Patch Level]</p></li>
+<li><p>v[Major].[Minor].99：打在 main 分支上的标签，表示 v[Major].[Minor+1] 的工作已经开始。例如，v1.7.99 会在 v1.8 流程开始时打上。该标签与为开发中的 main 分支版本所定义的 VERSION_MAJOR/VERSION_MINOR/PATCHLEVEL 宏相对应。有了这个标签，在 main 分支上执行 &quot;git describe&quot; 就能生成合理的输出，这通常用于自动化构建和 CI 工具。</p></li>
+</ul>
+</li>
+</ul>
+<figure class="align-center" id="id8">
+<a class="reference internal image-reference" href="../_images/release_flow.png"><img alt="版本" src="../_images/release_flow.png" style="width: 80%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">Zephyr 代码与版本</span><a class="headerlink" href="#id8" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<p>最终版本和每个候选版本都应按以下步骤打标签：</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>打标签需要通过显式的 git 命令完成，而不是通过 GitHub 的发布界面。GitHub 的发布界面不会生成附注标签（annotated tag），无论是正式版本还是预发布版本，它生成的都是“轻量”标签。由于下面的步骤涉及创建签名标签，你还应将你的 gpg 公钥上传到你的 GitHub 账户。如果你没有 gpg 密钥，也可以使用 ssh 密钥进行签名。</p>
+</div>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">Release Candidate</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1">Final Release</button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>本节以打 1.11.0-rc1 标签为例，请替换为相应的候选版本号。</p>
+</div>
+<ol class="arabic">
+<li><p>更新位于 Git 仓库根目录下的 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/VERSION">VERSION</a> 文件中的版本变量，使其与该候选版本的版本号一致。<code class="docutils literal notranslate"><span class="pre">EXTRAVERSION</span></code> 变量用于标识该候选版本的 rc[RC Number] 值:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>EXTRAVERSION = rc1
+</pre></div>
+</div>
+</li>
+<li><p>以 <code class="docutils literal notranslate"><span class="pre">release:</span> <span class="pre">Zephyr</span> <span class="pre">1.11.0-rc1</span></code> 作为提交标题，提交一个包含更新后的 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/VERSION">VERSION</a> 文件的 PR。CI 成功后合并该 PR。</p></li>
+<li><p>使用附注标签为该版本打标签并推送:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ git pull
+$ git tag -s -m "Zephyr 1.11.0-rc1" v1.11.0-rc1
+</pre></div>
+</div>
+</li>
+<li><p>验证标签是否已正确签名，对该标签执行 <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">show</span></code> 的输出中必须包含签名（在输出中查找 <code class="docutils literal notranslate"><span class="pre">BEGIN</span> <span class="pre">PGP</span> <span class="pre">SIGNATURE</span></code> 或 <code class="docutils literal notranslate"><span class="pre">BEGIN</span> <span class="pre">SSH</span> <span class="pre">SIGNATURE</span></code> 标记）:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ git show v1.11.0-rc1
+</pre></div>
+</div>
+</li>
+<li><p>推送标签:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ git push git@github.com:zephyrproject-rtos/zephyr.git v1.11.0-rc1
+</pre></div>
+</div>
+</li>
+<li><p>向邮件列表（<code class="docutils literal notranslate"><span class="pre">announce</span></code> 和 <code class="docutils literal notranslate"><span class="pre">devel</span></code>）发送一封附有版本链接的电子邮件</p></li>
+</ol>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>本节以打 1.11.0 标签为例，请替换为相应的最终版本号。</p>
+</div>
+<p>当所有最终版本标准均已满足，且最终发布说明已获批准并合并到仓库后，将按以下步骤设置最终版本号并为仓库打标签：</p>
+<ol class="arabic">
+<li><p>更新位于 Git 仓库根目录下的 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/VERSION">VERSION</a> 文件中的版本变量。将 <code class="docutils literal notranslate"><span class="pre">EXTRAVERSION</span></code> 变量设为空字符串，表示这是最终版本:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>EXTRAVERSION =
+</pre></div>
+</div>
+</li>
+<li><p>以 <code class="docutils literal notranslate"><span class="pre">release:</span> <span class="pre">Zephyr</span> <span class="pre">1.11.0</span></code> 作为提交标题，提交一个包含更新后的 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/VERSION">VERSION</a> 文件的 PR。CI 成功后合并该 PR。</p></li>
+<li><p>使用两个附注标签为该版本打标签并推送:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ git pull
+$ git tag -s -m "Zephyr 1.11.0" v1.11.0
+</pre></div>
+</div>
+</li>
+<li><p>验证标签是否已正确签名，对该标签执行 <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">show</span></code> 的输出中必须包含签名（在输出中查找 <code class="docutils literal notranslate"><span class="pre">BEGIN</span> <span class="pre">PGP</span> <span class="pre">SIGNATURE</span></code> 或 <code class="docutils literal notranslate"><span class="pre">BEGIN</span> <span class="pre">SSH</span> <span class="pre">SIGNATURE</span></code> 标记）:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ git show v1.11.0
+</pre></div>
+</div>
+</li>
+<li><p>推送标签:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ git push git@github.com:zephyrproject-rtos/zephyr.git v1.11.0
+</pre></div>
+</div>
+</li>
+<li><p>在 releases 页面顶部找到新的 <code class="docutils literal notranslate"><span class="pre">v1.11.0</span></code> 标签，使用 <code class="docutils literal notranslate"><span class="pre">Edit</span> <span class="pre">tag</span></code> 按钮编辑该版本，内容如下：</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>将 <code class="docutils literal notranslate"><span class="pre">docs/releases/release-notes-1.11.rst</span></code> 中的概述复制到发布说明文本框中，并链接到 docs.zephyrproject.org 上完整的发布说明文件。</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>向邮件列表（<code class="docutils literal notranslate"><span class="pre">announce</span></code> 和 <code class="docutils literal notranslate"><span class="pre">devel</span></code>）发送一封附有版本链接的电子邮件</p></li>
+</ol>
+</div></div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 7月 08, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

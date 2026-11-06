@@ -1,0 +1,431 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Trusted Firmware-M 概述 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/tfm/overview.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="TF-M 要求" href="requirements.html" />
+    <link rel="prev" title="Trusted Firmware-M (TF-M)" href="index.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">服务</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../connectivity/index.html">连接</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../power_management.html">电源管理</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../security.html">安全</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../crypto/index.html">密码学</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../authentication/index.html">身份认证</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../jwt/index.html">JSON Web 令牌（JWT）</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">Trusted Firmware-M (TF-M)</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Trusted Firmware-M 概述</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#what-does-tf-m-offer">TF-M 提供什么？</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#build-system-integration">构建系统集成</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#architecture-overview">架构概述</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#root-of-trust-rot-architecture">信任根（RoT）架构</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#secure-boot">安全启动</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#secure-processing-environment">安全处理环境</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#non-secure-processing-environment">非安全处理环境</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="requirements.html">TF-M 要求</a></li>
+<li class="toctree-l4"><a class="reference internal" href="build.html">TF-M 构建系统</a></li>
+<li class="toctree-l4"><a class="reference internal" href="integration.html">Trusted Firmware-M 集成</a></li>
+<li class="toctree-l4"><a class="reference internal" href="testsuites.html">测试套件</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../uuid/index.html">UUID</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../security.html">安全</a> &raquo;</li>
+  
+     <li><a href="index.html">Trusted Firmware-M (TF-M)</a> &raquo;</li>
+  
+  <li>Trusted Firmware-M 概述</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="trusted-firmware-m-overview">
+<h1>Trusted Firmware-M 概述<a class="headerlink" href="#trusted-firmware-m-overview" title="链接到此标题。"></a></h1>
+<p><a class="reference external" href="https://tf-m.docs.trustedfirmware.org/en/latest/">Trusted Firmware-M（TF-M）</a> 是平台安全架构（PSA）<a class="reference external" href="https://www.psacertified.org/what-is-psa-certified/">物联网安全框架</a> 的参考实现。它定义并实现了一套架构和一组软件组件，旨在解决物联网产品中的一些主要安全问题。</p>
+<p>Zephyr RTOS 自 Zephyr 2.0.0（配合 TF-M 1.0）起就已通过 PSA 认证，目前集成的是 TF-M 2.1.0。</p>
+<section id="what-does-tf-m-offer">
+<h2>TF-M 提供什么？<a class="headerlink" href="#what-does-tf-m-offer" title="链接到此标题。"></a></h2>
+<p>通过一组安全服务以及其设计本身，TF-M 提供：</p>
+<ul class="simple">
+<li><p>安全资源与非安全资源的隔离</p></li>
+<li><p>适合嵌入式的密码学功能</p></li>
+<li><p>设备机密（密钥等）的管理</p></li>
+<li><p>固件验证（及加密）</p></li>
+<li><p>受保护的片外数据存储与读取</p></li>
+<li><p>设备身份证明（设备证明）</p></li>
+<li><p>审计日志</p></li>
+</ul>
+</section>
+<section id="build-system-integration">
+<h2>构建系统集成<a class="headerlink" href="#build-system-integration" title="链接到此标题。"></a></h2>
+<p>在受支持的平台上使用 TF-M 时，TF-M 会作为标准 Zephyr 构建过程的一部分在后台自动构建和链接。该构建过程对 TF-M 的使用方式做了一些假设，这也决定了 Zephyr 应用程序镜像能做什么、不能做什么：</p>
+<ul class="simple">
+<li><p>安全处理环境（安全启动和 TF-M）首先启动</p></li>
+<li><p>Zephyr 的资源分配取决于安全镜像中所做的选择。</p></li>
+</ul>
+</section>
+<section id="architecture-overview">
+<h2>架构概述<a class="headerlink" href="#architecture-overview" title="链接到此标题。"></a></h2>
+<p>一般来说，TF-M 应用程序由以下三部分组成，从左到右按可信程度由高到低排列，代码也按相同顺序执行（安全启动 &gt; 安全镜像 &gt; ns 镜像）。</p>
+<p>安全引导加载程序是可选的，但默认启用，而安全启动是提供安全解决方案的重要组成部分：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>+-------------------------------------+           +--------------+
+| Secure Processing Environment (SPE) |           |     NSPE     |
+| +----------++---------------------+ |           | +----------+ |
+| |          ||                     | |           | |          | |
+| | bl2.bin  ||  tfm_s_signed.bin   | |           | |zephyr.bin| |
+| |          ||                     | | &lt;- PSA -&gt; | |          | |
+| |  Secure  || Trusted Firmware-M  | |    APIs   | |  Zephyr  | |
+| |   Boot   ||   (Secure Image)    | |           | |(NS Image)| |
+| |          ||                     | |           | |          | |
+| +----------++---------------------+ |           | +----------+ |
++-------------------------------------+           +--------------+
+</pre></div>
+</div>
+<p>（Zephyr）非安全处理环境（NSPE）与（TF-M）安全处理环境镜像之间的通信基于一组 PSA API，通常使用一种 IPC 机制，该机制包含在 TF-M 构建中，并在 Zephyr 中实现（参见 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/modules/trusted-firmware-m/interface">modules/trusted-firmware-m/interface</a>）。</p>
+<section id="root-of-trust-rot-architecture">
+<h3>信任根（RoT）架构<a class="headerlink" href="#root-of-trust-rot-architecture" title="链接到此标题。"></a></h3>
+<p>TF-M 基于 <strong>信任根（Root of Trust，RoT）</strong> 架构。这种架构允许建立从最可信、较可信到最不可信的信任层级，为构建或访问可信服务和资源提供了坚实的基础。</p>
+<p>这种方法的好处是，可信度较低的组件无法访问或破坏系统中更关键的部分，可信度较低的环境中出现的错误也不会损坏可信度更高的隔离资源。</p>
+<p>TF-M 定义了以下 RoT 层级，按可信度从高到低排列：</p>
+<ul class="simple">
+<li><p>PSA 信任根（<strong>PRoT</strong>），包括：</p>
+<ul>
+<li><p>PSA 不可变信任根：安全启动</p></li>
+<li><p>PSA 可更新信任根：最可信的安全服务</p></li>
+</ul>
+</li>
+<li><p>应用程序信任根（<strong>ARoT</strong>）：隔离的安全服务</p></li>
+</ul>
+<p><strong>PSA 不可变信任根</strong> 是系统中最可信的代码，后续的各级信任根都以它为锚点。在 TF-M 中，它就是安全启动镜像，负责验证安全镜像和非安全镜像有效、未被篡改且来源可靠。借助内置的公共签名密钥，安全引导加载程序还会在固件更新过程中验证新镜像。顾名思义，这个镜像是 <strong>不可变</strong> 的。</p>
+<p><strong>PSA 可更新信任根</strong> 实现 TF-M 中最可信的安全服务和组件，例如安全分区管理器（Secure Partition Manager，SPM），以及 PSA Crypto、内部可信存储（Internal Trusted Storage，ITS）等共享安全服务。PSA 可更新信任根中的服务可以访问同一信任根中的其他资源。</p>
+<p><strong>应用程序信任根</strong> 是安全处理环境中权限较低的区域。根据构建 TF-M 时所选的隔离级别，它对 PRoT 的访问受限，在最高隔离级别下甚至对其他 ARoT 服务的访问也受限。ARoT 中有一些标准服务，例如受保护存储（Protected Storage，PS）。一般而言，自己实现的自定义安全服务应放在 ARoT 中，除非有充分理由将其放在 PRoT 中。</p>
+<p>这些划分与 <strong>不可信代码</strong> 不同，后者运行在非安全环境中，在系统中权限最低。在这里就是 Zephyr 应用程序镜像。</p>
+<section id="isolation-levels">
+<h4>隔离级别<a class="headerlink" href="#isolation-levels" title="链接到此标题。"></a></h4>
+<p>目前 TF-M 定义了三个不同的 <strong>隔离级别</strong>，各区域之间的边界依次愈加严格。所用的隔离级别取决于安全需求以及可用的系统资源。</p>
+<ul class="simple">
+<li><p><strong>隔离级别 1</strong> 是最低的隔离级别，唯一的主要边界在安全处理环境与非安全处理环境之间，在 Armv8-M 处理器上通常借助 Arm TrustZone 实现。此级别不区分 PSA 可更新信任根（PRoT）和应用程序信任根（ARoT），两者以相同的特权级别执行。此隔离级别生成的组合应用程序镜像最小。</p></li>
+<li><p><strong>隔离级别 2</strong> 在级别 1 的基础上区分了 PSA 可更新信任根和应用程序信任根：ARoT 服务对 PRoT 服务的访问受限，只能通过 PRoT 服务公开的 API 与其通信。不过，各 ARoT 服务彼此之间并未严格隔离。</p></li>
+<li><p><strong>隔离级别 3</strong> 是最高的隔离级别，在级别 2 的基础上将各 ARoT 服务相互隔离，使每个 ARoT 基本上都与其他服务分隔开来。这提供了最高级别的隔离，但代价是额外的开销以及服务之间的代码重复。</p></li>
+</ul>
+<p>可以通过 <a class="reference internal" href="../../kconfig.html#CONFIG_TFM_ISOLATION_LEVEL" title="CONFIG_TFM_ISOLATION_LEVEL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TFM_ISOLATION_LEVEL</span></code></a> 查看当前的隔离级别。</p>
+</section>
+</section>
+<section id="secure-boot">
+<h3>安全启动<a class="headerlink" href="#secure-boot" title="链接到此标题。"></a></h3>
+<p>TF-M 中默认的安全引导加载程序基于 <a class="reference external" href="https://www.mcuboot.com/">MCUBoot</a>，在 TF-M 中称为 <code class="docutils literal notranslate"><span class="pre">BL2</span></code> （即第二阶段引导加载程序，可能运行在安全 MCU 上基于硬件的引导加载程序等之后）。</p>
+<p>TF-M 中的所有镜像都经过哈希和签名，MCUBoot 会在固件更新过程中验证哈希和签名。</p>
+<p>TF-M 中所用 MCUBoot 的一些关键特性：</p>
+<ul class="simple">
+<li><p>公共签名密钥内置于引导加载程序中</p></li>
+<li><p>S 镜像和 NS 镜像可以使用不同的密钥签名</p></li>
+<li><p>固件镜像可以选择加密</p></li>
+<li><p>由客户端软件负责将新镜像写入次槽（secondary slot）</p></li>
+<li><p>默认使用由两个大小相同的内存区域组成的静态 Flash 布局</p></li>
+<li><p>可选的安全计数器，用于防回滚保护</p></li>
+</ul>
+<p>处理（可选的）加密镜像时：</p>
+<ul class="simple">
+<li><p>只有载荷被加密（头部和 TLV 为明文）</p></li>
+<li><p>哈希和签名作用于未加密的数据</p></li>
+<li><p>使用 <code class="docutils literal notranslate"><span class="pre">AES-CTR-128</span></code> 或 <code class="docutils literal notranslate"><span class="pre">AES-CTR-256</span></code> 进行加密</p></li>
+<li><p>每次加密都会随机生成加密密钥（通过 <code class="docutils literal notranslate"><span class="pre">imgtool</span></code>）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">AES-CTR</span></code> 密钥包含在镜像中，可使用以下方式加密：</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">RSA-OAEP</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">AES-KW</span></code> （128 位或 256 位，取决于 <code class="docutils literal notranslate"><span class="pre">AES-CTR</span></code> 密钥长度）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ECIES-P256</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ECIES-X25519</span></code></p></li>
+</ul>
+</li>
+</ul>
+<p>在 Zephyr 中控制安全启动的关键配置属性有：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_TFM_BL2" title="CONFIG_TFM_BL2"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TFM_BL2</span></code></a> 开关引导加载程序（默认值为 <code class="docutils literal notranslate"><span class="pre">y</span></code>）。</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_TFM_KEY_FILE_S" title="CONFIG_TFM_KEY_FILE_S"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TFM_KEY_FILE_S</span></code></a> 覆盖安全镜像的签名密钥。</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_TFM_KEY_FILE_NS" title="CONFIG_TFM_KEY_FILE_NS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TFM_KEY_FILE_NS</span></code></a> 覆盖非安全镜像的签名密钥。</p></li>
+</ul>
+</section>
+<section id="secure-processing-environment">
+<h3>安全处理环境<a class="headerlink" href="#secure-processing-environment" title="链接到此标题。"></a></h3>
+<p>安全引导加载程序执行完毕后，基于 TF-M 的安全镜像开始在 <strong>安全处理环境</strong> 中执行。设备在这里完成初始配置，所有安全服务也在这里初始化。</p>
+<p>注意，设备的初始状态由安全固件控制，这意味着非安全 Zephyr 应用程序启动时，外设可能并不处于硬件默认的复位状态。如有疑问，请查阅 TF-M 中的开发板支持包，它们位于 TF-M 模块的 <code class="docutils literal notranslate"><span class="pre">platform/ext/target/</span></code> 文件夹中（在默认的 Zephyr west 工作区中，该模块位于 <code class="docutils literal notranslate"><span class="pre">modules/tee/tf-m/trusted-firmware-m/</span></code>）。</p>
+<section id="secure-services">
+<h4>安全服务<a class="headerlink" href="#secure-services" title="链接到此标题。"></a></h4>
+<p>截至 TF-M 1.8.0，一般可以使用以下安全服务（但厂商支持情况可能有所不同）：</p>
+<ul class="simple">
+<li><p>密码学（Crypto）</p></li>
+<li><p>固件更新（FWU）</p></li>
+<li><p>初始证明（Initial Attestation）</p></li>
+<li><p>平台（Platform）</p></li>
+<li><p>安全存储，包括两部分：</p>
+<ul>
+<li><p>内部可信存储（ITS）</p></li>
+<li><p>受保护存储（PS）</p></li>
+</ul>
+</li>
+</ul>
+<p>此外还有一个模板，可用于创建自己的自定义服务。</p>
+<p>有关这些服务及其公开 API 的完整细节，请参阅 <a class="reference external" href="https://tf-m.docs.trustedfirmware.org/en/latest/">TF-M 文档</a>。</p>
+</section>
+<section id="key-management-and-derivation">
+<h4>密钥管理与派生<a class="headerlink" href="#key-management-and-derivation" title="链接到此标题。"></a></h4>
+<p>密钥和机密的管理是任何安全设备的关键部分。需要确保密钥材料只对需要它的区域可用，而对其他任何部分都不可用，并且以难以篡改或被恶意访问的方式安全存储。</p>
+<p>TF-M 中的 <strong>内部可信存储</strong> 服务被 <strong>PSA Crypto</strong> 服务（其自身基于 mbedtls）用来存储密钥，并确保私钥只能被安全处理环境访问。使用密钥材料的密码学运算（例如对载荷签名或解密敏感数据）全部通过密钥句柄进行。密钥材料在任何时候都不应暴露给 NS 环境。</p>
+<p>一个例外是，可以将私钥以单向操作的方式预配到安全处理环境中，例如在工厂预配过程中；但即便如此也应尽量避免，而应（通过 PSA Crypto 服务）请求 SPE 自行生成新的私钥，并在预配期间请求对应的公钥并在工厂中记录下来。这样可以确保私钥材料永远不会暴露，甚至在预配阶段也不会被知晓。</p>
+<p>TF-M 还大量使用 <strong>硬件唯一密钥（Hardware Unique Key，HUK）</strong>，每个 TF-M 设备都必须提供该密钥。例如，<strong>受保护存储</strong> 服务使用这个设备唯一的密钥来加密存储在外部存储器中的信息。这样可以确保即使 Flash 被拆下放到新设备上，其内容也无法被解密，因为每个设备首次加密存储内容时使用的都是自己独有的 HUK。</p>
+<p>HUK 还为开发者带来了另一个好处：可以用它派生新的密钥，而 <strong>派生密钥</strong> 无需存储，因为启动时可以使用额外的盐值/种子值（取决于所用的密钥派生算法）从 HUK 重新生成。这消除了存储问题，也消除了一个常见的攻击途径。在安全设备中，HUK 本身通常受到严密保护，用户无法直接访问。</p>
+<p><code class="docutils literal notranslate"><span class="pre">TFM_CRYPTO_ALG_HUK_DERIVATION</span></code> 标识使用软件实现时默认的密钥派生算法。当前的默认算法是使用 SHA-256 哈希的 <code class="docutils literal notranslate"><span class="pre">HKDF</span></code> （<span class="target" id="index-2"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc5869.html"><strong>RFC 5869</strong></a>）。在某些平台上可能还有其他硬件实现。</p>
+</section>
+</section>
+<section id="non-secure-processing-environment">
+<h3>非安全处理环境<a class="headerlink" href="#non-secure-processing-environment" title="链接到此标题。"></a></h3>
+<p>Zephyr 用作 NSPE，所用开发板需受 TF-M 支持，并已启用 <a class="reference internal" href="../../kconfig.html#CONFIG_BUILD_WITH_TFM" title="CONFIG_BUILD_WITH_TFM"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BUILD_WITH_TFM</span></code></a> 标志。</p>
+<p>一般来说，只需选择某块有效开发板的 <code class="docutils literal notranslate"><span class="pre">*/ns</span></code> 开发板目标（例如 <code class="docutils literal notranslate"><span class="pre">mps2/an521/cpu0/ns</span></code>），它就会将 Zephyr 应用程序配置为在 NSPE 中运行，正确构建并与 TF-M 安全镜像链接，对安全镜像和非安全镜像签名，并将三个二进制文件合并为一个 <code class="docutils literal notranslate"><span class="pre">tfm_merged.hex</span></code> 文件。在此配置下，<a class="reference internal" href="../../develop/west/build-flash-debug.html#west-flashing"><span class="std std-ref">west flash</span></a> 命令默认烧录 <code class="docutils literal notranslate"><span class="pre">tfm_merged.hex</span></code>。</p>
+<p>目前，Zephyr 不能配置为用作安全处理环境。</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 11月 25, 2025.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

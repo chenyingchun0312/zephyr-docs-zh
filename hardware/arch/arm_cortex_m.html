@@ -1,0 +1,1092 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Arm Cortex-M 开发者指南 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/hardware/arch/arm_cortex_m.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="ARM64 开发者指南" href="arm64.html" />
+    <link rel="prev" title="Zephyr 在 ARC 处理器上的支持状态" href="arc-support-status.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">硬件支持</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">架构相关指南</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="arc-support-status.html">Zephyr 在 ARC 处理器上的支持状态</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Arm Cortex-M 开发者指南</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">概述</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#key-supported-features">主要支持的特性</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#notes">注释</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#os-features">操作系统特性</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#threads">线程</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#thread-stack-alignment">线程栈对齐</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#stack-pointers">栈指针</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#thread-context-switching">线程上下文切换</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#stack-limit-checking-arm-v8-m">栈界限检查（Arm v8-M）</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#interrupt-handling-features">中断处理特性</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#interrupt-priority-levels">中断优先级</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#reserved-priority-levels">保留的优先级</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#locking-and-unlocking-irqs">锁定和解锁 IRQ</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#dynamic-direct-interrupts">动态直接中断</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#zero-latency-interrupts">零延迟中断</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#cpu-idling">CPU 空闲</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#memory-protection-features">内存保护特性</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#user-mode-system-calls">用户模式系统调用</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#mpu-assisted-stack-overflow-detection">MPU 辅助的栈溢出检测</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#pointer-authentication-and-branch-target-identification-pacbti">指针认证和分支目标识别（PACBTI）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#memory-map-and-mpu-considerations">内存映射和 MPU 注意事项</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#fixed-mpu-regions">固定 MPU 区域</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#fixed-mpu-regions-defined-in-devicetree">设备树中定义的固定 MPU 区域</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#static-mpu-regions">静态 MPU 区域</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#dynamic-mpu-regions">动态 MPU 区域</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#considerations">注意事项</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#floating-point-services">浮点服务</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#misc">其他</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#chain-loadable-images">可链式加载的镜像</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#hw-initialization-at-boot">启动时的硬件初始化</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#software-vector-relaying">软件向量转发</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#code-relocation">代码重定位</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#linking-cortex-m-applications">链接 Cortex-M 应用程序</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cmsis">CMSIS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#testing">测试</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#qemu">QEMU</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#maintainers-collaborators">维护者和协作者</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="arm64.html">ARM64 开发者指南</a></li>
+<li class="toctree-l3"><a class="reference internal" href="risc-v.html">Zephyr 在 RISC-V 处理器上的支持状态</a></li>
+<li class="toctree-l3"><a class="reference internal" href="semihost.html">半主机（Semihosting）指南</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tricore.html">TriCore AURIX 开发者指南</a></li>
+<li class="toctree-l3"><a class="reference internal" href="x86.html">x86 开发者指南</a></li>
+<li class="toctree-l3"><a class="reference internal" href="xtensa.html">Xtensa 开发者指南</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../barriers/index.html">屏障 API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cache/index.html">缓存</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../emulator/index.html">Zephyr 的设备仿真器/模拟器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../emulator/bus_emulators.html">外部总线及总线所连外设的仿真器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../firmware/index.html">固件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../peripherals/index.html">外设</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pinctrl/index.html">引脚控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../porting/index.html">移植</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../virtualization/index.html">虚拟化</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">硬件支持</a> &raquo;</li>
+  
+     <li><a href="index.html">架构相关指南</a> &raquo;</li>
+  
+  <li>Arm Cortex-M 开发者指南</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="arm-cortex-m-developer-guide">
+<span id="id1"></span><h1>Arm Cortex-M 开发者指南<a class="headerlink" href="#arm-cortex-m-developer-guide" title="链接到此标题。"></a></h1>
+<section id="overview">
+<h2>概述<a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>本页详细介绍 Zephyr RTOS 中 Arm Cortex-M 架构移植的状态，并说明为基于 Arm Cortex-M 的平台开发 Zephyr 应用程序时需要注意的关键方面。</p>
+</section>
+<section id="key-supported-features">
+<h2>主要支持的特性<a class="headerlink" href="#key-supported-features" title="链接到此标题。"></a></h2>
+<p>下表汇总了不同 Arm Cortex-M 实现变体中主要操作系统特性的状态。</p>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td></td>
+<td></td>
+<td colspan="8"><p><strong>处理器系列</strong></p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p>架构变体</p></td>
+<td></td>
+<td colspan="2"><p>Arm v6-M</p></td>
+<td colspan="3"><p>Arm v7-M</p></td>
+<td colspan="2"><p>Arm v8-M</p></td>
+<td colspan="2"><p>Arm v8.1-M</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td></td>
+<td><p><strong>M0/M1</strong></p></td>
+<td><p><strong>M0+</strong></p></td>
+<td><p><strong>M3</strong></p></td>
+<td><p><strong>M4</strong></p></td>
+<td><p><strong>M7</strong></p></td>
+<td><p><strong>M23</strong></p></td>
+<td><p><strong>M33</strong></p></td>
+<td><p><strong>M55</strong></p></td>
+<td><p><strong>M85</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>操作系统特性</strong></p></td>
+<td></td>
+<td colspan="8"></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>可编程的故障 IRQ 优先级</p></td>
+<td></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-even"><td><p>单线程内核支持</p></td>
+<td></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-odd"><td><p>线程本地存储支持</p></td>
+<td></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>中断处理</strong></p></td>
+<td></td>
+<td colspan="8"></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>常规中断</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>动态中断</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>直接中断</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>零延迟中断</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-odd"><td><p>CPU 空闲</p></td>
+<td></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-even"><td><p>原生系统定时器（SysTick）</p></td>
+<td></td>
+<td><p>N <a class="footnote-reference brackets" href="#f1" id="id2" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>内存保护</strong></p></td>
+<td></td>
+<td colspan="8"></td>
+<td></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>用户模式</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>硬件栈保护（MPU）</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>硬件辅助的栈界限检查</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>Y <a class="footnote-reference brackets" href="#f2" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a></p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>特权模式禁止执行（Privileged Execute Never） <a class="footnote-reference brackets" href="#f3" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a></p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-even"><td><p>硬件辅助的控制流完整性</p></td>
+<td><p>PACBTI</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-odd"><td><p>硬件辅助的空指针解引用检测</p></td>
+<td></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-even"><td><p>硬件辅助的原子操作</p></td>
+<td></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-odd"><td><p>支持不可缓存区域</p></td>
+<td></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-even"><td><p>在 SRAM 中执行函数</p></td>
+<td></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-odd"><td><p>浮点服务</p></td>
+<td></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-even"><td><p>DSP ISA</p></td>
+<td></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>可信执行</strong></p></td>
+<td colspan="9"></td>
+<td></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p>原生 TrustZone-M 支持</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p>TF-M 集成</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+</tr>
+<tr class="row-even"><td><p>代码重定位</p></td>
+<td></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-odd"><td><p>基于软件的向量表转发</p></td>
+<td></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-even"><td><p>硬件辅助的计时函数</p></td>
+<td></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+</tbody>
+</table>
+<section id="notes">
+<h3>注释<a class="headerlink" href="#notes" title="链接到此标题。"></a></h3>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="f1" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">1</a><span class="fn-bracket">]</span></span>
+<p>SysTick 在 Cortex-M1 中是可选的</p>
+</aside>
+<aside class="footnote brackets" id="f2" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">2</a><span class="fn-bracket">]</span></span>
+<p>Cortex-M23 中仅在安全（Secure）构建中支持栈界限检查</p>
+</aside>
+<aside class="footnote brackets" id="f3" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">3</a><span class="fn-bracket">]</span></span>
+<p><a class="reference external" href="https://developer.arm.com/documentation/107655/100/RTOS-and-Secure-software-design-considerations/Secure-software-development-design-considerations/Security-and-privilege-combination/Using-PXN-bit?lang=en">https://developer.arm.com/documentation/107655/100/RTOS-and-Secure-software-design-considerations/Secure-software-development-design-considerations/Security-and-privilege-combination/Using-PXN-bit?lang=en</a></p>
+</aside>
+</aside>
+</section>
+</section>
+<section id="os-features">
+<h2>操作系统特性<a class="headerlink" href="#os-features" title="链接到此标题。"></a></h2>
+<section id="threads">
+<h3>线程<a class="headerlink" href="#threads" title="链接到此标题。"></a></h3>
+<section id="thread-stack-alignment">
+<h4>线程栈对齐<a class="headerlink" href="#thread-stack-alignment" title="链接到此标题。"></a></h4>
+<p>每个 Zephyr 线程都定义有自己的栈内存。默认情况下，Cortex-M 强制线程栈按双字对齐，见 <a class="reference internal" href="../../kconfig.html#CONFIG_STACK_ALIGN_DOUBLE_WORD" title="CONFIG_STACK_ALIGN_DOUBLE_WORD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_STACK_ALIGN_DOUBLE_WORD</span></code></a>。如果启用了基于 MPU 的硬件辅助栈溢出检测（<a class="reference internal" href="../../kconfig.html#CONFIG_MPU_STACK_GUARD" title="CONFIG_MPU_STACK_GUARD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MPU_STACK_GUARD</span></code></a>），线程栈需要按更大的值对齐，该值由 <a class="reference internal" href="../../kconfig.html#CONFIG_ARM_MPU_REGION_MIN_ALIGN_AND_SIZE" title="CONFIG_ARM_MPU_REGION_MIN_ALIGN_AND_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARM_MPU_REGION_MIN_ALIGN_AND_SIZE</span></code></a> 表示。在 Arm v6-M 和 Arm v7-M 架构变体中，对于需要支持用户模式（<a class="reference internal" href="../../kconfig.html#CONFIG_USERSPACE" title="CONFIG_USERSPACE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USERSPACE</span></code></a>）的应用程序，还要求线程栈按与其大小相等的值对齐。这种情况下线程栈大小必须是 2 的幂。所有这些都由 <a class="reference internal" href="../../kconfig.html#CONFIG_MPU_REQUIRES_POWER_OF_TWO_ALIGNMENT" title="CONFIG_MPU_REQUIRES_POWER_OF_TWO_ALIGNMENT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MPU_REQUIRES_POWER_OF_TWO_ALIGNMENT</span></code></a> 体现，在支持用户模式的 Arm v6-M 和 Arm v7-M 构建中会强制启用该选项。</p>
+</section>
+<section id="stack-pointers">
+<h4>栈指针<a class="headerlink" href="#stack-pointers" title="链接到此标题。"></a></h4>
+<p>在线程模式下执行时，处理器使用进程栈指针（PSP）。在处理程序模式下执行时，即处理异常和硬件中断时，处理器使用主栈指针（MSP）。在线程模式下使用 PSP，<em>便于</em> 在线程上下文切换期间 <em>操作线程栈指针</em>，而不会影响处理程序模式下当前的执行上下文流。</p>
+<p>在 Arm Cortex-M 构建中，异常和中断共享同一块中断栈内存。选择中断栈大小时需要考虑嵌套中断，每次嵌套都会压入一个额外的栈帧。开发者可以使用 <a class="reference internal" href="../../kconfig.html#CONFIG_ISR_STACK_SIZE" title="CONFIG_ISR_STACK_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ISR_STACK_SIZE</span></code></a> 修改中断栈大小。</p>
+<p>中断栈也会在早期启动期间使用，以便内核在切换到 main 线程之前初始化 main 线程的栈。</p>
+</section>
+</section>
+<section id="thread-context-switching">
+<h3>线程上下文切换<a class="headerlink" href="#thread-context-switching" title="链接到此标题。"></a></h3>
+<p>在 Arm Cortex-M 构建中，使用 PendSV 异常来触发到另一个线程的上下文切换。PendSV 异常在所有 Cortex-M 实现中都存在。在所有 Cortex-M 变体中，PendSV 都被配置为可能的最低中断优先级。这样设计的主要原因是：</p>
+<ul class="simple">
+<li><p>利用 Cortex-M 处理器的尾链（tail chaining）特性，从而限制上下文切换操作的发生次数。</p></li>
+<li><p>不影响硬件中断所观测到的中断延迟。</p></li>
+</ul>
+<p>因此，Cortex-M 中的上下文切换是非原子的，即它可能被硬件中断 <em>抢占</em>，但一次上下文切换操作必须完成后，才能开始新的线程上下文切换。</p>
+<p>线程上下文切换通常执行以下操作：</p>
+<ul>
+<li><p>换出当前线程时，处理器会保存：</p>
+<blockquote>
+<div><ul>
+<li><p>被调用者保存寄存器（R4 - R11），存入该线程位于内核内存中的被调用者保存寄存器容器</p></li>
+<li><p>线程当前的操作 <em>模式</em></p>
+<blockquote>
+<div><ul class="simple">
+<li><p>用户或特权执行模式</p></li>
+<li><p>是否存在活动的浮点上下文</p></li>
+<li><p>当前处理程序上下文（PendSV）的 EXC_RETURN 值</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>浮点被调用者保存寄存器（S16 - S31），如果当前线程有活动的浮点上下文，则存入该线程的浮点被调用者保存寄存器容器</p></li>
+<li><p>当前线程的 PSP，它指向当前线程异常栈帧的起始位置。该栈帧包含被换出线程的调用者保存上下文和返回地址。</p></li>
+</ul>
+</div></blockquote>
+</li>
+<li><p>换入新线程时，处理器会：</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>从该线程的被调用者保存寄存器容器中恢复新线程的被调用者保存寄存器</p></li>
+<li><p>恢复新线程的操作 <em>模式</em></p></li>
+<li><p>如果被换入的线程在被换出之前有活动的浮点上下文，则恢复浮点被调用者保存寄存器</p></li>
+<li><p>重新编程动态 MPU 区域，使用户线程能够访问其栈和应用程序内存，和/或在线程特权栈的底部编程一个栈溢出 MPU 保护区</p></li>
+<li><p>恢复换入线程的 PSP，并重新编程栈指针界限寄存器（如适用，见 <a class="reference internal" href="../../kconfig.html#CONFIG_BUILTIN_STACK_GUARD" title="CONFIG_BUILTIN_STACK_GUARD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BUILTIN_STACK_GUARD</span></code></a>）</p></li>
+<li><p>如果启用了基于哨兵（sentinel）的栈界限检查（见 <a class="reference internal" href="../../kconfig.html#CONFIG_STACK_SENTINEL" title="CONFIG_STACK_SENTINEL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_STACK_SENTINEL</span></code></a>），可选地对换入的线程进行栈界限检查。</p></li>
+</ul>
+</div></blockquote>
+</li>
+</ul>
+<p>PendSV 异常返回序列在弹出异常栈帧的过程中，恢复新线程的调用者保存寄存器和返回地址。</p>
+<p>上下文切换机制的实现位于 <code class="file docutils literal notranslate"><span class="pre">arch/arm/core/cortex_m/swap_helper.S</span></code> 中。</p>
+<section id="stack-limit-checking-arm-v8-m">
+<h4>栈界限检查（Arm v8-M）<a class="headerlink" href="#stack-limit-checking-arm-v8-m" title="链接到此标题。"></a></h4>
+<p>Armv8-M 和 Armv8.1-M 变体支持使用 MSPLIM 和 PSPLIM 内核寄存器进行栈界限检查。设置 <a class="reference internal" href="../../kconfig.html#CONFIG_BUILTIN_STACK_GUARD" title="CONFIG_BUILTIN_STACK_GUARD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BUILTIN_STACK_GUARD</span></code></a> 后即启用该功能。启用栈界限检查后，线程的特权栈或用户栈以及中断栈分别由 PSPLIM 和 MSPLIM 寄存器保护。MSPLIM 在内核启动期间只配置 <em>一次</em>，而 PSLIM 则在每次线程上下文切换时重新编程，或者在系统调用期间、线程从使用默认栈切换为使用特权栈（以及反向切换）时重新编程。PSPLIM 的重新编程：</p>
+<ul class="simple">
+<li><p>运行时开销相对较低（使用 MSR 指令进行编程）</p></li>
+<li><p>不影响中断延迟</p></li>
+<li><p>不需要为栈保护区预留任何内存区域</p></li>
+<li><p>不使用 MPU 区域</p></li>
+</ul>
+<p>因此，它被视为 Cortex-M 应用程序中一种轻量但非常高效的栈溢出检测机制。</p>
+<p>栈溢出会触发 Arm v8-M 提供的专用 UsageFault 异常。</p>
+</section>
+</section>
+<section id="interrupt-handling-features">
+<h3>中断处理特性<a class="headerlink" href="#interrupt-handling-features" title="链接到此标题。"></a></h3>
+<p>本节介绍 Arm Cortex-M 中与异常和中断处理相关的若干方面。</p>
+<section id="interrupt-priority-levels">
+<h4>中断优先级<a class="headerlink" href="#interrupt-priority-levels" title="链接到此标题。"></a></h4>
+<p>可用（可配置）的中断优先级数量由 NVIC 中实现的中断优先级位数决定；每个 Cortex-M 平台都需要使用设备树描述这一点：</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="nf">nvic</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">arm</span><span class="p">,</span><span class="n">num-irq-priority-bits</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;#</span><span class="na">priority</span><span class="o">-</span><span class="na">bits</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</section>
+<section id="reserved-priority-levels">
+<h4>保留的优先级<a class="headerlink" href="#reserved-priority-levels" title="链接到此标题。"></a></h4>
+<p>有若干中断优先级是为操作系统保留的。</p>
+<p>按照设计，系统故障异常具有最高的优先级。在 <em>Baseline</em> Cortex-M 中，这实际上由硬件强制保证，因为 HardFault 是唯一可用的处理器故障异常，其优先级高于任何可配置的异常优先级。</p>
+<p>在 <em>Mainline</em> Cortex-M 中，可用的故障异常（例如 MemManageFault、UsageFault 等）被分配为最高的 <em>可配置</em> 优先级。（<a class="reference internal" href="../../kconfig.html#CONFIG_CPU_CORTEX_M_HAS_PROGRAMMABLE_FAULT_PRIOS" title="CONFIG_CPU_CORTEX_M_HAS_PROGRAMMABLE_FAULT_PRIOS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CPU_CORTEX_M_HAS_PROGRAMMABLE_FAULT_PRIOS</span></code></a> 明确表示该 Cortex-M 实现支持可配置的故障优先级。）</p>
+<p>该优先级从不与硬件中断共享（下文介绍了这一规则的一个例外）。因此，在常规 ISR 中发生的处理器故障将由相应的故障处理程序处理，而不会升级为 HardFault，<em>这与在线程模式下发生的处理器故障类似</em>。</p>
+<p>SVC 异常通常被配置为最高的可配置优先级（下文将介绍这一规则的一个例外）。Zephyr 内核使用 SVC 来分派系统调用、触发运行时系统错误（例如内核 oops 或 panic），或实现 IRQ 卸载（offloading）。</p>
+<p>在 Baseline Cortex-M 中，SVC 的优先级可能与其他同样被赋予最高可配置优先级的异常或硬件中断共享（因此，中断处理期间发生的内核运行时错误会升级为 HardFault。故障处理例程中的额外逻辑可确保成功检测到此类运行时错误）。</p>
+<p>然而，在 Mainline Cortex-M 中，SVC 优先级是 <em>保留的</em>，因此通常只与可配置优先级的故障异常共享。这简化了 Mainline Cortex-M 架构中的故障处理例程，因为内核运行时错误由 SVC 处理程序处理（即不会升级为 HardFault，即使内核错误发生在 ISR 上下文中也是如此）。</p>
+<p>在 Mainline Cortex-M 构建中，硬件中断被分配的优先级低于 SVC。</p>
+<p>上述规则的一个例外是 Zephyr 应用程序支持零延迟中断（Zero Latency Interrupt，ZLI）的情况。此类中断被设计为具有高于任何硬件中断或系统中断的优先级。如果在 Mainline Cortex-M 构建中启用了 ZLI 功能（见 <a class="reference internal" href="../../kconfig.html#CONFIG_ZERO_LATENCY_IRQS" title="CONFIG_ZERO_LATENCY_IRQS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZERO_LATENCY_IRQS</span></code></a>），则：</p>
+<ul class="simple">
+<li><p>ZLI 被分配最高的可配置优先级</p></li>
+<li><p>SVC 被分配第二高的可配置优先级</p></li>
+<li><p>常规硬件中断被分配低于 SVC 的优先级。</p></li>
+</ul>
+<p>Cortex-M 中的优先级配置实现于 <code class="file docutils literal notranslate"><span class="pre">include/zephyr/arch/arm/cortex_m/exception.h</span></code>。</p>
+</section>
+<section id="locking-and-unlocking-irqs">
+<h4>锁定和解锁 IRQ<a class="headerlink" href="#locking-and-unlocking-irqs" title="链接到此标题。"></a></h4>
+<p>在 Baseline Cortex-M 中，锁定中断是通过 PRIMASK 寄存器实现的。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">arch_irq_lock</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>会将 PRIMASK 寄存器设置为 1，最终屏蔽所有具有可配置优先级的 IRQ。虽然这满足了操作系统锁定中断的要求，但其后果是内核运行时错误（会触发 SVC）将升级为 HardFault。</p>
+<p>在 Mainline Cortex-M 中，锁定中断是通过 BASEPRI 寄存器实现的（Mainline Cortex-M 构建会选择 <a class="reference internal" href="../../kconfig.html#CONFIG_CPU_CORTEX_M_HAS_BASEPRI" title="CONFIG_CPU_CORTEX_M_HAS_BASEPRI"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CPU_CORTEX_M_HAS_BASEPRI</span></code></a>，以表示实现了 BASEPRI 寄存器）。通过修改 BASEPRI（或 BASEPRI_MAX），arch_irq_lock() 会屏蔽所有系统中断和硬件中断，但以下各项除外：</p>
+<ul class="simple">
+<li><p>SVC</p></li>
+<li><p>处理器故障</p></li>
+<li><p>ZLI</p></li>
+</ul>
+<p>这使得零延迟中断可以在操作系统临界区内被触发。此外，无论错误发生时 IRQ 是否已被锁定，Zephyr 都能以 <em>完全相同的方式</em> 处理系统（处理器和内核）故障。它还允许在 IRQ 被锁定时分派系统调用。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>Mainline Cortex-M 的故障处理在设计和配置上保证所有处理器故障和内核故障都由相应的异常处理程序处理，绝不会升级为 HardFault。换言之，只有修改了默认故障处理配置的 Zephyr 应用程序才可能发生 HardFault。这样设计的主要原因是为安全关键型应用程序保留 HardFault 异常，用于处理异常的错误情况。</p>
+</div>
+</section>
+<section id="dynamic-direct-interrupts">
+<h4>动态直接中断<a class="headerlink" href="#dynamic-direct-interrupts" title="链接到此标题。"></a></h4>
+<p>Cortex-M 构建支持在运行时安装直接中断服务例程。直接中断是为性能关键的中断处理而设计的，不会经过 Zephyr 的全部通用中断处理代码。</p>
+<p>通过启用 <a class="reference internal" href="../../kconfig.html#CONFIG_DYNAMIC_DIRECT_INTERRUPTS" title="CONFIG_DYNAMIC_DIRECT_INTERRUPTS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_DYNAMIC_DIRECT_INTERRUPTS</span></code></a> 来启用动态直接中断。</p>
+<p>注意，启用动态直接中断还需要在内核中启用对动态中断的支持（见 <a class="reference internal" href="../../kconfig.html#CONFIG_DYNAMIC_INTERRUPTS" title="CONFIG_DYNAMIC_INTERRUPTS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_DYNAMIC_INTERRUPTS</span></code></a>）。</p>
+</section>
+<section id="zero-latency-interrupts">
+<h4>零延迟中断<a class="headerlink" href="#zero-latency-interrupts" title="链接到此标题。"></a></h4>
+<p>如上所述，在 Mainline Cortex-M 应用程序中，Zephyr 内核会保留最高的可配置中断优先级供自身使用（SVC）。SVC 不会被中断锁定屏蔽。零延迟中断可用于在最高中断优先级上设置一个不会被中断锁定阻塞的中断。要使用 ZLI 功能，需要启用 <a class="reference internal" href="../../kconfig.html#CONFIG_ZERO_LATENCY_IRQS" title="CONFIG_ZERO_LATENCY_IRQS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZERO_LATENCY_IRQS</span></code></a>。</p>
+<p>零延迟 IRQ 的中断延迟最小，因为它们总是会抢占常规硬件中断或系统中断。</p>
+<p>但需要注意，由于 ZLI 的 ISR 运行在高于内核异常的优先级上，它们<strong>不能使用</strong>任何内核功能。此外，由于 ZLI 中断优先级等于处理器故障优先级，ZLI 的 ISR 中发生的故障会升级为 HardFault，而不会像常规处理器故障那样被处理。开发者需要了解这一限制。</p>
+</section>
+</section>
+<section id="cpu-idling">
+<h3>CPU 空闲<a class="headerlink" href="#cpu-idling" title="链接到此标题。"></a></h3>
+<p>Cortex-M 架构移植同时实现了 k_cpu_idle() 和 k_cpu_atomic_idle()。实现位于 <code class="file docutils literal notranslate"><span class="pre">arch/arm/core/cortex_m/cpu_idle.c</span></code> 中。</p>
+<p>在这两种实现中，处理器都会尝试让内核进入低功耗模式。在 k_cpu_idle() 中，处理器最终执行 WFI（Wait For Interrupt，等待中断）指令；而在 k_cpu_atomic_idle() 中，处理器会执行 WFE（Wait For Event，等待事件）指令。</p>
+<p>在 Cortex-M 中使用 CPU 空闲 API 时，需要注意以下几点：</p>
+<ul class="simple">
+<li><p>k_cpu_idle() 和 k_cpu_atomic_idle() 都 <em>假定</em> 是在中断已锁定的情况下被调用的。如果这些 API 由空闲线程调用，内核会负责处理这一点。</p></li>
+<li><p>从低功耗模式唤醒后，这两个函数都会无条件地 <em>恢复</em> 中断，也就是说，与调用 CPU 空闲 API 之前的中断锁定状态无关。</p></li>
+</ul>
+<p>Zephyr 的 CPU 空闲机制详见 <a class="reference internal" href="../../kernel/services/scheduling/index.html#cpu-idle"><span class="std std-ref">CPU 空闲</span></a>。</p>
+</section>
+<section id="memory-protection-features">
+<h3>内存保护特性<a class="headerlink" href="#memory-protection-features" title="链接到此标题。"></a></h3>
+<p>本节介绍 Arm Cortex-M 应用程序中与内存保护特性相关的若干方面。</p>
+<section id="user-mode-system-calls">
+<h4>用户模式系统调用<a class="headerlink" href="#user-mode-system-calls" title="链接到此标题。"></a></h4>
+<p>实现了标准（Arm）MPU 或类似的内核外设逻辑（用于配置和控制内存访问策略，例如 Kinetis 平台上的 NXP MPU）的 Cortex-M 平台支持用户模式。（目前，如果用户在开发板默认 Kconfig 设置中启用了 <a class="reference internal" href="../../kconfig.html#CONFIG_ARM_MPU" title="CONFIG_ARM_MPU"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARM_MPU</span></code></a>，就会选择 <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARCH_HAS_USERSPACE</span></code>。）</p>
+<p>线程通过触发一个（同步的）SVC 异常来执行系统调用，其中：</p>
+<ul class="simple">
+<li><p>最多 5 个参数放在寄存器 R1 - R5 中</p></li>
+<li><p>系统调用 ID 放在寄存器 R6 中。</p></li>
+</ul>
+<p>SVC 处理程序会跳转到系统调用准备逻辑，该逻辑执行以下操作：</p>
+<ul class="simple">
+<li><p>将线程的 PSP 切换为指向线程特权栈区域的起始位置；如果启用了栈界限检查，还可选地重新编程 PSPLIM</p></li>
+<li><p>修改 CONTROL 寄存器以切换到特权模式</p></li>
+<li><p>修改 SVC 异常栈帧中的返回地址，使异常返回后执行系统调用分派器（在线程特权模式下）</p></li>
+</ul>
+<p>系统调用执行完成后，系统调用分派器会恢复用户原来的 PSP 和 PSPLIM，并将 CONTROL 寄存器切换回非特权模式，然后返回到系统调用的调用者。</p>
+<p>系统调用在线程模式下执行，随时可能被中断抢占。线程在执行系统调用期间也可能被上下文切换换出；一旦线程再次被换入，系统调用就会继续执行。</p>
+<p>系统调用分派器以 SVC 优先级执行，因此不会被硬件中断抢占（ZLI 除外）；如果硬件中断发生在系统调用准备期间，可能会观察到一些额外的中断延迟。</p>
+</section>
+<section id="mpu-assisted-stack-overflow-detection">
+<h4>MPU 辅助的栈溢出检测<a class="headerlink" href="#mpu-assisted-stack-overflow-detection" title="链接到此标题。"></a></h4>
+<p>带有 MPU 的 Cortex-M 平台可以启用 <a class="reference internal" href="../../kconfig.html#CONFIG_MPU_STACK_GUARD" title="CONFIG_MPU_STACK_GUARD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MPU_STACK_GUARD</span></code></a>，以启用基于 MPU 的栈溢出检测机制。启用 MPU 栈保护区时需要考虑以下几点：</p>
+<ul class="simple">
+<li><p>栈溢出一旦发生就会立即触发处理器故障</p></li>
+<li><p>该机制对于检测监督者（supervisor）线程或处于特权模式的用户线程中的栈溢出至关重要；无论是否设置了 <a class="reference internal" href="../../kconfig.html#CONFIG_MPU_STACK_GUARD" title="CONFIG_MPU_STACK_GUARD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MPU_STACK_GUARD</span></code></a>，处于用户模式的线程中的栈溢出总是会被检测到。</p></li>
+<li><p>栈溢出总能被检测到，但当监督者线程的栈内存溢出时，该机制并不能保证不发生内存损坏</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_MPU_STACK_GUARD" title="CONFIG_MPU_STACK_GUARD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MPU_STACK_GUARD</span></code></a> 通常会保留一个 MPU 区域用于编程栈保护区（在启用了 <a class="reference internal" href="../../kconfig.html#CONFIG_MPU_GAP_FILLING" title="CONFIG_MPU_GAP_FILLING"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MPU_GAP_FILLING</span></code></a> 的某些 Arm v8-M 配置中，实现保护区功能需要 2 个 MPU 区域）</p></li>
+<li><p>每次上下文切换时都会重新编程 MPU 保护区，这会给线程切换例程带来少量开销。不过，与 <a class="reference internal" href="../../kconfig.html#CONFIG_BUILTIN_STACK_GUARD" title="CONFIG_BUILTIN_STACK_GUARD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BUILTIN_STACK_GUARD</span></code></a> 功能相比，系统调用期间不会进行重新编程。</p></li>
+<li><p>在 Arm v8-M 平台上启用 <a class="reference internal" href="../../kconfig.html#CONFIG_HW_STACK_PROTECTION" title="CONFIG_HW_STACK_PROTECTION"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HW_STACK_PROTECTION</span></code></a> 时，默认使用原生的栈界限检查机制，而不是基于 MPU 的栈溢出检测机制；在这些场景下，用户可以通过手动启用 <a class="reference internal" href="../../kconfig.html#CONFIG_MPU_STACK_GUARD" title="CONFIG_MPU_STACK_GUARD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MPU_STACK_GUARD</span></code></a> 来覆盖这一设置。</p></li>
+</ul>
+</section>
+</section>
+<section id="pointer-authentication-and-branch-target-identification-pacbti">
+<h3>指针认证和分支目标识别（PACBTI）<a class="headerlink" href="#pointer-authentication-and-branch-target-identification-pacbti" title="链接到此标题。"></a></h3>
+<p>Armv8.1-M 指针认证和分支目标识别（Pointer Authentication and Branch Target Identification，PACBTI）扩展是 Armv8.1-M 架构配置文件的一个可选扩展，由以下控制流完整性方法的实现组成：</p>
+<ul class="simple">
+<li><p>返回地址签名和认证（PAC-RET），用于缓解面向返回编程（Return Oriented Programming，ROP）类攻击。</p></li>
+<li><p>BTI 指令放置（BTI），用于缓解面向跳转编程（Jump Oriented Programming，JOP）类攻击。</p></li>
+</ul>
+<p>当存在硬件支持（例如 Cortex-M85）并且编译器支持可用时，可以在构建时通过选择以下配置之一在 Zephyr 中启用 PACBTI：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ARM_PACBTI_STANDARD" title="CONFIG_ARM_PACBTI_STANDARD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARM_PACBTI_STANDARD</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ARM_PACBTI_PACRET" title="CONFIG_ARM_PACBTI_PACRET"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARM_PACBTI_PACRET</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ARM_PACBTI_PACRET_LEAF" title="CONFIG_ARM_PACBTI_PACRET_LEAF"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARM_PACBTI_PACRET_LEAF</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ARM_PACBTI_BTI" title="CONFIG_ARM_PACBTI_BTI"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARM_PACBTI_BTI</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ARM_PACBTI_PACRET_BTI" title="CONFIG_ARM_PACBTI_PACRET_BTI"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARM_PACBTI_PACRET_BTI</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ARM_PACBTI_PACRET_LEAF_BTI" title="CONFIG_ARM_PACBTI_PACRET_LEAF_BTI"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARM_PACBTI_PACRET_LEAF_BTI</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ARM_PACBTI_NONE" title="CONFIG_ARM_PACBTI_NONE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARM_PACBTI_NONE</span></code></a></p></li>
+</ul>
+<p>这些配置选项确保在构建中添加启用 PACBTI 指令的编译器标志，具体为：</p>
+<ul class="simple">
+<li><p>对于 GCC 工具链，为 <code class="docutils literal notranslate"><span class="pre">-mbranch-protection=</span></code>。</p></li>
+</ul>
+<p>此外，<a class="reference internal" href="../../kconfig.html#CONFIG_ARM_PAC" title="CONFIG_ARM_PAC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARM_PAC</span></code></a> 和 <a class="reference internal" href="../../kconfig.html#CONFIG_ARM_BTI" title="CONFIG_ARM_BTI"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARM_BTI</span></code></a> 会根据为 <a class="reference internal" href="../../kconfig.html#CONFIG_ARM_PACBTI" title="CONFIG_ARM_PACBTI"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARM_PACBTI</span></code></a> 选择的分支保护选项自动选中。这些配置选项通过在 CONTROL 寄存器和 FVP 中启用相应的 PACBTI 位来强制启用 PACBTI。</p>
+<p>为了进一步增强指针认证，Zephyr 支持通过启用 <a class="reference internal" href="../../kconfig.html#CONFIG_ARM_PAC_PER_THREAD" title="CONFIG_ARM_PAC_PER_THREAD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARM_PAC_PER_THREAD</span></code></a> 来使用密码学安全的、每线程独立的 PAC 密钥。有关密钥生成来源和配置的更多详细信息，请参阅 <a class="reference internal" href="../../kconfig.html#CONFIG_ARM_PAC_PER_THREAD" title="CONFIG_ARM_PAC_PER_THREAD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARM_PAC_PER_THREAD</span></code></a> 的 Kconfig 帮助。</p>
+<p><strong>限制：</strong></p>
+<ul class="simple">
+<li><p>只有面向具备 PACBTI 硬件支持的 Armv8.1-M Mainline 处理器（例如 Cortex-M85）的构建才能完整使用该功能。</p></li>
+<li><p>Zephyr 集成的 SDK 目前包含的是 GCC 12.2，它不支持 PACBTI，因此必须使用外部 GCC 工具链（推荐 14.3 或更高版本）来获得 PACBTI 支持。有关如何设置工具链，请参阅<a class="reference external" href="https://docs.zephyrproject.org/latest/develop/toolchains/index.html">此文档</a>。</p></li>
+</ul>
+<p>有关 PACBTI 的更多信息，请参阅官方 <a class="reference external" href="https://developer.arm.com/documentation/109576/latest/">Arm 文档</a> 以及 <a class="reference external" href="https://community.arm.com/arm-community-blogs/b/architectures-and-processors-blog/posts/armv8-1-m-pointer-authentication-and-branch-target-identification-extension">Arm 社区博客</a></p>
+</section>
+<section id="memory-map-and-mpu-considerations">
+<span id="arm-cortex-m-mpu-considerations"></span><h3>内存映射和 MPU 注意事项<a class="headerlink" href="#memory-map-and-mpu-considerations" title="链接到此标题。"></a></h3>
+<section id="fixed-mpu-regions">
+<h4>固定 MPU 区域<a class="headerlink" href="#fixed-mpu-regions" title="链接到此标题。"></a></h4>
+<p>默认情况下，启用 <a class="reference internal" href="../../kconfig.html#CONFIG_ARM_MPU" title="CONFIG_ARM_MPU"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARM_MPU</span></code></a> 后，会在系统启动期间编程一组 <em>固定</em> 的 MPU 区域。</p>
+<ul class="simple">
+<li><p>一个 MPU 区域将整个 Flash 区域编程为可读可执行。用户可以通过启用 <a class="reference internal" href="../../kconfig.html#CONFIG_MPU_ALLOW_FLASH_WRITE" title="CONFIG_MPU_ALLOW_FLASH_WRITE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MPU_ALLOW_FLASH_WRITE</span></code></a> 覆盖该设置，此时 Flash 会以 RWX 权限进行编程。如果启用了 <a class="reference internal" href="../../kconfig.html#CONFIG_USERSPACE" title="CONFIG_USERSPACE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USERSPACE</span></code></a>，则允许对整个 Flash 区域进行非特权访问。</p></li>
+<li><p>一个 MPU 区域将整个 SRAM 区域编程为仅特权模式可读写（RW）。也就是说，使用一个 MPU 区域来禁止 SRAM 上的执行权限。（此设置的一个例外是禁用了 <a class="reference internal" href="../../kconfig.html#CONFIG_MPU_GAP_FILLING" title="CONFIG_MPU_GAP_FILLING"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MPU_GAP_FILLING</span></code></a> 的情况（仅限 Arm v8-M）；此时不会对 SRAM 进行 MPU 编程，访问权限由默认的 Arm 内存映射策略决定，即 SRAM 上允许仅特权模式的 RWX 权限。）</p></li>
+<li><p>设备树中所有带有 <code class="docutils literal notranslate"><span class="pre">zephyr,memory-attr</span></code> 属性的内存区域，该属性定义了该内存区域的 MPU 权限。更多详细信息请参阅下一节。</p></li>
+</ul>
+<p>上述 MPU 区域定义在 <code class="file docutils literal notranslate"><span class="pre">arch/arm/core/mpu/arm_mpu_regions.c</span></code> 中。可以通过启用 <a class="reference internal" href="../../kconfig.html#CONFIG_CPU_HAS_CUSTOM_FIXED_SOC_MPU_REGIONS" title="CONFIG_CPU_HAS_CUSTOM_FIXED_SOC_MPU_REGIONS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CPU_HAS_CUSTOM_FIXED_SOC_MPU_REGIONS</span></code></a> 来使用其他 MPU 配置。启用该选项表示 Cortex-M SoC 将在 SoC 定义中定义并配置自己的固定 MPU 区域。</p>
+</section>
+<section id="fixed-mpu-regions-defined-in-devicetree">
+<h4>设备树中定义的固定 MPU 区域<a class="headerlink" href="#fixed-mpu-regions-defined-in-devicetree" title="链接到此标题。"></a></h4>
+<p>当内存节点中存在 <code class="docutils literal notranslate"><span class="pre">zephyr,memory-attr</span></code> 属性时，会在系统启动期间分配并编程一个新的 MPU 区域。当与 <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,memory-region</span></code> 设备树 compatible 一起使用时，还会生成一个与该 MPU 区域关联的链接器段。</p>
+<p>例如，在设备树中定义一个新的不可缓存内存区域：</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nl">sram_no_cache</span><span class="p">:</span><span class="w"> </span><span class="nf">memory</span><span class="o">@</span><span class="mi">20300000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">     </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"zephyr,memory-region"</span><span class="p">,</span><span class="w"> </span><span class="s">"mmio-sram"</span><span class="p">;</span>
+<span class="w">     </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x20300000</span><span class="w"> </span><span class="mh">0x100000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">     </span><span class="n">zephyr</span><span class="p">,</span><span class="n">memory-region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"SRAM_NO_CACHE"</span><span class="p">;</span>
+<span class="w">     </span><span class="n">zephyr</span><span class="p">,</span><span class="n">memory-attr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="na">DT_MEM_ARM_MPU_RAM_NOCACHE</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>这会自动创建一个新的 MPU 条目，其名称、基地址、大小和属性都直接从设备树中获取。更多详细信息请参阅 <a class="reference internal" href="../cache/guide.html#cache-guide"><span class="std std-ref">缓存基础</span></a> 和 <a class="reference internal" href="../../services/mem_mgmt/index.html#mem-mgmt-api"><span class="std std-ref">内存属性</span></a>。</p>
+</section>
+<section id="static-mpu-regions">
+<h4>静态 MPU 区域<a class="headerlink" href="#static-mpu-regions" title="链接到此标题。"></a></h4>
+<p>可以在系统启动期间额外编程一次一些 <em>静态</em> MPU 区域。启用某些功能需要这些区域。更多详细信息请参阅 <a class="reference internal" href="../cache/guide.html#cache-guide"><span class="std std-ref">缓存基础</span></a>。</p>
+<ul class="simple">
+<li><p>当启用了 <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARCH_HAS_RAMFUNC_SUPPORT</span></code> 并且用户定义了要从 SRAM 执行的函数时，一个允许从 SRAM 执行的 RX 区域。</p></li>
+<li><p>当启用了 <a class="reference internal" href="../../kconfig.html#CONFIG_CODE_DATA_RELOCATION_SRAM" title="CONFIG_CODE_DATA_RELOCATION_SRAM"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CODE_DATA_RELOCATION_SRAM</span></code></a> 时，一个用于将代码（text）段重定位到 SRAM 的 RX 区域</p></li>
+<li><p>当启用了 <a class="reference internal" href="../../kconfig.html#CONFIG_NOCACHE_MEMORY" title="CONFIG_NOCACHE_MEMORY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NOCACHE_MEMORY</span></code></a> 时，一个用于提供不可缓存 SRAM 区域的 <code class="docutils literal notranslate"><span class="pre">nocache</span></code> 区域</p></li>
+<li><p>当启用了 <a class="reference internal" href="../../kconfig.html#CONFIG_COVERAGE_GCOV" title="CONFIG_COVERAGE_GCOV"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_COVERAGE_GCOV</span></code></a> 时，一个用于 GCOV 代码覆盖率统计区域的、可能允许非特权访问的 RW 区域</p></li>
+<li><p>当启用了 <a class="reference internal" href="../../kconfig.html#CONFIG_NULL_POINTER_EXCEPTION_DETECTION_MPU" title="CONFIG_NULL_POINTER_EXCEPTION_DETECTION_MPU"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NULL_POINTER_EXCEPTION_DETECTION_MPU</span></code></a> 时，一个用于实现空指针解引用检测的禁止访问区域</p></li>
+</ul>
+<p>这些静态 MPU 区域的边界由链接器在 <code class="file docutils literal notranslate"><span class="pre">include/linker/linker-defs.h</span></code> 中导出的符号得出。</p>
+</section>
+<section id="dynamic-mpu-regions">
+<h4>动态 MPU 区域<a class="headerlink" href="#dynamic-mpu-regions" title="链接到此标题。"></a></h4>
+<p>某些线程专属的 MPU 区域可能会在每次线程上下文切换时动态重新编程：</p>
+<ul class="simple">
+<li><p>一个用于当前线程栈区域的非特权 RW 区域（针对用户线程）</p></li>
+<li><p>一个用于 MPU 栈保护区的只读区域</p></li>
+<li><p>用于当前线程应用程序内存域中各分区的非特权 RW 区域。</p></li>
+</ul>
+</section>
+<section id="considerations">
+<h4>注意事项<a class="headerlink" href="#considerations" title="链接到此标题。"></a></h4>
+<p>Cortex-M 平台上可用的 MPU 区域数量是有限的资源。大多数平台有 8 个 MPU 区域，而某些 Cortex-M33 或 Cortex-M7 平台最多可有 16 个 MPU 区域。因此，可以同时编程的固定、静态和动态 MPU 区域数量受到相对严格的限制。对于有 8 个可用 MPU 区域的平台，可能无法启用上述所有需要编程 MPU 区域的功能。不过，在大多数实际应用中只需要其中的一部分功能，很多情况下 8 个 MPU 区域就足够了。</p>
+<p>在 Arm v8-M 处理器中，MPU 架构不允许已编程的 MPU 区域相互重叠。<a class="reference internal" href="../../kconfig.html#CONFIG_MPU_GAP_FILLING" title="CONFIG_MPU_GAP_FILLING"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MPU_GAP_FILLING</span></code></a> 控制是否编程覆盖整个 SRAM 的固定 MPU 区域。如果编程该区域，就需要对整个 SRAM 区域进行分区，才能编程静态和动态 MPU 区域，这会增加所需 MPU 区域的总数。如果未启用 <a class="reference internal" href="../../kconfig.html#CONFIG_MPU_GAP_FILLING" title="CONFIG_MPU_GAP_FILLING"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MPU_GAP_FILLING</span></code></a>，则不会编程覆盖整个 SRAM 的固定 MPU 区域，静态和动态区域只需编程在始终存在的背景区域之上即可（无需对整个 SRAM 进行分区）。但需要注意，背景 SRAM 区域允许从 SRAM 执行代码，因此当未设置 <a class="reference internal" href="../../kconfig.html#CONFIG_MPU_GAP_FILLING" title="CONFIG_MPU_GAP_FILLING"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MPU_GAP_FILLING</span></code></a> 时，Zephyr 无法防御试图从 SRAM 执行恶意代码的攻击。</p>
+</section>
+</section>
+<section id="floating-point-services">
+<h3>浮点服务<a class="headerlink" href="#floating-point-services" title="链接到此标题。"></a></h3>
+<p>Cortex-M 同时支持非共享和共享浮点寄存器模式（更多详细信息请参阅 <a class="reference internal" href="../../kernel/services/other/float.html#float-v2"><span class="std std-ref">浮点服务</span></a>）。</p>
+<p>当构建中启用了 FPU 支持（启用了 <a class="reference internal" href="../../kconfig.html#CONFIG_FPU" title="CONFIG_FPU"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FPU</span></code></a>）时，默认会启用共享浮点寄存器模式（<a class="reference internal" href="../../kconfig.html#CONFIG_FPU_SHARING" title="CONFIG_FPU_SHARING"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FPU_SHARING</span></code></a>）。这是因为某些编译器配置可能会为任何线程生成浮点指令，从而激活浮点上下文，而不管该线程是否执行浮点计算；在换入和换出这类线程时，必须保留该上下文。</p>
+<p>如果能够保证镜像代码只在允许（并且预期）生成浮点指令的单个线程上下文中生成浮点指令，开发者仍然可以在其应用程序项目中禁用浮点共享模式，并切换到非共享浮点寄存器模式。</p>
+<p>在 FPU 共享模式下，如果相应线程有活动的浮点上下文，则会在上下文切换时保存和恢复被调用者保存的 FPU 寄存器。这会给切换例程增加一些运行时开销。除了运行时开销之外，共享 FPU 模式还：</p>
+<ul class="simple">
+<li><p>需要为每个线程额外分配内存，用于保存被调用者保存的浮点寄存器</p></li>
+<li><p>需要为每个线程额外分配栈内存，以便在浮点上下文处于活动状态时，在进入异常时压栈调用者保存的浮点寄存器。但需要注意，由于启用了惰性压栈（lazy stacking），常规中断中不存在浮点上下文压栈的运行时开销（浮点状态的保存只在 PendSV 中断的切换例程中激活）。</p></li>
+</ul>
+</section>
+</section>
+<section id="misc">
+<h2>其他<a class="headerlink" href="#misc" title="链接到此标题。"></a></h2>
+<section id="chain-loadable-images">
+<h3>可链式加载的镜像<a class="headerlink" href="#chain-loadable-images" title="链接到此标题。"></a></h3>
+<p>Cortex-M 应用程序既可以是独立镜像，也可以是可链式加载的镜像，例如由引导加载程序加载。可由引导加载程序（或其他应用程序）链式加载的应用程序镜像，通常占用 Flash 中一块特定的区域，称为其 <em>代码分区</em>。<a class="reference internal" href="../../kconfig.html#CONFIG_USE_DT_CODE_PARTITION" title="CONFIG_USE_DT_CODE_PARTITION"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USE_DT_CODE_PARTITION</span></code></a> 可确保 Zephyr 可链式加载的镜像被链接到设备树中指定的代码分区中。</p>
+<section id="hw-initialization-at-boot">
+<h4>启动时的硬件初始化<a class="headerlink" href="#hw-initialization-at-boot" title="链接到此标题。"></a></h4>
+<p>为了正常启动，被链式加载的应用程序可能要求 Arm 内核硬件寄存器和外设被初始化为复位值。启用 <a class="reference internal" href="../../kconfig.html#CONFIG_INIT_ARCH_HW_AT_BOOT" title="CONFIG_INIT_ARCH_HW_AT_BOOT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_INIT_ARCH_HW_AT_BOOT</span></code></a> 会使 Zephyr 在启动期间强制将 Cortex-M 内部架构状态初始化为相应 Arm 架构手册中规定的复位值。</p>
+</section>
+<section id="software-vector-relaying">
+<h4>软件向量转发<a class="headerlink" href="#software-vector-relaying" title="链接到此标题。"></a></h4>
+<p>在实现了 VTOR 寄存器的 Cortex-M 平台上（见 <a class="reference internal" href="../../kconfig.html#CONFIG_CPU_CORTEX_M_HAS_VTOR" title="CONFIG_CPU_CORTEX_M_HAS_VTOR"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CPU_CORTEX_M_HAS_VTOR</span></code></a>），可链式加载的镜像通过将镜像向量表的偏移量写入 VTOR 寄存器来重定位 Cortex-M 向量表。</p>
+<p>没有 VTOR 寄存器的 Baseline Cortex-M 平台可能无法重定位其向量表，向量表始终位于固定位置。因此，可链式加载的镜像需要另一种方式将硬件中断和系统异常路由到自己的向量表；这是通过软件向量转发实现的。</p>
+<p>当引导加载程序镜像启用 <a class="reference internal" href="../../kconfig.html#CONFIG_SW_VECTOR_RELAY" title="CONFIG_SW_VECTOR_RELAY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SW_VECTOR_RELAY</span></code></a> 时，它能够根据可链式加载的应用程序所设置的向量表指针转发异常和中断。后者会设置 <a class="reference internal" href="../../kconfig.html#CONFIG_SW_VECTOR_RELAY_CLIENT" title="CONFIG_SW_VECTOR_RELAY_CLIENT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SW_VECTOR_RELAY_CLIENT</span></code></a> 选项，指示启动序列在 SRAM 中设置向量表指针，以便引导加载程序将异常和中断转发到可链式加载镜像的软件向量表。</p>
+<p>虽然该功能是为没有 VTOR 寄存器的处理器设计的，但它也可以用于 Mainline Cortex-M 平台。</p>
+</section>
+</section>
+<section id="code-relocation">
+<h3>代码重定位<a class="headerlink" href="#code-relocation" title="链接到此标题。"></a></h3>
+<p>Cortex-M 支持代码重定位功能。选择 <a class="reference internal" href="../../kconfig.html#CONFIG_CODE_DATA_RELOCATION_SRAM" title="CONFIG_CODE_DATA_RELOCATION_SRAM"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CODE_DATA_RELOCATION_SRAM</span></code></a> 后，Zephyr 会将指定文件中的 .text、data 和 .bss 段重定位并放入 SRAM。可以只将部分代码段重定位到 SRAM，而无需重定位整个镜像的代码和数据段。有关代码重定位功能的更多详细信息，请参阅 <a class="reference internal" href="../../kernel/code-relocation.html#code-data-relocation"><span class="std std-ref">代码和数据重定位</span></a>。</p>
+</section>
+</section>
+<section id="linking-cortex-m-applications">
+<h2>链接 Cortex-M 应用程序<a class="headerlink" href="#linking-cortex-m-applications" title="链接到此标题。"></a></h2>
+<p>大多数 Cortex-M 平台使用 <code class="file docutils literal notranslate"><span class="pre">include/zephyr/arch/arm/cortex_m/scripts/linker.ld</span></code> 中默认的 Cortex-M GCC 链接器脚本，不过平台也可以使用自定义链接器脚本。</p>
+</section>
+<section id="cmsis">
+<h2>CMSIS<a class="headerlink" href="#cmsis" title="链接到此标题。"></a></h2>
+<p>Cortex-M CMSIS 头文件通过独立的模块仓库提供：</p>
+<ul class="simple">
+<li><p><strong>CMSIS 5</strong>：<a class="reference external" href="https://github.com/zephyrproject-rtos/cmsis">zephyrproject-rtos/cmsis</a></p></li>
+<li><p><strong>CMSIS 6</strong>：<a class="reference external" href="https://github.com/zephyrproject-rtos/CMSIS_6">zephyrproject-rtos/CMSIS_6</a></p></li>
+</ul>
+<p>Zephyr 已开始过渡到以 <strong>CMSIS 6</strong> 作为 Cortex-M 内核头文件的默认来源。不过，目前 Zephyr 会<strong>同时</strong>包含 CMSIS 6 和旧版 CMSIS 5 模块中的头文件。</p>
+<p>旧版 CMSIS 5 头文件主要是为了与厂商 HAL 保持兼容而保留的，所有新的架构级开发都应尽可能使用 <strong>CMSIS 6</strong> 头文件。</p>
+<p><a class="reference internal" href="../../kconfig.html#CONFIG_CPU_CORTEX_M" title="CONFIG_CPU_CORTEX_M"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CPU_CORTEX_M</span></code></a> 会选择 <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HAS_CMSIS_CORE</span></code>，以表示所有受支持的 Cortex-M 变体都可以使用 CMSIS 头文件。</p>
+</section>
+<section id="testing">
+<h2>测试<a class="headerlink" href="#testing" title="链接到此标题。"></a></h2>
+<p><code class="file docutils literal notranslate"><span class="pre">tests/arch/arm/</span></code> 中提供了一系列针对 Cortex-M 移植和其他功能的单元测试。这些测试套件在持续扩充，并不断添加新的测试套件，以提高 Zephyr 中 Cortex-M 架构支持的覆盖率。</p>
+</section>
+<section id="qemu">
+<h2>QEMU<a class="headerlink" href="#qemu" title="链接到此标题。"></a></h2>
+<p>我们使用 QEMU 来验证 Zephyr 中 Cortex-M 架构移植所实现的功能。通过定义和使用一系列 QEMU 目标（每个目标都具有特定的架构变体和 Arm 外设支持列表），可以达到足够的覆盖率。</p>
+<p>下表列出了 Zephyr 中定义的 QEMU 平台目标，以及相应的 Cortex-M 实现变体和这些目标所模拟的外设。</p>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td></td>
+<td colspan="5"><p><strong>QEMU 目标</strong></p></td>
+</tr>
+<tr class="row-even"><td><p>架构变体</p></td>
+<td><p>Arm v6-M</p></td>
+<td colspan="2"><p>Arm v7-M</p></td>
+<td><p>Arm v8-M</p></td>
+<td><p>Arm v8.1-M</p></td>
+</tr>
+<tr class="row-odd"><td></td>
+<td><p><strong>qemu_cortex_m0</strong></p></td>
+<td><p><strong>qemu_cortex_m3</strong></p></td>
+<td><p><strong>mps2/an385</strong></p></td>
+<td><p><strong>mps2/an521/cpu0</strong></p></td>
+<td><p><strong>mps3/corstone300/an547</strong></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>模拟的特性</strong></p></td>
+<td colspan="5"></td>
+</tr>
+<tr class="row-odd"><td><p>NVIC</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-even"><td><p>BASEPRI</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-odd"><td><p>SysTick</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-even"><td><p>MPU</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-odd"><td><p>FPU</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+</tr>
+<tr class="row-even"><td><p>SPLIM</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>Y</p></td>
+</tr>
+<tr class="row-odd"><td><p>TrustZone-M</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>N</p></td>
+<td><p>Y</p></td>
+<td><p>N</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="maintainers-collaborators">
+<h2>维护者和协作者<a class="headerlink" href="#maintainers-collaborators" title="链接到此标题。"></a></h2>
+<p>Zephyr 中 Arm Cortex-M 架构移植的状态为：<em>维护中</em>。Cortex-M 维护者和协作者的最新列表见 <code class="file docutils literal notranslate"><span class="pre">MAINTAINERS.yml</span></code>。</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 1月 08, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

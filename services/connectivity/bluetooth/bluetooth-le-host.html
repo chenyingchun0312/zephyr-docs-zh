@@ -1,0 +1,502 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LE 主机 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/connectivity/bluetooth/bluetooth-le-host.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" />
+    <link rel="next" title="LE Audio 协议栈" href="api/audio/bluetooth-le-audio-arch.html" />
+    <link rel="prev" title="协议栈架构" href="bluetooth-arch.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">服务</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">连接</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../networking/index.html">网络</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">Bluetooth</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="features.html">支持的功能</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bluetooth-qual.html">认证</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bluetooth-arch.html">协议栈架构</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">LE 主机</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#peripheral-role">外设角色</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#central-role">中心设备角色</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#observer-role">观察者角色</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#broadcaster-role">广播者角色</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#connections">连接</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#callback-execution-contexts">回调执行上下文</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#security">安全</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#l2cap">L2CAP</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#terminology">术语</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#pdu-types">PDU 类型</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#relevant-kconfig">相关 Kconfig</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#gatt">GATT</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#att-timeout">ATT 超时</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#mesh">Mesh</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#le-audio">LE Audio</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#persistent-storage">持久化存储</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="api/audio/bluetooth-le-audio-arch.html">LE Audio 协议栈</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/audio/bluetooth-le-audio-arch.html#le-audio-resources">LE Audio 资源</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bluetooth-ctlr-arch.html">LE 控制器</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bluetooth-dev.html">应用程序开发</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/index.html">API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bluetooth-tools.html">工具</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bluetooth-shell.html">Shell</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../usb/index.html">USB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../canbus/index.html">控制器局域网（CAN）总线协议</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lora_lorawan/index.html">LoRa 和 LoRaWAN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modbus/index.html">Modbus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modem/index.html">调制解调器模块</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../index.html">连接</a> &raquo;</li>
+  
+     <li><a href="index.html">Bluetooth</a> &raquo;</li>
+  
+  <li>LE 主机</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="le-host">
+<span id="bluetooth-le-host"></span><h1>LE 主机<a class="headerlink" href="#le-host" title="链接到此标题。"></a></h1>
+<p>Bluetooth 主机实现了所有高层协议和规范（profile），最重要的是为应用程序提供高层 API。下图描绘了主机的主要协议和规范分层。</p>
+<figure class="align-center" id="id1">
+<img alt="Bluetooth 主机协议和规范分层" src="../../../_images/ble_host_layers.png" />
+<figcaption>
+<p><span class="caption-text">Bluetooth 主机协议和规范分层。</span><a class="headerlink" href="#id1" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<p>主机协议栈的最底层是所谓的 HCI 驱动，负责屏蔽 HCI 传输的细节。它提供了一个基本 API，用于在控制器和主机之间双向传递数据。</p>
+<p>HCI 处理之上最重要的模块可能是通用访问规范（GAP）。GAP 通过定义四种不同的 Bluetooth 使用角色，简化了对 Bluetooth LE 的访问：</p>
+<ul class="simple">
+<li><p>面向连接的角色</p>
+<ul>
+<li><p>外设（例如智能传感器，通常用户界面有限）</p></li>
+<li><p>中心设备（通常是手机或 PC）</p></li>
+</ul>
+</li>
+<li><p>无连接角色</p>
+<ul>
+<li><p>广播者（发送 Bluetooth LE 广播，例如智能信标）</p></li>
+<li><p>观察者（扫描 Bluetooth LE 广播）</p></li>
+</ul>
+</li>
+</ul>
+<p>每个角色都有各自的构建时配置选项：<a class="reference internal" href="../../../kconfig.html#CONFIG_BT_PERIPHERAL" title="CONFIG_BT_PERIPHERAL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_PERIPHERAL</span></code></a>、<a class="reference internal" href="../../../kconfig.html#CONFIG_BT_CENTRAL" title="CONFIG_BT_CENTRAL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_CENTRAL</span></code></a>、<a class="reference internal" href="../../../kconfig.html#CONFIG_BT_BROADCASTER" title="CONFIG_BT_BROADCASTER"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_BROADCASTER</span></code></a> 和 <a class="reference internal" href="../../../kconfig.html#CONFIG_BT_OBSERVER" title="CONFIG_BT_OBSERVER"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_OBSERVER</span></code></a>。在面向连接的角色中，中心设备会隐式启用观察者角色，外设会隐式启用广播者角色。创建应用程序时，通常第一步是确定需要哪些角色，然后在此基础上展开。Bluetooth Mesh 是一个稍微特殊的情况，它至少需要观察者和广播者角色，还可能需要外设角色。后面的章节将对此进行更详细的说明。</p>
+<section id="peripheral-role">
+<h2>外设角色<a class="headerlink" href="#peripheral-role" title="链接到此标题。"></a></h2>
+<p>大多数基于 Zephyr 的 Bluetooth LE 设备很可能都是外设角色设备。这意味着它们执行可连接广播，并公开一个或多个 GATT 服务。使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">bt_gatt_service_register()</span></code> API 注册服务后，应用程序通常会使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">bt_le_adv_start()</span></code> API 开始可连接广播。</p>
+<p>源码树中提供了多个外设示例应用程序，例如 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/samples/bluetooth/peripheral_hr">samples/bluetooth/peripheral_hr</a>。</p>
+</section>
+<section id="central-role">
+<h2>中心设备角色<a class="headerlink" href="#central-role" title="链接到此标题。"></a></h2>
+<p>对于基于 Zephyr 的设备，中心设备角色可能不如外设角色常见，但仍然是一种合理的选择，并且在 Zephyr 中同样得到良好支持。中心设备角色的设备不接受来自其他设备的连接，而是扫描可用的外设并选择其中一个进行连接。连接后，中心设备通常充当 GATT 客户端，先发现可用的服务，再访问一个或多个受支持的服务。</p>
+<p>为了最初发现要连接的设备，应用程序通常会使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">bt_le_scan_start()</span></code> API，等待找到合适的设备（通过扫描回调），使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">bt_le_scan_stop()</span></code> 停止扫描，然后使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">bt_conn_le_create()</span></code> 连接到该设备。</p>
+<p>源码树中提供了一些中心设备角色的示例应用程序，例如 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/samples/bluetooth/central_hr">samples/bluetooth/central_hr</a>。</p>
+</section>
+<section id="observer-role">
+<h2>观察者角色<a class="headerlink" href="#observer-role" title="链接到此标题。"></a></h2>
+<p>观察者角色设备使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">bt_le_scan_start()</span></code> API 扫描设备，但不会连接其中任何一个，而是仅利用所发现设备的广播数据，并可选地结合接收信号强度（RSSI）。</p>
+</section>
+<section id="broadcaster-role">
+<h2>广播者角色<a class="headerlink" href="#broadcaster-role" title="链接到此标题。"></a></h2>
+<p>广播者角色设备使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">bt_le_adv_start()</span></code> API 广播特定的广播数据，但广播类型为不可连接，即其他设备无法连接到它。</p>
+</section>
+<section id="connections">
+<h2>连接<a class="headerlink" href="#connections" title="链接到此标题。"></a></h2>
+<p>连接处理及相关 API 请参阅 <a class="reference internal" href="api/connection_mgmt.html#bluetooth-connection-mgmt"><span class="std std-ref">连接管理</span></a> 一节。</p>
+</section>
+<section id="callback-execution-contexts">
+<span id="bluetooth-callback-contexts"></span><h2>回调执行上下文<a class="headerlink" href="#callback-execution-contexts" title="链接到此标题。"></a></h2>
+<p>主机通过已注册的回调向应用程序传递事件，例如 <code class="xref c c-struct docutils literal notranslate"><span class="pre">bt_conn_cb</span></code>、<code class="xref c c-struct docutils literal notranslate"><span class="pre">bt_le_scan_cb</span></code> 或 <code class="xref c c-struct docutils literal notranslate"><span class="pre">bt_l2cap_chan_ops</span></code> 中的回调。除非文档另有说明，这些回调都在线程上下文中调用，绝不会在 ISR 中调用。大多数回调运行在协议栈内部的上下文中，但目前有些回调是在触发它们的 API 调用内部同步调用的，因此运行在调用者线程中：例如 <code class="xref c c-func docutils literal notranslate"><span class="pre">bt_unpair()</span></code> 会在返回前调用 <code class="docutils literal notranslate"><span class="pre">bond_deleted</span></code>，<code class="xref c c-func docutils literal notranslate"><span class="pre">bt_gatt_unsubscribe()</span></code> 可能会在返回前以 <code class="docutils literal notranslate"><span class="pre">NULL</span></code> 数据调用 <code class="docutils literal notranslate"><span class="pre">notify</span></code>。这两种行为都不属于 API 的一部分：如今同步传递的回调，在将来的版本中可能会推迟到协议栈内部上下文中执行，反之亦然；而且具体的线程在以往版本之间已经变化过，今后也可能再次变化。应用程序只应依赖上述保证，而不应依赖于从某个特定位置调用，或在某个特定调用返回之前被调用。</p>
+<p>当回调运行在协议栈内部的上下文中时，该上下文与协议栈自身的处理共享：回调中花费的时间会推迟其他 Bluetooth 活动，而阻塞还带来额外的风险：如果等待的条件只能由 Bluetooth 处理本身来满足，就会造成死锁，因为在回调返回之前这些处理无法继续进行。典型的例子是使用 <code class="docutils literal notranslate"><span class="pre">K_FOREVER</span></code> 从一个由运行该回调的同一上下文负责补充的缓冲池中分配缓冲区。由于应用程序无法依赖某个回调使用哪个上下文，下述做法适用于所有回调。</p>
+<p>在回调中调用 Bluetooth API 很常见，也是受支持的，尽管其中大多数 API 都可能阻塞；此时需要对阻塞风险加以管理，而不是回避：</p>
+<ul class="simple">
+<li><p>保持回调简短，把耗时较长或可能无限期阻塞的工作推迟到应用程序自己的线程或工作队列中执行。</p></li>
+<li><p>分配时优先使用 <code class="docutils literal notranslate"><span class="pre">K_NO_WAIT</span></code> 或有限超时，而不是 <code class="docutils literal notranslate"><span class="pre">K_FOREVER</span></code>，并处理分配失败的情况。</p></li>
+<li><p>合理设置缓冲池的大小（例如 <a class="reference internal" href="../../../kconfig.html#CONFIG_BT_L2CAP_TX_BUF_COUNT" title="CONFIG_BT_L2CAP_TX_BUF_COUNT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_L2CAP_TX_BUF_COUNT</span></code></a> 或 <a class="reference internal" href="../../../kconfig.html#CONFIG_BT_ATT_TX_COUNT" title="CONFIG_BT_ATT_TX_COUNT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_ATT_TX_COUNT</span></code></a>），使回调中进行的分配无需等待。</p></li>
+</ul>
+</section>
+<section id="security">
+<h2>安全<a class="headerlink" href="#security" title="链接到此标题。"></a></h2>
+<p>为了在两个 Bluetooth 设备之间建立安全关系，需要使用一个称为配对（pairing）的过程。该过程既可以通过 GATT 服务的安全属性隐式触发，也可以在连接对象上使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">bt_conn_set_security()</span></code> API 显式触发。</p>
+<p>为了达到更高的安全级别并防范中间人（MITM）攻击，建议在配对期间使用某种带外信道。如果设备具有足够的用户界面，这个“信道”就是用户本人。设备的能力通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">bt_conn_auth_cb_register()</span></code> API 注册。传给该 API 的 <code class="xref c c-struct docutils literal notranslate"><span class="pre">bt_conn_auth_cb</span></code> 结构体包含一组可在配对期间使用的可选回调；如果设备缺少某项功能，相应的回调可以设为 NULL。例如，如果设备没有输入方式但有显示屏，则 <code class="docutils literal notranslate"><span class="pre">passkey_entry</span></code> 和 <code class="docutils literal notranslate"><span class="pre">passkey_confirm</span></code> 回调应设为 NULL，而 <code class="docutils literal notranslate"><span class="pre">passkey_display</span></code> 应设为能够向用户显示配对码（passkey）的回调。</p>
+<p>根据本地和远端的安全要求与能力，可以达到以下四种安全级别：</p>
+<blockquote>
+<div><dl class="simple">
+<dt><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">BT_SECURITY_L1</span></code></dt><dd><p>无加密，无认证。</p>
+</dd>
+<dt><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">BT_SECURITY_L2</span></code></dt><dd><p>加密但无认证（无 MITM 防护）。</p>
+</dd>
+<dt><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">BT_SECURITY_L3</span></code></dt><dd><p>使用 Bluetooth 4.0 和 4.1 中的传统配对（legacy pairing）方法进行加密和认证。</p>
+</dd>
+<dt><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">BT_SECURITY_L4</span></code></dt><dd><p>使用自 Bluetooth 4.2 起提供的 LE 安全连接（LE Secure Connections）功能进行加密和认证。</p>
+</dd>
+</dl>
+</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>Mesh 通过一个称为配网（provisioning）的过程实现自己的安全方案。它的流程与配对类似，但使用单独的 Mesh 专用 API 完成。</p>
+</div>
+</section>
+<section id="l2cap">
+<h2>L2CAP<a class="headerlink" href="#l2cap" title="链接到此标题。"></a></h2>
+<p>L2CAP 是逻辑链路控制和适配协议（Logical Link Control and Adaptation Protocol）的缩写。它是 Bluetooth 连接上所有通信的公共层，但应用程序只有在以所谓的面向连接信道（CoC）模式使用它时才会直接接触它。更多信息请参阅 <a class="reference internal" href="api/l2cap.html#bt-l2cap"><span class="std std-ref">L2CAP API 一节</span></a>。</p>
+<section id="terminology">
+<h3>术语<a class="headerlink" href="#terminology" title="链接到此标题。"></a></h3>
+<p>以下定义来自核心规范（Core Specification）5.4 版第 3 卷 A 部分 1.4 节。</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>术语</p></th>
+<th class="head"><p>描述</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>上层（Upper layer）</p></td>
+<td><p>L2CAP 之上的层，以 SDU 的形式交换数据。它可以是应用程序或更高层的协议。</p></td>
+</tr>
+<tr class="row-odd"><td><p>下层（Lower layer）</p></td>
+<td><p>L2CAP 之下的层，以 PDU（或分片）的形式交换数据。通常是 HCI。</p></td>
+</tr>
+<tr class="row-even"><td><p>服务数据单元（SDU）</p></td>
+<td><p>L2CAP 与上层交换的数据包。</p>
+<p>该术语仅适用于增强重传模式、流模式、重传模式和流控模式，不适用于基本 L2CAP 模式。</p>
+</td>
+</tr>
+<tr class="row-odd"><td><p>协议数据单元（PDU）</p></td>
+<td><p>包含 L2CAP 数据的数据包。PDU 总是以基本 L2CAP 头开始。</p>
+<p>LE 的 PDU 类型：<a class="reference internal" href="#bluetooth-l2cap-b-frame"><span class="std std-ref">B 帧</span></a> 和 <a class="reference internal" href="#bluetooth-l2cap-k-frame"><span class="std std-ref">K 帧</span></a>。</p>
+<p>BR/EDR 的 PDU 类型：I 帧、S 帧、C 帧和 G 帧。</p>
+</td>
+</tr>
+<tr class="row-even"><td><p>最大传输单元（MTU）</p></td>
+<td><p>上层能够接受的 SDU 的最大大小。</p></td>
+</tr>
+<tr class="row-odd"><td><p>最大载荷大小（MPS）</p></td>
+<td><p>L2CAP 层能够接受的最大载荷大小。</p>
+<p>在基本 L2CAP 模式下，MTU 大小等于 MPS。在不分段的基于信用（credit-based）的信道中，MTU 等于 MPS 减 2。</p>
+</td>
+</tr>
+<tr class="row-even"><td><p>基本 L2CAP 头</p></td>
+<td><p>位于每个 PDU 的开头，包含两个字段：PDU 长度和信道标识符（CID）。</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="pdu-types">
+<h3>PDU 类型<a class="headerlink" href="#pdu-types" title="链接到此标题。"></a></h3>
+<section id="b-frame-basic-information-frame">
+<span id="bluetooth-l2cap-b-frame"></span><h4>B 帧：基本信息帧（Basic information frame）<a class="headerlink" href="#b-frame-basic-information-frame" title="链接到此标题。"></a></h4>
+<p>在基本 L2CAP 模式中使用的 PDU。它包含从上层接收的载荷，或作为载荷交付给上层的数据。</p>
+<a class="reference internal image-reference" href="../../../_images/l2cap_b_frame.drawio.svg"><img alt="B 帧 PDU 示意图。PDU 分为两个矩形，第一个是 L2CAP 头，大小为 4 个八位组，由 PDU 长度和信道 ID 组成。第二个矩形表示信息载荷，其大小小于或等于 MPS。" class="align-center" src="../../../_images/l2cap_b_frame.drawio.svg" style="width: 45%;" />
+</a>
+</section>
+<section id="k-frame-credit-based-frame">
+<span id="bluetooth-l2cap-k-frame"></span><h4>K 帧：基于信用的帧（Credit-based frame）<a class="headerlink" href="#k-frame-credit-based-frame" title="链接到此标题。"></a></h4>
+<p>在 LE 基于信用的流控模式和增强型基于信用的流控模式中使用的 PDU。它包含一个 SDU 分段和额外的协议信息。</p>
+<a class="reference internal image-reference" href="../../../_images/l2cap_k_frame_1.drawio.svg"><img alt="起始 K 帧 PDU 示意图。PDU 分为三个矩形，第一个是 L2CAP 头，大小为 4 个八位组，由 PDU 长度和信道 ID 组成。第二个矩形表示 L2CAP SDU 长度，大小为 2 个八位组。第三个矩形表示信息载荷，其大小小于或等于 MPS 减 2 个八位组。信息载荷包含 L2CAP SDU。" src="../../../_images/l2cap_k_frame_1.drawio.svg" style="width: 45%;" />
+</a>
+<a class="reference internal image-reference" href="../../../_images/l2cap_k_frame.drawio.svg"><img alt="起始帧之后的 K 帧 PDU 示意图。PDU 分为两个矩形，第一个是 L2CAP 头，大小为 4 个八位组，由 PDU 长度和信道 ID 组成。第二个矩形表示信息载荷，其大小小于或等于 MPS。信息载荷包含 L2CAP SDU。" class="align-right" src="../../../_images/l2cap_k_frame.drawio.svg" style="width: 45%;" />
+</a>
+</section>
+</section>
+<section id="relevant-kconfig">
+<h3>相关 Kconfig<a class="headerlink" href="#relevant-kconfig" title="链接到此标题。"></a></h3>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Kconfig 符号</p></th>
+<th class="head"><p>描述</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="../../../kconfig.html#CONFIG_BT_BUF_ACL_RX_SIZE" title="CONFIG_BT_BUF_ACL_RX_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_BUF_ACL_RX_SIZE</span></code></a></p></td>
+<td><p>表示 MPS</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../../kconfig.html#CONFIG_BT_L2CAP_TX_MTU" title="CONFIG_BT_L2CAP_TX_MTU"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_L2CAP_TX_MTU</span></code></a></p></td>
+<td><p>表示 L2CAP MTU</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../../kconfig.html#CONFIG_BT_L2CAP_DYNAMIC_CHANNEL" title="CONFIG_BT_L2CAP_DYNAMIC_CHANNEL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_L2CAP_DYNAMIC_CHANNEL</span></code></a></p></td>
+<td><p>启用 LE 基于信用的流控，从而协议栈可以使用 <a class="reference internal" href="#bluetooth-l2cap-k-frame"><span class="std std-ref">K 帧</span></a> PDU</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="gatt">
+<h2>GATT<a class="headerlink" href="#gatt" title="链接到此标题。"></a></h2>
+<p>通用属性规范（Generic Attribute Profile）是 LE 连接上最常用的通信方式。关于该层的更详细描述和 API 参考，请参阅 <a class="reference internal" href="api/gatt.html#bt-gatt"><span class="std std-ref">GATT API 参考一节</span></a>。</p>
+<section id="att-timeout">
+<h3>ATT 超时<a class="headerlink" href="#att-timeout" title="链接到此标题。"></a></h3>
+<p>如果对端设备未在 ATT 超时时间内响应 ATT 请求（例如读或写），主机将自动发起断开连接。这样就把罕见的故障情况归结为普通的断开连接，从而简化了错误处理，开发者可以统一处理意外断开，而无需为 ATT 超时编写特殊处理。</p>
+<img alt="ATT 超时" class="align-center" src="../../../_images/att_timeout.svg" />
+</section>
+</section>
+<section id="mesh">
+<h2>Mesh<a class="headerlink" href="#mesh" title="链接到此标题。"></a></h2>
+<p>在所需的 GAP 角色方面，Mesh 有些特殊。默认情况下，Mesh 需要同时启用观察者和广播者角色。如果需要可选的 GATT 代理功能，则还应启用外设角色。</p>
+<p>Mesh 的 API 参考请参阅 <a class="reference internal" href="api/mesh.html#bluetooth-mesh"><span class="std std-ref">Mesh API 参考一节</span></a>。</p>
+</section>
+<section id="le-audio">
+<h2>LE Audio<a class="headerlink" href="#le-audio" title="链接到此标题。"></a></h2>
+<p>LE Audio 是一组规范和服务，利用 GATT 和等时信道通过 Bluetooth Low Energy 提供音频。其架构和 API 参考请参阅 <a class="reference internal" href="api/audio/bluetooth-le-audio-arch.html#bluetooth-le-audio-arch"><span class="std std-ref">Bluetooth 音频架构</span></a>。</p>
+</section>
+<section id="persistent-storage">
+<span id="bluetooth-persistent-storage"></span><h2>持久化存储<a class="headerlink" href="#persistent-storage" title="链接到此标题。"></a></h2>
+<p>Bluetooth 主机协议栈使用设置（settings）子系统实现到 Flash 的持久化存储。这需要具备 Flash 驱动，并在 Flash 上指定一个“storage”分区。所需的典型配置选项如下所示：</p>
+<blockquote>
+<div><div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">CONFIG_BT_SETTINGS</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_FLASH</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_FLASH_PAGE_LAYOUT</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_FLASH_MAP</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_NVS</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_SETTINGS</span><span class="o">=</span><span class="s">y</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>启用后，应用程序需负责在初始化 Bluetooth（使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">bt_enable()</span></code> API）之后调用 settings_load()。</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 8月 24, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

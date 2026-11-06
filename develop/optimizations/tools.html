@@ -1,0 +1,646 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>优化工具 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/develop/optimizations/tools.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="烧录与硬件调试" href="../flash_debug/index.html" />
+    <link rel="prev" title="针对资源占用进行优化" href="footprint.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">使用 Zephyr 进行开发</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/index.html">入门指南</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beyond-GSG.html">入门指南之外</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../env_vars.html">环境变量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../application/index.html">应用程序开发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../debug/index.html">调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/index.html">API 状态与准则</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../languages/index.html">编程语言支持</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">优化</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="footprint.html">针对资源占用进行优化</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">优化工具</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#footprint-and-memory-usage">资源占用与内存使用</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#build-target-ram-report">构建目标：ram_report</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#build-target-rom-report">构建目标：rom_report</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#build-targets-ram-plot-rom-plot">构建目标：ram_plot/rom_plot</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#build-target-puncover">构建目标：puncover</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#data-structures">数据结构</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#build-target-pahole">构建目标：pahole</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#dashboard">仪表板</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../flash_debug/index.html">烧录与硬件调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html">模块（外部项目）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../west/index.html">West（Zephyr 的元工具）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../twister/index.html">测试运行器（Twister）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../test/index.html">测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sca/index.html">静态代码分析（SCA）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../toolchains/index.html">工具链</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tools/index.html">工具与 IDE</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">使用 Zephyr 进行开发</a> &raquo;</li>
+  
+     <li><a href="index.html">优化</a> &raquo;</li>
+  
+  <li>优化工具</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="optimization-tools">
+<span id="id1"></span><h1>优化工具<a class="headerlink" href="#optimization-tools" title="链接到此标题。"></a></h1>
+<p>借助现有的优化工具，可以使用不同的构建系统目标分析 <a class="reference internal" href="#footprint-tools"><span class="std std-ref">资源占用与内存使用</span></a> 和 <a class="reference internal" href="#data-structure-tools"><span class="std std-ref">数据结构</span></a>。还可以生成 <a class="reference internal" href="#dashboard"><span class="std std-ref">HTML 仪表板</span></a>，以更动态的方式查看构建产物和指标。</p>
+<section id="footprint-and-memory-usage">
+<span id="footprint-tools"></span><h2>资源占用与内存使用<a class="headerlink" href="#footprint-and-memory-usage" title="链接到此标题。"></a></h2>
+<p>构建系统提供 3 个目标，用于查看和分析生成镜像中的 RAM、ROM 和栈使用情况。这些工具基于最终镜像运行，提供 RAM 和 ROM 中所用符号和代码的大小信息。此外，借助编译器提供的特性，还可以生成最坏情况下的栈使用分析。</p>
+<p>本节提到的某些工具会按照符号的物理组织方式组织输出。由于某些符号可能位于项目的目录树结构之外，或者缺少按名称显示所需的元数据，因此使用以下顶层容器对这类符号进行分组：</p>
+<ul>
+<li><p>Hidden：RAM 和 ROM 报告会在 Hidden 类别中列出所有没有匹配映射文件的已处理符号。</p>
+<p>这表示所列符号对应的文件未被添加到元数据文件中、为空或未定义。工具既无法获得该符号对应的函数名，也无法确定其来源。</p>
+</li>
+<li><p>No paths：RAM 和 ROM 报告会在 No paths 类别中列出所有带相对路径的已处理符号。</p>
+<p>这表示所列符号无法放到报告树结构中某个特定文件下的绝对路径处。工具能够获得函数名，但无法确定其来源。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>同一个函数可能出现多次，No paths 类别会把它们的总和列为一个条目。</p>
+</div>
+</li>
+</ul>
+<section id="build-target-ram-report">
+<h3>构建目标：ram_report<a class="headerlink" href="#build-target-ram-report" title="链接到此标题。"></a></h3>
+<p>以表格形式列出所有已编译对象及其 RAM 使用情况，包括每个符号的字节数及其所占百分比。数据按对象在源码树中的文件系统位置以及包含该符号的文件进行分组。</p>
+<p>针对你的开发板使用 <code class="docutils literal notranslate"><span class="pre">ram_report</span></code> 目标，如下例所示。如果使用 <a class="reference internal" href="../../build/sysbuild/index.html#sysbuild"><span class="std std-ref">Sysbuild（系统构建）</span></a>，请改为参阅 <a class="reference internal" href="../../build/sysbuild/index.html#sysbuild-dedicated-image-build-targets"><span class="std std-ref">镜像专用构建目标</span></a>。</p>
+<p>使用 west：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>reel_board<span class="w"> </span>samples/hello_world
+west<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>ram_report
+</pre></div>
+</div>
+<p>使用 CMake 和 ninja：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+<span class="c1"># Use cmake to configure a Ninja-based buildsystem:</span>
+cmake<span class="w"> </span>-Bbuild<span class="w"> </span>-GNinja<span class="w"> </span>-DBOARD<span class="o">=</span>reel_board<span class="w"> </span>samples/hello_world
+
+<span class="c1"># Now run the build tool on the generated build system:</span>
+ninja<span class="w"> </span>-Cbuild<span class="w"> </span>ram_report
+</pre></div>
+</div>
+<p>这些命令会生成类似下面的输出:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Path                                                           Size    %      Address
+========================================================================================
+Root                                                           4637 100.00%  -
+├── (hidden)                                                      4   0.09%  -
+├── (no paths)                                                 2748  59.26%  -
+│   ├── _cpus_active                                              4   0.09%  0x20000314
+│   ├── _kernel                                                  32   0.69%  0x20000318
+│   ├── _sw_isr_table                                           384   8.28%  0x00006474
+│   ├── cli.1                                                    16   0.35%  0x20000254
+│   ├── on.2                                                      4   0.09%  0x20000264
+│   ├── poll_out_lock.0                                           4   0.09%  0x200002d4
+│   ├── z_idle_threads                                          128   2.76%  0x20000120
+│   ├── z_interrupt_stacks                                     2048  44.17%  0x20000360
+│   └── z_main_thread                                           128   2.76%  0x200001a0
+├── WORKSPACE                                                   184   3.97%  -
+│   └── modules                                                 184   3.97%  -
+│       └── hal                                                 184   3.97%  -
+│           └── nordic                                          184   3.97%  -
+│               └── nrfx                                        184   3.97%  -
+│                   └── drivers                                 184   3.97%  -
+│                       └── src                                 184   3.97%  -
+│                           ├── nrfx_clock.c                      8   0.17%  -
+│                           │   └── m_clock_cb                    8   0.17%  0x200002e4
+│                           ├── nrfx_gpiote.c                   132   2.85%  -
+│                           │   └── m_cb                        132   2.85%  0x20000060
+│                           ├── nrfx_ppi.c                        4   0.09%  -
+│                           │   └── m_channels_allocated          4   0.09%  0x200000e4
+│                           └── nrfx_twim.c                      40   0.86%  -
+│                               └── m_cb                         40   0.86%  0x200002ec
+└── ZEPHYR_BASE                                                1701  36.68%  -
+    ├── arch                                                      5   0.11%  -
+    │   └── arm                                                   5   0.11%  -
+    │       └── core                                              5   0.11%  -
+    │           ├── mpu                                           1   0.02%  -
+    │           │   └── arm_mpu.c                                 1   0.02%  -
+    │           │       └── static_regions_num                    1   0.02%  0x20000348
+    │           └── tls.c                                         4   0.09%  -
+    │               └── z_arm_tls_ptr                             4   0.09%  0x20000240
+    ├── drivers                                                 258   5.56%  -
+    │   ├── ...                                                 ...    ...%
+========================================================================================
+                                                               4637
+</pre></div>
+</div>
+</section>
+<section id="build-target-rom-report">
+<h3>构建目标：rom_report<a class="headerlink" href="#build-target-rom-report" title="链接到此标题。"></a></h3>
+<p>以表格形式列出所有已编译对象及其 ROM 使用情况，包括每个符号的字节数及其所占百分比。数据按对象在源码树中的文件系统位置以及包含该符号的文件进行分组。</p>
+<p>针对你的开发板使用 <code class="docutils literal notranslate"><span class="pre">rom_report</span></code> 目标，如下例所示。如果使用 <a class="reference internal" href="../../build/sysbuild/index.html#sysbuild"><span class="std std-ref">Sysbuild（系统构建）</span></a>，请改为参阅 <a class="reference internal" href="../../build/sysbuild/index.html#sysbuild-dedicated-image-build-targets"><span class="std std-ref">镜像专用构建目标</span></a>。</p>
+<p>使用 west：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>reel_board<span class="w"> </span>samples/hello_world
+west<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>rom_report
+</pre></div>
+</div>
+<p>使用 CMake 和 ninja：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+<span class="c1"># Use cmake to configure a Ninja-based buildsystem:</span>
+cmake<span class="w"> </span>-Bbuild<span class="w"> </span>-GNinja<span class="w"> </span>-DBOARD<span class="o">=</span>reel_board<span class="w"> </span>samples/hello_world
+
+<span class="c1"># Now run the build tool on the generated build system:</span>
+ninja<span class="w"> </span>-Cbuild<span class="w"> </span>rom_report
+</pre></div>
+</div>
+<p>这些命令会生成类似下面的输出:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Path                                                           Size    %      Address
+========================================================================================
+Root                                                          27828 100.00%  -
+├── ...                                                         ...    ...%
+└── ZEPHYR_BASE                                               13558  48.72%  -
+    ├── arch                                                   1766   6.35%  -
+    │   └── arm                                                1766   6.35%  -
+    │       └── core                                           1766   6.35%  -
+    │           ├── cortex_m                                   1020   3.67%  -
+    │           │   ├── fault.c                                 620   2.23%  -
+    │           │   │   ├── bus_fault.constprop.0               108   0.39%  0x00000749
+    │           │   │   ├── mem_manage_fault.constprop.0        120   0.43%  0x000007b5
+    │           │   │   ├── usage_fault.constprop.0              84   0.30%  0x000006f5
+    │           │   │   ├── z_arm_fault                         292   1.05%  0x0000082d
+    │           │   │   └── z_arm_fault_init                     16   0.06%  0x00000951
+    │           │   ├── ...                                     ...    ...%
+    ├── boards                                                   32   0.11%  -
+    │   └── arm                                                  32   0.11%  -
+    │       └── reel_board                                       32   0.11%  -
+    │           └── board.c                                      32   0.11%  -
+    │               ├── __init_board_reel_board_init              8   0.03%  0x000063e4
+    │               └── board_reel_board_init                    24   0.09%  0x00000ed5
+    ├── build                                                   194   0.70%  -
+    │   └── zephyr                                              194   0.70%  -
+    │       ├── isr_tables.c                                    192   0.69%  -
+    │       │   └── _irq_vector_table                           192   0.69%  0x00000040
+    │       └── misc                                              2   0.01%  -
+    │           └── generated                                     2   0.01%  -
+    │               └── configs.c                                 2   0.01%  -
+    │                   └── _ConfigAbsSyms                        2   0.01%  0x00005945
+    ├── drivers                                                6282  22.57%  -
+    │   ├── ...                                                 ...    ...%
+========================================================================================
+                                                              21652
+</pre></div>
+</div>
+</section>
+<section id="build-targets-ram-plot-rom-plot">
+<span id="footprint-tools-plot"></span><h3>构建目标：ram_plot/rom_plot<a class="headerlink" href="#build-targets-ram-plot-rom-plot" title="链接到此标题。"></a></h3>
+<p>与 <code class="docutils literal notranslate"><span class="pre">ram_report</span></code> 和 <code class="docutils literal notranslate"><span class="pre">rom_report</span></code> 构建目标类似，这些目标以旭日图的形式生成可视化的内存使用报告。用户可以点击各扇区浏览目录结构，并将鼠标悬停在扇区上查看更多详细信息。</p>
+<p>运行这些目标时，会先生成命令行报告，然后打开一个浏览器窗口。</p>
+<p>使用 west：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>reel_board<span class="w"> </span>samples/hello_world
+west<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>ram_plot
+</pre></div>
+</div>
+<p>使用 CMake 和 ninja：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+<span class="c1"># Use cmake to configure a Ninja-based buildsystem:</span>
+cmake<span class="w"> </span>-Bbuild<span class="w"> </span>-GNinja<span class="w"> </span>-DBOARD<span class="o">=</span>reel_board<span class="w"> </span>samples/hello_world
+
+<span class="c1"># Now run the build tool on the generated build system:</span>
+ninja<span class="w"> </span>-Cbuild<span class="w"> </span>ram_plot
+</pre></div>
+</div>
+<img alt="RAM 使用旭日图" class="align-center" src="../../_images/ram_plot.png" />
+<p>ROM 使用情况也是如此。</p>
+<p>使用 west：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>reel_board<span class="w"> </span>samples/hello_world
+west<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>rom_plot
+</pre></div>
+</div>
+<p>使用 CMake 和 ninja：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+<span class="c1"># Use cmake to configure a Ninja-based buildsystem:</span>
+cmake<span class="w"> </span>-Bbuild<span class="w"> </span>-GNinja<span class="w"> </span>-DBOARD<span class="o">=</span>reel_board<span class="w"> </span>samples/hello_world
+
+<span class="c1"># Now run the build tool on the generated build system:</span>
+ninja<span class="w"> </span>-Cbuild<span class="w"> </span>rom_plot
+</pre></div>
+</div>
+<img alt="ROM 使用旭日图" class="align-center" src="../../_images/rom_plot.png" />
+</section>
+<section id="build-target-puncover">
+<h3>构建目标：puncover<a class="headerlink" href="#build-target-puncover" title="链接到此标题。"></a></h3>
+<p>该目标使用一个名为 puncover 的第三方工具，可在 <a class="reference external" href="https://github.com/HBehrens/puncover">https://github.com/HBehrens/puncover</a> 找到。构建该目标时，会启动一个本地 Web 服务器，你可以打开 Web 客户端浏览文件，并查看它们的 ROM、RAM 和栈使用情况。</p>
+<p>使用该目标之前，请安装 puncover Python 模块:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>pip3 install --user puncover
+</pre></div>
+</div>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>这是一个第三方工具，任何时候都可能能用也可能不能用。请查看 GitHub issue，并将新问题报告给该项目的维护者。</p>
+</div>
+<p>安装该 Python 模块后，针对你的开发板使用 <code class="docutils literal notranslate"><span class="pre">puncover</span></code> 目标，如下例所示。如果使用 <a class="reference internal" href="../../build/sysbuild/index.html#sysbuild"><span class="std std-ref">Sysbuild（系统构建）</span></a>，请改为参阅 <a class="reference internal" href="../../build/sysbuild/index.html#sysbuild-dedicated-image-build-targets"><span class="std std-ref">镜像专用构建目标</span></a>。</p>
+<p>使用 west：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>reel_board<span class="w"> </span>samples/hello_world
+west<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>puncover
+</pre></div>
+</div>
+<p>使用 CMake 和 ninja：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+<span class="c1"># Use cmake to configure a Ninja-based buildsystem:</span>
+cmake<span class="w"> </span>-Bbuild<span class="w"> </span>-GNinja<span class="w"> </span>-DBOARD<span class="o">=</span>reel_board<span class="w"> </span>samples/hello_world
+
+<span class="c1"># Now run the build tool on the generated build system:</span>
+ninja<span class="w"> </span>-Cbuild<span class="w"> </span>puncover
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">puncover</span></code> 目标默认会在 <code class="docutils literal notranslate"><span class="pre">localhost:5000</span></code> 上启动本地 Web 服务器。可以通过设置环境变量 <code class="docutils literal notranslate"><span class="pre">PUNCOVER_HOST</span></code> 和 <code class="docutils literal notranslate"><span class="pre">PUNCOVER_PORT</span></code> 更改 HTTP 服务器运行的主机 IP 和端口。可以在 <code class="docutils literal notranslate"><span class="pre">EXTRA_PUNCOVER_ARGS</span></code> 中定义传给 puncover 的其他参数。</p>
+<p>要在交互式 Web 应用中查看最坏情况下的栈使用分析，请在启用 <a class="reference internal" href="../../kconfig.html#CONFIG_STACK_USAGE" title="CONFIG_STACK_USAGE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_STACK_USAGE</span></code></a> 的情况下构建。</p>
+<p>使用 west：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>reel_board<span class="w"> </span>samples/hello_world<span class="w"> </span>--<span class="w"> </span>-DCONFIG_STACK_USAGE<span class="o">=</span>y<span class="w"> </span>-DCONFIG_CALLGRAPH_INFO<span class="o">=</span>y
+west<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>puncover
+</pre></div>
+</div>
+<p>使用 CMake 和 ninja：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+<span class="c1"># Use cmake to configure a Ninja-based buildsystem:</span>
+cmake<span class="w"> </span>-Bbuild<span class="w"> </span>-GNinja<span class="w"> </span>-DBOARD<span class="o">=</span>reel_board<span class="w"> </span>-DCONFIG_STACK_USAGE<span class="o">=</span>y<span class="w"> </span>-DCONFIG_CALLGRAPH_INFO<span class="o">=</span>y<span class="w"> </span>samples/hello_world
+
+<span class="c1"># Now run the build tool on the generated build system:</span>
+ninja<span class="w"> </span>-Cbuild<span class="w"> </span>puncover
+</pre></div>
+</div>
+<p>如果想在不启动 Web 应用的情况下获得一份关于所发现的最坏情况栈使用量的 JSON 报告，可以添加选项 <code class="docutils literal notranslate"><span class="pre">--generate-report</span> <span class="pre">--non-interactive</span> <span class="pre">--report-type</span> <span class="pre">json</span></code> 进行非交互式使用。并将你关心的所有函数逐个以 <code class="docutils literal notranslate"><span class="pre">--report-max-static-stack-usage</span> <span class="pre">FUNCTION_NAME:::MAXIMAL_STACK_SIZE</span></code> 形式的参数加入报告。例如，要导出 <code class="docutils literal notranslate"><span class="pre">log_process_thread_func</span></code>、<code class="docutils literal notranslate"><span class="pre">shell_thread</span></code>、<code class="docutils literal notranslate"><span class="pre">bg_thread_main</span></code> 和 <code class="docutils literal notranslate"><span class="pre">work_queue_main</span></code>，命令如下：</p>
+<p>使用 west：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>reel_board<span class="w"> </span>samples/hello_world<span class="w"> </span>--<span class="w"> </span>-DCONFIG_STACK_USAGE<span class="o">=</span>y<span class="w"> </span>-DCONFIG_CALLGRAPH_INFO<span class="o">=</span>y<span class="w"> </span>-DEXTRA_PUNCOVER_ARGS<span class="o">=</span><span class="s2">"--generate-report;--non-interactive;--report-type;json;--report-max-static-stack-usage;log_process_thread_func:::832;--report-max-static-stack-usage;shell_thread:::4160;--report-max-static-stack-usage;bg_thread_main:::2112;--report-max-static-stack-usage;work_queue_main:::1088;--report-filename;</span><span class="nv">$PWD</span><span class="s2">/report"</span>
+west<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>puncover
+</pre></div>
+</div>
+<p>使用 CMake 和 ninja：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+<span class="c1"># Use cmake to configure a Ninja-based buildsystem:</span>
+cmake<span class="w"> </span>-Bbuild<span class="w"> </span>-GNinja<span class="w"> </span>-DBOARD<span class="o">=</span>reel_board<span class="w"> </span>-DCONFIG_STACK_USAGE<span class="o">=</span>y<span class="w"> </span>-DCONFIG_CALLGRAPH_INFO<span class="o">=</span>y<span class="w"> </span>-DEXTRA_PUNCOVER_ARGS<span class="o">=</span><span class="s2">"--generate-report;--non-interactive;--report-type;json;--report-max-static-stack-usage;log_process_thread_func:::832;--report-max-static-stack-usage;shell_thread:::4160;--report-max-static-stack-usage;bg_thread_main:::2112;--report-max-static-stack-usage;work_queue_main:::1088;--report-filename;</span><span class="nv">$PWD</span><span class="s2">/report"</span><span class="w"> </span>samples/hello_world
+
+<span class="c1"># Now run the build tool on the generated build system:</span>
+ninja<span class="w"> </span>-Cbuild<span class="w"> </span>puncover
+</pre></div>
+</div>
+<p>为了便于维护和总览，也可以把所有参数放到一个 yaml 配置文件中：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">elf_file</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">~/zephyrproject/zephyr/samples/net/mqtt_publisher/build/zephyr/zephyr.elf</span>
+<span class="nt">gcc-tools-base</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">~/zephyr-sdk-1.0.1/gnu/arm-zephyr-eabi/bin/arm-zephyr-eabi-</span>
+<span class="nt">src_root</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">~/zephyrproject/zephyr</span>
+<span class="nt">build_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">~/zephyrproject/zephyr/samples/net/mqtt_publisher/build</span>
+<span class="nt">generate-report</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="nt">non-interactive</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="nt">report-type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">json</span>
+<span class="nt">report-max-static-stack-usage</span><span class="p">:</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">log_process_thread_func:::832</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">shell_thread:::4160</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bg_thread_main:::2112</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">work_queue_main:::1088</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mgmt_event_work_handler:::896</span>
+</pre></div>
+</div>
+<p>使用 west：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>reel_board<span class="w"> </span>samples/hello_world<span class="w"> </span>--<span class="w"> </span>-DCONFIG_STACK_USAGE<span class="o">=</span>y<span class="w"> </span>-DCONFIG_CALLGRAPH_INFO<span class="o">=</span>y<span class="w"> </span>-DEXTRA_PUNCOVER_ARGS<span class="o">=</span><span class="s2">"-c puncover_config.yaml"</span>
+west<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>puncover
+</pre></div>
+</div>
+<p>使用 CMake 和 ninja：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+<span class="c1"># Use cmake to configure a Ninja-based buildsystem:</span>
+cmake<span class="w"> </span>-Bbuild<span class="w"> </span>-GNinja<span class="w"> </span>-DBOARD<span class="o">=</span>reel_board<span class="w"> </span>-DCONFIG_STACK_USAGE<span class="o">=</span>y<span class="w"> </span>-DCONFIG_CALLGRAPH_INFO<span class="o">=</span>y<span class="w"> </span>-DEXTRA_PUNCOVER_ARGS<span class="o">=</span><span class="s2">"-c puncover_config.yaml"</span><span class="w"> </span>samples/hello_world
+
+<span class="c1"># Now run the build tool on the generated build system:</span>
+ninja<span class="w"> </span>-Cbuild<span class="w"> </span>puncover
+</pre></div>
+</div>
+</section>
+</section>
+<section id="data-structures">
+<span id="data-structure-tools"></span><h2>数据结构<a class="headerlink" href="#data-structures" title="链接到此标题。"></a></h2>
+<section id="build-target-pahole">
+<h3>构建目标：pahole<a class="headerlink" href="#build-target-pahole" title="链接到此标题。"></a></h3>
+<p>Poke-a-hole（pahole）是一个目标文件分析工具，用于查看数据结构的大小，以及编译器为将数据元素按 CPU 字长对齐而产生的空洞。</p>
+<p>使用该目标之前必须安装 Poke-a-hole（pahole）。可以从 <a class="reference external" href="https://git.kernel.org/pub/scm/devel/pahole/pahole.git">https://git.kernel.org/pub/scm/devel/pahole/pahole.git</a> 获取，在 fedora 和 ubuntu 中都包含在 dwarves 软件包里:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>sudo apt-get install dwarves
+</pre></div>
+</div>
+<p>也可以从 fedora 获取:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>sudo dnf install dwarves
+</pre></div>
+</div>
+<p>安装该软件包后，针对你的开发板使用 <code class="docutils literal notranslate"><span class="pre">pahole</span></code> 目标，如下例所示。如果使用 <a class="reference internal" href="../../build/sysbuild/index.html#sysbuild"><span class="std std-ref">Sysbuild（系统构建）</span></a>，请改为参阅 <a class="reference internal" href="../../build/sysbuild/index.html#sysbuild-dedicated-image-build-targets"><span class="std std-ref">镜像专用构建目标</span></a>。</p>
+<p>使用 west：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>reel_board<span class="w"> </span>samples/hello_world
+west<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>pahole
+</pre></div>
+</div>
+<p>使用 CMake 和 ninja：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+<span class="c1"># Use cmake to configure a Ninja-based buildsystem:</span>
+cmake<span class="w"> </span>-Bbuild<span class="w"> </span>-GNinja<span class="w"> </span>-DBOARD<span class="o">=</span>reel_board<span class="w"> </span>samples/hello_world
+
+<span class="c1"># Now run the build tool on the generated build system:</span>
+ninja<span class="w"> </span>-Cbuild<span class="w"> </span>pahole
+</pre></div>
+</div>
+<p>Pahole 会在控制台中生成类似下面的输出:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>/* Used at: [...]/build/zephyr/kobject_hash.c */
+/* &lt;375&gt; [...]/zephyr/include/zephyr/sys/dlist.h:37 */
+union {
+        struct _dnode *            head;               /*     0     4 */
+        struct _dnode *            next;               /*     0     4 */
+};
+/* Used at: [...]/build/zephyr/kobject_hash.c */
+/* &lt;397&gt; [...]/zephyr/include/zephyr/sys/dlist.h:36 */
+struct _dnode {
+        union {
+                struct _dnode *    head;                 /*     0     4 */
+                struct _dnode *    next;                 /*     0     4 */
+        };                                               /*     0     4 */
+        union {
+                struct _dnode *    tail;                 /*     4     4 */
+                struct _dnode *    prev;                 /*     4     4 */
+        };                                               /*     4     4 */
+
+        /* size: 8, cachelines: 1, members: 2 */
+        /* last cacheline: 8 bytes */
+};
+/* Used at: [...]/build/zephyr/kobject_hash.c */
+/* &lt;3b7&gt; [...]/zephyr/include/zephyr/sys/dlist.h:41 */
+union {
+        struct _dnode *            tail;               /*     0     4 */
+        struct _dnode *            prev;               /*     0     4 */
+};
+...
+...
+</pre></div>
+</div>
+</section>
+</section>
+<section id="dashboard">
+<span id="id2"></span><h2>仪表板<a class="headerlink" href="#dashboard" title="链接到此标题。"></a></h2>
+<p>可以生成一个 HTML 仪表板，将各种工具的输出和产物汇总到一个简洁的视图中。除了构建结果的基本摘要外，还包括以下详细信息：</p>
+<ul class="simple">
+<li><p>以可逐层展开的表格形式呈现的完整内存报告（ram、rom），以及 <a class="reference internal" href="#footprint-tools-plot"><span class="std std-ref">图表</span></a>（与 <code class="docutils literal notranslate"><span class="pre">footprint</span></code>、<code class="docutils literal notranslate"><span class="pre">ram_plot</span></code> 和 <code class="docutils literal notranslate"><span class="pre">rom_plot</span></code> 构建目标的输出相同）。</p></li>
+<li><p>Kconfig 符号的值及其来源（与 <code class="docutils literal notranslate"><span class="pre">traceconfig</span></code> 构建目标的输出相同）。</p></li>
+<li><p>带函数名的初始化级别，并报告 sys-init 与设备树之间的任何优先级问题（与 <code class="docutils literal notranslate"><span class="pre">initlevels</span></code> 构建目标的输出相同）。</p></li>
+<li><p>可导航的设备树视图，包含属性值以及来自各绑定的详细信息。</p></li>
+</ul>
+<p>针对你的开发板使用 <code class="docutils literal notranslate"><span class="pre">dashboard</span></code> 目标，如下例所示。如果使用 <a class="reference internal" href="../../build/sysbuild/index.html#sysbuild"><span class="std std-ref">Sysbuild（系统构建）</span></a>，请改为参阅 <a class="reference internal" href="../../build/sysbuild/index.html#sysbuild-dedicated-image-build-targets"><span class="std std-ref">镜像专用构建目标</span></a>。</p>
+<p>使用 west：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>reel_board<span class="w"> </span>samples/hello_world
+west<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>dashboard
+</pre></div>
+</div>
+<p>使用 CMake 和 ninja：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+<span class="c1"># Use cmake to configure a Ninja-based buildsystem:</span>
+cmake<span class="w"> </span>-Bbuild<span class="w"> </span>-GNinja<span class="w"> </span>-DBOARD<span class="o">=</span>reel_board<span class="w"> </span>samples/hello_world
+
+<span class="c1"># Now run the build tool on the generated build system:</span>
+ninja<span class="w"> </span>-Cbuild<span class="w"> </span>dashboard
+</pre></div>
+</div>
+<p>这会生成以下输出文件，并在默认浏览器中打开:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>build/dashboard/index.html
+</pre></div>
+</div>
+<img alt="仪表板" class="align-center" src="../../_images/dashboard.webp" />
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 8月 02, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

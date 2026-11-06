@@ -1,0 +1,612 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>连接实现 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/connectivity/networking/conn_mgr/implementation.html" />
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../../search.html" />
+    <link rel="next" title="分布式交换架构（DSA）" href="../dsa.html" />
+    <link rel="prev" title="概述" href="main.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html">
+            
+              <img src="../../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">服务</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">连接</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">网络</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../overview.html">概述</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../net-stack-architecture.html">网络协议栈架构</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../net_config_guide.html">网络配置指南</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../networking_with_host.html">与主机系统联网</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../network_monitoring.html">监视网络流量</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../network_tracing.html">网络跟踪</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../conformance/index.html">使用 TTCN-3 进行协议一致性测试</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../api/index.html">网络 API</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="index.html">连接管理器</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="main.html">概述</a></li>
+<li class="toctree-l5"><a class="reference internal" href="main.html#connectivity-monitoring">连接监视</a></li>
+<li class="toctree-l5"><a class="reference internal" href="main.html#connectivity-control">连接控制</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">连接实现</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#overview">概述</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#architecture">架构</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#context-pointer">上下文指针</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#defining-an-implementation">定义实现</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#declaring-an-implementation-publicly">公开声明实现</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#declaring-a-context-type">声明上下文类型</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#binding-an-iface-to-an-implementation">将接口绑定到实现</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#connectivity-implementation-guidelines">连接实现指南</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#implementing-timeouts-and-persistence">实现超时和持久性</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#implementation-api">实现 API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../dsa.html">分布式交换架构（DSA）</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../bluetooth/index.html">Bluetooth</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../usb/index.html">USB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../canbus/index.html">控制器局域网（CAN）总线协议</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lora_lorawan/index.html">LoRa 和 LoRaWAN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modbus/index.html">Modbus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modem/index.html">调制解调器模块</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../../index.html">连接</a> &raquo;</li>
+  
+     <li><a href="../index.html">网络</a> &raquo;</li>
+  
+     <li><a href="index.html">连接管理器</a> &raquo;</li>
+  
+  <li>连接实现</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="connectivity-implementations">
+<span id="conn-mgr-impl"></span><h1>连接实现<a class="headerlink" href="#connectivity-implementations" title="链接到此标题。"></a></h1>
+<section id="overview">
+<span id="conn-mgr-impl-overview"></span><h2>概述<a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>连接实现是特定于某种技术的模块，使特定的 Zephyr 接口能够支持 <a class="reference internal" href="main.html#conn-mgr-control"><span class="std std-ref">连接控制</span></a>。它们负责将通用的 <a class="reference internal" href="main.html#conn-mgr-control-api"><span class="std std-ref">连接控制 API</span></a> 调用转换为特定于硬件的操作，还负责实现标准化的 <a class="reference internal" href="main.html#conn-mgr-control-persistence-timeouts"><span class="std std-ref">持久性和超时</span></a> 行为。</p>
+<p>关于编写符合规范的连接实现的详情，参见 <a class="reference internal" href="#conn-mgr-impl-guidelines"><span class="std std-ref">实现指南</span></a>。</p>
+</section>
+<section id="architecture">
+<span id="conn-mgr-impl-architecture"></span><h2>架构<a class="headerlink" href="#architecture" title="链接到此标题。"></a></h2>
+<p>借助 <a class="reference internal" href="#conn-mgr-impl-api"><span class="std std-ref">实现 API</span></a>，可以在构建时使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">CONN_MGR_CONN_DEFINE</span></code> <a class="reference internal" href="#conn-mgr-impl-defining"><span class="std std-ref">定义</span></a> 连接实现。</p>
+<p>这会创建 <code class="xref c c-struct docutils literal notranslate"><span class="pre">conn_mgr_conn_impl</span></code> 结构体的一个静态实例，其中保存对传入的 <code class="xref c c-struct docutils literal notranslate"><span class="pre">conn_mgr_conn_api</span></code> 结构体（应填充实现回调）的引用。</p>
+<p>定义之后，可以按名称引用实现，并使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">CONN_MGR_BIND_CONN</span></code> 将其绑定到任何未绑定的接口。注意不要意外地将两个连接实现绑定到同一个接口。</p>
+<p>接口绑定后，就可以在该接口上调用 <a class="reference internal" href="main.html#conn-mgr-control-api"><span class="std std-ref">连接控制 API</span></a> 函数，这些调用会被转换为 <code class="xref c c-struct docutils literal notranslate"><span class="pre">conn_mgr_conn_api</span></code> 中相应的实现函数。</p>
+<p>绑定接口不会直接修改其 <code class="xref c c-struct docutils literal notranslate"><span class="pre">iface</span> <span class="pre">struct</span></code>。</p>
+<p>而是会创建一个 <code class="xref c c-struct docutils literal notranslate"><span class="pre">conn_mgr_conn_binding</span></code> 实例，并将其追加到内部的 <a class="reference internal" href="../../../../kernel/iterable_sections/index.html#iterable-sections-api"><span class="std std-ref">可迭代段</span></a> 中。</p>
+<p>该绑定结构体包含对所绑定接口的引用、该接口所绑定的连接实现，以及一个指向每接口 <a class="reference internal" href="#conn-mgr-impl-ctx"><span class="std std-ref">上下文指针</span></a> 的指针。</p>
+<p>通过遍历该可迭代段，可以查出给定接口绑定了哪个连接实现（如果有的话）。<a class="reference internal" href="main.html#conn-mgr-control-api"><span class="std std-ref">连接控制 API</span></a> 中的大多数函数都使用这一查找过程。因此，由于查找开销相对较高，应尽量少调用这些函数。</p>
+<p>同一个连接实现可以绑定到多个接口。详情参见 <a class="reference internal" href="#conn-mgr-impl-guidelines-no-instancing"><span class="std std-ref">不要为实现创建多个实例</span></a>。</p>
+<figure class="align-center align-default" id="id1">
+<span id="conn-mgr-integration-diagram-detailed"></span><img alt="连接管理器与 Zephyr 和应用程序集成方式的详细视图。" src="../../../../_images/integration_diagram_detailed.svg" />
+<figcaption>
+<p><span class="caption-text">连接管理器与 Zephyr 和应用程序集成方式的详细视图。</span><a class="headerlink" href="#id1" title="链接到此图片"></a></p>
+<div class="legend">
+<p>简化版本参见 <a class="reference internal" href="main.html#conn-mgr-integration-diagram-simple"><span class="std std-ref">此处</span></a>。</p>
+</div>
+</figcaption>
+</figure>
+</section>
+<section id="context-pointer">
+<span id="conn-mgr-impl-ctx"></span><h2>上下文指针<a class="headerlink" href="#context-pointer" title="链接到此标题。"></a></h2>
+<p>由于同一个连接实现可能由多个 Zephyr 接口共享，每个绑定都会实例化一个该绑定独有的上下文容器（其 <a class="reference internal" href="#conn-mgr-impl-declaring"><span class="std std-ref">类型可配置</span></a>）。每个绑定在实例化时都带有对该容器的引用，实现可以借此访问每个接口的状态信息。</p>
+<p>另请参见 <a class="reference internal" href="#conn-mgr-impl-guidelines-binding-access"><span class="std std-ref">不要在未加锁的情况下访问绑定</span></a> 和 <a class="reference internal" href="#conn-mgr-impl-guidelines-no-instancing"><span class="std std-ref">不要为实现创建多个实例</span></a>。</p>
+</section>
+<section id="defining-an-implementation">
+<span id="conn-mgr-impl-defining"></span><h2>定义实现<a class="headerlink" href="#defining-an-implementation" title="链接到此标题。"></a></h2>
+<p>可以按如下方式定义连接实现：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Create the API implementation functions */</span>
+<span class="kt">int</span><span class="w"> </span><span class="nf">my_connect_impl</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">conn_mgr_conn_binding</span><span class="w"> </span><span class="o">*</span><span class="k">const</span><span class="w"> </span><span class="n">binding</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="cm">/* Cause your underlying technology to associate */</span>
+<span class="p">}</span>
+<span class="kt">int</span><span class="w"> </span><span class="nf">my_disconnect_impl</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">conn_mgr_conn_binding</span><span class="w"> </span><span class="o">*</span><span class="k">const</span><span class="w"> </span><span class="n">binding</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="cm">/* Cause your underlying technology to disassociate */</span>
+<span class="p">}</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">my_init_impl</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">conn_mgr_conn_binding</span><span class="w"> </span><span class="o">*</span><span class="k">const</span><span class="w"> </span><span class="n">binding</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="cm">/* Perform any required initialization for your underlying technology */</span>
+<span class="p">}</span>
+
+<span class="cm">/* Declare the API struct */</span>
+<span class="k">static</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">conn_mgr_conn_api</span><span class="w"> </span><span class="n">my_impl_api</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">connect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">my_connect_impl</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">disconnect</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">my_disconnect_impl</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">init</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">my_init_impl</span><span class="p">,</span>
+<span class="w">        </span><span class="cm">/* ... so on */</span>
+<span class="p">};</span>
+
+<span class="cm">/* Define the implementation (named MY_CONNECTIVITY_IMPL) */</span>
+<span class="n">CONN_MGR_CONN_DEFINE</span><span class="p">(</span><span class="n">MY_CONNECTIVITY_IMPL</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">my_impl_api</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>除非同时 <a class="reference internal" href="#conn-mgr-impl-declaring-ctx"><span class="std std-ref">声明上下文指针类型</span></a>，否则这样做无法工作。</p>
+</div>
+</section>
+<section id="declaring-an-implementation-publicly">
+<span id="conn-mgr-impl-declaring"></span><h2>公开声明实现<a class="headerlink" href="#declaring-an-implementation-publicly" title="链接到此标题。"></a></h2>
+<p>定义之后，可以按如下方式（在头文件中）声明连接实现，使其可供其他编译单元使用：</p>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">my_connectivity_header.h</span></code></span><a class="headerlink" href="#id2" title="链接到此段代码"></a></div>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">CONN_MGR_CONN_DECLARE_PUBLIC</span><span class="p">(</span><span class="n">MY_CONNECTIVITY_IMPL</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<p>任何需要引用该实现的编译单元都必须包含含有此声明的头文件。</p>
+</section>
+<section id="declaring-a-context-type">
+<span id="conn-mgr-impl-declaring-ctx"></span><h2>声明上下文类型<a class="headerlink" href="#declaring-a-context-type" title="链接到此标题。"></a></h2>
+<p>要使 <code class="xref c c-macro docutils literal notranslate"><span class="pre">CONN_MGR_CONN_DEFINE</span></code> 正常工作，必须声明相应的上下文指针类型。这是因为所有连接绑定都包含一个其关联上下文指针类型的 <a class="reference internal" href="#conn-mgr-impl-ctx"><span class="std std-ref">上下文指针</span></a>。</p>
+<p>如果使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">CONN_MGR_CONN_DECLARE_PUBLIC</span></code>，请将该类型与声明一起声明：</p>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">my_connectivity_impl.h</span></code></span><a class="headerlink" href="#id3" title="链接到此段代码"></a></div>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#define MY_CONNECTIVITY_IMPL_CTX_TYPE struct my_context_type *</span>
+<span class="n">CONN_MGR_CONN_DECLARE_PUBLIC</span><span class="p">(</span><span class="n">MY_CONNECTIVITY_IMPL</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<p>然后，确保在调用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">CONN_MGR_CONN_DEFINE</span></code> 之前包含该头文件：</p>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">my_connectivity_impl.c</span></code></span><a class="headerlink" href="#id4" title="链接到此段代码"></a></div>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">"my_connectivity_impl.h"</span>
+
+<span class="n">CONN_MGR_CONN_DEFINE</span><span class="p">(</span><span class="n">MY_CONNECTIVITY_IMPL</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">my_impl_api</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<p>否则，只需在调用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">CONN_MGR_CONN_DEFINE</span></code> 之前紧接着声明上下文指针类型即可：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#define MY_CONNECTIVITY_IMPL_CTX_TYPE struct my_context_type *</span>
+<span class="n">CONN_MGR_CONN_DEFINE</span><span class="p">(</span><span class="n">MY_CONNECTIVITY_IMPL</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">my_impl_api</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>命名很重要。上下文指针类型声明必须使用与实现声明相同的名称，并在末尾加上 <code class="docutils literal notranslate"><span class="pre">_CTX_TYPE</span></code>。</p>
+<p>在上一个示例中，上下文类型命名为 <code class="docutils literal notranslate"><span class="pre">MY_CONNECTIVITY_IMPL_CTX_TYPE</span></code>，因为连接实现的名称是 <code class="docutils literal notranslate"><span class="pre">MY_CONNECTIVITY_IMPL</span></code>。</p>
+</div>
+<p>如果连接实现不需要上下文指针，只需将该类型声明为 void：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#define MY_CONNECTIVITY_IMPL_CTX_TYPE void *</span>
+</pre></div>
+</div>
+</section>
+<section id="binding-an-iface-to-an-implementation">
+<span id="conn-mgr-impl-binding"></span><h2>将接口绑定到实现<a class="headerlink" href="#binding-an-iface-to-an-implementation" title="链接到此标题。"></a></h2>
+<p>在接口的设备定义之后的任何位置调用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">CONN_MGR_BIND_CONN</span></code>，即可将已定义的连接实现绑定到该接口：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Define an iface */</span>
+<span class="n">NET_DEVICE_INIT</span><span class="p">(</span><span class="n">my_iface</span><span class="p">,</span>
+<span class="w">        </span><span class="cm">/* ... the specifics here don't matter ... */</span>
+<span class="p">);</span>
+
+<span class="cm">/* Now bind MY_CONNECTIVITY_IMPL to that iface --</span>
+<span class="cm"> * the name used should match with the above</span>
+<span class="cm"> */</span>
+<span class="n">CONN_MGR_BIND_CONN</span><span class="p">(</span><span class="n">my_iface</span><span class="p">,</span><span class="w"> </span><span class="n">MY_CONNECTIVITY_IMPL</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="connectivity-implementation-guidelines">
+<span id="conn-mgr-impl-guidelines"></span><h2>连接实现指南<a class="headerlink" href="#connectivity-implementation-guidelines" title="链接到此标题。"></a></h2>
+<p>连接管理器并不集中实现所有功能，而是依靠每个连接实现分别实现许多行为和功能。</p>
+<p>这种做法使连接管理器保持精简，并允许每个连接实现为自己选择最合适的方式来实现这些行为。但它依赖于一种信任，即所有连接实现都会如实地实现委派给它们的功能。</p>
+<p>为保持所有连接实现之间的一致性，编写自己的实现时请遵循以下指南：</p>
+<section id="completely-implement-timeout-and-persistence">
+<span id="conn-mgr-impl-guidelines-timeout-persistence"></span><h3><em>完整实现超时和持久性</em><a class="headerlink" href="#completely-implement-timeout-and-persistence" title="链接到此标题。"></a></h3>
+<p>所有连接实现都必须完整支持 <a class="reference internal" href="main.html#conn-mgr-control-persistence-timeouts"><span class="std std-ref">超时和持久性</span></a>，使用户无论底层技术的固有行为如何，都能禁用或启用这些功能。换言之，无论底层技术行为如何，你的实现都必须让最终用户看到的行为与 <a class="reference internal" href="main.html#conn-mgr-control-persistence-timeouts"><span class="std std-ref">超时和持久性</span></a> 一节的规定完全一致。</p>
+<p>关于实现超时和持久性的详细技术讨论，参见 <a class="reference internal" href="#conn-mgr-impl-timeout-persistence"><span class="std std-ref">实现超时和持久性</span></a>。</p>
+</section>
+<section id="conform-to-api-specifications">
+<span id="conn-mgr-impl-guidelines-conformity"></span><h3><em>遵循 API 规范</em><a class="headerlink" href="#conform-to-api-specifications" title="链接到此标题。"></a></h3>
+<p>你实现的每个 <code class="xref c c-struct docutils literal notranslate"><span class="pre">implementation</span> <span class="pre">API</span> <span class="pre">function</span></code> 都应按照相应连接控制 API 函数所述的方式运行。</p>
+<p>例如，你对 <code class="xref c c-member docutils literal notranslate"><span class="pre">conn_mgr_conn_api.connect</span></code> 的实现应符合 <code class="xref c c-func docutils literal notranslate"><span class="pre">conn_mgr_if_connect()</span></code> 所述的行为。</p>
+</section>
+<section id="allow-connectivity-pre-configuration">
+<span id="conn-mgr-impl-guidelines-preconfig"></span><h3><em>允许预先配置连接</em><a class="headerlink" href="#allow-connectivity-pre-configuration" title="链接到此标题。"></a></h3>
+<p>连接实现应为应用程序提供在调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">conn_mgr_if_connect()</span></code> 之前预先配置所有必要连接参数（例如网络 SSID，或在适用时的 PSK）的方法。不应要求在 <code class="xref c c-func docutils literal notranslate"><span class="pre">conn_mgr_if_connect()</span></code> 调用中或调用之后才提供这些信息，不过 <a class="reference internal" href="#conn-mgr-impl-guidelines-await-config"><span class="std std-ref">如果未提供这些信息，实现应等待这些信息</span></a>。</p>
+</section>
+<section id="await-valid-connectivity-configuration">
+<span id="conn-mgr-impl-guidelines-await-config"></span><h3><em>等待有效的连接配置</em><a class="headerlink" href="#await-valid-connectivity-configuration" title="链接到此标题。"></a></h3>
+<p>如果由于应用程序预先配置了无效的连接参数，或根本没有配置连接参数而导致网络关联失败，应将其视为网络故障。</p>
+<p>换言之，即使尚未配置有效的连接参数，连接实现也不应放弃连接尝试。</p>
+<p>相反，连接实现应异步等待有效的连接参数被配置，可以无限期等待，也可以等到配置的 <a class="reference internal" href="main.html#conn-mgr-control-timeouts"><span class="std std-ref">连接超时</span></a> 到期。</p>
+<p>例外情况是：网络接口被配置为非持久，且连接实现定义了 <code class="xref c c-member docutils literal notranslate"><span class="pre">conn_mgr_conn_api.has_connection_config</span></code> 的实现。</p>
+<p>这种情况下，为降低功耗并避免不必要的状态转换，如果 <code class="xref c c-member docutils literal notranslate"><span class="pre">conn_mgr_conn_api.has_connection_config</span></code> 返回 <code class="docutils literal notranslate"><span class="pre">false</span></code>，<code class="xref c c-func docutils literal notranslate"><span class="pre">conn_mgr_if_connect()</span></code> 会提前退出，而不启用接口。此时会发出 <code class="xref c c-enum docutils literal notranslate"><span class="pre">NET_EVENT_CONN_IF_NO_CONFIGURATION</span></code> 事件，通知订阅者配置有误。</p>
+</section>
+<section id="implement-iface-state-reporting">
+<span id="conn-mgr-impl-guidelines-iface-state-reporting"></span><h3><em>实现接口状态上报</em><a class="headerlink" href="#implement-iface-state-reporting" title="链接到此标题。"></a></h3>
+<p>所有连接实现都必须使所绑定接口的状态保持最新。</p>
+<p>具体而言：</p>
+<ul class="simple">
+<li><p>在 <code class="xref c c-member docutils literal notranslate"><span class="pre">binding</span> <span class="pre">init</span></code> 期间将接口设置为 dormant、carrier-down 或两者兼有。</p>
+<ul>
+<li><p>关于接口 carrier 和 dormant 状态的详情，参见 <a class="reference internal" href="../api/net_if.html#net-if-interface-state-management"><span class="std std-ref">网络接口状态管理</span></a>。</p></li>
+</ul>
+</li>
+<li><p>更新 dormant 和 carrier 状态，使接口在关联完成且连接就绪时（并且仅在此时）处于非 dormant 和 carrier-up 状态。</p></li>
+<li><p>一旦检测到服务中断，立即将接口设置为 dormant 或 carrier-down。</p>
+<ul>
+<li><p>对于服务经常间歇性中断的网络技术，可以在此之前加一个较短的超时（与连接超时分开）。</p></li>
+</ul>
+</li>
+<li><p>如果该技术也负责 IP 地址分配，请确保这些 IP 地址已 <a class="reference internal" href="../api/net_if.html#net-if-interface-ip-management"><span class="std std-ref">分配给接口</span></a>。</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>接口状态更新不一定需要由连接实现直接执行。</p>
+<p>例如：</p>
+<ul class="simple">
+<li><p>如果接口使用 <a class="reference internal" href="../api/dhcpv4.html#dhcpv4-interface"><span class="std std-ref">DHCP</span></a>，则无需分配 IP 地址。</p></li>
+<li><p>如果底层的 <a class="reference internal" href="../api/net_l2.html#net-l2-interface"><span class="std std-ref">L2 实现</span></a> 已经更新接口的 dormant 状态，连接实现就无需再更新。</p></li>
+</ul>
+</div>
+</section>
+<section id="do-not-use-iface-state-as-implementation-state">
+<span id="conn-mgr-impl-guidelines-iface-state-writeonly"></span><h3><em>不要将接口状态用作实现状态</em><a class="headerlink" href="#do-not-use-iface-state-as-implementation-state" title="链接到此标题。"></a></h3>
+<p>其他线程可能在不遵守绑定互斥量的情况下访问 Zephyr 接口。因此，在连接实现回调执行期间，Zephyr 接口状态可能发生不可预测的变化。</p>
+<p>因此，不要基于接口状态来决定实现的行为。</p>
+<p>应使接口状态保持最新以反映网络可用性，但不要出于任何目的读取接口状态。</p>
+<p>如果需要跟踪 dormant 状态或 IP 地址分配，请使用存储在 <a class="reference internal" href="#conn-mgr-impl-ctx"><span class="std std-ref">上下文指针</span></a> 中的独立状态变量。</p>
+</section>
+<section id="remain-non-interferent">
+<span id="conn-mgr-impl-guidelines-non-interference"></span><h3><em>保持不干扰</em><a class="headerlink" href="#remain-non-interferent" title="链接到此标题。"></a></h3>
+<p>连接实现不应阻止应用程序直接与相关的特定技术 API 交互。</p>
+<p>换言之，应用程序应当能够直接使用底层技术，而不会破坏你的连接实现。</p>
+<p>如果确实必须存在例外，应将其限定在特定的 API 调用上，并加以文档说明。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>虽然连接实现不能因此出错，但如果应用程序试图直接控制关联状态，实现出现可能意料之外的行为是可以接受的。</p>
+<p>例如，如果应用程序直接指示底层技术解除关联，连接实现将其解读为意外的连接丢失并立即尝试重新关联，这是可以接受的。</p>
+</div>
+</section>
+<section id="remain-non-blocking">
+<span id="conn-mgr-impl-guidelines-non-blocking"></span><h3><em>保持非阻塞</em><a class="headerlink" href="#remain-non-blocking" title="链接到此标题。"></a></h3>
+<p>所有连接实现回调都应是非阻塞的。</p>
+<p>例如，调用 <code class="xref c c-member docutils literal notranslate"><span class="pre">conn_mgr_conn_api.connect</span></code> 应发起连接过程并立即返回。</p>
+<p>一个例外是 <code class="xref c c-member docutils literal notranslate"><span class="pre">conn_mgr_conn_api.init</span></code>，其实现允许阻塞。</p>
+<p>不过请注意，在该回调中阻塞会延迟系统初始化，因此仍应考虑将耗时任务交给后台线程执行。</p>
+</section>
+<section id="make-api-immediately-ready">
+<span id="conn-mgr-impl-guidelines-immediate-api-readiness"></span><h3><em>使 API 立即就绪</em><a class="headerlink" href="#make-api-immediately-ready" title="链接到此标题。"></a></h3>
+<p>连接实现必须在 <code class="xref c c-member docutils literal notranslate"><span class="pre">conn_mgr_conn_api.init</span></code> 之后立即准备好接收 API 调用。</p>
+<p>例如，即使紧接在 <code class="xref c c-member docutils literal notranslate"><span class="pre">conn_mgr_conn_api.init</span></code> 之后调用 <code class="xref c c-member docutils literal notranslate"><span class="pre">conn_mgr_conn_api.connect</span></code>，也必须最终引发一次关联尝试。</p>
+<p>如果在调用 <code class="xref c c-member docutils literal notranslate"><span class="pre">conn_mgr_conn_api.init</span></code> 时底层技术无法立即准备好接收连接命令，则必须以非阻塞方式将对 <code class="xref c c-member docutils literal notranslate"><span class="pre">conn_mgr_conn_api.connect</span></code> 的调用排队，并在就绪后再执行。</p>
+</section>
+<section id="do-not-store-state-information-outside-the-context-pointer">
+<span id="conn-mgr-impl-guidelines-context-pointer"></span><h3><em>不要在上下文指针之外存储状态信息</em><a class="headerlink" href="#do-not-store-state-information-outside-the-context-pointer" title="链接到此标题。"></a></h3>
+<p>连接管理器为每个绑定提供一个上下文指针。</p>
+<p>连接实现应将所有状态信息存储在该上下文指针中。</p>
+<p>唯一的例外是只打算绑定到单个接口的连接实现，这类实现可以改用静态声明的状态。</p>
+<p>另请参见 <a class="reference internal" href="#conn-mgr-impl-guidelines-no-instancing"><span class="std std-ref">不要为实现创建多个实例</span></a>。</p>
+</section>
+<section id="access-ifaces-only-through-binding-structs">
+<span id="conn-mgr-impl-guidelines-iface-access"></span><h3><em>只通过绑定结构体访问接口</em><a class="headerlink" href="#access-ifaces-only-through-binding-structs" title="链接到此标题。"></a></h3>
+<p>不要使用静态声明的接口，也不要从外部获取对接口的引用。</p>
+<p>例如，不要假定所绑定的接口就是默认接口而使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">net_if_get_default()</span></code>。</p>
+<p>而应始终使用相关 <code class="xref c c-struct docutils literal notranslate"><span class="pre">binding</span> <span class="pre">struct</span></code> 提供的 <code class="xref c c-member docutils literal notranslate"><span class="pre">iface</span> <span class="pre">pointer</span></code>。另请参见 <a class="reference internal" href="#conn-mgr-impl-guidelines-binding-access"><span class="std std-ref">不要在未加锁的情况下访问绑定</span></a>。</p>
+</section>
+<section id="make-implementations-optional-at-compile-time">
+<span id="conn-mgr-impl-guidelines-bindings-optional"></span><h3><em>使实现在编译时可选</em><a class="headerlink" href="#make-implementations-optional-at-compile-time" title="链接到此标题。"></a></h3>
+<p>连接实现应提供一个 Kconfig 选项，用于启用或禁用该实现，而不影响所绑定接口的可用性。</p>
+<p>换言之，应当可以配置这样的构建：包含连接管理器以及原本会绑定到该实现的接口，但不包含该实现本身及其绑定。</p>
+</section>
+<section id="do-not-instance-implementations">
+<span id="conn-mgr-impl-guidelines-no-instancing"></span><h3><em>不要为实现创建多个实例</em><a class="headerlink" href="#do-not-instance-implementations" title="链接到此标题。"></a></h3>
+<p>不要为要绑定的每个接口分别声明一个连接实现。</p>
+<p>而应将一个全局连接实现绑定到所有接口，并使用上下文指针存储与各个接口相关的状态。</p>
+<p>另请参见 <a class="reference internal" href="#conn-mgr-impl-guidelines-binding-access"><span class="std std-ref">不要在未加锁的情况下访问绑定</span></a> 和 <a class="reference internal" href="#conn-mgr-impl-guidelines-iface-access"><span class="std std-ref">只通过绑定结构体访问接口</span></a>。</p>
+</section>
+<section id="do-not-access-bindings-without-locking-them">
+<span id="conn-mgr-impl-guidelines-binding-access"></span><h3><em>不要在未加锁的情况下访问绑定</em><a class="headerlink" href="#do-not-access-bindings-without-locking-them" title="链接到此标题。"></a></h3>
+<p>绑定可能被多个线程随机访问和修改，因此在未先 <code class="xref c c-func docutils literal notranslate"><span class="pre">locking</span> <span class="pre">it</span></code> 的情况下修改或读取绑定，可能导致不可预测的行为。</p>
+<p>这适用于绑定的所有下级内容，包括 <a class="reference internal" href="#conn-mgr-impl-ctx"><span class="std std-ref">上下文容器</span></a> 中的任何内容。</p>
+<p>访问完毕后，务必 <code class="xref c c-func docutils literal notranslate"><span class="pre">unlock</span></code> 该绑定。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>如果相关资源本身是线程安全的，则可能是此规则的例外。</p>
+<p>不过，利用这一例外时要小心。仍然可能产生竞争条件，例如同时访问多个线程安全的资源时。</p>
+<p>因此，建议无论所访问的资源本身是否线程安全，都始终对绑定加锁。</p>
+</div>
+</section>
+<section id="do-not-disable-built-in-features">
+<span id="conn-mgr-impl-guidelines-support-builtins"></span><h3><em>不要禁用内置功能</em><a class="headerlink" href="#do-not-disable-built-in-features" title="链接到此标题。"></a></h3>
+<p>不要试图阻止使用内置功能（例如 <a class="reference internal" href="main.html#conn-mgr-control-persistence-timeouts"><span class="std std-ref">超时和持久性</span></a> 或 <a class="reference internal" href="main.html#conn-mgr-control-automations"><span class="std std-ref">自动化行为</span></a>）。</p>
+<p>所有连接实现都必须完全支持这些功能。实现不得试图强制某些功能始终启用或始终禁用。</p>
+</section>
+<section id="trigger-connectivity-control-events">
+<span id="conn-mgr-impl-guidelines-trigger-events"></span><h3><em>触发连接控制事件</em><a class="headerlink" href="#trigger-connectivity-control-events" title="链接到此标题。"></a></h3>
+<p>连接控制的 <a class="reference internal" href="../api/net_mgmt.html#net-mgmt-interface"><span class="std std-ref">网络管理</span></a> 事件不会由连接管理器自动触发。</p>
+<p>连接实现必须自行触发这些事件。</p>
+<p>发生连接 <a class="reference internal" href="main.html#conn-mgr-control-timeouts"><span class="std std-ref">超时</span></a> 时，触发 <code class="xref c c-macro docutils literal notranslate"><span class="pre">NET_EVENT_CONN_CMD_IF_TIMEOUT</span></code>。详情参见 <a class="reference internal" href="main.html#conn-mgr-control-events-timeout"><span class="std std-ref">超时</span></a>。</p>
+<p>发生致命（不可恢复的）连接错误时，触发 <code class="xref c c-macro docutils literal notranslate"><span class="pre">NET_EVENT_CONN_IF_FATAL_ERROR</span></code>。详情参见 <a class="reference internal" href="main.html#conn-mgr-control-events-fatal-error"><span class="std std-ref">致命错误</span></a>。</p>
+<p>关于触发网络管理事件的详情，参见 <a class="reference internal" href="../api/net_mgmt.html#net-mgmt-interface"><span class="std std-ref">网络管理</span></a>。</p>
+</section>
+</section>
+<section id="implementing-timeouts-and-persistence">
+<span id="conn-mgr-impl-timeout-persistence"></span><h2>实现超时和持久性<a class="headerlink" href="#implementing-timeouts-and-persistence" title="链接到此标题。"></a></h2>
+<p>首先，关于超时和持久性预期行为的高层描述，参见 <a class="reference internal" href="main.html#conn-mgr-control-persistence-timeouts"><span class="std std-ref">超时和持久性</span></a>。</p>
+<p>无论底层连接技术的行为如何，连接实现都必须完全符合该描述。</p>
+<p>有时这意味着需要在连接实现中编写额外的逻辑来模拟某些行为。以下各节讨论各种常见的边界情况和细微差别，以及如何处理它们。</p>
+<section id="inherently-persistent-technologies">
+<span id="conn-mgr-impl-tp-inherent-persistence"></span><h3><em>本身具有持久性的技术</em><a class="headerlink" href="#inherently-persistent-technologies" title="链接到此标题。"></a></h3>
+<p>如果底层技术在连接丢失或失败后会自动尝试重新连接或重试连接，那么当这些尝试与超时或持久性设置冲突时，连接实现必须手动取消这些尝试。</p>
+<p>例如：</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>如果底层技术在失去连接后会自动尝试重新连接，而该接口禁用了持久性，连接实现应立即取消这次重新连接尝试。</p></li>
+<li><p>如果某个接口的底层技术没有内置超时，而该接口上的连接尝试超时了，连接实现必须手动取消连接尝试来模拟超时。</p></li>
+</ul>
+</div></blockquote>
+</section>
+<section id="technologiess-that-give-up-on-connection-attempts">
+<span id="conn-mgr-impl-tp-inherent-nonpersistence"></span><h3><em>会放弃连接尝试的技术</em><a class="headerlink" href="#technologiess-that-give-up-on-connection-attempts" title="链接到此标题。"></a></h3>
+<p>如果底层技术没有重试连接尝试的机制，或者会在用户配置的超时到期之前放弃尝试，或者在连接丢失后不会重新连接，连接实现必须手动重新请求连接，以抵消这些偏差。</p>
+<ul class="simple">
+<li><p>如果底层技术不具有持久性，则在启用持久性时必须手动触发重新连接尝试。</p></li>
+<li><p>如果底层技术不支持超时，则在启用超时时必须手动取消连接尝试。</p></li>
+<li><p>如果底层技术强制使用超时，而该超时比连接管理器的超时短，则必须手动触发新的连接尝试。</p></li>
+</ul>
+</section>
+<section id="technologies-with-association-retry">
+<span id="conn-mgr-impl-tp-assoc-retry"></span><h3><em>带关联重试的技术</em><a class="headerlink" href="#technologies-with-association-retry" title="链接到此标题。"></a></h3>
+<p>许多底层技术通常无法一次尝试就完成关联。</p>
+<p>这些底层技术可能需要连续进行多次背靠背的关联尝试，通常每次之间有短暂的延迟。</p>
+<p>这种情况下，连接实现应将这一系列背靠背的关联子尝试视为一次统一的连接尝试。</p>
+<p>例如，某次子尝试失败后，即使禁用了持久性，也不应阻止后续的子尝试，因为它们都算作同一次整体连接尝试。另请参见 <a class="reference internal" href="#conn-mgr-impl-tp-persistence-during-connect"><span class="std std-ref">连接尝试期间的持久性</span></a>。</p>
+<p>一系列子尝试失败到什么程度时应视为整个连接尝试失败，由各个实现自行决定。</p>
+<p>如果连接尝试越过了这一阈值，但配置的超时尚未到期，或者没有设置超时，则应继续进行子尝试。</p>
+</section>
+<section id="persistence-during-connection-attempts">
+<span id="conn-mgr-impl-tp-persistence-during-connect"></span><h3><em>连接尝试期间的持久性</em><a class="headerlink" href="#persistence-during-connection-attempts" title="链接到此标题。"></a></h3>
+<p>在连接尝试期间，持久性不应影响实现行为的任何方面。持久性只应影响连接丢失后是否自动触发连接尝试。</p>
+<p>是否应执行连接重试应完全由配置的超时决定。</p>
+</section>
+</section>
+<section id="implementation-api">
+<span id="conn-mgr-impl-api"></span><h2>实现 API<a class="headerlink" href="#implementation-api" title="链接到此标题。"></a></h2>
+<p>包含头文件 <code class="file docutils literal notranslate"><span class="pre">include/zephyr/net/conn_mgr_connectivity_impl.h</span></code> 即可使用这些 API。</p>
+<p>仅供连接实现使用。</p>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">conn_mgr_connectivity_impl</span></dt>
+</dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 4月 15, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

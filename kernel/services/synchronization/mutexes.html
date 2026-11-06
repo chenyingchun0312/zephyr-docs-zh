@@ -1,0 +1,443 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>互斥量 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/kernel/services/synchronization/mutexes.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" />
+    <link rel="next" title="条件变量" href="condvar.html" />
+    <link rel="prev" title="信号量" href="semaphores.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">内核</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">内核服务</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html#scheduling-interrupts-and-synchronization">调度、中断与同步</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../threads/index.html">线程</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scheduling/index.html">调度</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scheduling/index.html#cpu-idling">CPU 空闲</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../threads/system_threads.html">系统线程</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../threads/workqueue.html">工作队列线程</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../threads/nothread.html">无线程运行</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../interrupts.html">中断</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../polling.html">轮询 API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="semaphores.html">信号量</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">互斥量</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#concepts">概念</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#reentrant-locking">可重入锁定</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#priority-inheritance">优先级继承</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#implementation">实现</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#defining-a-mutex">定义互斥量</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#locking-a-mutex">锁定互斥量</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#unlocking-a-mutex">解锁互斥量</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#suggested-uses">建议用法</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#configuration-options">配置选项</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#api-reference">API 参考</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#futex-api-reference">Futex API 参考</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#user-mode-mutex-api-reference">用户模式互斥量 API 参考</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="condvar.html">条件变量</a></li>
+<li class="toctree-l4"><a class="reference internal" href="events.html">事件</a></li>
+<li class="toctree-l4"><a class="reference internal" href="spinlocks.html">自旋锁</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../smp/smp.html">对称多处理</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#data-passing">数据传递</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#memory-management">内存管理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#timing">计时</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#other">其他</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../drivers/index.html">设备驱动模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../usermode/index.html">用户模式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../memory_management/index.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../data_structures/index.html">数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../timing_functions/index.html">计时函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../object_cores/index.html">对象核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../timeutil.html">时间工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../precision_timing.html">精密计时</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../util/index.html">实用工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../iterable_sections/index.html">可迭代段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../code-relocation.html">代码和数据重定位</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanup.html">基于作用域的清理辅助工具</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">内核</a> &raquo;</li>
+  
+     <li><a href="../index.html">内核服务</a> &raquo;</li>
+  
+  <li>互斥量</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="mutexes">
+<span id="mutexes-v2"></span><h1>互斥量<a class="headerlink" href="#mutexes" title="链接到此标题。"></a></h1>
+<p><em class="dfn">mutex</em> （互斥量）是实现传统可重入互斥量的内核对象。互斥量通过确保对资源的互斥访问，使多个线程能够安全地共享与之关联的硬件或软件资源。</p>
+<nav class="contents local" id="id1">
+<ul class="simple">
+<li><p><a class="reference internal" href="#concepts" id="id2">概念</a></p>
+<ul>
+<li><p><a class="reference internal" href="#reentrant-locking" id="id3">可重入锁定</a></p></li>
+<li><p><a class="reference internal" href="#priority-inheritance" id="id4">优先级继承</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#implementation" id="id5">实现</a></p>
+<ul>
+<li><p><a class="reference internal" href="#defining-a-mutex" id="id6">定义互斥量</a></p></li>
+<li><p><a class="reference internal" href="#locking-a-mutex" id="id7">锁定互斥量</a></p></li>
+<li><p><a class="reference internal" href="#unlocking-a-mutex" id="id8">解锁互斥量</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#suggested-uses" id="id9">建议用法</a></p></li>
+<li><p><a class="reference internal" href="#configuration-options" id="id10">配置选项</a></p></li>
+<li><p><a class="reference internal" href="#api-reference" id="id11">API 参考</a></p></li>
+<li><p><a class="reference internal" href="#futex-api-reference" id="id12">Futex API 参考</a></p></li>
+<li><p><a class="reference internal" href="#user-mode-mutex-api-reference" id="id13">用户模式互斥量 API 参考</a></p></li>
+</ul>
+</nav>
+<section id="concepts">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">概念</a><a class="headerlink" href="#concepts" title="链接到此标题。"></a></h2>
+<p>可以定义任意数量的互斥量（仅受可用 RAM 限制）。每个互斥量通过其内存地址引用。</p>
+<p>互斥量具有以下关键属性：</p>
+<ul class="simple">
+<li><p><strong>锁计数</strong>，表示持有该互斥量的线程对其加锁的次数。计数为零表示互斥量未被锁定。</p></li>
+<li><p><strong>持有线程</strong>，在互斥量被锁定时标识锁定它的线程。</p></li>
+</ul>
+<p>互斥量必须先初始化才能使用，初始化会将其锁计数置零。</p>
+<p>需要使用共享资源的线程必须先通过 <strong>锁定</strong> 关联的互斥量来获得对该资源的独占访问权。如果互斥量已被其他线程锁定，请求线程可以选择等待互斥量解锁。</p>
+<p>锁定互斥量后，线程可以在需要的时间内安全地使用关联资源；不过，良好的做法是尽量缩短持锁时间，以免影响其他想要使用该资源的线程。当线程不再需要该资源时，必须 <strong>解锁</strong> 互斥量，以便其他线程使用该资源。</p>
+<p>互斥量在被锁定期间或有线程在其上等待期间，不得被释放，其内存也不得被重用。嵌入在动态分配对象中的互斥量必须在该对象被释放之前解锁；否则，持有线程将继续跟踪一个位于已不属于它的内存中的互斥量。</p>
+<p>任意数量的线程可以同时在一个已锁定的互斥量上等待。互斥量解锁后，将由等待时间最长的最高优先级线程锁定。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>互斥量对象 <em>不</em> 适合在 ISR 中使用。</p>
+</div>
+<section id="reentrant-locking">
+<h3><a class="toc-backref" href="#id3" role="doc-backlink">可重入锁定</a><a class="headerlink" href="#reentrant-locking" title="链接到此标题。"></a></h3>
+<p>线程可以锁定自己已经锁定的互斥量。这使线程可以在执行过程中的某一处访问关联资源，而无需关心此时互斥量是否已被锁定。</p>
+<p>被同一线程重复锁定的互斥量必须解锁相同的次数，才能完全解锁，从而被其他线程获取。</p>
+</section>
+<section id="priority-inheritance">
+<h3><a class="toc-backref" href="#id4" role="doc-backlink">优先级继承</a><a class="headerlink" href="#priority-inheritance" title="链接到此标题。"></a></h3>
+<p>锁定互斥量的线程可以获得 <em class="dfn">priority inheritance</em> （优先级继承）。也就是说，如果有更高优先级的线程开始在该互斥量上等待，内核会 <em>临时</em> 提升该线程的优先级。这样，持有线程以与等待线程相同的优先级执行，从而更快地完成工作并释放互斥量。互斥量解锁后，解锁线程会将其优先级恢复到锁定该互斥量之前的水平。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>配置选项 <a class="reference internal" href="../../../kconfig.html#CONFIG_PRIORITY_CEILING" title="CONFIG_PRIORITY_CEILING"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PRIORITY_CEILING</span></code></a> 限制了内核因优先级继承而能将线程优先级提升到的最高程度。默认值 -128 表示不限制。将其设置为等于或低于空闲线程优先级的级别则会禁用优先级继承。</p>
+</div>
+<p>线程在任何与互斥量相关的提升之前的优先级，会在第一次被提升时保存在线程自身中，线程持有的每个互斥量都记录在一个线程私有的链表中。每当有更高优先级的线程在互斥量上等待时，内核都会调整持有线程的优先级。当持有线程释放一个锁（或者高优先级的等待线程超时）时，内核会重新扫描该线程仍持有的互斥量，并根据其中任意一个互斥量上仍在等待的最高优先级等待者重新计算其优先级；如果已没有等待者，则恢复为线程的原始优先级。因此，无论以何种顺序解锁所持有的互斥量，结果都是正确的。</p>
+<p>如果互斥量的持有者本身也在阻塞等待另一个互斥量，优先级提升会沿着这条持有链传播，使阻碍等待者推进的每个线程依次得到提升，但每次加锁尝试遍历的链节点数有一个由实现定义的上限。超出该上限的持有者会保持提升前的优先级，直到之后的某次加锁尝试再次遍历该链。</p>
+</section>
+</section>
+<section id="implementation">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">实现</a><a class="headerlink" href="#implementation" title="链接到此标题。"></a></h2>
+<section id="defining-a-mutex">
+<h3><a class="toc-backref" href="#id6" role="doc-backlink">定义互斥量</a><a class="headerlink" href="#defining-a-mutex" title="链接到此标题。"></a></h3>
+<p>互斥量使用 <code class="xref c c-struct docutils literal notranslate"><span class="pre">k_mutex</span></code> 类型的变量定义，然后必须调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_mutex_init()</span></code> 进行初始化。</p>
+<p>以下代码定义并初始化了一个互斥量。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">k_mutex</span><span class="w"> </span><span class="n">my_mutex</span><span class="p">;</span>
+
+<span class="n">k_mutex_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_mutex</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>也可以调用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_MUTEX_DEFINE</span></code> 在编译时定义并初始化互斥量。</p>
+<p>以下代码与上面的代码段效果相同。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">K_MUTEX_DEFINE</span><span class="p">(</span><span class="n">my_mutex</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="locking-a-mutex">
+<h3><a class="toc-backref" href="#id7" role="doc-backlink">锁定互斥量</a><a class="headerlink" href="#locking-a-mutex" title="链接到此标题。"></a></h3>
+<p>调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_mutex_lock()</span></code> 锁定互斥量。</p>
+<p>以下代码基于上面的示例，如果互斥量已被其他线程锁定，则无限期等待其变为可用。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">k_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_mutex</span><span class="p">,</span><span class="w"> </span><span class="n">K_FOREVER</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>以下代码最多等待 100 毫秒，直到互斥量变为可用；如果互斥量未变为可用，则发出警告。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">k_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_mutex</span><span class="p">,</span><span class="w"> </span><span class="n">K_MSEC</span><span class="p">(</span><span class="mi">100</span><span class="p">))</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/* mutex successfully locked */</span>
+<span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">"Cannot lock XYZ display</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="unlocking-a-mutex">
+<h3><a class="toc-backref" href="#id8" role="doc-backlink">解锁互斥量</a><a class="headerlink" href="#unlocking-a-mutex" title="链接到此标题。"></a></h3>
+<p>调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_mutex_unlock()</span></code> 解锁互斥量。</p>
+<p>以下代码基于上面的示例，解锁该线程之前锁定的互斥量。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">k_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_mutex</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="suggested-uses">
+<h2><a class="toc-backref" href="#id9" role="doc-backlink">建议用法</a><a class="headerlink" href="#suggested-uses" title="链接到此标题。"></a></h2>
+<p>使用互斥量提供对资源（例如物理设备）的独占访问。</p>
+</section>
+<section id="configuration-options">
+<h2><a class="toc-backref" href="#id10" role="doc-backlink">配置选项</a><a class="headerlink" href="#configuration-options" title="链接到此标题。"></a></h2>
+<p>相关配置选项：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_PRIORITY_CEILING" title="CONFIG_PRIORITY_CEILING"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PRIORITY_CEILING</span></code></a></p></li>
+</ul>
+</section>
+<section id="api-reference">
+<h2><a class="toc-backref" href="#id11" role="doc-backlink">API 参考</a><a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">mutex_apis</span></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/philosophers/README.html#dining-philosophers" title="使用 Zephyr 内核服务实现哲学家就餐问题的解决方案。">Dining Philosophers</a></span><span class="code-sample-description">使用 Zephyr 内核服务实现哲学家就餐问题的解决方案。</span></li>
+</ul>
+</div>
+</section>
+<section id="futex-api-reference">
+<h2><a class="toc-backref" href="#id12" role="doc-backlink">Futex API 参考</a><a class="headerlink" href="#futex-api-reference" title="链接到此标题。"></a></h2>
+<p><code class="xref c c-struct docutils literal notranslate"><span class="pre">k_futex</span></code> 是一种轻量级互斥原语，旨在尽量减少内核的参与。无竞争时的操作只依赖对共享内存的原子访问。<code class="xref c c-struct docutils literal notranslate"><span class="pre">k_futex</span></code> 不是内核对象，也不使用内核对象权限管理。它们位于用户内存中，任何对该内存具有读写权限的线程都可以使用。</p>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">futex_apis</span></dt>
+</dl>
+
+</section>
+<section id="user-mode-mutex-api-reference">
+<h2><a class="toc-backref" href="#id13" role="doc-backlink">用户模式互斥量 API 参考</a><a class="headerlink" href="#user-mode-mutex-api-reference" title="链接到此标题。"></a></h2>
+<p><code class="xref c c-struct docutils literal notranslate"><span class="pre">sys_mutex</span></code> 的行为与 <code class="xref c c-struct docutils literal notranslate"><span class="pre">k_mutex</span></code> 几乎完全相同，额外的优点是 <code class="xref c c-struct docutils literal notranslate"><span class="pre">sys_mutex</span></code> 实例可以位于用户内存中。未启用用户模式时，<code class="xref c c-struct docutils literal notranslate"><span class="pre">sys_mutex</span></code> 的行为与 <code class="xref c c-struct docutils literal notranslate"><span class="pre">k_mutex</span></code> 相同。</p>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">user_mutex_apis</span></dt>
+</dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 9月 21, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

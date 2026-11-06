@@ -1,0 +1,538 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>基于作用域的清理辅助工具 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/kernel/cleanup.html" />
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../_static/translations.js?v=540d3cec"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="服务" href="../services/index.html" />
+    <link rel="prev" title="代码和数据重定位" href="code-relocation.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">内核</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="services/index.html">内核服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="drivers/index.html">设备驱动模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="usermode/index.html">用户模式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="memory_management/index.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_structures/index.html">数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timing_functions/index.html">计时函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="object_cores/index.html">对象核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="timeutil.html">时间工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="precision_timing.html">精密计时</a></li>
+<li class="toctree-l2"><a class="reference internal" href="util/index.html">实用工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="iterable_sections/index.html">可迭代段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="code-relocation.html">代码和数据重定位</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">基于作用域的清理辅助工具</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#overview">概述</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#core-concepts">核心概念</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#scoped-variables">作用域变量</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#scoped-guards">作用域守卫</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#scoped-defers">作用域延迟</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#defining-scoped-types">定义作用域类型</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#custom-scoped-variables">自定义作用域变量</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id2">作用域守卫</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#block-scoped-guards">块作用域守卫</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#conditional-guards">条件守卫</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id3">作用域延迟</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#usage-notes">使用说明</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#order-of-cleanup">清理顺序</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#scope-rules">作用域规则</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#api-reference">API 参考</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="index.html">内核</a> &raquo;</li>
+  
+  <li>基于作用域的清理辅助工具</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="scope-based-cleanup-helpers">
+<span id="cleanup-api"></span><h1>基于作用域的清理辅助工具<a class="headerlink" href="#scope-based-cleanup-helpers" title="链接到此标题。"></a></h1>
+<nav class="contents local" id="id1">
+<ul class="simple">
+<li><p><a class="reference internal" href="#overview" id="id4">概述</a></p></li>
+<li><p><a class="reference internal" href="#core-concepts" id="id5">核心概念</a></p>
+<ul>
+<li><p><a class="reference internal" href="#scoped-variables" id="id6">作用域变量</a></p></li>
+<li><p><a class="reference internal" href="#scoped-guards" id="id7">作用域守卫</a></p></li>
+<li><p><a class="reference internal" href="#scoped-defers" id="id8">作用域延迟</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#defining-scoped-types" id="id9">定义作用域类型</a></p>
+<ul>
+<li><p><a class="reference internal" href="#custom-scoped-variables" id="id10">自定义作用域变量</a></p></li>
+<li><p><a class="reference internal" href="#id2" id="id11">作用域守卫</a></p></li>
+<li><p><a class="reference internal" href="#block-scoped-guards" id="id12">块作用域守卫</a></p></li>
+<li><p><a class="reference internal" href="#conditional-guards" id="id13">条件守卫</a></p></li>
+<li><p><a class="reference internal" href="#id3" id="id14">作用域延迟</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#usage-notes" id="id15">使用说明</a></p>
+<ul>
+<li><p><a class="reference internal" href="#order-of-cleanup" id="id16">清理顺序</a></p></li>
+<li><p><a class="reference internal" href="#scope-rules" id="id17">作用域规则</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#api-reference" id="id18">API 参考</a></p></li>
+</ul>
+</nav>
+<section id="overview">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">概述</a><a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>清理辅助 API 提供了一种在变量离开作用域时自动清理资源的机制，类似于 C++ 中的 RAII 或 Go 中的 defer 语句。借助编译器对 <code class="docutils literal notranslate"><span class="pre">__cleanup</span></code> 属性的支持，该 API 可确保清理代码自动执行，从而帮助防止资源泄漏并简化错误处理。</p>
+<p>必须设置 <a class="reference internal" href="../kconfig.html#CONFIG_SCOPE_CLEANUP_HELPERS" title="CONFIG_SCOPE_CLEANUP_HELPERS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SCOPE_CLEANUP_HELPERS</span></code></a> 才能启用此功能，它尤其适用于：</p>
+<ul class="simple">
+<li><p>自动解锁互斥量和信号量</p></li>
+<li><p>自动释放动态分配的内存</p></li>
+<li><p>确保在所有代码路径（包括提前返回）上都执行清理操作</p></li>
+<li><p>减少样板式的清理代码</p></li>
+</ul>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>清理机制使用 <code class="docutils literal notranslate"><span class="pre">__cleanup</span></code> 属性实现。如果工具链不支持该属性，则此 API 不可用。</p>
+<p>因此，此 API 仅供用户应用程序使用，不用于内核本身或其他子系统。</p>
+</div>
+</section>
+<section id="core-concepts">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">核心概念</a><a class="headerlink" href="#core-concepts" title="链接到此标题。"></a></h2>
+<p>清理 API 提供了三种主要抽象：</p>
+<section id="scoped-variables">
+<h3><a class="toc-backref" href="#id6" role="doc-backlink">作用域变量</a><a class="headerlink" href="#scoped-variables" title="链接到此标题。"></a></h3>
+<p>作用域变量定义了一种具有自动初始化和退出行为的类型。使用作用域变量类型声明的变量会通过初始化函数进行初始化，并在离开作用域时通过退出函数自动清理。</p>
+</section>
+<section id="scoped-guards">
+<h3><a class="toc-backref" href="#id7" role="doc-backlink">作用域守卫</a><a class="headerlink" href="#scoped-guards" title="链接到此标题。"></a></h3>
+<p>作用域守卫是一种特殊的作用域变量，它在初始化时自动获取锁或资源，并在离开作用域时将其释放。这种模式常用于互斥量、信号量和其他同步原语。</p>
+</section>
+<section id="scoped-defers">
+<h3><a class="toc-backref" href="#id8" role="doc-backlink">作用域延迟</a><a class="headerlink" href="#scoped-defers" title="链接到此标题。"></a></h3>
+<p>作用域延迟会在变量离开作用域时执行指定的函数，而在初始化时不获取任何东西。这类似于 Go 等语言中的 <code class="docutils literal notranslate"><span class="pre">defer</span></code> 语句。</p>
+</section>
+</section>
+<section id="defining-scoped-types">
+<h2><a class="toc-backref" href="#id9" role="doc-backlink">定义作用域类型</a><a class="headerlink" href="#defining-scoped-types" title="链接到此标题。"></a></h2>
+<section id="custom-scoped-variables">
+<h3><a class="toc-backref" href="#id10" role="doc-backlink">自定义作用域变量</a><a class="headerlink" href="#custom-scoped-variables" title="链接到此标题。"></a></h3>
+<p>使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">SCOPE_VAR_DEFINE</span></code> 定义带有初始化函数和退出函数的自定义作用域变量类型：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kr">inline</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">flash_area</span><span class="w"> </span><span class="o">*</span><span class="n">flash_area_init</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">area_id</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">flash_area</span><span class="w"> </span><span class="o">*</span><span class="n">fa</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">flash_area_open</span><span class="p">(</span><span class="n">area_id</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">fa</span><span class="p">)</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="nb">NULL</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">fa</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kr">inline</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">flash_area_exit</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">flash_area</span><span class="w"> </span><span class="o">*</span><span class="n">fa</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">fa</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">flash_area_close</span><span class="p">(</span><span class="n">fa</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Define the scoped variable type</span>
+<span class="n">SCOPE_VAR_DEFINE</span><span class="p">(</span><span class="n">flash_area</span><span class="p">,</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">flash_area</span><span class="w"> </span><span class="o">*</span><span class="p">,</span><span class="w"> </span><span class="n">flash_area_exit</span><span class="p">(</span><span class="n">_T</span><span class="p">),</span>
+<span class="w">                 </span><span class="n">flash_area_init</span><span class="p">(</span><span class="n">area_id</span><span class="p">),</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">area_id</span><span class="p">);</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">some_function</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// Declare 'fa' with automatic cleanup</span>
+<span class="w">    </span><span class="n">scope_var</span><span class="p">(</span><span class="n">flash_area</span><span class="p">,</span><span class="w"> </span><span class="n">fa</span><span class="p">)(</span><span class="n">PARTITION_ID</span><span class="p">(</span><span class="n">storage_partition</span><span class="p">));</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">fa</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nb">NULL</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="o">-</span><span class="n">EINVAL</span><span class="p">;</span><span class="w">  </span><span class="c1">// Exit function is still called</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// Use fa normally</span>
+<span class="w">    </span><span class="n">printk</span><span class="p">(</span><span class="s">"Has driver: %d</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="w"> </span><span class="n">flash_area_has_driver</span><span class="p">(</span><span class="n">fa</span><span class="p">));</span>
+
+<span class="w">    </span><span class="c1">// No need to manually close - exit function is called automatically</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>退出函数表达式中的 <code class="docutils literal notranslate"><span class="pre">_T</span></code> 变量包含正在被清理的变量的值。</p>
+</section>
+<section id="id2">
+<h3><a class="toc-backref" href="#id11" role="doc-backlink">作用域守卫</a><a class="headerlink" href="#id2" title="链接到此标题。"></a></h3>
+<p>使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">SCOPE_GUARD_DEFINE</span></code> 定义一个守卫，它在初始化时获取锁，并在退出作用域时释放锁：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// Example guard definition (already provided by &lt;zephyr/cleanup/kernel.h&gt;)</span>
+<span class="n">SCOPE_GUARD_DEFINE</span><span class="p">(</span><span class="n">k_mutex</span><span class="p">,</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">k_mutex</span><span class="w"> </span><span class="o">*</span><span class="p">,</span>
+<span class="w">                   </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">k_mutex_lock</span><span class="p">(</span><span class="n">_T</span><span class="p">,</span><span class="w"> </span><span class="n">K_FOREVER</span><span class="p">),</span>
+<span class="w">                   </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">k_mutex_unlock</span><span class="p">(</span><span class="n">_T</span><span class="p">));</span>
+
+<span class="k">static</span><span class="w"> </span><span class="n">K_MUTEX_DEFINE</span><span class="p">(</span><span class="n">lock</span><span class="p">);</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">critical_section</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">scope_guard</span><span class="p">(</span><span class="n">k_mutex</span><span class="p">)(</span><span class="o">&amp;</span><span class="n">lock</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Lock is held here</span>
+<span class="w">    </span><span class="c1">// Perform critical operations</span>
+
+<span class="w">    </span><span class="c1">// Lock is automatically released when guard goes out of scope</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="block-scoped-guards">
+<h3><a class="toc-backref" href="#id12" role="doc-backlink">块作用域守卫</a><a class="headerlink" href="#block-scoped-guards" title="链接到此标题。"></a></h3>
+<p><code class="xref c c-macro docutils literal notranslate"><span class="pre">scope_guard</span></code> 会一直持有守卫，直到 <em>外层</em> 作用域结束；而 <code class="xref c c-macro docutils literal notranslate"><span class="pre">scoped_guard</span></code> 将守卫绑定到紧随其后的花括号块，一旦退出该块就立即释放。这使得短小的临界区更加明确，并让锁对象紧挨着它所保护的代码：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="n">K_MUTEX_DEFINE</span><span class="p">(</span><span class="n">lock</span><span class="p">);</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">worker</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// ... work that does not need the lock ...</span>
+
+<span class="w">    </span><span class="n">scoped_guard</span><span class="p">(</span><span class="n">k_mutex</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">lock</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// lock held only inside these braces</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="c1">// lock released here</span>
+
+<span class="w">    </span><span class="c1">// ... more work without the lock held ...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>该块恰好执行一次。以任何方式退出该块时都会释放锁，包括 <code class="docutils literal notranslate"><span class="pre">break</span></code>、<code class="docutils literal notranslate"><span class="pre">return</span></code> 和 <code class="docutils literal notranslate"><span class="pre">goto</span></code>。注意，<code class="docutils literal notranslate"><span class="pre">continue</span></code> 会离开该块（其行为与 <code class="docutils literal notranslate"><span class="pre">break</span></code> 相同），而不会重新执行该块。</p>
+</section>
+<section id="conditional-guards">
+<h3><a class="toc-backref" href="#id13" role="doc-backlink">条件守卫</a><a class="headerlink" href="#conditional-guards" title="链接到此标题。"></a></h3>
+<p>使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">SCOPE_GUARD_DEFINE</span></code> 定义的守卫总会获取锁（它们以 <code class="docutils literal notranslate"><span class="pre">K_FOREVER</span></code> 阻塞）。如果需要表达获取可能失败的守卫（例如非阻塞的 <code class="docutils literal notranslate"><span class="pre">K_NO_WAIT</span></code> 尝试加锁），请将 <code class="xref c c-macro docutils literal notranslate"><span class="pre">SCOPE_COND_GUARD_DEFINE</span></code> 与 <code class="xref c c-macro docutils literal notranslate"><span class="pre">scoped_cond_guard</span></code> 配合使用。获取表达式会被求值以判断是否成功：失败时，守卫保存 <code class="docutils literal notranslate"><span class="pre">NULL</span></code>，执行所提供的失败语句，并跳过该块。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// Example guard definition (already provided by &lt;zephyr/cleanup/kernel.h&gt;)</span>
+<span class="n">SCOPE_COND_GUARD_DEFINE</span><span class="p">(</span><span class="n">k_mutex_try</span><span class="p">,</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">k_mutex</span><span class="w"> </span><span class="o">*</span><span class="p">,</span>
+<span class="w">                        </span><span class="n">k_mutex_lock</span><span class="p">(</span><span class="n">_T</span><span class="p">,</span><span class="w"> </span><span class="n">K_NO_WAIT</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">                        </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">k_mutex_unlock</span><span class="p">(</span><span class="n">_T</span><span class="p">));</span>
+
+<span class="k">static</span><span class="w"> </span><span class="n">K_MUTEX_DEFINE</span><span class="p">(</span><span class="n">lock</span><span class="p">);</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">try_critical_section</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">scoped_cond_guard</span><span class="p">(</span><span class="n">k_mutex_try</span><span class="p">,</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="o">-</span><span class="n">EBUSY</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">lock</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">// runs only if the lock was acquired</span>
+<span class="w">        </span><span class="c1">// released automatically when the block is exited</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>失败语句可以是任何语句，例如 <code class="docutils literal notranslate"><span class="pre">break</span></code>、<code class="docutils literal notranslate"><span class="pre">return</span> <span class="pre">-EBUSY</span></code>，或用 <code class="docutils literal notranslate"><span class="pre">{}</span></code> 静默跳过该块。</p>
+</section>
+<section id="id3">
+<h3><a class="toc-backref" href="#id14" role="doc-backlink">作用域延迟</a><a class="headerlink" href="#id3" title="链接到此标题。"></a></h3>
+<p>使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">SCOPE_DEFER_DEFINE</span></code> 定义一个执行清理函数的延迟操作：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// Define a defer for a custom cleanup function</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">cleanup_resources</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="c1">// Cleanup code here</span>
+<span class="p">}</span>
+
+<span class="n">SCOPE_DEFER_DEFINE</span><span class="p">(</span><span class="n">cleanup_resources</span><span class="p">);</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">some_function</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">scope_defer</span><span class="p">(</span><span class="n">cleanup_resources</span><span class="p">)();</span>
+
+<span class="w">    </span><span class="c1">// Do work...</span>
+
+<span class="w">    </span><span class="c1">// cleanup_resources() is called automatically</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>对于带参数的函数：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// Example deferred k_free (already provided by &lt;zephyr/cleanup/kernel.h&gt;)</span>
+<span class="n">SCOPE_DEFER_DEFINE</span><span class="p">(</span><span class="n">k_free</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="p">);</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">allocate_and_use</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">ptr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">k_malloc</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
+<span class="w">    </span><span class="n">scope_defer</span><span class="p">(</span><span class="n">k_free</span><span class="p">)(</span><span class="n">ptr</span><span class="p">);</span>
+
+<span class="w">    </span><span class="c1">// Use ptr...</span>
+
+<span class="w">    </span><span class="c1">// k_free(ptr) is called automatically</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="usage-notes">
+<h2><a class="toc-backref" href="#id15" role="doc-backlink">使用说明</a><a class="headerlink" href="#usage-notes" title="链接到此标题。"></a></h2>
+<section id="order-of-cleanup">
+<h3><a class="toc-backref" href="#id16" role="doc-backlink">清理顺序</a><a class="headerlink" href="#order-of-cleanup" title="链接到此标题。"></a></h3>
+<p>清理函数按声明的相反顺序调用（LIFO，后进先出），这与资源的自然嵌套关系相符：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">    </span><span class="n">scope_guard</span><span class="p">(</span><span class="n">k_mutex</span><span class="p">)(</span><span class="o">&amp;</span><span class="n">lock</span><span class="p">);</span><span class="w">           </span><span class="c1">// Acquired first</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">ptr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">k_malloc</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
+<span class="w">    </span><span class="n">scope_defer</span><span class="p">(</span><span class="n">k_free</span><span class="p">)(</span><span class="n">ptr</span><span class="p">);</span><span class="w">              </span><span class="c1">// Registered second</span>
+
+<span class="w">    </span><span class="c1">// Do work...</span>
+
+<span class="p">}</span><span class="w">  </span><span class="c1">// ptr is freed first, then mutex is unlocked</span>
+</pre></div>
+</div>
+</section>
+<section id="scope-rules">
+<h3><a class="toc-backref" href="#id17" role="doc-backlink">作用域规则</a><a class="headerlink" href="#scope-rules" title="链接到此标题。"></a></h3>
+<p>当变量离开作用域时会执行清理，包括以下情况：</p>
+<ul class="simple">
+<li><p>到达块的末尾</p></li>
+<li><p>提前执行 return 语句</p></li>
+<li><p>循环中的 break 或 continue</p></li>
+<li><p>跳出作用域的 goto 语句</p></li>
+</ul>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">example_with_early_exit</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">k_mutex</span><span class="w"> </span><span class="o">*</span><span class="n">lock</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">scope_guard</span><span class="p">(</span><span class="n">k_mutex</span><span class="p">)(</span><span class="n">lock</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">error_condition</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="p">;</span><span class="w">  </span><span class="c1">// Guard cleanup happens here</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// Normal path</span>
+
+<span class="p">}</span><span class="w">  </span><span class="c1">// Guard cleanup also happens here</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="api-reference">
+<h2><a class="toc-backref" href="#id18" role="doc-backlink">API 参考</a><a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">cleanup_interface</span></dt>
+</dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 6月 18, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

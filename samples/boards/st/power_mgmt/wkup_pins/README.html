@@ -1,0 +1,410 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="将 GPIO 引脚用作唤醒引脚。" name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GPIO as wake-up pin &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/samples/boards/st/power_mgmt/wkup_pins/README.html" />
+      <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../../../search.html" />
+    <link rel="next" title="PWM" href="../../pwm/index.html" />
+    <link rel="prev" title="Suspend to RAM" href="../suspend_to_ram/README.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../index.html">
+            
+              <img src="../../../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../index.html">示例与演示</a><ul class="current">
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../../application_development/application_development.html">Application Development</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../../arch/index.html">Architecture-dependent Samples</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../../basic/basic.html">Basic</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../../bluetooth/bluetooth.html">Bluetooth</a></li>
+<li class="toctree-l2 current"><a class="category-link reference internal" href="../../../boards.html">Boards</a><ul class="current">
+<li class="toctree-l3"><a class="category-link reference internal" href="../../bluetooth/index.html">Bluetooth</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../board_specific/index.html">Board-specific STM32 samples</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../../enjoydigital/index.html">EnjoyDigital</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../../espressif/index.html">Espressif ESP32 boards</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../../google/index.html">Google</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../../infineon/index.html">Infineon</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../../intel/index.html">Intel</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../../microchip/index.html">Microchip</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../../nxp/index.html">NXP</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../../nordic/index.html">Nordic Semiconductor</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../../phytec/index.html">PHYTEC</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../../quicklogic/index.html">QuickLogic</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../../raspberrypi/index.html">Raspberry Pi</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../../renesas/index.html">Renesas</a></li>
+<li class="toctree-l3 current"><a class="category-link reference internal" href="../../index.html">STMicroelectronics</a><ul class="current">
+<li class="toctree-l4"><a class="category-link reference internal" href="../../pwm/index.html">PWM</a></li>
+<li class="toctree-l4 current"><a class="category-link reference internal" href="../index.html">Power Management</a><ul class="current">
+<li class="toctree-l5"><a class="code-sample-link reference internal" href="../adc/README.html" title="在 STM32 上的低功耗环境中使用 ADC。">ADC power management</a></li>
+<li class="toctree-l5"><a class="code-sample-link reference internal" href="../blinky/README.html" title="在 STM32 上的低功耗环境中使用 GPIO API 闪烁 LED">Blinky with power management</a></li>
+<li class="toctree-l5"><a class="code-sample-link reference internal" href="../stm32wb_ble/README.html" title="在 STM32WB 上启用 Zephyr 电源管理的情况下执行 Bluetooth LE 操作。">Bluetooth Low Energy Power Management on STM32WB</a></li>
+<li class="toctree-l5 current"><a class="code-sample-link current reference internal" href="#" title="将 GPIO 引脚用作唤醒引脚。">GPIO as wake-up pin</a></li>
+<li class="toctree-l5"><a class="code-sample-link reference internal" href="../serial_wakeup/README.html" title="在 STM32 上通过串口活动唤醒。">Serial wakeup</a></li>
+<li class="toctree-l5"><a class="code-sample-link reference internal" href="../stop3/README.html" title="在 STM32U5 上使用 STOP3 低功耗模式。">STOP3 mode</a></li>
+<li class="toctree-l5"><a class="code-sample-link reference internal" href="../suspend_to_ram/README.html" title="在 STM32 上使用挂起到 RAM 低功耗模式。">Suspend to RAM</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="category-link reference internal" href="../../uart/index.html">UART</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../../backup_sram/README.html" title="使用备份 SRAM 存储一个在重新上电后仍能保留的变量。">Backup SRAM</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../../bluetooth/interactive_gui/README.html" title="通过 UART 开放 ST BlueNRG Bluetooth 网络协处理器。">Bluetooth: ST Interactive GUI</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../../ccm/README.html" title="在内核耦合存储器（CCM）中放置并使用变量。">Core Coupled Memory (CCM)</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../../h7_dual_core/README.html" title="使用硬件信号量（HSEM）从一个内核触发另一个内核上的 LED 闪烁。">Hardware Semaphore (HSEM) Inter-Processor Communication on STM32 H7</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../../i2c_timing/README.html" title="在运行时获取 I2C V2 timing 值。">I2C V2 timings</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../../mco/README.html" title="输出内部时钟，供应用程序在外部使用。">Master Clock Output (MCO)</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../../board_specific/sensortile_box_pro/sensors-on-board/README.html" title="从 SensorTile.box Pro 的各个传感器读取数据。">SensorTile.box Pro sensors</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../../board_specific/sensortile_box/sensors/README.html" title="从 SensorTile.box 的各个传感器读取数据。">SensorTile.box sensors</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../../bluetooth/st_ble_sensor/README.html" title="通过 Bluetooth 提供厂商自定义的 GATT 服务。">ST Bluetooth LE Sensor Demo</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../../board_specific/steval_stwinbx1/sensors/README.html" title="从 STWIN SensorTile 无线工业节点的各个传感器读取数据。">STWIN.box sensors</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../board_specific/steval_stwinbx1/index.html">STWIN.box</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../board_specific/sensortile_box/index.html">SensorTile.box</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../board_specific/sensortile_box_pro/index.html">SensorTile.box Pro</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../../ti/index.html">Texas Instruments</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../../adi/power_mgmt/gpio_wakeup/README.html" title="使用 GPIO 将系统从低功耗状态唤醒">ADI MAX32 GPIO Wakeup</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../../adi/power_mgmt/power_modes/README.html" title="运行给定 SoC 的各种电源模式">ADI Power Modes</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../../amd/xclk_wiz/README.html" title="使能、重新配置并读回 AXI Clocking Wizard 的输出时钟。">AXI Clocking Wizard</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../../bbc/microbit/display/README.html" title="使用 BBC micro:bit 开发板上的 5x5 LED 点阵显示屏。">LED matrix display</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../../bbc/microbit/line_follower_robot/README.html" title="使用 BBC micro:bit 开发板和机器人底盘实现一台循迹机器人。">Line following robot</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../../96boards/argonkey/microphone/README.html" title="通过 ArgonKey 板载的 MP34DT05 麦克风采集音频。">Microphone</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../../bbc/microbit/pong/README.html" title="单人玩乒乓球游戏，或在两台 micro:bit 设备之间通过蓝牙对战。">Pong game</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../../96boards/argonkey/sensors/README.html" title="从 ArgonKey 开发板的板载传感器读取数据。">Sensors</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../../bbc/microbit/sound/README.html" title="使用 BBC micro:bit 开发板上的压电蜂鸣器。">Sound</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../cpp/cpp.html">C++</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../data_structures/data_structures.html">数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../drivers/drivers.html">驱动</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../hello_world/README.html">Hello World</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../kernel/index.html">内核与调度器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../modules/index.html">外部模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../net/net.html">网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../philosophers/README.html">Dining Philosophers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../psa/index.html">PSA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../regulator/index.html">稳压器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../sensor/sensor.html"><span class="xref std std-ref">传感器</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../shields/shields.html">扩展板（shield）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../subsys/subsys.html">子系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../synchronization/README.html">Basic Synchronization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../sysbuild/sysbuild.html">Sysbuild</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../tfm_integration/tfm_integration.html">TF-M 集成</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../userspace/index.html">用户空间</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../sample_definition_and_criteria.html">示例的定义与标准</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../../../index.html">示例与演示</a> &raquo;</li>
+  
+     <li><a href="../../../boards.html">开发板</a> &raquo;</li>
+  
+     <li><a href="../../index.html">STMicroelectronics</a> &raquo;</li>
+  
+     <li><a href="../index.html">电源管理</a> &raquo;</li>
+  
+  <li>GPIO as wake-up pin</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="stm32_pm_gpio_wkup_src">
+<h1>GPIO as wake-up pin<a class="headerlink" href="#stm32_pm_gpio_wkup_src" title="链接到此标题。"></a></h1>
+<p>
+                <a href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0//samples\boards\st\power_mgmt\wkup_pins\README.rst/.." class="btn btn-info fa fa-github"
+                    target="_blank" style="text-align: center;">
+                    Browse source code on GitHub
+                </a>
+                </p>
+<section id="overview">
+<h2>概述<a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>本示例是一个最小应用程序，演示在 STM32 SoC 上将 GPIO 用作唤醒引脚的两种场景：断电（Poweroff）和挂起到 RAM（Suspend-to-RAM）。启用相应的 Kconfig 选项即可选择场景：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CONFIG_SAMPLE_SCENARIO_POWEROFF</span></code>：断电场景（本示例的默认场景）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">CONFIG_SAMPLE_SCENARIO_S2RAM</span></code>：挂起到 RAM 场景</p></li>
+</ul>
+<p>本示例需要一个设备树别名 <code class="docutils literal notranslate"><span class="pre">wkup-src</span></code>，指向带有 <code class="docutils literal notranslate"><span class="pre">gpios</span></code> 属性的节点。</p>
+<p>在大多数 STM32 开发板上，至少有一个板载按键连接到可用作唤醒引脚的 GPIO 引脚。在这些开发板上，将 <code class="docutils literal notranslate"><span class="pre">wkup-src</span></code> 设为代表该按键的节点（节点 <code class="docutils literal notranslate"><span class="pre">/gpio_keys</span></code> 的某个子节点）的别名。</p>
+<p>有些开发板的板载按键都没有连接到可用作唤醒引脚的 GPIO 引脚。在这些开发板上，需要在开发板覆盖文件中新建一个 <code class="docutils literal notranslate"><span class="pre">/gpio_keys</span></code> 子节点，使其 <code class="docutils literal notranslate"><span class="pre">gpios</span></code> 属性对应某个唤醒引脚 GPIO，并将其用作 <code class="docutils literal notranslate"><span class="pre">wkup-src</span></code> 别名；这种情况下，必须用跳线使唤醒引脚进入有效状态。</p>
+<p>在下文中，术语 <em>WAKEUP 按键引脚</em> 指 <code class="docutils literal notranslate"><span class="pre">wkup-src</span></code> 别名所指定的 GPIO 引脚，<em>按下 WAKEUP 按键</em> 指使 WAKEUP 按键引脚进入有效状态的操作，无论该引脚实际上是否连接到按键。</p>
+<section id="usage-of-wake-up-pins-in-poweroff">
+<h3>在断电模式下使用唤醒引脚<a class="headerlink" href="#usage-of-wake-up-pins-in-poweroff" title="链接到此标题。"></a></h3>
+<p>在断电场景中，WAKEUP 按键引脚被配置为 GPIO 输入和唤醒引脚，然后在经过 <code class="docutils literal notranslate"><span class="pre">CONFIG_SAMPLE_BUSY_WAIT_TIME_MS</span></code> 指定的毫秒数（默认 4000）后，调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">sys_poweroff()</span></code> 函数使系统断电。</p>
+<p>进入断电状态后按下 WAKEUP 按键，应会使 SoC 上电，其启动方式与拉低 <code class="docutils literal notranslate"><span class="pre">nRESET</span></code> 引脚时相同。在大多数 STM32 系列上，软件可以区分由唤醒引脚触发的复位与由 <code class="docutils literal notranslate"><span class="pre">nRESET</span></code> 引脚触发的复位：如果可以区分，示例会在控制台上打印专门的消息：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Reset from low-power state detected.</span>
+<span class="go">Continuing sample execution...</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>在 STM32 平台上，断电状态对应功耗最低的 STM32 低功耗模式，通常称为 <em>Standby</em> 或 <em>Shutdown</em>（取决于 SoC 系列）。</p>
+</div>
+</section>
+<section id="usage-of-wake-up-pins-in-suspend-to-ram">
+<h3>在挂起到 RAM 模式下使用唤醒引脚<a class="headerlink" href="#usage-of-wake-up-pins-in-suspend-to-ram" title="链接到此标题。"></a></h3>
+<p>在挂起到 RAM 场景中，WAKEUP 按键引脚被配置为 GPIO 输入和唤醒引脚，然后注册 GPIO 回调并在该引脚上启用中断。这样，无论系统处于运行模式还是挂起到 RAM 状态，按下 WAKEUP 按键时都会调用 GPIO 回调（前一种情况下由 GPIO 控制器检测到中断，后一种情况下由电源控制器检测到）。GPIO 回调会向控制台打印一条消息，然后释放信号量。</p>
+<p>随后示例进入永久重复的演示循环：* 打印一条消息，然后示例（忙）等待 <code class="docutils literal notranslate"><span class="pre">CONFIG_SAMPLE_BUSY_WAIT_TIME_MS</span></code> 毫秒。</p>
+<ul class="simple">
+<li><p>示例尝试以 <code class="docutils literal notranslate"><span class="pre">CONFIG_SAMPLE_BUTTON_PRESS_TIMEOUT_MS</span></code> 为超时获取信号量。如果按键尚未按下，系统应进入挂起到 RAM 状态。</p></li>
+<li><p>处于挂起到 RAM 状态时，按下 WAKEUP 按键会唤醒系统。已注册的 GPIO 回调会被调用，打印其消息并释放信号量。这样，（正在等待该信号量的）示例主线程就能恢复执行，从而确保系统不会（因为没有可运行的线程而）立即再次进入挂起到 RAM 状态。</p></li>
+<li><p>信号量被释放或超时到期后，示例继续执行：</p>
+<ul>
+<li><p>如果获取到了信号量，则打印成功消息并重新开始循环。</p></li>
+<li><p>如果超时到期，则打印超时消息，示例暂停直到按下 WAKEUP 按键，然后重新开始循环。</p></li>
+</ul>
+</li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>唤醒引脚仅支持 <strong>单边沿</strong> 检测（上升沿或下降沿）。</p>
+</div>
+</section>
+</section>
+<section id="requirements">
+<span id="gpio-as-a-wkup-pin-src-sample-requirements"></span><h2>要求<a class="headerlink" href="#requirements" title="链接到此标题。"></a></h2>
+<p>SoC 必须实现对 <a class="reference internal" href="../../../../../hardware/peripherals/hwinfo.html#hwinfo-api"><span class="std std-ref">硬件信息</span></a> API 和 <a class="reference internal" href="../../../../../services/poweroff.html#poweroff"><span class="std std-ref">关机</span></a> API 的支持。</p>
+<p>此外，挂起到 RAM 场景要求目标 SoC 具有这种低功耗模式，且软件支持该功能（体现为设备树中存在一个 <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,power-state</span></code> 节点，其 <code class="docutils literal notranslate"><span class="pre">power-state-name</span></code> 属性值为 <code class="docutils literal notranslate"><span class="pre">&quot;suspend-to-ram&quot;</span></code>）。</p>
+<p>必须为本示例添加每块开发板各自的覆盖文件，以提供 <code class="docutils literal notranslate"><span class="pre">wkup-src</span></code> 别名。</p>
+</section>
+<section id="building-and-running">
+<h2>构建与运行<a class="headerlink" href="#building-and-running" title="链接到此标题。"></a></h2>
+<p>按如下方式构建并烧录 wkup_pins，将 <code class="docutils literal notranslate"><span class="pre">nucleo_u5a5zj_q</span></code> 替换为你的开发板：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>nucleo_u5a5zj_q<span class="w"> </span>samples/boards/st/power_mgmt/wkup_pins
+west<span class="w"> </span>flash
+</pre></div>
+</div>
+<p>复位后，开发板的 LED 点亮。系统断电或进入挂起到 RAM 状态（取决于所选场景）时，LED 会熄灭。</p>
+</section>
+<section id="see-also">
+<h2>See also<a class="headerlink" href="#see-also" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">sys_poweroff</span></dt>
+</dl>
+
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">gpio_interface</span></dt>
+</dl>
+
+</section>
+</section>
+<script type="application/ld+json">
+                {"@context": "http://schema.org", "@type": "SoftwareSourceCode", "name": "GPIO as wake-up pin", "description": "\u5c06 GPIO \u5f15\u811a\u7528\u4f5c\u5524\u9192\u5f15\u811a\u3002", "codeSampleType": "full", "codeRepository": "https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0//samples\\boards\\st\\power_mgmt\\wkup_pins\\README.rst"}
+                </script>
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 9月 25, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

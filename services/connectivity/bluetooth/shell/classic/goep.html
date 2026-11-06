@@ -1,0 +1,533 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bluetooth：经典 Bluetooth：GOEP Shell &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/tabs.css?v=a5c4661c" />
+
+  
+    <link rel="shortcut icon" href="../../../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/connectivity/bluetooth/shell/classic/goep.html" />
+      <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script src="../../../../../_static/tabs.js?v=3030b3cb"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../../../search.html" />
+    <link rel="next" title="Bluetooth：经典 Bluetooth：HFP Shell" href="hfp.html" />
+    <link rel="prev" title="Bluetooth：经典 Bluetooth：AVRCP Shell" href="avrcp.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../index.html">
+            
+              <img src="../../../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../index.html">服务</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../index.html">连接</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../networking/index.html">网络</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../index.html">Bluetooth</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../../features.html">支持的功能</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bluetooth-qual.html">认证</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bluetooth-arch.html">协议栈架构</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bluetooth-le-host.html">LE 主机</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/audio/bluetooth-le-audio-arch.html">LE Audio 协议栈</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/audio/bluetooth-le-audio-arch.html#le-audio-resources">LE Audio 资源</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bluetooth-ctlr-arch.html">LE 控制器</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bluetooth-dev.html">应用程序开发</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bluetooth-tools.html">工具</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../../bluetooth-shell.html">Shell</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="../audio/bap.html">Bluetooth：基本音频规范（Basic Audio Profile）Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../audio/bap_broadcast_assistant.html">Bluetooth：基本音频规范：广播助手（Broadcast Assistant）Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../audio/bap_scan_delegator.html">Bluetooth：基本音频规范：扫描委托者（Scan Delegator）Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../audio/cap.html">Bluetooth：通用音频规范（Common Audio Profile）Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../audio/ccp.html">Bluetooth：呼叫控制规范（Call Control Profile）Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../audio/csip.html">Bluetooth：协调集识别规范（Coordinated Set Identification Profile）Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../audio/gmap.html">Bluetooth：游戏音频规范（Gaming Audio Profile）Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../audio/mcp.html">Bluetooth：媒体控制规范（Media Control Profile）Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../audio/tbs.html">Bluetooth：电话承载服务（Telephone Bearer Service）Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../audio/tmap.html">Bluetooth：电话和媒体音频规范（Telephone and Media Audio Profile）Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../audio/pbp.html">Bluetooth：公共广播规范（Public Broadcast Profile）Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="a2dp.html">Bluetooth：A2DP Shell 命令</a></li>
+<li class="toctree-l5"><a class="reference internal" href="avrcp.html">Bluetooth：经典 Bluetooth：AVRCP Shell</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">Bluetooth：经典 Bluetooth：GOEP Shell</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#commands">命令</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#connect-goep-transport">连接 GOEP 传输</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#disconnect-goep-transport">断开 GOEP 传输</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#connect-to-obex-server">连接到 OBEX 服务器</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#disconnect-from-obex-server">断开与 OBEX 服务器的连接</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#obex-put-operation">OBEX Put 操作</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#obex-get-operation">OBEX Get 操作</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="hfp.html">Bluetooth：经典 Bluetooth：HFP Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="l2cap.html">Bluetooth：经典 Bluetooth：L2CAP Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="map.html">Bluetooth：MAP Shell 命令</a></li>
+<li class="toctree-l5"><a class="reference internal" href="pbap.html">Bluetooth：经典 Bluetooth：PBAP Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="spp.html">Bluetooth：经典 Bluetooth：SPP Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../host/gap.html">Bluetooth：GAP Shell 命令</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../host/gatt.html">Bluetooth：GATT Shell 命令</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../host/iso.html">Bluetooth：等时信道 Shell 命令</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../host/l2cap.html">Bluetooth：L2CAP Shell 命令</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../bluetooth-shell.html#bluetooth-shell-setup-and-usage">Bluetooth Shell 的设置与使用</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../bluetooth-shell.html#logging">日志</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usb/index.html">USB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../canbus/index.html">控制器局域网（CAN）总线协议</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lora_lorawan/index.html">LoRa 和 LoRaWAN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../modbus/index.html">Modbus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../modem/index.html">调制解调器模块</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../../../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../../../index.html">连接</a> &raquo;</li>
+  
+     <li><a href="../../index.html">Bluetooth</a> &raquo;</li>
+  
+     <li><a href="../../bluetooth-shell.html">Shell</a> &raquo;</li>
+  
+  <li>Bluetooth：经典 Bluetooth：GOEP Shell</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="bluetooth-classic-goep-shell">
+<h1>Bluetooth：经典 Bluetooth：GOEP Shell<a class="headerlink" href="#bluetooth-classic-goep-shell" title="链接到此标题。"></a></h1>
+<p>本文档介绍如何运行经典 Bluetooth 的 GOEP 功能。<code class="code docutils literal notranslate"><span class="pre">goep</span></code> 命令提供了经典 Bluetooth GOEP 的 Shell 命令。</p>
+<section id="commands">
+<h2>命令<a class="headerlink" href="#commands" title="链接到此标题。"></a></h2>
+<p><code class="code docutils literal notranslate"><span class="pre">goep</span></code> 命令：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>goep
+<span class="go">goep - Bluetooth GOEP shell commands</span>
+<span class="go">Subcommands:</span>
+<span class="go">  register-rfcomm    : &lt;channel&gt;</span>
+<span class="go">  connect-rfcomm     : &lt;channel&gt;</span>
+<span class="go">  disconnect-rfcomm  :</span>
+<span class="go">  register-l2cap     : &lt;psm&gt;</span>
+<span class="go">  connect-l2cap      : &lt;psm&gt;</span>
+<span class="go">  disconnect-l2cap   :</span>
+<span class="go">  alloc-buf          : Alloc tx buffer</span>
+<span class="go">  release-buf        : Free allocated tx buffer</span>
+<span class="go">  add-header         : Adding header sets</span>
+<span class="go">  client             : Client sets</span>
+<span class="go">  server             : Server sets</span>
+</pre></div>
+</div>
+<p><code class="code docutils literal notranslate"><span class="pre">goep</span> <span class="pre">client</span></code> 命令：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>goep<span class="w"> </span>client
+<span class="go">client - Client sets</span>
+<span class="go">Subcommands:</span>
+<span class="go">  conn     : &lt;mopl&gt;</span>
+<span class="go">  disconn  :</span>
+<span class="go">  put      : &lt;final: true, false&gt;</span>
+<span class="go">  get      : &lt;final: true, false&gt;</span>
+<span class="go">  abort    :</span>
+<span class="go">  setpath  : [parent] [create]</span>
+<span class="go">  action   : &lt;final: true, false&gt;</span>
+</pre></div>
+</div>
+<p><code class="code docutils literal notranslate"><span class="pre">goep</span> <span class="pre">server</span></code> 命令：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>goep<span class="w"> </span>server
+<span class="go">server - Server sets</span>
+<span class="go">Subcommands:</span>
+<span class="go">  reg      : [UUID 128]</span>
+<span class="go">  unreg    :</span>
+<span class="go">  conn     : &lt;rsp: continue, success, error&gt; &lt;mopl&gt; [rsp_code]</span>
+<span class="go">  disconn  : &lt;rsp: continue, success, error&gt; [rsp_code]</span>
+<span class="go">  put      : &lt;rsp: continue, success, error&gt; [rsp_code]</span>
+<span class="go">  get      : &lt;rsp: continue, success, error&gt; [rsp_code]</span>
+<span class="go">  abort    : &lt;rsp: continue, success, error&gt; [rsp_code]</span>
+<span class="go">  setpath  : &lt;rsp: continue, success, error&gt; [rsp_code]</span>
+<span class="go">  action   : &lt;rsp: continue, success, error&gt; [rsp_code]</span>
+</pre></div>
+</div>
+</section>
+<section id="connect-goep-transport">
+<h2>连接 GOEP 传输<a class="headerlink" href="#connect-goep-transport" title="链接到此标题。"></a></h2>
+<p>创建 GOEP 传输连接之前，应先建立 ACL 连接。</p>
+<p>基于 L2CAP 信道的传输：</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-TDJDQVAgU2VydmVy" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-0-TDJDQVAgU2VydmVy" name="TDJDQVAgU2VydmVy" role="tab" tabindex="0">L2CAP Server</button><button aria-controls="panel-0-TDJDQVAgQ2xpZW50" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-TDJDQVAgQ2xpZW50" name="TDJDQVAgQ2xpZW50" role="tab" tabindex="-1">L2CAP Client</button></div><div aria-labelledby="tab-0-TDJDQVAgU2VydmVy" class="sphinx-tabs-panel group-tab" id="panel-0-TDJDQVAgU2VydmVy" name="TDJDQVAgU2VydmVy" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>goep<span class="w"> </span>register-l2cap<span class="w"> </span><span class="m">0</span>
+<span class="go">L2CAP server (psm 1001) is registered</span>
+<span class="go">Security changed: XX:XX:XX:XX:XX:XX level 2</span>
+<span class="go">GOEP 0x20005600 transport connected on 0x20004dc8</span>
+<span class="gp">uart:~$</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-TDJDQVAgQ2xpZW50" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-TDJDQVAgQ2xpZW50" name="TDJDQVAgQ2xpZW50" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>goep<span class="w"> </span>connect-l2cap<span class="w"> </span><span class="m">1001</span>
+<span class="go">GOEP L2CAP connection pending</span>
+<span class="go">Security changed: XX:XX:XX:XX:XX:XX level 2</span>
+<span class="go">GOEP 0x20005600 transport connected on 0x20004dc8</span>
+<span class="gp">uart:~$</span>
+</pre></div>
+</div>
+</div></div>
+<p>基于 RFCOMM 信道的传输：</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-UkZDT01NIFNlcnZlcg==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-1-UkZDT01NIFNlcnZlcg==" name="UkZDT01NIFNlcnZlcg==" role="tab" tabindex="0">RFCOMM Server</button><button aria-controls="panel-1-UkZDT01NIENsaWVudA==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-1-UkZDT01NIENsaWVudA==" name="UkZDT01NIENsaWVudA==" role="tab" tabindex="-1">RFCOMM Client</button></div><div aria-labelledby="tab-1-UkZDT01NIFNlcnZlcg==" class="sphinx-tabs-panel group-tab" id="panel-1-UkZDT01NIFNlcnZlcg==" name="UkZDT01NIFNlcnZlcg==" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>goep<span class="w"> </span>register-rfcomm<span class="w"> </span><span class="m">0</span>
+<span class="go">RFCOMM server (channel 06) is registered</span>
+<span class="go">Security changed: XX:XX:XX:XX:XX:XX level 2</span>
+<span class="go">GOEP 0x20005600 transport connected on 0x20004dc8</span>
+<span class="gp">uart:~$</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-1-UkZDT01NIENsaWVudA==" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-1-UkZDT01NIENsaWVudA==" name="UkZDT01NIENsaWVudA==" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>goep<span class="w"> </span>connect-rfcomm<span class="w"> </span><span class="m">6</span>
+<span class="go">GOEP RFCOMM connection pending</span>
+<span class="go">Security changed: XX:XX:XX:XX:XX:XX level 2</span>
+<span class="go">GOEP 0x20005600 transport connected on 0x20004dc8</span>
+<span class="gp">uart:~$</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="disconnect-goep-transport">
+<h2>断开 GOEP 传输<a class="headerlink" href="#disconnect-goep-transport" title="链接到此标题。"></a></h2>
+<p>基于 L2CAP 信道的传输：</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-2-T25lIFNpZGU=" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-2-T25lIFNpZGU=" name="T25lIFNpZGU=" role="tab" tabindex="0">One Side</button><button aria-controls="panel-2-QW5vdGhlciBTaWRl" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-2-QW5vdGhlciBTaWRl" name="QW5vdGhlciBTaWRl" role="tab" tabindex="-1">Another Side</button></div><div aria-labelledby="tab-2-T25lIFNpZGU=" class="sphinx-tabs-panel group-tab" id="panel-2-T25lIFNpZGU=" name="T25lIFNpZGU=" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">GOEP 0x20005600 transport disconnected</span>
+<span class="gp">uart:~$</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-2-QW5vdGhlciBTaWRl" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-2-QW5vdGhlciBTaWRl" name="QW5vdGhlciBTaWRl" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>goep<span class="w"> </span>disconnect-l2cap
+<span class="go">GOEP L2CAP disconnection pending</span>
+<span class="go">GOEP 0x20005600 transport disconnected</span>
+<span class="gp">uart:~$</span>
+</pre></div>
+</div>
+</div></div>
+<p>基于 RFCOMM 信道的传输：</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-3-T25lIFNpZGU=" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-3-T25lIFNpZGU=" name="T25lIFNpZGU=" role="tab" tabindex="0">One Side</button><button aria-controls="panel-3-QW5vdGhlciBTaWRl" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-3-QW5vdGhlciBTaWRl" name="QW5vdGhlciBTaWRl" role="tab" tabindex="-1">Another Side</button></div><div aria-labelledby="tab-3-T25lIFNpZGU=" class="sphinx-tabs-panel group-tab" id="panel-3-T25lIFNpZGU=" name="T25lIFNpZGU=" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">GOEP 0x20005600 transport disconnected</span>
+<span class="gp">uart:~$</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-3-QW5vdGhlciBTaWRl" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-3-QW5vdGhlciBTaWRl" name="QW5vdGhlciBTaWRl" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>goep<span class="w"> </span>disconnect-rfcomm
+<span class="go">GOEP RFCOMM disconnection pending</span>
+<span class="go">GOEP 0x20005600 transport disconnected</span>
+<span class="gp">uart:~$</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="connect-to-obex-server">
+<h2>连接到 OBEX 服务器<a class="headerlink" href="#connect-to-obex-server" title="链接到此标题。"></a></h2>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-4-T0JFWCBTZXJ2ZXI=" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-4-T0JFWCBTZXJ2ZXI=" name="T0JFWCBTZXJ2ZXI=" role="tab" tabindex="0">OBEX Server</button><button aria-controls="panel-4-T0JFWCBDbGllbnQ=" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-4-T0JFWCBDbGllbnQ=" name="T0JFWCBDbGllbnQ=" role="tab" tabindex="-1">OBEX Client</button></div><div aria-labelledby="tab-4-T0JFWCBTZXJ2ZXI=" class="sphinx-tabs-panel group-tab" id="panel-4-T0JFWCBTZXJ2ZXI=" name="T0JFWCBTZXJ2ZXI=" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>goep<span class="w"> </span>server<span class="w"> </span>reg
+<span class="gp">uart:~$</span>
+<span class="go">OBEX server 0x20005850 conn req, version 10, mopl 00ff</span>
+<span class="gp">uart:~$ </span>goep<span class="w"> </span>server<span class="w"> </span>conn<span class="w"> </span>success<span class="w"> </span><span class="m">255</span>
+<span class="gp">uart:~$</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-4-T0JFWCBDbGllbnQ=" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-4-T0JFWCBDbGllbnQ=" name="T0JFWCBDbGllbnQ=" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>goep<span class="w"> </span>client<span class="w"> </span>conn<span class="w"> </span><span class="m">255</span>
+<span class="go">OBEX client 0x20005818 conn rsp, rsp_code Success, version 10, mopl 00ff</span>
+<span class="gp">uart:~$</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="disconnect-from-obex-server">
+<h2>断开与 OBEX 服务器的连接<a class="headerlink" href="#disconnect-from-obex-server" title="链接到此标题。"></a></h2>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-5-T0JFWCBTZXJ2ZXI=" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-5-T0JFWCBTZXJ2ZXI=" name="T0JFWCBTZXJ2ZXI=" role="tab" tabindex="0">OBEX Server</button><button aria-controls="panel-5-T0JFWCBDbGllbnQ=" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-5-T0JFWCBDbGllbnQ=" name="T0JFWCBDbGllbnQ=" role="tab" tabindex="-1">OBEX Client</button></div><div aria-labelledby="tab-5-T0JFWCBTZXJ2ZXI=" class="sphinx-tabs-panel group-tab" id="panel-5-T0JFWCBTZXJ2ZXI=" name="T0JFWCBTZXJ2ZXI=" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">OBEX server 0x20005850 disconn req</span>
+<span class="gp">uart:~$ </span>goep<span class="w"> </span>server<span class="w"> </span>disconn<span class="w"> </span>success
+<span class="gp">uart:~$</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-5-T0JFWCBDbGllbnQ=" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-5-T0JFWCBDbGllbnQ=" name="T0JFWCBDbGllbnQ=" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>goep<span class="w"> </span>client<span class="w"> </span>disconn
+<span class="go">OBEX client 0x20005818 disconn rsp, rsp_code Success</span>
+<span class="gp">uart:~$</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="obex-put-operation">
+<h2>OBEX Put 操作<a class="headerlink" href="#obex-put-operation" title="链接到此标题。"></a></h2>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-6-T0JFWCBTZXJ2ZXI=" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-6-T0JFWCBTZXJ2ZXI=" name="T0JFWCBTZXJ2ZXI=" role="tab" tabindex="0">OBEX Server</button><button aria-controls="panel-6-T0JFWCBDbGllbnQ=" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-6-T0JFWCBDbGllbnQ=" name="T0JFWCBDbGllbnQ=" role="tab" tabindex="-1">OBEX Client</button></div><div aria-labelledby="tab-6-T0JFWCBTZXJ2ZXI=" class="sphinx-tabs-panel group-tab" id="panel-6-T0JFWCBTZXJ2ZXI=" name="T0JFWCBTZXJ2ZXI=" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$</span>
+<span class="go">OBEX server 0x20005850 put req, final false, data len 12</span>
+<span class="go">HI c3 Len 4</span>
+<span class="go">00000000: 00 00 00 09                                      |....             |</span>
+<span class="go">HI 48 Len 4</span>
+<span class="go">00000000: 12 34 56 78                                      |.4Vx             |</span>
+<span class="gp">uart:~$ </span>goep<span class="w"> </span>server<span class="w"> </span>put<span class="w"> </span><span class="k">continue</span>
+<span class="go">OBEX server 0x20005850 put req, final true, data len 8</span>
+<span class="go">HI 49 Len 5</span>
+<span class="go">00000000: 12 34 56 78 90                                   |.4Vx.            |</span>
+<span class="gp">uart:~$ </span>goep<span class="w"> </span>server<span class="w"> </span>put<span class="w"> </span>success
+<span class="gp">uart:~$</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-6-T0JFWCBDbGllbnQ=" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-6-T0JFWCBDbGllbnQ=" name="T0JFWCBDbGllbnQ=" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>goep<span class="w"> </span>alloc-buf
+<span class="gp">uart:~$ </span>goep<span class="w"> </span>add-header<span class="w"> </span>len<span class="w"> </span><span class="m">9</span>
+<span class="gp">uart:~$ </span>goep<span class="w"> </span>add-header<span class="w"> </span>body<span class="w"> </span><span class="m">12345678</span>
+<span class="gp">uart:~$ </span>goep<span class="w"> </span>client<span class="w"> </span>put<span class="w"> </span><span class="nb">false</span>
+<span class="go">OBEX client 0x20005818 put rsp, rsp_code Continue, data len 0</span>
+<span class="gp">uart:~$ </span>goep<span class="w"> </span>alloc-buf
+<span class="gp">uart:~$ </span>goep<span class="w"> </span>add-header<span class="w"> </span>end_body<span class="w"> </span><span class="m">1234567890</span>
+<span class="gp">uart:~$ </span>goep<span class="w"> </span>client<span class="w"> </span>put<span class="w"> </span><span class="nb">true</span>
+<span class="go">OBEX client 0x20005818 put rsp, rsp_code Success, data len 0</span>
+<span class="gp">uart:~$</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="obex-get-operation">
+<h2>OBEX Get 操作<a class="headerlink" href="#obex-get-operation" title="链接到此标题。"></a></h2>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-7-T0JFWCBTZXJ2ZXI=" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-7-T0JFWCBTZXJ2ZXI=" name="T0JFWCBTZXJ2ZXI=" role="tab" tabindex="0">OBEX Server</button><button aria-controls="panel-7-T0JFWCBDbGllbnQ=" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-7-T0JFWCBDbGllbnQ=" name="T0JFWCBDbGllbnQ=" role="tab" tabindex="-1">OBEX Client</button></div><div aria-labelledby="tab-7-T0JFWCBTZXJ2ZXI=" class="sphinx-tabs-panel group-tab" id="panel-7-T0JFWCBTZXJ2ZXI=" name="T0JFWCBTZXJ2ZXI=" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>goep<span class="w"> </span>alloc-buf
+<span class="gp">uart:~$ </span>goep<span class="w"> </span>add-header<span class="w"> </span>len<span class="w"> </span><span class="m">9</span>
+<span class="gp">uart:~$ </span>goep<span class="w"> </span>add-header<span class="w"> </span>body<span class="w"> </span><span class="m">12345678</span>
+<span class="gp">uart:~$ </span>goep<span class="w"> </span>server<span class="w"> </span>get<span class="w"> </span><span class="k">continue</span>
+<span class="go">OBEX server 0x20005850 get req, final true, data len 0</span>
+<span class="gp">uart:~$ </span>goep<span class="w"> </span>alloc-buf
+<span class="gp">uart:~$ </span>goep<span class="w"> </span>add-header<span class="w"> </span>end_body<span class="w"> </span><span class="m">1234567890</span>
+<span class="gp">uart:~$</span>
+<span class="gp">uart:~$ </span>goep<span class="w"> </span>server<span class="w"> </span>get<span class="w"> </span>success
+<span class="gp">uart:~$</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-7-T0JFWCBDbGllbnQ=" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-7-T0JFWCBDbGllbnQ=" name="T0JFWCBDbGllbnQ=" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>goep<span class="w"> </span>client<span class="w"> </span>get<span class="w"> </span><span class="nb">true</span>
+<span class="go">OBEX client 0x20005818 get rsp, rsp_code Continue, data len 12</span>
+<span class="go">HI c3 Len 4</span>
+<span class="go">00000000: 00 00 00 09                                      |....             |</span>
+<span class="go">HI 48 Len 4</span>
+<span class="go">00000000: 12 34 56 78                                      |.4Vx             |</span>
+<span class="gp">uart:~$ </span>goep<span class="w"> </span>client<span class="w"> </span>get<span class="w"> </span><span class="nb">true</span>
+<span class="go">OBEX client 0x20005818 get rsp, rsp_code Success, data len 8</span>
+<span class="go">HI 49 Len 5</span>
+<span class="go">00000000: 12 34 56 78 90                                   |.4Vx.            |</span>
+<span class="gp">uart:~$</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 4月 15, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

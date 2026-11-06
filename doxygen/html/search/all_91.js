@@ -1,0 +1,7 @@
+var searchData=
+[
+  ['扩展与设备树常量。_0',['设备专用的传感器 API 扩展与设备树常量。@{ @}',['../group__sensor__interface__ext.html',1,'']]],
+  ['扩展区域_1',['Xen 扩展区域',['../group__xen__regions.html',1,'']]],
+  ['扩展操作_2',['扩展操作',['../group__flash__ex__op.html',1,'']]],
+  ['扩展_3',['扩展',['../group__led__strip__interface__ext.html',1,'设备专用的 LED 灯带 API 扩展 @{ @}'],['../group__pwm__interface__ext.html',1,'设备专用的 PWM API 扩展'],['../group__rtc__interface__ext.html',1,'设备专用的 RTC API 扩展'],['../group__charger__interface__ext.html',1,'设备特定的充电器 API 扩展 @{ @}'],['../group__clock__control__interface__ext.html',1,'设备特定的时钟控制 API 扩展'],['../group__display__interface__ext.html',1,'设备特定的显示 API 扩展 @{ @}'],['../group__stepper__interface__ext.html',1,'设备特定的步进 API 扩展'],['../group__disk__driver__interface__ext.html',1,'设备特定的磁盘访问 API 扩展'],['../group__cellular__interface__ext.html',1,'设备特定的蜂窝 API 扩展 @{ @}'],['../group__haptics__interface__ext.html',1,'设备特定的触觉 API 扩展'],['../group__counter__interface__ext.html',1,'设备特定的计数器 API 扩展'],['../group__input__interface__ext.html',1,'设备特定的输入 API 扩展'],['../group__audio__codec__interface__ext.html',1,'设备特定的音频编解码器 API 扩展'],['../group__adc__interface__ext.html',1,'设备特定的 ADC API 扩展'],['../group__dac__interface__ext.html',1,'设备特定的 DAC API 扩展'],['../group__edac__interface__ext.html',1,'设备特定的 EDAC API 扩展 @{ @}'],['../group__gpio__interface__ext.html',1,'设备特定的 GPIO API 扩展'],['../group__fff__extensions.html',1,'FFF 扩展']]]
+];

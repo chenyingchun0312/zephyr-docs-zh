@@ -1,0 +1,352 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>安全编码 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/security/secure-coding.html" />
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../_static/translations.js?v=540d3cec"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="传感器设备威胁模型" href="sensor-threat.html" />
+    <link rel="prev" title="信息安全漏洞报告" href="reporting.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../project/index.html">项目与治理</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">信息安全</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="security-overview.html">Zephyr 信息安全概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reporting.html">信息安全漏洞报告</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">安全编码</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#introduction-and-scope">简介与范围</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">安全编码</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#secure-development-knowledge">安全开发知识</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#secure-designer">安全设计者</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vulnerability-knowledge">漏洞知识</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#zephyr-security-subcommittee">Zephyr 信息安全小组委员会</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#code-review">代码审查</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#issues-and-bug-tracking">问题与缺陷跟踪</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#modifications-to-this-document">本文档的修改</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sensor-threat.html">传感器设备威胁模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hardening-tool.html">加固工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="control-flow-integrity.html">控制流完整性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vulnerabilities.html">漏洞</a></li>
+<li class="toctree-l2"><a class="reference internal" href="standards/index.html">信息安全标准与 Zephyr</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="index.html">信息安全</a> &raquo;</li>
+  
+  <li>安全编码</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="secure-coding">
+<span id="secure-code"></span><h1>安全编码<a class="headerlink" href="#secure-coding" title="链接到此标题。"></a></h1>
+<p>传统上，基于微控制器的系统并不太重视信息安全。人们通常认为这些系统是孤立的，与外界隔绝，而且仅仅因为难以接触到它们，所以不太容易受到攻击。物联网改变了这一点。如今，运行在小型微控制器上的代码往往能够访问互联网，或者至少能够访问其他设备（这些设备本身也可能存在漏洞）。由于这类设备的部署数量通常很大，不受控制的访问可能造成毁灭性的后果 <a class="footnote-reference brackets" href="#attackf" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>。</p>
+<p>本文档描述了在 Zephyr 项目中确保信息安全得到落实的要求和流程。所有提交的代码都应遵守这些原则。</p>
+<p>本文档的大部分内容来自 <a class="reference internal" href="security-citations.html#ciibpb" id="id2"><span>[CIIBPB]</span></a>。</p>
+<section id="introduction-and-scope">
+<h2>简介与范围<a class="headerlink" href="#introduction-and-scope" title="链接到此标题。"></a></h2>
+<p>本文档从信息安全的角度介绍 <a class="reference external" href="https://www.zephyrproject.org/">Zephyr Project</a> 的指南。其中的许多理念取自其他开源项目。</p>
+<p>我们首先概述与 Zephyr 相关的安全设计。接下来是 <a class="reference internal" href="#secure-development-knowledge">Secure development knowledge</a> 一节，给出参与本项目的开发者需要具备的基本要求。该节提供了对其他信息安全文档的引用，而如何编写安全软件的完整细节超出了本文档的范围。该节还描述了至少一名主要开发者应具备的漏洞知识。这些知识是后文所述审查流程所必需的。</p>
+<p>随后描述了将更改纳入 Zephyr 代码库所使用的审查流程，接着说明项目如何处理信息安全敏感问题。</p>
+<p>最后，本文档说明了如何修改本文档本身。</p>
+</section>
+<section id="id3">
+<h2>安全编码<a class="headerlink" href="#id3" title="链接到此标题。"></a></h2>
+<p>要将 Zephyr 这样的开放软件系统设计得安全，就需要遵守一套明确的设计标准。<a class="reference internal" href="security-citations.html#salt75" id="id4"><span>[SALT75]</span></a> 定义了以下被广泛接受的保护机制原则，以帮助防止违反信息安全的行为并限制其影响：</p>
+<ul class="simple">
+<li><p><strong>开放设计</strong>（Open design）这一设计准则体现了这样一条格言：在任何被广泛使用的系统上，保护机制都无法保密。因此，不应依赖保密的、定制的信息安全措施，而应使用公认的密码算法和成熟的密码库。</p></li>
+<li><p><strong>机制经济性</strong>（Economy of mechanism）规定，系统的底层设计应尽可能简单、精小。在 Zephyr 项目中，这可以通过模块化代码 <a class="reference internal" href="security-citations.html#paul09" id="id5"><span>[PAUL09]</span></a> 和抽象的 API 等方式来实现。</p></li>
+<li><p><strong>完全仲裁</strong>（Complete mediation）要求对每个对象和进程的每次访问都必须先经过认证。应尽可能避免使用存储访问条件的机制。</p></li>
+<li><p><strong>失效安全默认值</strong>（Fail-safe defaults）规定，访问默认是受限的，只有在系统保护方案所定义的特定条件下（例如认证成功之后）才被允许。此外，服务的默认设置应以提供最高信息安全的方式来选择。这对应于“默认安全”（Secure by Default）范式 <a class="reference internal" href="security-citations.html#ms12" id="id6"><span>[MS12]</span></a>。</p></li>
+<li><p><strong>权限分离</strong>（Separation of privilege）原则是指，必须满足两个或更多条件才能授予访问权限。在 Zephyr 项目中，这可以包括拆分密钥 <a class="reference internal" href="security-citations.html#paul09" id="id7"><span>[PAUL09]</span></a>。</p></li>
+<li><p><strong>最小权限</strong>（Least privilege）描述了这样一种访问模型：每个用户、程序和线程都只应拥有执行其任务所需的、系统中尽可能小的权限子集。这种正向信息安全模型旨在最大限度地减小系统的攻击面。</p></li>
+<li><p><strong>最少公共机制</strong>（Least common mechanism）规定，如果并非绝对必要，多个用户或进程共用的机制不应共享。<a class="reference internal" href="security-citations.html#salt75" id="id8"><span>[SALT75]</span></a> 中给出的例子是：某个函数应实现为由每个用户各自执行的共享库，而不是实现为由所有用户共享的特权（supervisor）过程。</p></li>
+<li><p><strong>心理可接受性</strong>（Psychological acceptability）要求信息安全特性易于开发者使用，以确保这些特性得到使用并被正确应用。</p></li>
+</ul>
+<p>除了这些通用原则之外，以下几点专门针对安全 RTOS 的开发：</p>
+<ul class="simple">
+<li><p><strong>互补安全/纵深防御</strong>（Complementary Security/Defense in Depth）：不要依赖单一的威胁缓解手段。在互补安全方法中，部分威胁缓解由底层平台完成。如果平台不提供此类机制，或这些机制不可信，则应采用纵深防御 <a class="reference internal" href="security-citations.html#ms12" id="id9"><span>[MS12]</span></a> 范式。</p></li>
+<li><p><strong>较少使用的服务默认关闭</strong>：为了减少系统暴露于潜在攻击的程度，仅很少使用的特性或服务不应默认启用（<a class="reference internal" href="security-citations.html#ms12" id="id10"><span>[MS12]</span></a> 中给出的阈值为 80%）。在 Zephyr 项目中，这可以通过配置管理来实现。每项功能和每个模块都应表示为一个配置选项，并且需要显式启用。这样，特定用例不需要的所有特性、协议和驱动都可以被禁用。如果启用了底层选项和 API 但应用程序并未使用，应通知用户。</p></li>
+<li><p><strong>变更管理</strong>：为了保证对系统所做更改的可追溯性，每项更改都应遵循规定的流程，包括变更请求、影响分析、批准、实施和验证阶段。每个阶段都应提供相应的文档。所有提交都应关联到问题跟踪系统中的缺陷报告或变更请求。没有有效关联的提交应被拒绝。</p></li>
+</ul>
+</section>
+<section id="secure-development-knowledge">
+<h2>安全开发知识<a class="headerlink" href="#secure-development-knowledge" title="链接到此标题。"></a></h2>
+<section id="secure-designer">
+<h3>安全设计者<a class="headerlink" href="#secure-designer" title="链接到此标题。"></a></h3>
+<p>Zephyr 项目必须至少有一名懂得如何设计安全软件的主要开发者。</p>
+<p>这要求理解以下设计原则，其中包括 <a class="reference internal" href="security-citations.html#salt75" id="id11"><span>[SALT75]</span></a> 中的 8 条原则：</p>
+<ul class="simple">
+<li><p>机制经济性（使设计在可行范围内尽可能简单、精小，例如通过大刀阔斧的简化）</p></li>
+<li><p>失效安全默认值（访问决策应默认拒绝，项目的安装应默认安全）</p></li>
+<li><p>完全仲裁（每一次可能受限的访问都必须检查权限，并且不可绕过）</p></li>
+</ul>
+<ul class="simple">
+<li><p>开放设计（信息安全机制不应依赖于攻击者不了解其设计，而应依赖于更容易保护和更改的信息，例如密钥和密码）</p></li>
+<li><p>权限分离（理想情况下，对重要对象的访问应取决于不止一个条件，这样攻破一个保护系统也无法获得完全访问权限。例如，多因素认证（如同时要求密码和硬件令牌）比单因素认证更强）</p></li>
+<li><p>最小权限（进程应以所需的最小权限运行）</p></li>
+<li><p>最少公共机制（设计应尽量减少由多个用户共用、并被所有用户依赖的机制，例如临时文件目录）</p></li>
+<li><p>心理可接受性（人机界面必须设计得易于使用，按照“最小意外”原则进行设计会有所帮助）</p></li>
+<li><p>有限的攻击面（攻击者可能尝试从中输入或提取数据的各个不同位置的集合）</p></li>
+<li><p>使用允许列表进行输入验证（输入通常应在被接受之前检查其是否有效；这种验证应使用允许列表（只接受已知的有效值），而不是阻止列表（试图列出已知的无效值））。</p></li>
+</ul>
+</section>
+<section id="vulnerability-knowledge">
+<h3>漏洞知识<a class="headerlink" href="#vulnerability-knowledge" title="链接到此标题。"></a></h3>
+<p>项目中的“主要开发者”是指熟悉项目代码库、能够熟练地修改代码，并被项目中大多数其他参与者认可的任何人。主要开发者通常在过去一年中做出过一定数量的贡献（通过代码、文档或解答问题）。如果开发者发起了该项目（且离开项目未超过三年）、可以选择通过私有漏洞报告渠道（如果有的话）接收信息、可以代表项目接受提交，或者负责发布项目软件的正式版本，通常就会被视为主要开发者。如果只有一名开发者，那么此人就是主要开发者。</p>
+<p>至少一名主要开发者 <strong>必须</strong> 了解在这类软件中会导致漏洞的常见错误类型，并且对每种错误至少掌握一种应对或缓解方法。</p>
+<p>示例（取决于软件类型）包括 SQL 注入、操作系统命令注入、经典缓冲区溢出、跨站脚本、缺少认证和缺少授权。常用的列表请参见 <a class="reference external" href="https://cwe.mitre.org/top25/">CWE/SANS top 25</a> 或 <a class="reference external" href="https://owasp.org/www-project-top-ten/">OWASP Top 10</a>。</p>
+<p>非营利组织 OpenSecurityTraining2 为 C/C++ 开发者提供了一门免费课程 <a class="reference external" href="https://ost2.fyi/Vulns1001">OST2_1001</a>。该课程讲授如何预防、检测和缓解线性栈/堆缓冲区溢出、非线性越界写入、整数溢出以及其他整数问题。后续课程 <a class="reference external" href="https://ost2.fyi/Vulns1002">OST2_1002</a> 涵盖未初始化数据访问、竞争条件、释放后使用（use-after-free）、类型混淆以及信息泄露漏洞。</p>
+</section>
+<section id="zephyr-security-subcommittee">
+<h3>Zephyr 信息安全小组委员会<a class="headerlink" href="#zephyr-security-subcommittee" title="链接到此标题。"></a></h3>
+<p>应设立一个“Zephyr 信息安全小组委员会”（Zephyr Security Subcommittee），负责执行本指南、监督审查并改进这些指南。</p>
+<p>该团队将依据 Zephyr 项目章程设立。</p>
+</section>
+</section>
+<section id="code-review">
+<h2>代码审查<a class="headerlink" href="#code-review" title="链接到此标题。"></a></h2>
+<p>Zephyr 项目应使用一个代码审查系统，所有更改都必须经过该系统。每项更改都应至少由一名不是该更改作者的主要开发者审查。该开发者应（根据其对信息安全的一般理解）判断此更改是否影响系统的信息安全；如果有影响，则应请具备漏洞知识的开发者或安全设计者也审查该代码。上述任何人都有权阻止该更改合并到主线代码中，直到信息安全问题得到解决。</p>
+</section>
+<section id="issues-and-bug-tracking">
+<h2>问题与缺陷跟踪<a class="headerlink" href="#issues-and-bug-tracking" title="链接到此标题。"></a></h2>
+<p>Zephyr 项目应有一个问题跟踪系统（例如 <a class="reference external" href="https://www.github.com">GitHub</a>），用于记录和跟踪在系统中发现的缺陷。</p>
+<p>由于信息安全问题通常比较敏感，该问题跟踪系统应有一个用于标识信息安全问题的字段。设置该字段后，该问题应只对 Zephyr 信息安全小组委员会可见。此外，还应有一个字段，允许 Zephyr 信息安全小组委员会添加其他可查看指定问题的用户。</p>
+<p>这种禁止公开期（embargo），即受限可见性，应只持续固定的时长，默认值由项目决定。但是，由于信息安全方面的考虑往往来自 Zephyr 项目之外，可能需要延长禁止公开期。所需的时间应在问题中明确注明。</p>
+<p>Zephyr 信息安全小组委员会应至少每月审查一次问题列表。审查应着重于跟踪修复情况、确定是否需要通知或邀请外部各方参与，以及确定何时解除问题的禁止公开期。禁止公开期 <strong>不应</strong> 通过自动化手段解除，但审查团队应避免在解除已解决问题的禁止公开期时出现不必要的延迟。</p>
+</section>
+<section id="modifications-to-this-document">
+<h2>本文档的修改<a class="headerlink" href="#modifications-to-this-document" title="链接到此标题。"></a></h2>
+<p>对本文档的修改应由 Zephyr 信息安全小组委员会审查，并经协商一致批准。</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="attackf" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>一次 <a class="reference external" href="https://www.theverge.com/2016/10/21/13362354/dyn-dns-ddos-attack-cause-outage-status-explained">attack</a> 导致相当大一部分 DNS 基础设施瘫痪。</p>
+</aside>
+</aside>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 7月 28, 2025.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

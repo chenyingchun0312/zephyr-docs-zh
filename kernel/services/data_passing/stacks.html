@@ -1,0 +1,400 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>栈 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/kernel/services/data_passing/stacks.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" />
+    <link rel="next" title="消息队列" href="message_queues.html" />
+    <link rel="prev" title="LIFO" href="lifos.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">内核</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">内核服务</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../index.html#scheduling-interrupts-and-synchronization">调度、中断与同步</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html#data-passing">数据传递</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="queues.html">队列</a></li>
+<li class="toctree-l4"><a class="reference internal" href="fifos.html">FIFO</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lifos.html">LIFO</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">栈</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#concepts">概念</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#implementation">实现</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#defining-a-stack">定义栈</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#pushing-to-a-stack">压栈</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#popping-from-a-stack">出栈</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#suggested-uses">建议用法</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#configuration-options">配置选项</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#api-reference">API 参考</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="message_queues.html">消息队列</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mailboxes.html">邮箱</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pipes.html">管道</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#memory-management">内存管理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#timing">计时</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#other">其他</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../drivers/index.html">设备驱动模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../usermode/index.html">用户模式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../memory_management/index.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../data_structures/index.html">数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../timing_functions/index.html">计时函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../object_cores/index.html">对象核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../timeutil.html">时间工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../precision_timing.html">精密计时</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../util/index.html">实用工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../iterable_sections/index.html">可迭代段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../code-relocation.html">代码和数据重定位</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanup.html">基于作用域的清理辅助工具</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">内核</a> &raquo;</li>
+  
+     <li><a href="../index.html">内核服务</a> &raquo;</li>
+  
+  <li>栈</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="stacks">
+<span id="stacks-v2"></span><h1>栈<a class="headerlink" href="#stacks" title="链接到此标题。"></a></h1>
+<p><em class="dfn">stack</em> （栈）是实现传统后进先出（LIFO）队列的内核对象，允许线程和 ISR 添加和移除有限数量的整数数据值。</p>
+<nav class="contents local" id="id1">
+<ul class="simple">
+<li><p><a class="reference internal" href="#concepts" id="id2">概念</a></p></li>
+<li><p><a class="reference internal" href="#implementation" id="id3">实现</a></p>
+<ul>
+<li><p><a class="reference internal" href="#defining-a-stack" id="id4">定义栈</a></p></li>
+<li><p><a class="reference internal" href="#pushing-to-a-stack" id="id5">压栈</a></p></li>
+<li><p><a class="reference internal" href="#popping-from-a-stack" id="id6">出栈</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#suggested-uses" id="id7">建议用法</a></p></li>
+<li><p><a class="reference internal" href="#configuration-options" id="id8">配置选项</a></p></li>
+<li><p><a class="reference internal" href="#api-reference" id="id9">API 参考</a></p></li>
+</ul>
+</nav>
+<section id="concepts">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">概念</a><a class="headerlink" href="#concepts" title="链接到此标题。"></a></h2>
+<p>可以定义任意数量的栈（仅受可用 RAM 限制）。每个栈通过其内存地址引用。</p>
+<p>栈具有以下关键属性：</p>
+<ul class="simple">
+<li><p><strong>队列</strong>，包含已添加但尚未移除的整数数据值。该队列使用 stack_data_t 类型的数组实现，并且必须按本机字长边界对齐。stack_data_t 类型对应本机字长，即 32 位或 64 位，具体取决于 CPU 架构和编译模式。</p></li>
+<li><p><strong>最大数量</strong>，即数组中可排队的数据值的最大个数。</p></li>
+</ul>
+<p>栈必须先初始化才能使用，初始化会将其队列置为空。</p>
+<p>线程或 ISR 都可以向栈 <strong>添加</strong> 数据值。如果有线程正在等待，数据值会直接交给该线程；否则数据值会被加入 LIFO 的队列。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>如果启用了 <a class="reference internal" href="../../../kconfig.html#CONFIG_NO_RUNTIME_CHECKS" title="CONFIG_NO_RUNTIME_CHECKS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NO_RUNTIME_CHECKS</span></code></a>，内核将 <em>不会</em> 检测和阻止向已达到最大排队数量的栈添加数据值。向已满的栈添加数据值会导致数组溢出，进而引发不可预测的行为。</p>
+</div>
+<p>线程可以从栈中 <strong>移除</strong> 数据值。如果栈的队列为空，线程可以选择等待数据值到来。任意数量的线程可以同时在一个空栈上等待。添加数据项时，它会交给等待时间最长的最高优先级线程。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>内核允许 ISR 从栈中移除数据项，但如果栈为空，ISR 不得尝试等待。</p>
+</div>
+</section>
+<section id="implementation">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">实现</a><a class="headerlink" href="#implementation" title="链接到此标题。"></a></h2>
+<section id="defining-a-stack">
+<h3><a class="toc-backref" href="#id4" role="doc-backlink">定义栈</a><a class="headerlink" href="#defining-a-stack" title="链接到此标题。"></a></h3>
+<p>栈使用 <code class="xref c c-struct docutils literal notranslate"><span class="pre">k_stack</span></code> 类型的变量定义，然后必须调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_stack_init()</span></code> 或 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_stack_alloc_init()</span></code> 进行初始化。使用后者时无需提供缓冲区，而是从调用线程的资源池中分配。</p>
+<p>以下代码定义并初始化了一个空栈，最多可容纳十个字长大小的数据值。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#define MAX_ITEMS 10</span>
+
+<span class="n">stack_data_t</span><span class="w"> </span><span class="n">my_stack_array</span><span class="p">[</span><span class="n">MAX_ITEMS</span><span class="p">];</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">k_stack</span><span class="w"> </span><span class="n">my_stack</span><span class="p">;</span>
+
+<span class="n">k_stack_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_stack</span><span class="p">,</span><span class="w"> </span><span class="n">my_stack_array</span><span class="p">,</span><span class="w"> </span><span class="n">MAX_ITEMS</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>也可以调用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_STACK_DEFINE</span></code> 在编译时定义并初始化栈。</p>
+<p>以下代码与上面的代码段效果相同。注意，该宏同时定义了栈及其数据值数组。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">K_STACK_DEFINE</span><span class="p">(</span><span class="n">my_stack</span><span class="p">,</span><span class="w"> </span><span class="n">MAX_ITEMS</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="pushing-to-a-stack">
+<h3><a class="toc-backref" href="#id5" role="doc-backlink">压栈</a><a class="headerlink" href="#pushing-to-a-stack" title="链接到此标题。"></a></h3>
+<p>调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_stack_push()</span></code> 向栈添加数据项。</p>
+<p>以下代码基于上面的示例，展示了线程如何通过将一组数据结构的内存地址保存在栈中来创建数据结构池。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* define array of data structures */</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">my_buffer_type</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">field1</span><span class="p">;</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">my_buffer_type</span><span class="w"> </span><span class="n">my_buffers</span><span class="p">[</span><span class="n">MAX_ITEMS</span><span class="p">];</span>
+
+<span class="cm">/* save address of each data structure in a stack */</span>
+<span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">MAX_ITEMS</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">k_stack_push</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_stack</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">stack_data_t</span><span class="p">)</span><span class="o">&amp;</span><span class="n">my_buffers</span><span class="p">[</span><span class="n">i</span><span class="p">]);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="popping-from-a-stack">
+<h3><a class="toc-backref" href="#id6" role="doc-backlink">出栈</a><a class="headerlink" href="#popping-from-a-stack" title="链接到此标题。"></a></h3>
+<p>调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_stack_pop()</span></code> 从栈中取出数据项。</p>
+<p>以下代码基于上面的示例，展示了线程如何动态分配一个未使用的数据结构。当不再需要该数据结构时，线程必须将其地址压回栈中，以便该数据结构可以被重用。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">my_buffer_type</span><span class="w"> </span><span class="o">*</span><span class="n">new_buffer</span><span class="p">;</span>
+
+<span class="n">k_stack_pop</span><span class="p">(</span><span class="o">&amp;</span><span class="n">buffer_stack</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="n">stack_data_t</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="o">&amp;</span><span class="n">new_buffer</span><span class="p">,</span><span class="w"> </span><span class="n">K_FOREVER</span><span class="p">);</span>
+<span class="n">new_buffer</span><span class="o">-&gt;</span><span class="n">field1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">...</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="suggested-uses">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">建议用法</a><a class="headerlink" href="#suggested-uses" title="链接到此标题。"></a></h2>
+<p>当已知所存数据项的最大数量时，使用栈以“后进先出”的方式存储和取回整数数据值。</p>
+</section>
+<section id="configuration-options">
+<h2><a class="toc-backref" href="#id8" role="doc-backlink">配置选项</a><a class="headerlink" href="#configuration-options" title="链接到此标题。"></a></h2>
+<p>相关配置选项：</p>
+<ul class="simple">
+<li><p>无。</p></li>
+</ul>
+</section>
+<section id="api-reference">
+<h2><a class="toc-backref" href="#id9" role="doc-backlink">API 参考</a><a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">stack_apis</span></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/philosophers/README.html#dining-philosophers" title="使用 Zephyr 内核服务实现哲学家就餐问题的解决方案。">Dining Philosophers</a></span><span class="code-sample-description">使用 Zephyr 内核服务实现哲学家就餐问题的解决方案。</span></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 4月 04, 2022.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

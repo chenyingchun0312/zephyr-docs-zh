@@ -1,0 +1,1090 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>日志 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/logging/index.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="使用 ARM Coresight STM 进行多域日志记录" href="cs_stm.html" />
+    <link rel="prev" title="日志、跟踪与调试" href="../observability.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">服务</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../connectivity/index.html">连接</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../messaging.html">进程间通信</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../observability.html">日志、跟踪与调试</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">日志</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#global-kconfig-options">全局 Kconfig 选项</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#usage">用法</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#logging-in-a-module">在模块中记录日志</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#logging-in-a-module-instance">在模块实例中记录日志</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#controlling-the-logging">控制日志</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#rate-limited-logging">限速日志</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#configuration">配置</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#logging-panic">日志 panic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#printk">Printk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#architecture">架构</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#default-frontend">默认前端</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#log-message">日志消息</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#log-message-allocation">日志消息分配</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runtime-filtering">运行时过滤</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#custom-frontend">自定义前端</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#frontend-using-arm-coresight-stm-system-trace-macrocell">使用 ARM Coresight STM（System Trace Macrocell）的前端</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#logging-strings">记录字符串</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#multi-domain-support">多域支持</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#domain-id">域 ID</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#cross-domain-log-message">跨域日志消息</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#id9">运行时过滤</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#message-ordering">消息排序</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#logging-backends">日志后端</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#message-formatting">消息格式化</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#dictionary-based-logging">基于字典的日志</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#id10">配置</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#id11">用法</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#recommendations-and-limitations">建议与限制</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#benchmark">基准测试</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#stack-usage">栈使用量</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#logging-using-arm-coresight-stm">使用 ARM Coresight STM 记录日志</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api-reference">API 参考</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="cs_stm.html">使用 ARM Coresight STM 进行多域日志记录</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../tracing/index.html">跟踪</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../debugging/index.html">调试</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../profiling/index.html">性能剖析</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../instrumentation/index.html">插桩</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cpu_load/index.html">CPU 负载</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../shell/index.html">Shell</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../task_wdt/index.html">任务看门狗</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../observability.html">日志、跟踪与调试</a> &raquo;</li>
+  
+  <li>日志</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="logging">
+<span id="logging-api"></span><h1>日志<a class="headerlink" href="#logging" title="链接到此标题。"></a></h1>
+<nav class="contents local" id="id1">
+<ul class="simple">
+<li><p><a class="reference internal" href="#global-kconfig-options" id="id21">全局 Kconfig 选项</a></p></li>
+<li><p><a class="reference internal" href="#usage" id="id22">用法</a></p>
+<ul>
+<li><p><a class="reference internal" href="#logging-in-a-module" id="id23">在模块中记录日志</a></p></li>
+<li><p><a class="reference internal" href="#logging-in-a-module-instance" id="id24">在模块实例中记录日志</a></p></li>
+<li><p><a class="reference internal" href="#controlling-the-logging" id="id25">控制日志</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#rate-limited-logging" id="id26">限速日志</a></p>
+<ul>
+<li><p><a class="reference internal" href="#configuration" id="id27">配置</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#logging-panic" id="id28">日志 panic</a></p></li>
+<li><p><a class="reference internal" href="#printk" id="id29">Printk</a></p></li>
+<li><p><a class="reference internal" href="#architecture" id="id30">架构</a></p>
+<ul>
+<li><p><a class="reference internal" href="#default-frontend" id="id31">默认前端</a></p></li>
+<li><p><a class="reference internal" href="#custom-frontend" id="id32">自定义前端</a></p></li>
+<li><p><a class="reference internal" href="#logging-strings" id="id33">记录字符串</a></p></li>
+<li><p><a class="reference internal" href="#multi-domain-support" id="id34">多域支持</a></p></li>
+<li><p><a class="reference internal" href="#logging-backends" id="id35">日志后端</a></p></li>
+<li><p><a class="reference internal" href="#dictionary-based-logging" id="id36">基于字典的日志</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#recommendations-and-limitations" id="id37">建议与限制</a></p></li>
+<li><p><a class="reference internal" href="#benchmark" id="id38">基准测试</a></p></li>
+<li><p><a class="reference internal" href="#stack-usage" id="id39">栈使用量</a></p></li>
+<li><p><a class="reference internal" href="#logging-using-arm-coresight-stm" id="id40">使用 ARM Coresight STM 记录日志</a></p></li>
+<li><p><a class="reference internal" href="#api-reference" id="id41">API 参考</a></p></li>
+</ul>
+</nav>
+<p>日志 API 提供了一个通用接口，用于处理开发者发出的消息。消息先经过前端，然后由处于活动状态的后端处理。前端负责立即过滤日志消息并将其排队，因此必须足够快。后端可以稍后运行，并且可以花费更多时间。后端负责格式化日志消息并将其发送到目的地，例如 UART、RTT 或 BLE。如有需要，可以使用自定义前端和自定义后端。</p>
+<p>日志功能概要：</p>
+<ul class="simple">
+<li><p>延迟日志：把耗时的操作转移到已知的上下文中执行，而不是在调用时就处理并发送日志消息，从而缩短记录一条消息所需的时间。</p></li>
+<li><p>支持多个后端（最多 9 个后端）。</p></li>
+<li><p>支持自定义前端，并可与标准后端协同工作。</p></li>
+<li><p>在模块级别进行编译时过滤。</p></li>
+<li><p>每个后端独立进行运行时过滤。</p></li>
+<li><p>在模块实例级别进行额外的运行时过滤。</p></li>
+<li><p>使用用户提供的函数生成时间戳。时间戳可以是 32 位或 64 位。</p></li>
+<li><p>用于转储数据的专用 API。</p></li>
+<li><p>用于处理临时字符串的专用 API。</p></li>
+<li><p>支持 panic：在 panic 模式下，日志切换为阻塞式的同步处理。</p></li>
+<li><p>支持 printk：printk 消息可以重定向到日志系统。</p></li>
+<li><p>设计上支持多域/多处理器系统。</p></li>
+<li><p>支持记录浮点数和 <code class="docutils literal notranslate"><span class="pre">long</span> <span class="pre">long</span></code> 值。</p></li>
+<li><p>内置对用作参数的临时字符串的复制。</p></li>
+<li><p>支持多域日志。</p></li>
+<li><p>提供限速日志宏，防止频繁生成消息时日志泛滥。</p></li>
+</ul>
+<p>日志 API 在编译时和运行时都高度可配置。通过 Kconfig 选项（参见 <a class="reference internal" href="#logging-kconfig"><span class="std std-ref">全局 Kconfig 选项</span></a>），可以在不需要日志时逐步将日志排除在编译之外，以减小镜像大小并缩短执行时间。在编译期间，可以按模块和严重级别过滤日志。</p>
+<p>日志也可以编译进来，但在运行时使用专用 API 进行过滤。运行时过滤对每个后端和每个日志消息源都是独立的。日志消息的源可以是一个模块，也可以是某个模块的特定实例。</p>
+<p>系统中有四个严重级别：error、warning、info 和 debug。对于每个严重级别，日志 API（<a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/logging/log.h">include/zephyr/logging/log.h</a>）都有一组专用的宏。此外还有用于记录数据的宏。</p>
+<p>每个严重级别都提供以下一组宏：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">LOG_X</span></code>：用于标准的类 printf 消息，例如 <code class="xref c c-macro docutils literal notranslate"><span class="pre">LOG_ERR</span></code>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LOG_HEXDUMP_X</span></code>：用于转储数据，例如 <code class="xref c c-macro docutils literal notranslate"><span class="pre">LOG_HEXDUMP_WRN</span></code>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LOG_INST_X</span></code>：用于与特定实例关联的标准类 printf 消息，例如 <code class="xref c c-macro docutils literal notranslate"><span class="pre">LOG_INST_INF</span></code>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LOG_INST_HEXDUMP_X</span></code>：用于转储与特定实例关联的数据，例如 <code class="xref c c-macro docutils literal notranslate"><span class="pre">LOG_INST_HEXDUMP_DBG</span></code></p></li>
+</ul>
+<p>warning 级别还额外提供以下宏：</p>
+<ul class="simple">
+<li><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">LOG_WRN_ONCE</span></code>：用于只关心首次出现的警告。</p></li>
+</ul>
+<p>所有严重级别还提供限速日志宏，以防止日志泛滥：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">LOG_X_RATELIMIT</span></code>：使用默认速率的限速标准类 printf 消息，例如 <code class="xref c c-macro docutils literal notranslate"><span class="pre">LOG_ERR_RATELIMIT</span></code>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LOG_X_RATELIMIT_RATE</span></code>：使用自定义速率的限速标准类 printf 消息，例如 <code class="xref c c-macro docutils literal notranslate"><span class="pre">LOG_ERR_RATELIMIT_RATE</span></code>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LOG_HEXDUMP_X_RATELIMIT</span></code>：使用默认速率的限速数据转储，例如 <code class="xref c c-macro docutils literal notranslate"><span class="pre">LOG_HEXDUMP_WRN_RATELIMIT</span></code>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LOG_HEXDUMP_X_RATELIMIT_RATE</span></code>：使用自定义速率的限速数据转储，例如 <code class="xref c c-macro docutils literal notranslate"><span class="pre">LOG_HEXDUMP_WRN_RATELIMIT_RATE</span></code>。</p></li>
+</ul>
+<p>便捷宏使用 <code class="docutils literal notranslate"><span class="pre">CONFIG_LOG_RATELIMIT_INTERVAL_MS</span></code> 指定的默认速率，而显式速率宏接受一个速率参数（单位为毫秒），用于指定日志消息之间的最小间隔。</p>
+<p>配置分为两类：按模块配置和全局配置。全局启用日志后，默认对所有模块启用。但模块可以在本地禁用日志。每个模块都可以指定自己的日志级别。模块必须在使用 API 之前定义 <code class="xref c c-macro docutils literal notranslate"><span class="pre">LOG_LEVEL</span></code> 宏。除非设置了全局覆盖，否则以模块的日志级别为准。全局覆盖只能提高日志级别，不能用来降低之前设置得更高的模块日志级别。还可以通过指定系统中存在的最大严重级别来全局限制日志，这里的最大是指最低的严重程度（例如，如果系统中的最大级别设为 info，则表示保留 error、warning 和 info 级别，但排除 debug 消息）。</p>
+<p>每个使用日志的模块都必须指定唯一的名称，并向日志系统注册自己。如果一个模块由多个文件组成，则只需在其中一个文件中注册，但每个文件都必须指定模块名称。</p>
+<p>日志的默认前端设计为线程安全的，并尽量缩短记录消息所需的时间。默认情况下，调用日志 API 时不会执行字符串格式化或访问传输层等耗时操作。调用日志 API 时，会创建一条消息并将其加入列表。日志消息池使用一个专用的、可配置的缓冲区。消息分为 2 种类型：标准消息和 hexdump 消息。每条消息都包含源 ID（模块或实例 ID，以及可能用于多处理器系统的域 ID）、时间戳和严重级别。标准消息包含指向字符串和参数的指针。hexdump 消息包含复制的数据和字符串。</p>
+<section id="global-kconfig-options">
+<span id="logging-kconfig"></span><h2><a class="toc-backref" href="#id21" role="doc-backlink">全局 Kconfig 选项</a><a class="headerlink" href="#global-kconfig-options" title="链接到此标题。"></a></h2>
+<p>这些选项位于以下文件中：<a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/subsys/logging/Kconfig">subsys/logging/Kconfig</a>。</p>
+<p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG" title="CONFIG_LOG"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG</span></code></a>：全局开关，打开或关闭日志。</p>
+<p>工作模式：</p>
+<p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG_MODE_DEFERRED" title="CONFIG_LOG_MODE_DEFERRED"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_MODE_DEFERRED</span></code></a>：延迟模式。</p>
+<p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG_MODE_IMMEDIATE" title="CONFIG_LOG_MODE_IMMEDIATE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_MODE_IMMEDIATE</span></code></a>：立即（同步）模式。</p>
+<p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG_MODE_MINIMAL" title="CONFIG_LOG_MODE_MINIMAL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_MODE_MINIMAL</span></code></a>：最小占用模式。</p>
+<p>过滤选项：</p>
+<p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG_RUNTIME_FILTERING" title="CONFIG_LOG_RUNTIME_FILTERING"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_RUNTIME_FILTERING</span></code></a>：允许在运行时重新配置过滤。</p>
+<p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG_DEFAULT_LEVEL" title="CONFIG_LOG_DEFAULT_LEVEL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_DEFAULT_LEVEL</span></code></a>：默认级别，设置未指定自身日志级别的模块所使用的日志级别。</p>
+<p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG_OVERRIDE_LEVEL" title="CONFIG_LOG_OVERRIDE_LEVEL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_OVERRIDE_LEVEL</span></code></a>：当模块日志级别未设置或低于该覆盖值时，覆盖模块的日志级别。</p>
+<p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG_MAX_LEVEL" title="CONFIG_LOG_MAX_LEVEL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_MAX_LEVEL</span></code></a>：编译进来的最大（最低严重程度）级别。</p>
+<p>处理选项：</p>
+<p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG_MODE_OVERFLOW" title="CONFIG_LOG_MODE_OVERFLOW"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_MODE_OVERFLOW</span></code></a>：无法分配新消息时，丢弃最旧的消息。</p>
+<p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG_BLOCK_IN_THREAD" title="CONFIG_LOG_BLOCK_IN_THREAD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_BLOCK_IN_THREAD</span></code></a>：启用后，如果无法分配新的日志消息，线程上下文将阻塞，最长 <a class="reference internal" href="../../kconfig.html#CONFIG_LOG_BLOCK_IN_THREAD_TIMEOUT_MS" title="CONFIG_LOG_BLOCK_IN_THREAD_TIMEOUT_MS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_BLOCK_IN_THREAD_TIMEOUT_MS</span></code></a>，或直到日志消息分配成功。</p>
+<p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG_PRINTK" title="CONFIG_LOG_PRINTK"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_PRINTK</span></code></a>：将 printk 调用重定向到日志系统。</p>
+<p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG_PROCESS_TRIGGER_THRESHOLD" title="CONFIG_LOG_PROCESS_TRIGGER_THRESHOLD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_PROCESS_TRIGGER_THRESHOLD</span></code></a>：当缓冲的日志消息数量达到该阈值时，唤醒专用线程（参见 <code class="xref c c-func docutils literal notranslate"><span class="pre">log_thread_set()</span></code>）。如果启用了 <a class="reference internal" href="../../kconfig.html#CONFIG_LOG_PROCESS_THREAD" title="CONFIG_LOG_PROCESS_THREAD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_PROCESS_THREAD</span></code></a>，则由内部线程使用该阈值。</p>
+<p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG_PROCESS_THREAD" title="CONFIG_LOG_PROCESS_THREAD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_PROCESS_THREAD</span></code></a>：启用后会创建一个日志线程来处理日志。</p>
+<p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG_PROCESS_THREAD_STARTUP_DELAY_MS" title="CONFIG_LOG_PROCESS_THREAD_STARTUP_DELAY_MS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_PROCESS_THREAD_STARTUP_DELAY_MS</span></code></a>：日志线程启动前的延迟，单位为毫秒。</p>
+<p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG_BUFFER_SIZE" title="CONFIG_LOG_BUFFER_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_BUFFER_SIZE</span></code></a>：分配给环形包缓冲区的字节数。</p>
+<p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG_FRONTEND" title="CONFIG_LOG_FRONTEND"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_FRONTEND</span></code></a>：将日志定向到自定义前端。</p>
+<p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG_FRONTEND_ONLY" title="CONFIG_LOG_FRONTEND_ONLY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_FRONTEND_ONLY</span></code></a>：消息发往前端时不使用任何后端。</p>
+<p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG_FRONTEND_OPT_API" title="CONFIG_LOG_FRONTEND_OPT_API"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_FRONTEND_OPT_API</span></code></a>：针对最常见的简单消息进行优化的可选 API。</p>
+<p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG_CUSTOM_HEADER" title="CONFIG_LOG_CUSTOM_HEADER"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_CUSTOM_HEADER</span></code></a>：将应用程序提供的头文件注入 log.h</p>
+<p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG_TIMESTAMP_64BIT" title="CONFIG_LOG_TIMESTAMP_64BIT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_TIMESTAMP_64BIT</span></code></a>：64 位时间戳。</p>
+<p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG_SIMPLE_MSG_OPTIMIZE" title="CONFIG_LOG_SIMPLE_MSG_OPTIMIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_SIMPLE_MSG_OPTIMIZE</span></code></a>：针对体积和性能优化简单日志消息。该选项仅适用于 32 位架构。</p>
+<p>格式化选项：</p>
+<p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG_FUNC_NAME_PREFIX_ERR" title="CONFIG_LOG_FUNC_NAME_PREFIX_ERR"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_FUNC_NAME_PREFIX_ERR</span></code></a>：在标准 ERROR 日志消息前加上函数名。hexdump 消息不加。</p>
+<p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG_FUNC_NAME_PREFIX_WRN" title="CONFIG_LOG_FUNC_NAME_PREFIX_WRN"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_FUNC_NAME_PREFIX_WRN</span></code></a>：在标准 WARNING 日志消息前加上函数名。hexdump 消息不加。</p>
+<p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG_FUNC_NAME_PREFIX_INF" title="CONFIG_LOG_FUNC_NAME_PREFIX_INF"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_FUNC_NAME_PREFIX_INF</span></code></a>：在标准 INFO 日志消息前加上函数名。hexdump 消息不加。</p>
+<p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG_FUNC_NAME_PREFIX_DBG" title="CONFIG_LOG_FUNC_NAME_PREFIX_DBG"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_FUNC_NAME_PREFIX_DBG</span></code></a>：在标准 DEBUG 日志消息前加上函数名。hexdump 消息不加。</p>
+<p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG_BACKEND_SHOW_TIMESTAMP" title="CONFIG_LOG_BACKEND_SHOW_TIMESTAMP"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_BACKEND_SHOW_TIMESTAMP</span></code></a>：使后端在日志中打印时间戳。</p>
+<p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG_BACKEND_SHOW_LEVEL" title="CONFIG_LOG_BACKEND_SHOW_LEVEL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_BACKEND_SHOW_LEVEL</span></code></a>：使后端在日志中打印级别。</p>
+<p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG_BACKEND_SHOW_COLOR" title="CONFIG_LOG_BACKEND_SHOW_COLOR"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_BACKEND_SHOW_COLOR</span></code></a>：为错误（红色）和警告（黄色）着色。</p>
+<p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG_BACKEND_FORMAT_TIMESTAMP" title="CONFIG_LOG_BACKEND_FORMAT_TIMESTAMP"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_BACKEND_FORMAT_TIMESTAMP</span></code></a>：启用后，时间戳格式化为 <em>hh:mm:ss:mmm,uuu</em>，否则以原始格式打印。</p>
+<p>后端选项：</p>
+<p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG_BACKEND_UART" title="CONFIG_LOG_BACKEND_UART"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_BACKEND_UART</span></code></a>：启用内置的 UART 后端。</p>
+<p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG_BACKEND_NET" title="CONFIG_LOG_BACKEND_NET"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_BACKEND_NET</span></code></a>：启用内置的网络后端，将 syslog 消息发送到网络服务器。</p>
+</section>
+<section id="usage">
+<span id="log-usage"></span><h2><a class="toc-backref" href="#id22" role="doc-backlink">用法</a><a class="headerlink" href="#usage" title="链接到此标题。"></a></h2>
+<section id="logging-in-a-module">
+<h3><a class="toc-backref" href="#id23" role="doc-backlink">在模块中记录日志</a><a class="headerlink" href="#logging-in-a-module" title="链接到此标题。"></a></h3>
+<p>要在模块中使用日志，必须为模块指定一个唯一的名称，并使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">LOG_MODULE_REGISTER</span></code> 注册该模块。可以选择通过第二个参数指定模块的编译时日志级别。如果未提供自定义日志级别，则使用默认日志级别（<a class="reference internal" href="../../kconfig.html#CONFIG_LOG_DEFAULT_LEVEL" title="CONFIG_LOG_DEFAULT_LEVEL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_DEFAULT_LEVEL</span></code></a>）。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/logging/log.h&gt;</span>
+<span class="n">LOG_MODULE_REGISTER</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span><span class="w"> </span><span class="n">CONFIG_FOO_LOG_LEVEL</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>如果模块由多个文件组成，则 <code class="docutils literal notranslate"><span class="pre">LOG_MODULE_REGISTER()</span></code> 应当只出现在其中一个文件中。其他每个文件都应使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">LOG_MODULE_DECLARE</span></code> 声明自己属于该模块。可以选择通过第二个参数指定模块的编译时日志级别。如果未提供自定义日志级别，则使用默认日志级别（<a class="reference internal" href="../../kconfig.html#CONFIG_LOG_DEFAULT_LEVEL" title="CONFIG_LOG_DEFAULT_LEVEL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_DEFAULT_LEVEL</span></code></a>）。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/logging/log.h&gt;</span>
+<span class="cm">/* In all files comprising the module but one */</span>
+<span class="n">LOG_MODULE_DECLARE</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span><span class="w"> </span><span class="n">CONFIG_FOO_LOG_LEVEL</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>要在头文件中实现的函数里使用日志 API，必须在调用日志 API 之前，在函数体中使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">LOG_MODULE_DECLARE</span></code> 宏。可以选择通过第二个参数指定模块的编译时日志级别。如果未提供自定义日志级别，则使用默认日志级别（<a class="reference internal" href="../../kconfig.html#CONFIG_LOG_DEFAULT_LEVEL" title="CONFIG_LOG_DEFAULT_LEVEL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_DEFAULT_LEVEL</span></code></a>）。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/logging/log.h&gt;</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kr">inline</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">foo</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">     </span><span class="n">LOG_MODULE_DECLARE</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span><span class="w"> </span><span class="n">CONFIG_FOO_LOG_LEVEL</span><span class="p">);</span>
+
+<span class="w">     </span><span class="n">LOG_INF</span><span class="p">(</span><span class="s">"foo"</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>可以使用专用的 Kconfig 模板（<a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/subsys/logging/Kconfig.template.log_config">subsys/logging/Kconfig.template.log_config</a>）创建本地日志级别配置。</p>
+<p>下面的示例展示了该模板的用法。结果会生成 <code class="docutils literal notranslate"><span class="pre">CONFIG_FOO_LOG_LEVEL</span></code>：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>module = FOO
+module-str = foo
+source "subsys/logging/Kconfig.template.log_config"
+</pre></div>
+</div>
+</section>
+<section id="logging-in-a-module-instance">
+<h3><a class="toc-backref" href="#id24" role="doc-backlink">在模块实例中记录日志</a><a class="headerlink" href="#logging-in-a-module-instance" title="链接到此标题。"></a></h3>
+<p>如果某些模块是多实例的，并且这些实例在系统中被广泛使用，启用日志就会导致日志泛滥。日志 API 提供了在实例级别而非模块级别过滤日志的工具。例如，可以只为某个特定实例启用日志。</p>
+<p>要使用实例级过滤，必须执行以下步骤：</p>
+<ul class="simple">
+<li><p>在实例结构体中声明一个指向特定日志结构体的指针，为此使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">LOG_INSTANCE_PTR_DECLARE</span></code>。</p></li>
+</ul>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/logging/log_instance.h&gt;</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">foo_object</span><span class="w"> </span><span class="p">{</span>
+<span class="w">     </span><span class="n">LOG_INSTANCE_PTR_DECLARE</span><span class="p">(</span><span class="n">log</span><span class="p">);</span>
+<span class="w">     </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p>模块必须提供一个用于实例化的宏。在该宏中注册日志实例，并在对象结构体中初始化日志实例指针。</p></li>
+</ul>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#define FOO_OBJECT_DEFINE(_name)                             \</span>
+<span class="cp">     LOG_INSTANCE_REGISTER(foo, _name, CONFIG_FOO_LOG_LEVEL) \</span>
+<span class="cp">     struct foo_object _name = {                             \</span>
+<span class="cp">             LOG_INSTANCE_PTR_INIT(log, foo, _name)          \</span>
+<span class="cp">     }</span>
+</pre></div>
+</div>
+<p>注意，禁用日志时，不会创建日志实例以及指向该实例的指针。</p>
+<p>要在源文件中使用实例日志 API，必须使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">LOG_LEVEL_SET</span></code> 设置编译时日志级别。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">LOG_LEVEL_SET</span><span class="p">(</span><span class="n">CONFIG_FOO_LOG_LEVEL</span><span class="p">);</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">foo_init</span><span class="p">(</span><span class="n">foo_object</span><span class="w"> </span><span class="o">*</span><span class="n">f</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">     </span><span class="n">LOG_INST_INF</span><span class="p">(</span><span class="n">f</span><span class="o">-&gt;</span><span class="n">log</span><span class="p">,</span><span class="w"> </span><span class="s">"Initialized."</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>要在头文件中使用实例日志 API，必须使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">LOG_LEVEL_SET</span></code> 设置编译时日志级别。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kr">inline</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">foo_init</span><span class="p">(</span><span class="n">foo_object</span><span class="w"> </span><span class="o">*</span><span class="n">f</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">     </span><span class="n">LOG_LEVEL_SET</span><span class="p">(</span><span class="n">CONFIG_FOO_LOG_LEVEL</span><span class="p">);</span>
+
+<span class="w">     </span><span class="n">LOG_INST_INF</span><span class="p">(</span><span class="n">f</span><span class="o">-&gt;</span><span class="n">log</span><span class="p">,</span><span class="w"> </span><span class="s">"Initialized."</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="controlling-the-logging">
+<h3><a class="toc-backref" href="#id25" role="doc-backlink">控制日志</a><a class="headerlink" href="#controlling-the-logging" title="链接到此标题。"></a></h3>
+<p>默认情况下，延迟模式下的日志处理由一个自动启动的专用任务在内部完成。但如果禁用了多线程，该任务可能不可用。也可以通过取消设置 <a class="reference internal" href="../../kconfig.html#CONFIG_LOG_PROCESS_TRIGGER_THRESHOLD" title="CONFIG_LOG_PROCESS_TRIGGER_THRESHOLD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_PROCESS_TRIGGER_THRESHOLD</span></code></a> 来禁用它。这种情况下，可以使用 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/logging/log_ctrl.h">include/zephyr/logging/log_ctrl.h</a> 中定义的 API 来控制日志。日志必须先初始化才能使用。用户可以选择提供一个返回时间戳值的函数；如果未提供，则使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">k_cycle_get</span></code> 或 <code class="xref c c-macro docutils literal notranslate"><span class="pre">k_cycle_get_32</span></code> 生成时间戳。<code class="xref c c-func docutils literal notranslate"><span class="pre">log_process()</span></code> 函数用于处理一条日志消息（如果有待处理的消息），如果还有更多待处理的消息则返回 true。不过，建议使用宏封装（<code class="xref c c-macro docutils literal notranslate"><span class="pre">LOG_INIT</span></code> 和 <code class="xref c c-macro docutils literal notranslate"><span class="pre">LOG_PROCESS</span></code>），它们会处理禁用日志的情况。</p>
+<p>下面的代码片段展示了如何在一个简单的无限循环中处理日志。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/logging/log_ctrl.h&gt;</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">     </span><span class="n">LOG_INIT</span><span class="p">();</span>
+<span class="w">     </span><span class="cm">/* If multithreading is enabled provide thread id to the logging. */</span>
+<span class="w">     </span><span class="n">log_thread_set</span><span class="p">(</span><span class="n">k_current_get</span><span class="p">());</span>
+
+<span class="w">     </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">             </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">LOG_PROCESS</span><span class="p">()</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nb">false</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                     </span><span class="cm">/* sleep */</span>
+<span class="w">             </span><span class="p">}</span>
+<span class="w">     </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>如果日志由线程（用户线程或内部线程）处理，则可以启用一项功能：当缓冲的日志消息达到一定数量时唤醒处理线程（参见 <a class="reference internal" href="../../kconfig.html#CONFIG_LOG_PROCESS_TRIGGER_THRESHOLD" title="CONFIG_LOG_PROCESS_TRIGGER_THRESHOLD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_PROCESS_TRIGGER_THRESHOLD</span></code></a>）。</p>
+</section>
+</section>
+<section id="rate-limited-logging">
+<span id="logging-ratelimited"></span><h2><a class="toc-backref" href="#id26" role="doc-backlink">限速日志</a><a class="headerlink" href="#rate-limited-logging" title="链接到此标题。"></a></h2>
+<p>限速日志宏提供了一种在频繁生成消息时防止日志泛滥的方法。这些宏确保日志消息的输出频率不超过指定的间隔，类似于 Linux 的 <code class="docutils literal notranslate"><span class="pre">printk_ratelimited</span></code> 功能。</p>
+<p>限速日志系统提供两类宏：</p>
+<p><strong>便捷宏（使用默认速率）：</strong> - <code class="xref c c-macro docutils literal notranslate"><span class="pre">LOG_ERR_RATELIMIT</span></code> - 限速的错误消息 - <code class="xref c c-macro docutils literal notranslate"><span class="pre">LOG_WRN_RATELIMIT</span></code> - 限速的警告消息 - <code class="xref c c-macro docutils literal notranslate"><span class="pre">LOG_INF_RATELIMIT</span></code> - 限速的信息消息 - <code class="xref c c-macro docutils literal notranslate"><span class="pre">LOG_DBG_RATELIMIT</span></code> - 限速的调试消息 - <code class="xref c c-macro docutils literal notranslate"><span class="pre">LOG_HEXDUMP_ERR_RATELIMIT</span></code> - 限速的错误 hexdump - <code class="xref c c-macro docutils literal notranslate"><span class="pre">LOG_HEXDUMP_WRN_RATELIMIT</span></code> - 限速的警告 hexdump - <code class="xref c c-macro docutils literal notranslate"><span class="pre">LOG_HEXDUMP_INF_RATELIMIT</span></code> - 限速的信息 hexdump - <code class="xref c c-macro docutils literal notranslate"><span class="pre">LOG_HEXDUMP_DBG_RATELIMIT</span></code> - 限速的调试 hexdump</p>
+<p><strong>显式速率宏（使用自定义速率）：</strong> - <code class="xref c c-macro docutils literal notranslate"><span class="pre">LOG_ERR_RATELIMIT_RATE</span></code> - 使用自定义速率限速的错误消息 - <code class="xref c c-macro docutils literal notranslate"><span class="pre">LOG_WRN_RATELIMIT_RATE</span></code> - 使用自定义速率限速的警告消息 - <code class="xref c c-macro docutils literal notranslate"><span class="pre">LOG_INF_RATELIMIT_RATE</span></code> - 使用自定义速率限速的信息消息 - <code class="xref c c-macro docutils literal notranslate"><span class="pre">LOG_DBG_RATELIMIT_RATE</span></code> - 使用自定义速率限速的调试消息 - <code class="xref c c-macro docutils literal notranslate"><span class="pre">LOG_HEXDUMP_ERR_RATELIMIT_RATE</span></code> - 使用自定义速率限速的错误 hexdump - <code class="xref c c-macro docutils literal notranslate"><span class="pre">LOG_HEXDUMP_WRN_RATELIMIT_RATE</span></code> - 使用自定义速率限速的警告 hexdump - <code class="xref c c-macro docutils literal notranslate"><span class="pre">LOG_HEXDUMP_INF_RATELIMIT_RATE</span></code> - 使用自定义速率限速的信息 hexdump - <code class="xref c c-macro docutils literal notranslate"><span class="pre">LOG_HEXDUMP_DBG_RATELIMIT_RATE</span></code> - 使用自定义速率限速的调试 hexdump</p>
+<p>便捷宏使用 <a class="reference internal" href="../../kconfig.html#CONFIG_LOG_RATELIMIT_INTERVAL_MS" title="CONFIG_LOG_RATELIMIT_INTERVAL_MS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_RATELIMIT_INTERVAL_MS</span></code></a> 指定的默认速率（默认为 5000ms）。显式速率宏接受一个速率参数（单位为毫秒），用于指定日志消息之间的最小间隔。限速按宏的调用点进行，也就是说，对限速宏的每个不同调用都有各自独立的速率限制。</p>
+<p>用法示例：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/logging/log.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/kernel.h&gt;</span>
+
+<span class="n">LOG_MODULE_REGISTER</span><span class="p">(</span><span class="n">my_module</span><span class="p">,</span><span class="w"> </span><span class="n">CONFIG_LOG_DEFAULT_LEVEL</span><span class="p">);</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">process_data</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="cm">/* Convenience macros using default rate (CONFIG_LOG_RATELIMIT_INTERVAL_MS) */</span>
+<span class="w">    </span><span class="n">LOG_WRN_RATELIMIT</span><span class="p">(</span><span class="s">"Data processing warning: %d"</span><span class="p">,</span><span class="w"> </span><span class="n">error_code</span><span class="p">);</span>
+<span class="w">    </span><span class="n">LOG_ERR_RATELIMIT</span><span class="p">(</span><span class="s">"Critical error occurred: %s"</span><span class="p">,</span><span class="w"> </span><span class="n">error_msg</span><span class="p">);</span>
+<span class="w">    </span><span class="n">LOG_INF_RATELIMIT</span><span class="p">(</span><span class="s">"Processing status: %d items"</span><span class="p">,</span><span class="w"> </span><span class="n">item_count</span><span class="p">);</span>
+<span class="w">    </span><span class="n">LOG_HEXDUMP_WRN_RATELIMIT</span><span class="p">(</span><span class="n">data_buffer</span><span class="p">,</span><span class="w"> </span><span class="n">data_len</span><span class="p">,</span><span class="w"> </span><span class="s">"Data buffer:"</span><span class="p">);</span>
+
+<span class="w">    </span><span class="cm">/* Explicit rate macros with custom intervals */</span>
+<span class="w">    </span><span class="n">LOG_WRN_RATELIMIT_RATE</span><span class="p">(</span><span class="mi">1000</span><span class="p">,</span><span class="w"> </span><span class="s">"Fast rate warning: %d"</span><span class="p">,</span><span class="w"> </span><span class="n">error_code</span><span class="p">);</span>
+<span class="w">    </span><span class="n">LOG_ERR_RATELIMIT_RATE</span><span class="p">(</span><span class="mi">30000</span><span class="p">,</span><span class="w"> </span><span class="s">"Slow rate error: %s"</span><span class="p">,</span><span class="w"> </span><span class="n">error_msg</span><span class="p">);</span>
+<span class="w">    </span><span class="n">LOG_INF_RATELIMIT_RATE</span><span class="p">(</span><span class="mi">2000</span><span class="p">,</span><span class="w"> </span><span class="s">"Custom rate status: %d items"</span><span class="p">,</span><span class="w"> </span><span class="n">item_count</span><span class="p">);</span>
+<span class="w">    </span><span class="n">LOG_HEXDUMP_ERR_RATELIMIT_RATE</span><span class="p">(</span><span class="mi">5000</span><span class="p">,</span><span class="w"> </span><span class="n">data_buffer</span><span class="p">,</span><span class="w"> </span><span class="n">data_len</span><span class="p">,</span><span class="w"> </span><span class="s">"Error data:"</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>限速日志特别适用于：</p>
+<ul class="simple">
+<li><p>可能频繁发生、但不需要刷屏日志的错误情况</p></li>
+<li><p>紧凑循环或高频回调中的状态更新</p></li>
+<li><p>可能压垮日志系统的调试信息</p></li>
+<li><p>可能反复失败的网络或 I/O 操作</p></li>
+</ul>
+<section id="configuration">
+<h3><a class="toc-backref" href="#id27" role="doc-backlink">配置</a><a class="headerlink" href="#configuration" title="链接到此标题。"></a></h3>
+<p>可以使用以下 Kconfig 选项配置限速日志：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG_RATELIMIT" title="CONFIG_LOG_RATELIMIT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_RATELIMIT</span></code></a> - 启用/禁用限速日志的总开关</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG_RATELIMIT_INTERVAL_MS" title="CONFIG_LOG_RATELIMIT_INTERVAL_MS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_RATELIMIT_INTERVAL_MS</span></code></a> - 便捷宏的默认间隔（5000ms）</p></li>
+</ul>
+<p>禁用 <a class="reference internal" href="../../kconfig.html#CONFIG_LOG_RATELIMIT" title="CONFIG_LOG_RATELIMIT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_RATELIMIT</span></code></a> 时，限速宏的行为由 <a class="reference internal" href="../../kconfig.html#CONFIG_LOG_RATELIMIT_FALLBACK" title="CONFIG_LOG_RATELIMIT_FALLBACK"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_RATELIMIT_FALLBACK</span></code></a> 选项控制：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG_RATELIMIT_FALLBACK_LOG" title="CONFIG_LOG_RATELIMIT_FALLBACK_LOG"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_RATELIMIT_FALLBACK_LOG</span></code></a> - 所有限速宏都按普通日志宏工作</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG_RATELIMIT_FALLBACK_DROP" title="CONFIG_LOG_RATELIMIT_FALLBACK_DROP"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_RATELIMIT_FALLBACK_DROP</span></code></a> - 所有限速宏都展开为空操作（默认）</p></li>
+</ul>
+<p>这样你就可以控制在无法使用限速功能时，限速日志宏是始终打印，还是完全不输出。</p>
+<p>限速通过静态变量和 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_uptime_get_32()</span></code> 实现，用于记录每个调用点的上次日志时间。</p>
+</section>
+</section>
+<section id="logging-panic">
+<span id="id2"></span><h2><a class="toc-backref" href="#id28" role="doc-backlink">日志 panic</a><a class="headerlink" href="#logging-panic" title="链接到此标题。"></a></h2>
+<p>出现错误情况时，系统通常无法再依赖调度器或中断。此时无法进行延迟日志消息处理。日志控制 API 提供了一个进入 panic 模式的函数（<code class="xref c c-func docutils literal notranslate"><span class="pre">log_panic()</span></code>），在这种情况下应调用该函数。</p>
+<p>调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">log_panic()</span></code> 时，会向所有处于活动状态的后端发送 <em>panic</em> 通知。所有后端都收到通知后，所有缓冲的消息都会被刷出。从那时起，所有日志都以阻塞方式处理。</p>
+</section>
+<section id="printk">
+<span id="logging-printk"></span><h2><a class="toc-backref" href="#id29" role="doc-backlink">Printk</a><a class="headerlink" href="#printk" title="链接到此标题。"></a></h2>
+<p>通常，日志和 <code class="xref c c-func docutils literal notranslate"><span class="pre">printk()</span></code> 使用同一个输出，二者会争用该输出。如果输出不支持抢占，就可能出现问题；日志数据与 printk 数据交错也可能导致输出混乱。不过，启用 <a class="reference internal" href="../../kconfig.html#CONFIG_LOG_PRINTK" title="CONFIG_LOG_PRINTK"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_PRINTK</span></code></a> 可以把 printk 消息重定向到日志子系统。这种情况下，printk 条目被当作级别为 0 的日志消息（无法禁用）。启用后，输出由日志系统管理，因此不会出现交错。但在延迟模式下，printk 的行为会发生变化，因为输出要等到日志线程处理数据时才会产生。<a class="reference internal" href="../../kconfig.html#CONFIG_LOG_PRINTK" title="CONFIG_LOG_PRINTK"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_PRINTK</span></code></a> 默认启用。</p>
+</section>
+<section id="architecture">
+<span id="log-architecture"></span><h2><a class="toc-backref" href="#id30" role="doc-backlink">架构</a><a class="headerlink" href="#architecture" title="链接到此标题。"></a></h2>
+<p>日志由 3 个主要部分组成：</p>
+<ul class="simple">
+<li><p>前端</p></li>
+<li><p>核心</p></li>
+<li><p>后端</p></li>
+</ul>
+<p>日志消息由日志源生成，日志源可以是一个模块，也可以是某个模块的实例。</p>
+<section id="default-frontend">
+<h3><a class="toc-backref" href="#id31" role="doc-backlink">默认前端</a><a class="headerlink" href="#default-frontend" title="链接到此标题。"></a></h3>
+<p>当日志源调用日志 API（例如 <code class="xref c c-macro docutils literal notranslate"><span class="pre">LOG_INF</span></code>）时，默认前端开始工作，负责过滤消息（编译时和运行时）、为消息分配缓冲区、创建消息并提交该消息。由于日志 API 可能在中断中调用，前端经过优化，以尽可能快地记录消息。</p>
+<section id="log-message">
+<h4>日志消息<a class="headerlink" href="#log-message" title="链接到此标题。"></a></h4>
+<p>一条日志消息包含消息描述符（源、域和级别）、时间戳、格式化字符串的详细信息（参见 <a class="reference internal" href="../formatted_output.html#cbprintf-packaging"><span class="std std-ref">Cbprintf 打包</span></a>）以及可选的数据。日志消息存储在一块连续的内存中。内存从一个环形包缓冲区（<a class="reference internal" href="../../kernel/data_structures/mpsc_pbuf.html#mpsc-pbuf"><span class="std std-ref">多生产者单消费者数据包缓冲区</span></a>）中分配，这会带来以下几点影响：</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>每条消息都是一块自包含的连续内存，因此便于复制消息（例如用于离线处理）。</p></li>
+<li><p>消息必须按顺序释放。后端处理是同步的。后端可以复制一份消息以便延迟处理。</p></li>
+</ul>
+</div></blockquote>
+<p>日志消息的格式如下：</p>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td rowspan="11"><p>消息头</p></td>
+<td><p>2 位：MPSC 包缓冲区头</p></td>
+</tr>
+<tr class="row-even"><td><p>1 位：跟踪/日志消息标志</p></td>
+</tr>
+<tr class="row-odd"><td><p>3 位：域 ID</p></td>
+</tr>
+<tr class="row-even"><td><p>3 位：级别</p></td>
+</tr>
+<tr class="row-odd"><td><p>11 位：Cbprintf 包长度</p></td>
+</tr>
+<tr class="row-even"><td><p>12 位：数据长度</p></td>
+</tr>
+<tr class="row-odd"><td><p>指针：指向源描述符的指针 <a class="footnote-reference brackets" href="#l0" id="id3" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p>32 或 64 位：时间戳 <a class="footnote-reference brackets" href="#l0" id="id4" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>指针：指向线程 ID 的指针（可选） <a class="footnote-reference brackets" href="#l1" id="id5" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a></p></td>
+</tr>
+<tr class="row-even"><td><p>8 位：内核 ID（可选） <a class="footnote-reference brackets" href="#l2" id="id6" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>可选填充 <a class="footnote-reference brackets" href="#l3" id="id7" role="doc-noteref"><span class="fn-bracket">[</span>4<span class="fn-bracket">]</span></a></p></td>
+</tr>
+<tr class="row-even"><td rowspan="3"><p>Cbprintf</p>
+<div class="line-block">
+<div class="line">包</div>
+<div class="line">（可选）</div>
+</div>
+</td>
+<td><p>头部</p></td>
+</tr>
+<tr class="row-odd"><td><p>参数</p></td>
+</tr>
+<tr class="row-even"><td><p>追加的字符串</p></td>
+</tr>
+<tr class="row-odd"><td colspan="2"><p>Hexdump 数据（可选）</p></td>
+</tr>
+<tr class="row-even"><td colspan="2"><p>对齐填充（可选）</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">脚注</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="l0" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id3">1</a>,<a role="doc-backlink" href="#id4">2</a>)</span>
+<p>根据大小不同，源描述符和时间戳字段可能会交换位置，以减少填充量。</p>
+</aside>
+<aside class="footnote brackets" id="l1" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">2</a><span class="fn-bracket">]</span></span>
+<p>仅在启用 CONFIG_LOG_THREAD_ID_PREFIX 时存在。</p>
+</aside>
+<aside class="footnote brackets" id="l2" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">3</a><span class="fn-bracket">]</span></span>
+<p>仅在启用 CONFIG_LOG_CORE_ID_PREFIX 时存在。</p>
+</aside>
+<aside class="footnote brackets" id="l3" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id7">4</a><span class="fn-bracket">]</span></span>
+<p>cbprintf 包对齐可能需要它。</p>
+</aside>
+</aside>
+</section>
+<section id="log-message-allocation">
+<h4>日志消息分配<a class="headerlink" href="#log-message-allocation" title="链接到此标题。"></a></h4>
+<p>前端有可能无法分配消息。当系统在一定时间内产生的日志消息多于其处理能力时，就会出现这种情况。处理这种情况有两种策略：</p>
+<ul class="simple">
+<li><p>不覆盖：如果无法为消息分配空间，则丢弃新日志。</p></li>
+<li><p>覆盖：释放最旧的待处理消息，直到能够分配新消息。通过 <a class="reference internal" href="../../kconfig.html#CONFIG_LOG_MODE_OVERFLOW" title="CONFIG_LOG_MODE_OVERFLOW"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_MODE_OVERFLOW</span></code></a> 启用。注意，这会降低性能，因此建议调整缓冲区大小和启用的日志数量，以减少丢弃。</p></li>
+</ul>
+</section>
+<section id="runtime-filtering">
+<span id="logging-runtime-filtering"></span><h4>运行时过滤<a class="headerlink" href="#runtime-filtering" title="链接到此标题。"></a></h4>
+<p>如果启用了运行时过滤，则会在 RAM 中为每个日志源声明一个过滤器结构体。该过滤器使用 32 位，分为十个 3 位的槽位。除 <em>slot 0</em> 外，每个槽位存储系统中一个后端的当前过滤器。<em>slot 0</em>（位 0-2）用于汇总给定日志源的最大过滤器设置。汇总槽位决定是否为给定条目创建日志消息，因为它表示是否至少有一个后端需要该日志条目。核心处理消息时会检查各后端的槽位，以确定该消息是否被对应后端接受。与编译时过滤相比，二进制文件占用会增加，因为被丢弃的日志仍然编译在内。</p>
+<p>在下面的示例中，后端 1 设置为接收错误（<em>slot 1</em>），后端 2 接收 info 及以上级别（<em>slot 2</em>）。槽位 3-9 未使用。汇总过滤器（<em>slot 0</em>）设置为 info 级别，表示来自该日志源、级别不低于 info 的消息都会被缓冲。</p>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>slot 0</p></td>
+<td><p>slot 1</p></td>
+<td><p>slot 2</p></td>
+<td><p>slot 3</p></td>
+<td><p>...</p></td>
+<td><p>slot 9</p></td>
+</tr>
+<tr class="row-even"><td><p>INF</p></td>
+<td><p>ERR</p></td>
+<td><p>INF</p></td>
+<td><p>OFF</p></td>
+<td><p>...</p></td>
+<td><p>OFF</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="custom-frontend">
+<span id="log-frontend"></span><h3><a class="toc-backref" href="#id32" role="doc-backlink">自定义前端</a><a class="headerlink" href="#custom-frontend" title="链接到此标题。"></a></h3>
+<p>使用 <a class="reference internal" href="../../kconfig.html#CONFIG_LOG_FRONTEND" title="CONFIG_LOG_FRONTEND"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_FRONTEND</span></code></a> 启用自定义前端。日志会被定向到 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/logging/log_frontend.h">include/zephyr/logging/log_frontend.h</a> 中声明的函数。如果启用了 <a class="reference internal" href="../../kconfig.html#CONFIG_LOG_FRONTEND_ONLY" title="CONFIG_LOG_FRONTEND_ONLY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_FRONTEND_ONLY</span></code></a> 选项，则不会创建日志消息，也不会处理任何后端。否则，自定义前端可以与后端共存。</p>
+<p>某些情况下，需要在宏级别重定向日志。对于这种情况，可以使用 <a class="reference internal" href="../../kconfig.html#CONFIG_LOG_CUSTOM_HEADER" title="CONFIG_LOG_CUSTOM_HEADER"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_CUSTOM_HEADER</span></code></a>，在 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/logging/log.h">include/zephyr/logging/log.h</a> 末尾注入一个由应用程序提供、名为 <code class="file docutils literal notranslate"><span class="pre">zephyr_custom_log.h</span></code> 的头文件。</p>
+<section id="frontend-using-arm-coresight-stm-system-trace-macrocell">
+<h4>使用 ARM Coresight STM（System Trace Macrocell）的前端<a class="headerlink" href="#frontend-using-arm-coresight-stm-system-trace-macrocell" title="链接到此标题。"></a></h4>
+<p>有关使用 ARM Coresight STM 记录日志的更多详情，请参阅 <a class="reference internal" href="cs_stm.html#logging-cs-stm"><span class="std std-ref">使用 ARM Coresight STM 进行多域日志记录</span></a>。</p>
+</section>
+</section>
+<section id="logging-strings">
+<span id="id8"></span><h3><a class="toc-backref" href="#id33" role="doc-backlink">记录字符串</a><a class="headerlink" href="#logging-strings" title="链接到此标题。"></a></h3>
+<p>字符串参数由 <a class="reference internal" href="../formatted_output.html#cbprintf-packaging"><span class="std std-ref">Cbprintf 打包</span></a> 处理。有关限制和建议，请参阅 <a class="reference internal" href="../formatted_output.html#cbprintf-packaging-limitations"><span class="std std-ref">限制与建议</span></a>。</p>
+</section>
+<section id="multi-domain-support">
+<h3><a class="toc-backref" href="#id34" role="doc-backlink">多域支持</a><a class="headerlink" href="#multi-domain-support" title="链接到此标题。"></a></h3>
+<p>较复杂的系统可能由多个域组成，每个域都是一个独立的二进制文件。域的例子包括多核 SoC 中的一个内核，或 ARM TrustZone 内核上的某个二进制文件（Secure 或 Nonsecure）。</p>
+<p>在多域系统上进行跟踪和调试更为复杂，需要一个高效的日志系统。组织这种日志系统有两种方法：</p>
+<ul>
+<li><p>在每个域内独立记录日志。这种方法并非总是可行，因为它要求每个域都有可用的后端（例如 UART）。由于日志呈现在各自独立的输出上，这种方法使用起来也可能比较麻烦，而且不易扩展。</p></li>
+<li><p>使用多域日志系统，来自各个域的日志消息最终汇集到一个根域，并在那里按与单域情况完全相同的方式处理。在这种方法中，日志消息通过域间连接在域之间传递，该连接一端由后端创建，另一端链接到对方。</p>
+<p>日志链路（Log link）是这种多域方法中引入的接口。日志链路负责接收来自其他域的任意日志消息，创建其副本，并把该本地日志消息副本（包括远程数据）放入消息队列。具体的日志链路实现与对应的后端实现相配合，以支持日志消息交换和日志控制，例如配置过滤、获取日志源名称等。</p>
+</li>
+</ul>
+<p>多域系统中有三种类型的域：</p>
+<ul class="simple">
+<li><p><em>终端域（end domain）</em> 具有日志核心实现和一个跨域后端。它还可以同时拥有其他后端。</p></li>
+<li><p><em>中继域（relay domain）</em> 具有一条或多条到其他域的链路，但没有向用户输出日志的后端。它有一个跨域后端，连接到另一个中继域或根域。</p></li>
+<li><p><em>根域（root domain）</em> 具有一条或多条链路，以及一个向用户输出日志的后端。</p></li>
+</ul>
+<p>多域设置的示例见下图：</p>
+<figure class="align-default" id="id19">
+<img alt="../../_images/multidomain.png" src="../../_images/multidomain.png" />
+<figcaption>
+<p><span class="caption-text">多域示例</span><a class="headerlink" href="#id19" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<p>在这种架构中，一条链路可以处理多个域。例如，考虑一个带有两个支持 TrustZone 的 ARM Cortex-M33 内核的 SoC：内核 A 和内核 B（见上图示例）。由于每个内核都有 Secure 域和 Nonsecure 域，系统中共有四个域。如果 <em>core A nonsecure</em>（A_NS）是根域，则它有两条链路：一条到 <em>core A secure</em>（A_NS-A_S），一条到 <em>core B nonsecure</em>（A_NS-B_NS）。<em>B_NS</em> 域有一条到 <em>core B secure</em> 的链路（<em>B_NS-B_S</em>），以及一个到 <em>A_NS</em> 的后端。</p>
+<p>由于所有实例中都有标准日志子系统，因此总是可以拥有多个后端并同时向它们输出消息。上图中 <em>B_NS</em> 域上用虚线表示的 UART 后端就是一个例子。</p>
+<section id="domain-id">
+<h4>域 ID<a class="headerlink" href="#domain-id" title="链接到此标题。"></a></h4>
+<p>每条日志消息的源可以通过消息头中的以下字段识别：<code class="docutils literal notranslate"><span class="pre">source_id</span></code> 和 <code class="docutils literal notranslate"><span class="pre">domain_id</span></code>。</p>
+<p>分配给 <code class="docutils literal notranslate"><span class="pre">domain_id</span></code> 的值是相对的。每当某个域创建日志消息时，都会将其 <code class="docutils literal notranslate"><span class="pre">domain_id</span></code> 设为 <code class="docutils literal notranslate"><span class="pre">0</span></code>。当消息跨越域时，<code class="docutils literal notranslate"><span class="pre">domain_id</span></code> 会加上链路偏移量。链路偏移量在初始化期间分配，此时日志核心遍历所有已注册的链路并为其分配偏移量。</p>
+<p>第一条链路的偏移量设为 1。后续链路的偏移量等于前一条链路的偏移量加上前一条链路中的域数量。</p>
+<p>下面是一个示例，图中标出了为每个域分配的 <code class="docutils literal notranslate"><span class="pre">domain_ids</span></code>：</p>
+<figure class="align-default" id="id20">
+<img alt="../../_images/domain_ids.png" src="../../_images/domain_ids.png" />
+<figcaption>
+<p><span class="caption-text">域 ID 分配示例</span><a class="headerlink" href="#id20" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<p>考虑在 <em>B_S</em> 域上创建的一条日志消息：</p>
+<ol class="arabic simple">
+<li><p>最初，它的 <code class="docutils literal notranslate"><span class="pre">domain_id</span></code> 设为 <code class="docutils literal notranslate"><span class="pre">0</span></code>。</p></li>
+<li><p><em>B_NS-B_S</em> 链路收到消息时，加上 <em>B_NS-B_S</em> 的偏移量，把 <code class="docutils literal notranslate"><span class="pre">domain_id</span></code> 增加到 <code class="docutils literal notranslate"><span class="pre">1</span></code>。</p></li>
+<li><p>消息被传递到 <em>A_NS</em>。</p></li>
+<li><p><em>A_NS-B_NS</em> 链路收到消息时，把偏移量（<code class="docutils literal notranslate"><span class="pre">2</span></code>）加到 <code class="docutils literal notranslate"><span class="pre">domain_id</span></code> 上。最终消息的 <code class="docutils literal notranslate"><span class="pre">domain_id</span></code> 为 <code class="docutils literal notranslate"><span class="pre">3</span></code>，它唯一标识了消息的发起者。</p></li>
+</ol>
+</section>
+<section id="cross-domain-log-message">
+<h4>跨域日志消息<a class="headerlink" href="#cross-domain-log-message" title="链接到此标题。"></a></h4>
+<p>在大多数情况下，每个域的地址空间都是独立的，一个域无法直接访问另一个域中的数据。因此，后端可以在把消息传递给另一个域之前对其进行部分处理。部分处理可以包括把字符串包转换为 <em>完全自包含</em> 的版本（把只读字符串复制到包体中）。</p>
+<p>每个域的时间戳源在频率和偏移上都可能不同。日志系统不进行任何时间戳转换。</p>
+</section>
+<section id="id9">
+<h4>运行时过滤<a class="headerlink" href="#id9" title="链接到此标题。"></a></h4>
+<p>在单域情况下，每个日志源都有一个专用变量，为系统中的每个后端保存运行时过滤设置。在多域情况下，日志消息的发起者并不知道根域中有多少个后端。</p>
+<p>因此，要在多个域中过滤日志，每个日志源在通往根域路径上的每个域中都需要一个运行时过滤设置。由于编译时并不知道其他域中日志源的数量，远程日志源的运行时过滤必须使用动态分配的内存（每个日志源一个字）。当根域中的某个后端更改来自远程域的模块的过滤设置时，本地过滤器随之更新。更新后会检查汇总过滤器（所有本地后端中的最大值），如果发生变化，就通知远程域。通过这种方法，运行时过滤在多域和单域场景下的工作方式完全相同。</p>
+</section>
+<section id="message-ordering">
+<h4>消息排序<a class="headerlink" href="#message-ordering" title="链接到此标题。"></a></h4>
+<p>日志系统不提供任何跨多个域同步时间戳的机制：</p>
+<ul>
+<li><p>如果各个域的时间戳源不同，消息将按照到达根域缓冲区的顺序处理。</p></li>
+<li><p>如果各个域使用相同的时间戳源，或者有某种带外机制重新计算时间戳，则有 2 种选择：</p>
+<ul>
+<li><p>消息按其到达根域缓冲区的顺序处理。消息是无序的，但由于时间戳表示消息的生成时间，主机可以对它们排序。</p></li>
+<li><p>各条链路有专用缓冲区。处理时检查每个缓冲区的头部，先处理最早的消息。</p>
+<p>采用这种方法可以保持消息顺序，代价是内存利用率不够理想（因为缓冲区不共享），并且处理延迟增加（参见 <a class="reference internal" href="../../kconfig.html#CONFIG_LOG_PROCESSING_LATENCY_US" title="CONFIG_LOG_PROCESSING_LATENCY_US"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_PROCESSING_LATENCY_US</span></code></a>）。</p>
+</li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="logging-backends">
+<h3><a class="toc-backref" href="#id35" role="doc-backlink">日志后端</a><a class="headerlink" href="#logging-backends" title="链接到此标题。"></a></h3>
+<p>日志后端使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">LOG_BACKEND_DEFINE</span></code> 注册。该宏在专用内存段中创建一个实例。后端可以动态启用（<code class="xref c c-func docutils literal notranslate"><span class="pre">log_backend_enable()</span></code>）和禁用。启用 <a class="reference internal" href="#logging-runtime-filtering"><span class="std std-ref">运行时过滤</span></a> 后，可以使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">log_filter_set()</span></code> 动态更改某个后端对某个模块日志的过滤设置。模块由源 ID 和域 ID 标识。如果知道源名称，可以遍历所有已注册的源来获取源 ID。</p>
+<p>日志系统最多支持 9 个并发后端。在处理阶段，日志消息会传递给每个后端。此外，当日志进入 panic 模式时，会通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">log_backend_panic()</span></code> 通知后端。此时后端应切换为同步、不使用中断的工作方式；如果不支持，则应自行关闭。日志系统偶尔会通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">log_backend_dropped()</span></code> 告知后端被丢弃的消息数量。消息处理 API 与版本相关。</p>
+<p><code class="xref c c-func docutils literal notranslate"><span class="pre">log_backend_msg_process()</span></code> 用于处理消息。它对标准消息和 hexdump 消息通用，因为标准消息存放格式化参数的位置与 hexdump 消息存放数据的位置相同。它对延迟日志和立即日志也同样通用。</p>
+<section id="message-formatting">
+<span id="log-output"></span><h4>消息格式化<a class="headerlink" href="#message-formatting" title="链接到此标题。"></a></h4>
+<p>日志系统提供了一组可供后端用来格式化消息的函数。辅助函数位于 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/logging/log_output.h">include/zephyr/logging/log_output.h</a> 中。</p>
+<p>使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">log_output_msg_process()</span></code> 格式化的消息示例：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">[00:00:00.000,274] &lt;info&gt; sample_instance.inst1: logging message</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="dictionary-based-logging">
+<span id="logging-guide-dictionary"></span><h3><a class="toc-backref" href="#id36" role="doc-backlink">基于字典的日志</a><a class="headerlink" href="#dictionary-based-logging" title="链接到此标题。"></a></h3>
+<p>基于字典的日志以二进制格式而不是人类可读的文本输出日志消息。这种二进制格式以参数的原生存储格式对格式化字符串的参数进行编码，可能比等价的文本更紧凑。对于静态定义的字符串（包括格式字符串和任何字符串参数），编码的是对 ELF 文件的引用，而不是整个字符串。构建时会创建一个字典，其中包含这些引用与实际字符串之间的映射。这样离线解析器就可以从字典中获取字符串来解析日志消息。在某些场景下，这种二进制格式能更紧凑地表示日志消息。不过，它需要使用离线解析器，用起来也不如基于文本的日志消息直观。</p>
+<p>注意，Python 的 <code class="docutils literal notranslate"><span class="pre">struct</span></code> 模块不支持 <code class="docutils literal notranslate"><span class="pre">long</span> <span class="pre">double</span></code>。因此，含有 <code class="docutils literal notranslate"><span class="pre">long</span> <span class="pre">double</span></code> 的日志消息将无法显示正确的值。</p>
+<section id="id10">
+<h4>配置<a class="headerlink" href="#id10" title="链接到此标题。"></a></h4>
+<p>以下是与基于字典的日志相关的 Kconfig 选项：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG_DICTIONARY_SUPPORT" title="CONFIG_LOG_DICTIONARY_SUPPORT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_DICTIONARY_SUPPORT</span></code></a> 启用对基于字典的日志的支持。需要它的后端应选择（select）此选项。</p></li>
+<li><p>UART 后端可用于基于字典的日志。以下是 UART 后端的额外配置：</p>
+<ul>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG_BACKEND_UART_OUTPUT_DICTIONARY_HEX" title="CONFIG_LOG_BACKEND_UART_OUTPUT_DICTIONARY_HEX"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_BACKEND_UART_OUTPUT_DICTIONARY_HEX</span></code></a> 让 UART 后端在基于字典的日志中输出十六进制字符。当需要通过终端和控制台手动捕获日志数据时，这很有用。</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG_BACKEND_UART_OUTPUT_DICTIONARY_BIN" title="CONFIG_LOG_BACKEND_UART_OUTPUT_DICTIONARY_BIN"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_BACKEND_UART_OUTPUT_DICTIONARY_BIN</span></code></a> 让 UART 后端输出二进制数据。</p></li>
+</ul>
+</li>
+<li><p>RTT 后端也可用于基于字典的日志：</p>
+<ul>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG_BACKEND_RTT" title="CONFIG_LOG_BACKEND_RTT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_BACKEND_RTT</span></code></a> 启用 RTT 后端。</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG_BACKEND_RTT_OUTPUT_DICTIONARY" title="CONFIG_LOG_BACKEND_RTT_OUTPUT_DICTIONARY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_BACKEND_RTT_OUTPUT_DICTIONARY</span></code></a> 为 RTT 后端启用基于字典的输出。需与 <a class="reference internal" href="../../kconfig.html#CONFIG_USE_SEGGER_RTT" title="CONFIG_USE_SEGGER_RTT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USE_SEGGER_RTT</span></code></a> 一起使用。</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_LOG_BACKEND_RTT_OUTPUT_DICTIONARY_HEX" title="CONFIG_LOG_BACKEND_RTT_OUTPUT_DICTIONARY_HEX"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_BACKEND_RTT_OUTPUT_DICTIONARY_HEX</span></code></a> 让 RTT 后端在基于字典的日志中输出十六进制字符。</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="id11">
+<h4>用法<a class="headerlink" href="#id11" title="链接到此标题。"></a></h4>
+<p>通过启用相关日志后端来启用基于字典的日志后，构建目录中会生成一个名为 <code class="file docutils literal notranslate"><span class="pre">log_dictionary.json</span></code> 的 JSON 数据库文件。该数据库文件包含解析器正确解析日志数据所需的信息。注意，该数据库文件只适用于同一次构建，不能用于其他任何构建。</p>
+<section id="offline-parsing">
+<h5>离线解析<a class="headerlink" href="#offline-parsing" title="链接到此标题。"></a></h5>
+<p>要解析先前捕获的日志文件：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./scripts/logging/dictionary/log_parser.py &lt;build dir&gt;/log_dictionary.json &lt;log data file&gt;</span>
+</pre></div>
+</div>
+<p>解析器有两个必需参数：第一个是 JSON 数据库文件的完整路径，第二个是包含日志数据的文件。如果日志数据文件包含十六进制字符（例如设置了 <code class="docutils literal notranslate"><span class="pre">CONFIG_LOG_BACKEND_UART_OUTPUT_DICTIONARY_HEX=y</span></code> 时），请在末尾加上可选参数 <code class="docutils literal notranslate"><span class="pre">--hex</span></code>。该参数告诉解析器在解析之前先把十六进制字符转换为二进制。</p>
+</section>
+<section id="live-parsing">
+<h5>实时解析<a class="headerlink" href="#live-parsing" title="链接到此标题。"></a></h5>
+<p>要实时解码基于字典的日志输出，请使用实时日志解析器。它连接到正在运行的设备，并在二进制日志数据到达时持续解码。注意，实时解析器只支持二进制字典输出（不支持十六进制编码）。实时解析器支持三种输入模式：</p>
+<p><strong>串口（UART）：</strong></p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./scripts/logging/dictionary/live_log_parser.py &lt;build dir&gt;/log_dictionary.json serial &lt;port&gt; &lt;baudrate&gt;</span>
+</pre></div>
+</div>
+<p>例如，以 115200 波特率从 <code class="docutils literal notranslate"><span class="pre">/dev/ttyACM0</span></code> 读取：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./scripts/logging/dictionary/live_log_parser.py build/zephyr/log_dictionary.json serial /dev/ttyACM0 115200</span>
+</pre></div>
+</div>
+<p><strong>JLink RTT：</strong></p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./scripts/logging/dictionary/live_log_parser.py &lt;build dir&gt;/log_dictionary.json jlink-rtt &lt;device_name&gt;</span>
+</pre></div>
+</div>
+<p>例如，从 nRF5340 读取 RTT 输出：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./scripts/logging/dictionary/live_log_parser.py build/zephyr/log_dictionary.json jlink-rtt nrf5340_xxaa_app</span>
+</pre></div>
+</div>
+<p>JLink RTT 模式需要 <code class="docutils literal notranslate"><span class="pre">pylink-square</span></code> Python 包（<code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">pylink-square</span></code>）。可选参数包括：<code class="docutils literal notranslate"><span class="pre">--channel</span></code> 用于选择 RTT 通道（默认为 0），<code class="docutils literal notranslate"><span class="pre">--speed</span></code> 用于设置连接速度，<code class="docutils literal notranslate"><span class="pre">--block-address</span></code> 用于以十六进制指定 RTT 控制块地址。</p>
+<p><strong>文件 / stdin：</strong></p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./scripts/logging/dictionary/live_log_parser.py &lt;build dir&gt;/log_dictionary.json file &lt;filepath&gt;</span>
+</pre></div>
+</div>
+<p>省略 <code class="docutils literal notranslate"><span class="pre">&lt;filepath&gt;</span></code> 时，解析器从 stdin 读取，因此可以通过管道直接把二进制数据传给它。</p>
+<p>有关使用日志解析器的更多示例，请参阅 <a class="reference internal" href="../../samples/subsys/logging/dictionary/README.html#logging-dictionary" title="使用基于字典的日志 API 输出二进制日志数据。">Dictionary-based logging</a> 示例。</p>
+</section>
+</section>
+</section>
+</section>
+<section id="recommendations-and-limitations">
+<h2><a class="toc-backref" href="#id37" role="doc-backlink">建议与限制</a><a class="headerlink" href="#recommendations-and-limitations" title="链接到此标题。"></a></h2>
+<p>请考虑以下建议：</p>
+<ul class="simple">
+<li><p>启用 <a class="reference internal" href="../../kconfig.html#CONFIG_LOG_SPEED" title="CONFIG_LOG_SPEED"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_SPEED</span></code></a> 可以略微加快延迟日志的速度，代价是内存占用略有增加。</p></li>
+<li><p>当指针与 <code class="docutils literal notranslate"><span class="pre">%s</span></code> 格式说明符一起使用且指向常量字符串时，建议将其强制转换为 <code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">char</span> <span class="pre">*</span></code>。</p></li>
+<li><p>当指针与 <code class="docutils literal notranslate"><span class="pre">%s</span></code> 格式说明符一起使用且指向临时字符串时，建议将其强制转换为 <code class="docutils literal notranslate"><span class="pre">char</span> <span class="pre">*</span></code>。</p></li>
+<li><p>当字符指针与 <code class="docutils literal notranslate"><span class="pre">%p</span></code> 格式说明符一起使用时，必须将其强制转换为非字符指针（例如 <code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">*</span></code>）。</p></li>
+</ul>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">LOG_WRN</span><span class="p">(</span><span class="s">"%s"</span><span class="p">,</span><span class="w"> </span><span class="n">str</span><span class="p">);</span>
+<span class="n">LOG_WRN</span><span class="p">(</span><span class="s">"%p"</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">str</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>请注意以下限制：</p>
+<ul class="simple">
+<li><p>日志不支持带宽度的字符串格式说明符（例如 <code class="docutils literal notranslate"><span class="pre">%.*s</span></code> 或 <code class="docutils literal notranslate"><span class="pre">%8s</span></code>）。这是因为构建日志消息时只使用参数类型，而不使用格式字符串的内容。</p></li>
+<li><p>如果使用延迟日志，并且日志消息以线程名作为前缀（Kconfig 选项 <code class="docutils literal notranslate"><span class="pre">CONFIG_LOG_THREAD_ID_PREFIX=y</span></code> 和 <code class="docutils literal notranslate"><span class="pre">CONFIG_THREAD_NAME=y</span></code>），则假定在格式化日志消息时，对应的 <code class="xref c c-struct docutils literal notranslate"><span class="pre">k_thread</span></code> 结构体仍然有效。如果该结构体是动态分配的（例如使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_malloc()</span></code> 或 <code class="xref c c-func docutils literal notranslate"><span class="pre">malloc()</span></code>），就可能出现问题。这种情况下，如果线程记录了一些消息后被停止，并且其 <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">k_thread</span></code> 被释放，日志系统稍后处理消息时仍会尝试访问该结构体，从而造成释放后使用（use-after-free）。为避免这种情况，一种解决办法是在释放该结构体之前调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">log_flush()</span></code>。</p></li>
+</ul>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">k_thread</span><span class="w"> </span><span class="o">*</span><span class="kr">thread</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">k_malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="o">*</span><span class="kr">thread</span><span class="p">));</span><span class="w"> </span><span class="cm">/* struct allocated dynamically */</span>
+<span class="n">k_thread_create</span><span class="p">(</span><span class="kr">thread</span><span class="p">,</span><span class="w"> </span><span class="p">...);</span>
+<span class="n">k_thread_name_set</span><span class="p">(</span><span class="kr">thread</span><span class="p">,</span><span class="w"> </span><span class="s">"foobar"</span><span class="p">);</span>
+
+<span class="cm">/* Thread calls LOG_*(...) */</span>
+
+<span class="n">k_thread_join</span><span class="p">(</span><span class="kr">thread</span><span class="p">,</span><span class="w"> </span><span class="n">K_FOREVER</span><span class="p">);</span>
+<span class="n">log_flush</span><span class="p">();</span><span class="w">  </span><span class="cm">/* flush log buffer before freeing the struct k_thread */</span>
+<span class="n">k_free</span><span class="p">(</span><span class="kr">thread</span><span class="p">);</span><span class="w"> </span><span class="cm">/* avoid a potential use-after-free scenario if deferred logging is used */</span>
+</pre></div>
+</div>
+</section>
+<section id="benchmark">
+<h2><a class="toc-backref" href="#id38" role="doc-backlink">基准测试</a><a class="headerlink" href="#benchmark" title="链接到此标题。"></a></h2>
+<p>以下基准数据来自在 <code class="docutils literal notranslate"><span class="pre">qemu_x86</span></code> 上运行的 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/tests/subsys/logging/log_benchmark">tests/subsys/logging/log_benchmark</a>。这只是一个粗略的比较，用于提供大致的概况。</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>功能</p></th>
+<th class="head"></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>内核日志</p></td>
+<td><p>7us <a class="footnote-reference brackets" href="#f0" id="id12" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>/11us</p></td>
+</tr>
+<tr class="row-odd"><td><p>用户日志</p></td>
+<td><p>13us</p></td>
+</tr>
+<tr class="row-even"><td><p>带覆盖的内核日志</p></td>
+<td><p>10us <a class="footnote-reference brackets" href="#f0" id="id13" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>/15us</p></td>
+</tr>
+<tr class="row-odd"><td><p>记录临时字符串</p></td>
+<td><p>42us</p></td>
+</tr>
+<tr class="row-even"><td><p>从用户空间记录临时字符串</p></td>
+<td><p>50us</p></td>
+</tr>
+<tr class="row-odd"><td><p>内存利用率 <a class="footnote-reference brackets" href="#f1" id="id14" role="doc-noteref"><span class="fn-bracket">[</span>6<span class="fn-bracket">]</span></a></p></td>
+<td><p>518</p></td>
+</tr>
+<tr class="row-even"><td><p>内存占用（测试） <a class="footnote-reference brackets" href="#f2" id="id15" role="doc-noteref"><span class="fn-bracket">[</span>7<span class="fn-bracket">]</span></a></p></td>
+<td><p>2k</p></td>
+</tr>
+<tr class="row-odd"><td><p>内存占用（应用程序） <a class="footnote-reference brackets" href="#f3" id="id16" role="doc-noteref"><span class="fn-bracket">[</span>8<span class="fn-bracket">]</span></a></p></td>
+<td><p>3.5k</p></td>
+</tr>
+<tr class="row-even"><td><p>消息占用 <a class="footnote-reference brackets" href="#f4" id="id17" role="doc-noteref"><span class="fn-bracket">[</span>9<span class="fn-bracket">]</span></a></p></td>
+<td><p>47 <a class="footnote-reference brackets" href="#f0" id="id18" role="doc-noteref"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></a>/32 字节</p></td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">基准测试详情</p>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="f0" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span>5<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id12">1</a>,<a role="doc-backlink" href="#id13">2</a>,<a role="doc-backlink" href="#id18">3</a>)</span>
+<p>启用了 <a class="reference internal" href="../../kconfig.html#CONFIG_LOG_SPEED" title="CONFIG_LOG_SPEED"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_SPEED</span></code></a>。</p>
+</aside>
+<aside class="footnote brackets" id="f1" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id14">6</a><span class="fn-bracket">]</span></span>
+<p>在为日志分配的 2048 字节中，能容纳的带不同数量参数的日志消息数量。</p>
+</aside>
+<aside class="footnote brackets" id="f2" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id15">7</a><span class="fn-bracket">]</span></span>
+<p>在 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/tests/subsys/logging/log_benchmark">tests/subsys/logging/log_benchmark</a> 中（未使用过滤和格式化功能）日志子系统的内存占用。</p>
+</aside>
+<aside class="footnote brackets" id="f3" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id16">8</a><span class="fn-bracket">]</span></span>
+<p>在 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/samples/subsys/logging/logger">samples/subsys/logging/logger</a> 中日志子系统的内存占用。</p>
+</aside>
+<aside class="footnote brackets" id="f4" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id17">9</a><span class="fn-bracket">]</span></span>
+<p>在 <code class="docutils literal notranslate"><span class="pre">Cortex</span> <span class="pre">M3</span></code> 上带 2 个参数的日志消息的平均大小（不含字符串）</p>
+</aside>
+</aside>
+</section>
+<section id="stack-usage">
+<h2><a class="toc-backref" href="#id39" role="doc-backlink">栈使用量</a><a class="headerlink" href="#stack-usage" title="链接到此标题。"></a></h2>
+<p>启用日志后，会影响调用日志 API 的上下文的栈使用量。如果栈大小经过精简，就可能导致栈溢出。栈使用量取决于模式和优化级别，并且在不同平台之间差别很大。一般来说，使用 <a class="reference internal" href="../../kconfig.html#CONFIG_LOG_MODE_DEFERRED" title="CONFIG_LOG_MODE_DEFERRED"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_MODE_DEFERRED</span></code></a> 时栈使用量较小，因为日志只负责创建和存储日志消息。如果使用 <a class="reference internal" href="../../kconfig.html#CONFIG_LOG_MODE_IMMEDIATE" title="CONFIG_LOG_MODE_IMMEDIATE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_LOG_MODE_IMMEDIATE</span></code></a>，日志消息会直接在调用日志 API 的上下文中由后端处理，其中包括字符串格式化。在这种模式下，栈使用量取决于所用的后端。</p>
+<p>下面列出了部分平台上记录带两个 <code class="docutils literal notranslate"><span class="pre">integer</span></code> 参数的日志消息时的特征数据：</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>平台</p></th>
+<th class="head"><p>延迟</p></th>
+<th class="head"><p>延迟（无优化）</p></th>
+<th class="head"><p>立即</p></th>
+<th class="head"><p>立即（无优化）</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>ARM Cortex-M3</p></td>
+<td><p>40</p></td>
+<td><p>152</p></td>
+<td><p>412</p></td>
+<td><p>783</p></td>
+</tr>
+<tr class="row-odd"><td><p>x86</p></td>
+<td><p>12</p></td>
+<td><p>224</p></td>
+<td><p>388</p></td>
+<td><p>796</p></td>
+</tr>
+<tr class="row-even"><td><p>riscv32</p></td>
+<td><p>24</p></td>
+<td><p>208</p></td>
+<td><p>456</p></td>
+<td><p>844</p></td>
+</tr>
+<tr class="row-odd"><td><p>xtensa</p></td>
+<td><p>72</p></td>
+<td><p>336</p></td>
+<td><p>504</p></td>
+<td><p>944</p></td>
+</tr>
+<tr class="row-even"><td><p>x86_64</p></td>
+<td><p>32</p></td>
+<td><p>528</p></td>
+<td><p>1088</p></td>
+<td><p>1440</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="logging-using-arm-coresight-stm">
+<h2><a class="toc-backref" href="#id40" role="doc-backlink">使用 ARM Coresight STM 记录日志</a><a class="headerlink" href="#logging-using-arm-coresight-stm" title="链接到此标题。"></a></h2>
+<p>有关在 NRF54H20 上使用 ARM Coresight STM 记录日志的内容，请参阅 <a class="reference internal" href="cs_stm.html#logging-cs-stm"><span class="std std-ref">使用 ARM Coresight STM 进行多域日志记录</span></a>。</p>
+</section>
+<section id="api-reference">
+<h2><a class="toc-backref" href="#id41" role="doc-backlink">API 参考</a><a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">log_api</span></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/subsys/logging/ble_backend/README.html#logging-ble-backend" title="使用 Bluetooth 日志后端通过 Bluetooth 发送日志消息。">Bluetooth logging backend</a></span><span class="code-sample-description">使用 Bluetooth 日志后端通过 Bluetooth 发送日志消息。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/boards/nordic/coresight_stm/README.html#coresight_stm_sample">Coresight STM benchmark</a></span><span class="code-sample-description"></span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/boards/nordic/coresight_stm_shell/README.html#coresight_stm_shell">Coresight STM with remote shell</a></span><span class="code-sample-description"></span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/subsys/logging/dictionary/README.html#logging-dictionary" title="使用基于字典的日志 API 输出二进制日志数据。">Dictionary-based logging</a></span><span class="code-sample-description">使用基于字典的日志 API 输出二进制日志数据。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/subsys/logging/logger/README.html#logging" title="使用日志子系统向控制台输出日志消息。">Logging</a></span><span class="code-sample-description">使用日志子系统向控制台输出日志消息。</span></li>
+</ul>
+</div>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">log_ctrl</span></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/subsys/logging/logger/README.html#logging" title="使用日志子系统向控制台输出日志消息。">Logging</a></span><span class="code-sample-description">使用日志子系统向控制台输出日志消息。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/subsys/logging/multidomain/README.html#logging_multidomain" title="Use the multidomain logging feature to aggregate log messages from multiple cores into a single console output via the IPC service.">Logging in multi-domain environment</a></span><span class="code-sample-description">Use the multidomain logging feature to aggregate log messages from multiple
+cores into a single console output via the IPC service.</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/net/syslog_net/README.html#syslog-net" title="启用远程 syslog 服务，将 syslog 消息发送到远程服务器">Remote syslog</a></span><span class="code-sample-description">启用远程 syslog 服务，将 syslog 消息发送到远程服务器</span></li>
+</ul>
+</div>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">log_msg</span></dt>
+</dl>
+
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">log_backend</span></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/subsys/logging/ble_backend/README.html#logging-ble-backend" title="使用 Bluetooth 日志后端通过 Bluetooth 发送日志消息。">Bluetooth logging backend</a></span><span class="code-sample-description">使用 Bluetooth 日志后端通过 Bluetooth 发送日志消息。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/net/syslog_net/README.html#syslog-net" title="启用远程 syslog 服务，将 syslog 消息发送到远程服务器">Remote syslog</a></span><span class="code-sample-description">启用远程 syslog 服务，将 syslog 消息发送到远程服务器</span></li>
+</ul>
+</div>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">log_output</span></dt>
+</dl>
+
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cs_stm.html">使用 ARM Coresight STM 进行多域日志记录</a></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 10月 06, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

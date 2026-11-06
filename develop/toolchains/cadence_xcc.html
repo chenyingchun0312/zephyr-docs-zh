@@ -1,0 +1,369 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cadence Tensilica Xtensa C/C++ 编译器（XCC） &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/develop/toolchains/cadence_xcc.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="DesignWare ARC MetaWare Development Toolkit (MWDT)" href="designware_arc_mwdt.html" />
+    <link rel="prev" title="Arm Toolchain for Embedded (ATfE)" href="arm_toolchain_for_embedded.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">使用 Zephyr 进行开发</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/index.html">入门指南</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beyond-GSG.html">入门指南之外</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../env_vars.html">环境变量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../application/index.html">应用程序开发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../debug/index.html">调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/index.html">API 状态与准则</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../languages/index.html">编程语言支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../optimizations/index.html">优化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../flash_debug/index.html">烧录与硬件调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html">模块（外部项目）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../west/index.html">West（Zephyr 的元工具）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../twister/index.html">测试运行器（Twister）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../test/index.html">测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sca/index.html">静态代码分析（SCA）</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">工具链</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="zephyr_sdk.html">Zephyr SDK</a></li>
+<li class="toctree-l3"><a class="reference internal" href="arm_compiler_6.html">Arm Compiler 6</a></li>
+<li class="toctree-l3"><a class="reference internal" href="arm_toolchain_for_embedded.html">Arm Toolchain for Embedded (ATfE)</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Cadence Tensilica Xtensa C/C++ 编译器（XCC）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="designware_arc_mwdt.html">DesignWare ARC MetaWare Development Toolkit (MWDT)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gnu_arm_embedded.html">GNU Arm Embedded</a></li>
+<li class="toctree-l3"><a class="reference internal" href="hexagon_llvm.html">Qualcomm Hexagon LLVM 工具链</a></li>
+<li class="toctree-l3"><a class="reference internal" href="iar_arm_toolchain.html">IAR Arm 工具链</a></li>
+<li class="toctree-l3"><a class="reference internal" href="intel_oneapi_toolkit.html">Intel oneAPI Toolkit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="xc32_toolchain.html">MPLAB XC32</a></li>
+<li class="toctree-l3"><a class="reference internal" href="host.html">主机工具链</a></li>
+<li class="toctree-l3"><a class="reference internal" href="other_x_compilers.html">其他交叉编译器</a></li>
+<li class="toctree-l3"><a class="reference internal" href="custom_cmake.html">自定义 CMake 工具链</a></li>
+<li class="toctree-l3"><a class="reference internal" href="eld.html">嵌入式链接器（Embedded Linker，ELD）</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../tools/index.html">工具与 IDE</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">使用 Zephyr 进行开发</a> &raquo;</li>
+  
+     <li><a href="index.html">工具链</a> &raquo;</li>
+  
+  <li>Cadence Tensilica Xtensa C/C++ 编译器（XCC）</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="cadence-tensilica-xtensa-c-c-compiler-xcc">
+<span id="toolchain-cadence-xcc"></span><h1>Cadence Tensilica Xtensa C/C++ 编译器（XCC）<a class="headerlink" href="#cadence-tensilica-xtensa-c-c-compiler-xcc" title="链接到此标题。"></a></h1>
+<ol class="arabic">
+<li><p>获取面向目标 SoC 的 Tensilica 软件开发工具包。它通常包含两部分：</p>
+<ul class="simple">
+<li><p>Xtensa Xplorer，其中包含所需的可执行文件和库。</p></li>
+<li><p>一个特定于 SoC 的附加组件，需安装在 Xtensa Xplorer 之上。</p>
+<ul>
+<li><p>该附加组件使编译器能够为目标 SoC 生成代码。</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>先安装 Xtensa Xplorer，然后安装 SoC 附加组件。</p>
+<ul class="simple">
+<li><p>按照 Cadence 提供的说明安装 SDK。</p></li>
+<li><p>根据 SDK 的不同，有两套编译器：</p>
+<ul>
+<li><p>基于 GCC 的编译器：<code class="docutils literal notranslate"><span class="pre">xt-xcc</span></code> 及其配套工具。</p></li>
+<li><p>基于 Clang 的编译器：<code class="docutils literal notranslate"><span class="pre">xt-clang</span></code> 及其配套工具。</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>确保你已获得使用该 SDK 的许可证，或可以访问远程许可证服务器。</p></li>
+<li><p><a class="reference internal" href="../env_vars.html#env-vars"><span class="std std-ref">设置以下环境变量</span></a>：</p>
+<ul class="simple">
+<li><p>将 <span class="target" id="index-16"></span><a class="reference internal" href="../env_vars.html#envvar-ZEPHYR_TOOLCHAIN_VARIANT"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">ZEPHYR_TOOLCHAIN_VARIANT</span></code></a> 设置为 <code class="docutils literal notranslate"><span class="pre">xcc</span></code> 或 <code class="docutils literal notranslate"><span class="pre">xt-clang</span></code>。</p></li>
+<li><p>将 <span class="target" id="index-17"></span><code class="xref std std-envvar docutils literal notranslate"><span class="pre">XTENSA_TOOLCHAIN_PATH</span></code> 设置为工具链的安装目录。</p></li>
+<li><p>有两种方式指定要使用的 SoC ID 和 SDK 版本。两者互斥，不能同时使用。</p>
+<ol class="arabic simple">
+<li><p>为单个 SoC 构建时：</p>
+<ul>
+<li><p>将 <span class="target" id="index-18"></span><code class="xref std std-envvar docutils literal notranslate"><span class="pre">XTENSA_CORE</span></code> 设置为应用程序所面向的 SoC ID。</p></li>
+<li><p>将 <span class="target" id="index-19"></span><code class="xref std std-envvar docutils literal notranslate"><span class="pre">TOOLCHAIN_VER</span></code> 设置为 Xtensa SDK 版本。</p></li>
+</ul>
+</li>
+<li><p>为多个 SoC 构建时，针对每个 SoC 与开发板的组合：</p>
+<ul>
+<li><p>将 <span class="target" id="index-20"></span><code class="xref std std-envvar docutils literal notranslate"><span class="pre">XTENSA_CORE_{normalized_board_target}</span></code> 设置为应用程序所面向的 SoC ID。</p></li>
+<li><p>将 <span class="target" id="index-21"></span><code class="xref std std-envvar docutils literal notranslate"><span class="pre">TOOLCHAIN_VAR_{normalized_board_target}</span></code> 设置为 Xtensa SDK 版本。</p></li>
+</ul>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+<li><p>例如，假设 SDK 安装在 <code class="docutils literal notranslate"><span class="pre">/opt/xtensa</span></code>，并使用该 SDK 在 <code class="docutils literal notranslate"><span class="pre">intel_adsp/ace15_mtpm</span></code> 上开发应用程序，可以用上述两种方式设置环境：</p>
+<ol class="arabic">
+<li><p>单个 SoC：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>Linux
+<span class="go">export ZEPHYR_TOOLCHAIN_VARIANT=xt-clang</span>
+<span class="go">export XTENSA_TOOLCHAIN_PATH=/opt/xtensa/XtDevTools/install/tools/</span>
+<span class="go">export XTENSA_CORE=ace10_LX7HiFi4_2022_10</span>
+<span class="go">export TOOLCHAIN_VER=RI-2022.10-linux</span>
+</pre></div>
+</div>
+</li>
+<li><p>多个 SoC：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>Linux
+<span class="go">export ZEPHYR_TOOLCHAIN_VARIANT=xt-clang</span>
+<span class="go">export XTENSA_TOOLCHAIN_PATH=/opt/xtensa/XtDevTools/install/tools/</span>
+<span class="go">export TOOLCHAIN_VER_intel_adsp_ace15_mtpm=RI-2022.10-linux</span>
+<span class="go">export XTENSA_CORE_intel_adsp_ace15_mtpm=ace10_LX7HiFi4_2022_10</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</li>
+<li><p>要使用基于 Clang 的编译器：</p>
+<ul>
+<li><p>将 <span class="target" id="index-22"></span><a class="reference internal" href="../env_vars.html#envvar-ZEPHYR_TOOLCHAIN_VARIANT"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">ZEPHYR_TOOLCHAIN_VARIANT</span></code></a> 设置为 <code class="docutils literal notranslate"><span class="pre">xt-clang</span></code>。</p></li>
+<li><p>注意，基于 Clang 的编译器可能包含一个旧的 LLVM 缺陷，会导致以下错误：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">/tmp/file.s: Assembler messages:</span>
+<span class="go">/tmp/file.s:20: Error: file number 1 already allocated</span>
+<span class="go">clang-3.9: error: Xtensa-as command failed with exit code 1</span>
+</pre></div>
+</div>
+<p>如果出现这种情况，请将 <span class="target" id="index-23"></span><code class="xref std std-envvar docutils literal notranslate"><span class="pre">XCC_NO_G_FLAG</span></code> 设置为 <code class="docutils literal notranslate"><span class="pre">1</span></code>。</p>
+<ul>
+<li><p>例如：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>Linux
+<span class="go">export XCC_NO_G_FLAG=1</span>
+</pre></div>
+</div>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 11月 13, 2024.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

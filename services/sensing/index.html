@@ -1,0 +1,430 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>传感子系统（Sensing Subsystem） &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/sensing/index.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="状态机框架" href="../smf/index.html" />
+    <link rel="prev" title="多媒体流水线（mpipe）" href="../mpipe/index.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">服务</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../connectivity/index.html">连接</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../frameworks.html">框架</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../llext/index.html">可链接可加载扩展（LLEXT）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../mpipe/index.html">多媒体流水线（mpipe）</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">传感子系统（Sensing Subsystem）</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">概述</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#configurability">可配置性</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#main-features">主要特性</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#major-flows">主要流程</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sensor-types-and-instance">传感器类型与实例</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sensor-instance-handler">传感器实例句柄</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sensor-sample-value">传感器采样值</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#device-tree-configuration">设备树配置</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api-reference">API 参考</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../smf/index.html">状态机框架</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../frameworks.html">框架</a> &raquo;</li>
+  
+  <li>传感子系统（Sensing Subsystem）</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="sensing-subsystem">
+<span id="sensing"></span><h1>传感子系统（Sensing Subsystem）<a class="headerlink" href="#sensing-subsystem" title="链接到此标题。"></a></h1>
+<nav class="contents local" id="id1">
+<ul class="simple">
+<li><p><a class="reference internal" href="#overview" id="id2">概述</a></p></li>
+<li><p><a class="reference internal" href="#configurability" id="id3">可配置性</a></p></li>
+<li><p><a class="reference internal" href="#main-features" id="id4">主要特性</a></p></li>
+<li><p><a class="reference internal" href="#major-flows" id="id5">主要流程</a></p></li>
+<li><p><a class="reference internal" href="#sensor-types-and-instance" id="id6">传感器类型与实例</a></p></li>
+<li><p><a class="reference internal" href="#sensor-instance-handler" id="id7">传感器实例句柄</a></p></li>
+<li><p><a class="reference internal" href="#sensor-sample-value" id="id8">传感器采样值</a></p></li>
+<li><p><a class="reference internal" href="#device-tree-configuration" id="id9">设备树配置</a></p></li>
+<li><p><a class="reference internal" href="#api-reference" id="id10">API 参考</a></p></li>
+</ul>
+</nav>
+<section id="overview">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">概述</a><a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>传感子系统是位于操作系统用户空间服务层中的高层传感器框架，侧重于传感器融合、客户端仲裁、采样、定时、调度以及基于传感器的电源管理。</p>
+<p>传感子系统的关键概念包括物理传感器和虚拟传感器对象，以及建立在传感器对象关系之上的调度框架。物理传感器的输入不依赖任何其他传感器对象，直接与现有的 Zephyr 传感器设备驱动交互。虚拟传感器则依赖其他传感器对象（物理或虚拟）作为报告输入。</p>
+<p>传感子系统依赖 Zephyr 传感器设备 API（现有版本或将来的更新版本），以利用 Zephyr 庞大的传感器设备驱动库（100 多个）。</p>
+<p>传感子系统是可选的。只需访问简单传感器设备的应用程序可以直接使用 Zephyr <a class="reference internal" href="../../hardware/peripherals/sensor/index.html#sensor"><span class="std std-ref">传感器</span></a> API。</p>
+<p>由于传感子系统与设备驱动层或内核空间相分离，它可以借助虚拟传感器的概念，在用户空间支持各种定制和传感器算法。现有的传感器设备驱动可以专注于底层的设备端工作，尽量保持简单，只需提供设备硬件抽象和操作等。这对系统稳定性非常有利。</p>
+<p>传感子系统与任何传感器暴露/传输协议解耦，目标是根据不同产品的需求，支持采用不同传感器暴露/传输协议的各种上层框架和应用程序，例如 <a class="reference external" href="https://github.com/zephyrproject-rtos/chre">CHRE</a>、HID 传感器应用程序、MQTT 传感器应用程序。借助其多客户端支持设计，它甚至可以同时支持多个使用不同上层传感器协议的应用程序。</p>
+<p>传感子系统有助于构建统一的 Zephyr 传感架构，既可支持跨主机操作系统的场景，也可用于物联网传感器解决方案。</p>
+<p>下图展示了传感子系统如何与上层框架集成。</p>
+<img alt="统一的 Zephyr 传感架构。" class="align-center" src="../../_images/sensing_solution.png" />
+</section>
+<section id="configurability">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">可配置性</a><a class="headerlink" href="#configurability" title="链接到此标题。"></a></h2>
+<ul class="simple">
+<li><p>可复用、可配置的独立子系统。</p></li>
+<li><p>基于 Zephyr 现有的底层传感器 API（复用 100 多个现有传感器设备驱动）</p></li>
+<li><p>为应用程序提供 Zephyr 高层传感子系统 API。</p></li>
+<li><p>提供单独可选的 CHRE Sensor PAL 实现模块以支持 CHRE。</p></li>
+<li><p>与任何主机链路协议解耦，由 Zephyr 应用程序负责处理不同的协议（MQTT、HID 或私有协议，均可配置）</p></li>
+</ul>
+</section>
+<section id="main-features">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">主要特性</a><a class="headerlink" href="#main-features" title="链接到此标题。"></a></h2>
+<dl class="simple">
+<dt>范围</dt><dd><p>专注于传感器融合、多客户端、仲裁、数据采样、定时管理和调度的框架。</p>
+</dd>
+<dt>传感器抽象</dt><dd><ul class="simple">
+<li><p><strong>物理传感器</strong>：与 Zephyr 传感器设备驱动交互，专注于数据采集。</p></li>
+<li><p><strong>虚拟传感器</strong>：依赖其他传感器（<strong>物理</strong> 或 <strong>虚拟</strong>），专注于数据融合。</p></li>
+</ul>
+</dd>
+<dt>数据驱动模型</dt><dd><ul class="simple">
+<li><p><strong>轮询模式</strong>：周期性采样率</p></li>
+<li><p><strong>中断模式</strong>：数据就绪、阈值中断等。</p></li>
+</ul>
+</dd>
+<dt>调度</dt><dd><p>所有传感器对象的采样和处理都在单线程主循环中进行。</p>
+</dd>
+<dt>用于批处理的缓冲模式</dt><dd></dd>
+<dt>可通过设备树配置</dt><dd></dd>
+</dl>
+<p>下图展示了 API 的位置和范围：</p>
+<img alt="传感子系统 API 的组织结构。" class="align-center" src="../../_images/sensing_api_org.png" />
+<p><code class="docutils literal notranslate"><span class="pre">Sensing</span> <span class="pre">Subsystem</span> <span class="pre">API</span></code> 供应用程序使用，<code class="docutils literal notranslate"><span class="pre">Sensing</span> <span class="pre">Sensor</span> <span class="pre">API</span></code> 用于开发 <code class="docutils literal notranslate"><span class="pre">sensors</span></code>。</p>
+</section>
+<section id="major-flows">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">主要流程</a><a class="headerlink" href="#major-flows" title="链接到此标题。"></a></h2>
+<ul class="simple">
+<li><p>传感器配置流程</p></li>
+</ul>
+<img alt="传感器配置流程（以应用程序为铰链角度传感器设置报告间隔为例）。" class="align-center" src="../../_images/sensor_config_flow.png" />
+<ul class="simple">
+<li><p>传感器数据流程</p></li>
+</ul>
+<img alt="传感器数据流程（以应用程序通过数据事件回调接收铰链角度数据为例）。" class="align-center" src="../../_images/sensor_data_flow.png" />
+</section>
+<section id="sensor-types-and-instance">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">传感器类型与实例</a><a class="headerlink" href="#sensor-types-and-instance" title="链接到此标题。"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">Sensing</span> <span class="pre">Subsystem</span></code> 支持同一传感器类型的多个实例，应用程序可以通过两种方法来识别并打开某个唯一的传感器实例：</p>
+<ul>
+<li><p>枚举所有传感器实例</p>
+<p><code class="xref c c-func docutils literal notranslate"><span class="pre">sensing_get_sensors()</span></code> 以 <code class="xref c c-struct docutils literal notranslate"><span class="pre">sensing_sensor_info</span></code> 指针数组的形式，返回当前开发板配置所支持的全部传感器实例的信息。</p>
+<p>之后，应用程序可以使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">sensing_open_sensor()</span></code> 打开特定的传感器实例，以便后续访问、配置和接收传感器数据等。</p>
+<p>此方法适合支持 <code class="docutils literal notranslate"><span class="pre">CHRE</span></code>、<code class="docutils literal notranslate"><span class="pre">HID</span></code> 等需要动态枚举底层平台传感器实例的上层框架。</p>
+</li>
+<li><p>直接通过设备树节点打开传感器实例</p>
+<p>应用程序可以使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">sensing_open_sensor_by_dt()</span></code>，直接通过传感器的设备树节点标识符打开传感器实例。</p>
+<p>例如：</p>
+</li>
+</ul>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">sensing_open_sensor_by_dt</span><span class="p">(</span><span class="n">DEVICE_DT_GET</span><span class="p">(</span><span class="n">DT_NODELABEL</span><span class="p">(</span><span class="n">base_accel</span><span class="p">)),</span><span class="w"> </span><span class="n">cb_list</span><span class="p">,</span><span class="w"> </span><span class="n">handle</span><span class="p">);</span>
+<span class="n">sensing_open_sensor_by_dt</span><span class="p">(</span><span class="n">DEVICE_DT_GET</span><span class="p">(</span><span class="n">DT_CHOSEN</span><span class="p">(</span><span class="n">zephyr_sensing_base_accel</span><span class="p">)),</span><span class="w"> </span><span class="n">cb_list</span><span class="p">,</span><span class="w"> </span><span class="n">handle</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>对于只想访问特定传感器的简单应用程序，此方法实用且易于使用。</p>
+<p><code class="docutils literal notranslate"><span class="pre">Sensor</span> <span class="pre">type</span></code> 遵循 <a class="reference external" href="https://usb.org/sites/default/files/hutrr39b_0.pdf">HID 标准传感器类型定义</a>。</p>
+<p>参见 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/sensing/sensing_sensor_types.h">include/zephyr/sensing/sensing_sensor_types.h</a></p>
+</section>
+<section id="sensor-instance-handler">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">传感器实例句柄</a><a class="headerlink" href="#sensor-instance-handler" title="链接到此标题。"></a></h2>
+<p>客户端使用 <code class="xref c c-type docutils literal notranslate"><span class="pre">sensing_sensor_handle_t</span></code> 类型的句柄来操作已打开的传感器实例，之后对该传感器实例的所有操作（例如设置配置、读取传感器采样数据等）都需要使用这个句柄。</p>
+<p>一个传感器实例可以有两类客户端：<code class="docutils literal notranslate"><span class="pre">Application</span> <span class="pre">clients</span></code> 和 <code class="docutils literal notranslate"><span class="pre">Sensor</span> <span class="pre">clients</span></code>。</p>
+<p><code class="docutils literal notranslate"><span class="pre">Application</span> <span class="pre">clients</span></code> 可以使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">sensing_open_sensor()</span></code> 打开传感器实例并获取其句柄。</p>
+<p>对于 <code class="docutils literal notranslate"><span class="pre">Sensor</span> <span class="pre">clients</span></code>，没有用于打开报告者（reporter）的 open API，因为客户端与报告者之间的关系是在传感器注册阶段根据设备树建立的。</p>
+<p><code class="docutils literal notranslate"><span class="pre">Sensing</span> <span class="pre">Subsystem</span></code> 会自动为客户端传感器打开其报告者传感器并创建 <code class="docutils literal notranslate"><span class="pre">handlers</span></code>。<code class="docutils literal notranslate"><span class="pre">Sensor</span> <span class="pre">clients</span></code> 可以通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">sensing_sensor_get_reporters()</span></code> 获取其报告者的句柄。</p>
+<img alt="传感器报告拓扑。" class="align-center" src="../../_images/sensor_top.png" />
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>对于传感子系统内部的传感器，它们之间的报告关系全部由传感子系统根据设备树定义自动生成，客户端传感器与报告者传感器之间的句柄也会自动创建。应用程序需要调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">sensing_open_sensor()</span></code> 显式打开传感器实例。</p>
+</div>
+</section>
+<section id="sensor-sample-value">
+<h2><a class="toc-backref" href="#id8" role="doc-backlink">传感器采样值</a><a class="headerlink" href="#sensor-sample-value" title="链接到此标题。"></a></h2>
+<ul>
+<li><p>数据结构</p>
+<p>每个传感器采样值都定义为公共的 <code class="docutils literal notranslate"><span class="pre">header</span></code> + <code class="docutils literal notranslate"><span class="pre">readings[]</span></code> 数据结构，例如 <code class="xref c c-struct docutils literal notranslate"><span class="pre">sensing_sensor_value_3d_q31</span></code>、<code class="xref c c-struct docutils literal notranslate"><span class="pre">sensing_sensor_value_q31</span></code> 和 <code class="xref c c-struct docutils literal notranslate"><span class="pre">sensing_sensor_value_uint32</span></code>。</p>
+<p><code class="docutils literal notranslate"><span class="pre">header</span></code> 的定义见 <code class="xref c c-func docutils literal notranslate"><span class="pre">sensing_sensor_value_header()</span></code>。</p>
+</li>
+<li><p>时间戳</p>
+<p>传感子系统中时间戳的单位是 <code class="docutils literal notranslate"><span class="pre">micro</span> <span class="pre">seconds</span></code>。</p>
+<p><code class="docutils literal notranslate"><span class="pre">header</span></code> 定义了一个 <strong>base_timestamp</strong>，<strong>readings[]</strong> 数组中的每个元素定义了 <strong>timestamp_delta</strong>。</p>
+<p><strong>timestamp_delta</strong> 是相对于前一个 <strong>readings</strong> （或 <strong>base_timestamp</strong>）的值</p>
+<p>例如：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">readings[0]</span></code> 的时间戳为 <code class="docutils literal notranslate"><span class="pre">header.base_timestamp</span></code> + <code class="docutils literal notranslate"><span class="pre">readings[0].timestamp_delta</span></code>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">readings[1]</span></code> 的时间戳为 <code class="docutils literal notranslate"><span class="pre">timestamp</span> <span class="pre">of</span> <span class="pre">readings[0]</span></code> + <code class="docutils literal notranslate"><span class="pre">readings[1].timestamp_delta</span></code>。</p></li>
+</ul>
+<p>由于时间戳单位是微秒，最大的 <strong>timestamp_delta</strong> （<code class="docutils literal notranslate"><span class="pre">uint32_t</span></code>）为 <code class="docutils literal notranslate"><span class="pre">4295</span></code> 秒。</p>
+<p>如果某个传感器的批量数据中两次连续读数相差超过 <code class="docutils literal notranslate"><span class="pre">4295</span></code> 秒，传感子系统运行时会将它们拆分到多个 readings 结构体实例中，并发送多个事件。</p>
+<p>这一概念参考自 <a class="reference external" href="https://github.com/zephyrproject-rtos/chre/blob/zephyr/chre_api/include/chre_api/chre/sensor_types.h">CHRE Sensor API</a>。</p>
+</li>
+<li><p>数据格式</p>
+<p><code class="docutils literal notranslate"><span class="pre">Sensing</span> <span class="pre">Subsystem</span></code> 为每种传感器类型使用各自定义的数据格式结构体，并支持 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/dsp/types.h">include/zephyr/dsp/types.h</a> 中定义的 <code class="docutils literal notranslate"><span class="pre">Q</span> <span class="pre">Format</span></code>，以支持 <code class="docutils literal notranslate"><span class="pre">zdsp</span></code> 库。</p>
+<p>例如，<code class="xref c c-struct docutils literal notranslate"><span class="pre">sensing_sensor_value_3d_q31</span></code> 可用于 3D IMU 传感器，如 <code class="xref c c-macro docutils literal notranslate"><span class="pre">SENSING_SENSOR_TYPE_MOTION_ACCELEROMETER_3D</span></code>、<code class="xref c c-macro docutils literal notranslate"><span class="pre">SENSING_SENSOR_TYPE_MOTION_UNCALIB_ACCELEROMETER_3D</span></code> 和 <code class="xref c c-macro docutils literal notranslate"><span class="pre">SENSING_SENSOR_TYPE_MOTION_GYROMETER_3D</span></code>。</p>
+<p><code class="xref c c-struct docutils literal notranslate"><span class="pre">sensing_sensor_value_uint32</span></code> 可用于 <code class="xref c c-macro docutils literal notranslate"><span class="pre">SENSING_SENSOR_TYPE_LIGHT_AMBIENTLIGHT</span></code> 传感器，</p>
+<p><code class="xref c c-struct docutils literal notranslate"><span class="pre">sensing_sensor_value_q31</span></code> 可用于 <code class="xref c c-macro docutils literal notranslate"><span class="pre">SENSING_SENSOR_TYPE_MOTION_HINGE_ANGLE</span></code> 传感器</p>
+<p>参见 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/sensing/sensing_datatypes.h">include/zephyr/sensing/sensing_datatypes.h</a></p>
+</li>
+</ul>
+</section>
+<section id="device-tree-configuration">
+<h2><a class="toc-backref" href="#id9" role="doc-backlink">设备树配置</a><a class="headerlink" href="#device-tree-configuration" title="链接到此标题。"></a></h2>
+<p>传感子系统使用设备树配置所有传感器实例及其属性和报告关系。</p>
+<p>参见示例 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/samples/subsys/sensing/simple/boards/native_sim.overlay">samples/subsys/sensing/simple/boards/native_sim.overlay</a></p>
+</section>
+<section id="api-reference">
+<h2><a class="toc-backref" href="#id10" role="doc-backlink">API 参考</a><a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">sensing_api</span></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/subsys/sensing/simple/README.html#sensing" title="按定义的间隔获取高层传感器数据。">Sensing subsystem</a></span><span class="code-sample-description">按定义的间隔获取高层传感器数据。</span></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 12月 17, 2025.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

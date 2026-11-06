@@ -1,0 +1,26 @@
+var renesas_adc_b_8h =
+[
+    [ "RENESAS_ADC_B_CH0", "group__renesas__adc__b__channels.html#gae3fccb66f3f204be77091606f2ba815b", null ],
+    [ "RENESAS_ADC_B_CH1", "group__renesas__adc__b__channels.html#ga3070bebb15fa1d59fe5259737399ef39", null ],
+    [ "RENESAS_ADC_B_CH10", "group__renesas__adc__b__channels.html#gab9f15f8b48e6ad471af6560515e5516d", null ],
+    [ "RENESAS_ADC_B_CH11", "group__renesas__adc__b__channels.html#ga00594235aa6ee1f7769869adae058b1f", null ],
+    [ "RENESAS_ADC_B_CH12", "group__renesas__adc__b__channels.html#ga79ee547b1230a079b9f949e5aa8e118b", null ],
+    [ "RENESAS_ADC_B_CH13", "group__renesas__adc__b__channels.html#ga2a4cb686ebf6a4f337aab72f4135ce69", null ],
+    [ "RENESAS_ADC_B_CH14", "group__renesas__adc__b__channels.html#ga83bbaa0fb6f0b3fc4f9bf370cf7b12c8", null ],
+    [ "RENESAS_ADC_B_CH15", "group__renesas__adc__b__channels.html#ga9a2c0bae6bff5723208d2467c3db0fd9", null ],
+    [ "RENESAS_ADC_B_CH16", "group__renesas__adc__b__channels.html#ga826665fbbbf2353d66f88148eb5faa6b", null ],
+    [ "RENESAS_ADC_B_CH17", "group__renesas__adc__b__channels.html#gafd4456c4ea4ddc9ae826a66fda26425e", null ],
+    [ "RENESAS_ADC_B_CH18", "group__renesas__adc__b__channels.html#ga8f822dae3f6fcc990cebf4a49cabaca4", null ],
+    [ "RENESAS_ADC_B_CH19", "group__renesas__adc__b__channels.html#gaee1c1a9acba7f80114119dd808858204", null ],
+    [ "RENESAS_ADC_B_CH2", "group__renesas__adc__b__channels.html#ga2e60dc6c7eee95d3384ea8d6e6555a7c", null ],
+    [ "RENESAS_ADC_B_CH20", "group__renesas__adc__b__channels.html#ga6cc5f0f92c77439fb71a41c0349f9af9", null ],
+    [ "RENESAS_ADC_B_CH21", "group__renesas__adc__b__channels.html#gaac460ba32ba67e9036b91a5e992a850e", null ],
+    [ "RENESAS_ADC_B_CH22", "group__renesas__adc__b__channels.html#ga9d255c29dc37c919dbd6e0cd978115eb", null ],
+    [ "RENESAS_ADC_B_CH3", "group__renesas__adc__b__channels.html#ga1d5c59cb0b95ef52293b563974c5dcd1", null ],
+    [ "RENESAS_ADC_B_CH4", "group__renesas__adc__b__channels.html#ga60e4c5eaaed261f7abda06cc62b72eda", null ],
+    [ "RENESAS_ADC_B_CH5", "group__renesas__adc__b__channels.html#ga851cdbdc1d519d04c4357ff13f71c5cc", null ],
+    [ "RENESAS_ADC_B_CH6", "group__renesas__adc__b__channels.html#gaadebd120eff7b7413edf92585835c37d", null ],
+    [ "RENESAS_ADC_B_CH7", "group__renesas__adc__b__channels.html#gad9cb2ac0406c8ffa812cc64185dffc7a", null ],
+    [ "RENESAS_ADC_B_CH8", "group__renesas__adc__b__channels.html#gae26dffcabcd28617d835a949010f47ff", null ],
+    [ "RENESAS_ADC_B_CH9", "group__renesas__adc__b__channels.html#ga8ec4eca2df08d1911a9dade850ef7552", null ]
+];

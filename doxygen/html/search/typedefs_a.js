@@ -1,0 +1,20 @@
+var searchData=
+[
+  ['k_5fipi_5ffunc_5ft_0',['k_ipi_func_t',['../kernel_8h.html#a0eae408f9b07bdc43336a23fe4866686',1,'kernel.h']]],
+  ['k_5fmem_5fdomain_5ft_1',['k_mem_domain_t',['../group__mem__domain__apis.html#ga2d655d3e875fa0bb8538ceb51f82d148',1,'mem_domain.h']]],
+  ['k_5fp4wq_5fdone_5fhandler_5ft_2',['k_p4wq_done_handler_t',['../p4wq_8h.html#af8366e664f93871feca229b9835c535a',1,'p4wq.h']]],
+  ['k_5fp4wq_5fhandler_5ft_3',['k_p4wq_handler_t',['../p4wq_8h.html#a30c55067099e2b4c0e942efc8182a4e2',1,'p4wq.h']]],
+  ['k_5fspinlock_5fkey_5ft_4',['k_spinlock_key_t',['../group__spinlock__apis.html#gacacd3d3bbd31416dbbf6a0239be82ef0',1,'spinlock.h']]],
+  ['k_5fthread_5fentry_5ft_5',['k_thread_entry_t',['../arch__interface_8h.html#a87452e32015a8bfebc4e417750242e78',1,'arch_interface.h']]],
+  ['k_5fthread_5fruntime_5fstats_5ft_6',['k_thread_runtime_stats_t',['../kernel_2thread_8h.html#a887f70695cd229ea8f30ea3e1faf45cf',1,'thread.h']]],
+  ['k_5fthread_5fstack_5ft_7',['k_thread_stack_t',['../arch__interface_8h.html#a9fc2dce533bd7b8cb1fdd4bdbb2b62b1',1,'arch_interface.h']]],
+  ['k_5fthread_5ftimeslice_5ffn_5ft_8',['k_thread_timeslice_fn_t',['../kernel__structs_8h.html#a9577c7d595787244711895a8342fb838',1,'kernel_structs.h']]],
+  ['k_5fthread_5fuser_5fcb_5ft_9',['k_thread_user_cb_t',['../group__thread__apis.html#gaaf25feae2596ad4ee73e4f42358212a5',1,'kernel.h']]],
+  ['k_5fticks_5ft_10',['k_ticks_t',['../group__clock__apis.html#ga9832cb0adc2d1866420e5c370a0863e2',1,'clock.h']]],
+  ['k_5ftid_5ft_11',['k_tid_t',['../kernel_2thread_8h.html#a6379f5a1f19ffbc262a6877c4f6e3647',1,'thread.h']]],
+  ['k_5ftimer_5fexpiry_5ft_12',['k_timer_expiry_t',['../group__timer__apis.html#ga198dd18900c0813605986ff6f0eaadca',1,'kernel.h']]],
+  ['k_5ftimer_5fstop_5ft_13',['k_timer_stop_t',['../group__timer__apis.html#ga8072258d5057da858e460cd9b171db5e',1,'kernel.h']]],
+  ['k_5fwork_5fhandler_5ft_14',['k_work_handler_t',['../group__workqueue__apis.html#gaea7b79291e1afcc1771199987ccd47f7',1,'kernel.h']]],
+  ['k_5fwork_5fuser_5fhandler_5ft_15',['k_work_user_handler_t',['../group__workqueue__apis.html#ga87dc0fcdc25adebe1745a2453c89f7eb',1,'kernel.h']]],
+  ['kbd_5frow_5ft_16',['kbd_row_t',['../group__input__kbd__matrix.html#gac7d5c811da0c9ab2660be3c3f2fcfe86',1,'input_kbd_matrix.h']]]
+];

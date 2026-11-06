@@ -1,0 +1,420 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>电源域 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/pm/power_domain.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="电源管理 API" href="api/index.html" />
+    <link rel="prev" title="设备运行时电源管理" href="device_runtime.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">服务</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../connectivity/index.html">连接</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../memory_management.html">内存管理</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../power_management.html">电源管理</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">电源管理</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="overview.html">概述</a></li>
+<li class="toctree-l4"><a class="reference internal" href="system.html">系统电源管理</a></li>
+<li class="toctree-l4"><a class="reference internal" href="device.html">设备电源管理</a></li>
+<li class="toctree-l4"><a class="reference internal" href="device_runtime.html">设备运行时电源管理</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">电源域</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#introduction">简介</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#internal-power-domains">内部电源域</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#external-power-domains">外部电源域</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#implementation-guidelines">实现指南</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#examples">示例</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="api/index.html">电源管理 API</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../cpu_freq/index.html">CPU 频率调节</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../poweroff.html">关机</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resource_management/index.html">资源管理</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../power_management.html">电源管理</a> &raquo;</li>
+  
+     <li><a href="index.html">电源管理</a> &raquo;</li>
+  
+  <li>电源域</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="power-domain">
+<span id="pm-power-domain"></span><h1>电源域<a class="headerlink" href="#power-domain" title="链接到此标题。"></a></h1>
+<section id="introduction">
+<h2>简介<a class="headerlink" href="#introduction" title="链接到此标题。"></a></h2>
+<p>Zephyr 电源域抽象旨在支持将由同一电源供电的设备分组，并以通用的方式通知它们电源状态的变化。使用设备 A 的应用程序代码无需知道设备 B 位于同一电源域中、也应被配置为低功耗状态。</p>
+<p>电源域在 Zephyr 中是可选的，要启用此功能，必须设置 <a class="reference internal" href="../../kconfig.html#CONFIG_PM_DEVICE_POWER_DOMAIN" title="CONFIG_PM_DEVICE_POWER_DOMAIN"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PM_DEVICE_POWER_DOMAIN</span></code></a> 选项。</p>
+<p>当电源域自身开启或关闭时，电源域负责通知所有使用它的设备，分别以 <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">PM_DEVICE_ACTION_TURN_ON</span></code> 或 <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">PM_DEVICE_ACTION_TURN_OFF</span></code> 调用它们的电源管理回调。该工作流程如下图所示。</p>
+<figure class="align-default" id="id1">
+<span id="pm-domain-work-flow"></span>digraph {
+    rankdir=&quot;TB&quot;;
+
+    action [style=invis]
+    {
+        rank = same;
+        rankdir=&quot;LR&quot;
+        devA [label=&quot;gpio0&quot;]
+        devB [label=&quot;gpio1&quot;]
+    }
+    domain [label=&quot;gpio_domain&quot;]
+
+   action -&gt; devA [label=&quot;pm_device_runtime_get()&quot;]
+   devA:se -&gt; domain:n [label=&quot;pm_device_runtime_get()&quot;]
+
+   domain -&gt; devB [label=&quot;action_cb(PM_DEVICE_ACTION_TURN_ON)&quot;]
+   domain:sw -&gt; devA:sw [label=&quot;action_cb(PM_DEVICE_ACTION_TURN_ON)&quot;]
+}<figcaption>
+<p><span class="caption-text">电源域工作流程</span><a class="headerlink" href="#id1" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<section id="internal-power-domains">
+<h3>内部电源域<a class="headerlink" href="#internal-power-domains" title="链接到此标题。"></a></h3>
+<p>SoC 中的大多数设备都有独立的电源控制，可以开启或关闭以降低功耗。但仍有相当多的静态漏电流无法仅靠设备电源管理来控制。为解决这个问题，SoC 通常被划分为若干区域，把通常一起使用的设备分为一组，这样就可以将未使用的区域完全断电，以消除这种漏电。这些区域称为“电源域”，它们可以构成层次结构，也可以嵌套。</p>
+</section>
+<section id="external-power-domains">
+<h3>外部电源域<a class="headerlink" href="#external-power-domains" title="链接到此标题。"></a></h3>
+<p>SoC 外部的设备可以由 SoC 主电源以外的电源供电。这些外部电源通常是开关、稳压器或专用电源 IC。多个设备可以由同一电源供电，这样的设备分组通常称为“电源域”。</p>
+<p>将设备置于电源域中有多种原因，包括让在低功耗模式下功耗较高的设备在不使用时可以完全关闭。</p>
+</section>
+</section>
+<section id="implementation-guidelines">
+<h2>实现指南<a class="headerlink" href="#implementation-guidelines" title="链接到此标题。"></a></h2>
+<p>首先，充当电源域的设备需要声明兼容 <code class="docutils literal notranslate"><span class="pre">power-domain</span></code>。以 <a class="reference internal" href="#pm-domain-work-flow"><span class="std std-ref">电源域工作流程</span></a> 为例，以下代码定义了一个名为 <code class="docutils literal notranslate"><span class="pre">gpio_domain</span></code> 的域。</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nl">gpio_domain</span><span class="p">:</span><span class="w"> </span><span class="nf">gpio_domain</span><span class="o">@</span><span class="mi">4</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"power-domain"</span><span class="p">;</span>
+<span class="w">        </span><span class="p">...</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>电源域需要实现电源管理动作回调，电源管理子系统使用该回调来开启和关闭设备。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">mydomain_pm_action</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">,</span>
+<span class="w">                           </span><span class="k">enum</span><span class="w"> </span><span class="n">pm_device_action</span><span class="w"> </span><span class="n">action</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">action</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">PM_DEVICE_ACTION_RESUME</span><span class="p">:</span>
+<span class="w">        </span><span class="cm">/* resume the domain */</span>
+<span class="w">        </span><span class="p">...</span>
+<span class="w">        </span><span class="cm">/* notify children domain is now powered */</span>
+<span class="w">        </span><span class="n">pm_device_children_action_run</span><span class="p">(</span><span class="n">dev</span><span class="p">,</span><span class="w"> </span><span class="n">PM_DEVICE_ACTION_TURN_ON</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+<span class="w">        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">PM_DEVICE_ACTION_SUSPEND</span><span class="p">:</span>
+<span class="w">        </span><span class="cm">/* notify children domain is going down */</span>
+<span class="w">        </span><span class="n">pm_device_children_action_run</span><span class="p">(</span><span class="n">dev</span><span class="p">,</span><span class="w"> </span><span class="n">PM_DEVICE_ACTION_TURN_OFF</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+<span class="w">        </span><span class="cm">/* suspend the domain */</span>
+<span class="w">        </span><span class="p">...</span>
+<span class="w">        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">PM_DEVICE_ACTION_TURN_ON</span><span class="p">:</span>
+<span class="w">        </span><span class="cm">/* turn on the domain (e.g. setup control pins to disabled) */</span>
+<span class="w">        </span><span class="p">...</span>
+<span class="w">        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">PM_DEVICE_ACTION_TURN_OFF</span><span class="p">:</span>
+<span class="w">        </span><span class="cm">/* turn off the domain (e.g. reset control pins to default state) */</span>
+<span class="w">        </span><span class="p">...</span>
+<span class="w">        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">    </span><span class="k">default</span><span class="o">:</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="o">-</span><span class="n">ENOTSUP</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>属于该设备的设备可以通过在节点的 <code class="docutils literal notranslate"><span class="pre">power-domain</span></code> 属性中引用它来声明。下面的示例声明了设备 <code class="docutils literal notranslate"><span class="pre">gpio0</span></code> 和 <code class="docutils literal notranslate"><span class="pre">gpio1</span></code>，它们属于域 <code class="docutils literal notranslate"><span class="pre">gpio_domain`</span></code>。</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="nf">gpio0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"zephyr,gpio-emul"</span><span class="p">;</span>
+<span class="w">        </span><span class="n">gpio-controller</span><span class="p">;</span>
+<span class="w">        </span><span class="n">power-domains</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">gpio_domain</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="o">&amp;</span><span class="nf">gpio1</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"zephyr,gpio-emul"</span><span class="p">;</span>
+<span class="w">        </span><span class="n">gpio-controller</span><span class="p">;</span>
+<span class="w">        </span><span class="n">power-domains</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">gpio_domain</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>域的状态发生变化时，该域下的所有设备都会收到通知。这些通知作为动作发送到设备的电源管理动作回调中，设备可以借此完成所需的额外工作。不过，也可以放心地忽略它们。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">mydev_pm_action</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">,</span>
+<span class="w">                           </span><span class="k">enum</span><span class="w"> </span><span class="n">pm_device_action</span><span class="w"> </span><span class="o">*</span><span class="n">action</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">switch</span><span class="w"> </span><span class="p">(</span><span class="n">action</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">PM_DEVICE_ACTION_SUSPEND</span><span class="p">:</span>
+<span class="w">        </span><span class="cm">/* suspend the device */</span>
+<span class="w">        </span><span class="p">...</span>
+<span class="w">        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">PM_DEVICE_ACTION_RESUME</span><span class="p">:</span>
+<span class="w">        </span><span class="cm">/* resume the device */</span>
+<span class="w">        </span><span class="p">...</span>
+<span class="w">        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">PM_DEVICE_ACTION_TURN_ON</span><span class="p">:</span>
+<span class="w">        </span><span class="cm">/* configure the device into low power mode */</span>
+<span class="w">        </span><span class="p">...</span>
+<span class="w">        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">    </span><span class="k">case</span><span class="w"> </span><span class="no">PM_DEVICE_ACTION_TURN_OFF</span><span class="p">:</span>
+<span class="w">        </span><span class="cm">/* prepare the device for power down */</span>
+<span class="w">        </span><span class="p">...</span>
+<span class="w">        </span><span class="k">break</span><span class="p">;</span>
+<span class="w">    </span><span class="k">default</span><span class="o">:</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="o">-</span><span class="n">ENOTSUP</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>如果依赖某个域的设备被用作“唤醒”源，则由驱动或应用程序负责将该域也设为“唤醒”源。</p>
+</div>
+</section>
+<section id="examples">
+<h2>示例<a class="headerlink" href="#examples" title="链接到此标题。"></a></h2>
+<p>以下是一些展示电源域功能的实用示例：</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/tests/subsys/pm/device_power_domains/">tests/subsys/pm/device_power_domains/</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/tests/subsys/pm/power_domain/">tests/subsys/pm/power_domain/</a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 1月 22, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

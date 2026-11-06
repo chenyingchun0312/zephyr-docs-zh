@@ -1,0 +1,433 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>API 生命周期 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/develop/api/api_lifecycle.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="厂商专用 API 放置策略" href="vendor_interfaces_policy.html" />
+    <link rel="prev" title="API 概览" href="overview.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">使用 Zephyr 进行开发</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/index.html">入门指南</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beyond-GSG.html">入门指南之外</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../env_vars.html">环境变量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../application/index.html">应用程序开发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../debug/index.html">调试</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">API 状态与准则</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="overview.html">API 概览</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">API 生命周期</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#experimental">实验性</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#peripheral-apis-hardware-related">外设 API（与硬件相关）</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#unstable">不稳定</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#id2">外设 API（与硬件相关）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#hardware-agnostic-apis">与硬件无关的 API</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#stable">稳定</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#introducing-breaking-api-changes">引入破坏性的 API 变更</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#deprecated">已弃用</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#retired">已退役</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="vendor_interfaces_policy.html">厂商专用 API 放置策略</a></li>
+<li class="toctree-l3"><a class="reference internal" href="design_guidelines.html">API 设计准则</a></li>
+<li class="toctree-l3"><a class="reference internal" href="terminology.html">API 术语</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../languages/index.html">编程语言支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../optimizations/index.html">优化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../flash_debug/index.html">烧录与硬件调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html">模块（外部项目）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../west/index.html">West（Zephyr 的元工具）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../twister/index.html">测试运行器（Twister）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../test/index.html">测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sca/index.html">静态代码分析（SCA）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../toolchains/index.html">工具链</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tools/index.html">工具与 IDE</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">使用 Zephyr 进行开发</a> &raquo;</li>
+  
+     <li><a href="index.html">API 状态与准则</a> &raquo;</li>
+  
+  <li>API 生命周期</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="api-lifecycle">
+<span id="id1"></span><h1>API 生命周期<a class="headerlink" href="#api-lifecycle" title="链接到此标题。"></a></h1>
+<p>使用 Zephyr API 的开发者需要知道，在多长时间内可以相信某个 API 在未来的版本中不会改变。同时，维护和扩展 Zephyr API 的开发者需要能够引入尚未完全经过验证的新 API，并在旧 API 不再是最佳选择或不再受底层平台支持时将其淘汰。</p>
+<figure class="align-center" id="id3">
+<img alt="API 生命周期" src="../../_images/api_lifecycle.png" />
+<figcaption>
+<p><span class="caption-text">API 生命周期</span><a class="headerlink" href="#id3" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<p>所有 API 及其成熟度级别的最新列表，请参阅 <a class="reference internal" href="overview.html#api-overview"><span class="std std-ref">API 概览</span></a> 页面。</p>
+<section id="experimental">
+<span id="api-lifecycle-experimental"></span><h2>实验性<a class="headerlink" href="#experimental" title="链接到此标题。"></a></h2>
+<p>实验性 API 表示某项特性是最近引入的，在未来版本中可能会改变或被移除。欢迎试用，并通过 <a class="reference external" href="https://lists.zephyrproject.org/g/devel">开发者邮件列表</a> 向社区提供反馈。</p>
+<p>以下要求适用于所有新 API：</p>
+<ul class="simple">
+<li><p>API（用法）文档，说明其设计和假设、使用方法、当前实现的局限，以及在适当情况下的未来发展方向。</p></li>
+<li><p>引入 API 时，应同时提供该 API 的至少一个实现（对于外设 API，这对应一个驱动）</p></li>
+<li><p>至少一个使用该新 API 的示例（可以只在单个开发板上构建）</p></li>
+</ul>
+<p>引入新的实验性 API 时，应在定义该 API 的头文件中标注 API 版本。实验性 API 的次版本号不得超过一（0.1.z）。（参见 <a class="reference internal" href="overview.html#api-overview"><span class="std std-ref">API 概览</span></a>）</p>
+<section id="peripheral-apis-hardware-related">
+<h3>外设 API（与硬件相关）<a class="headerlink" href="#peripheral-apis-hardware-related" title="链接到此标题。"></a></h3>
+<p>为新的外设或驱动子系统引入 API（带文档的公共头文件）时，必须对 API 进行评审，评审由来自不同厂商代表组成的架构工作组主导。</p>
+<p>当 API 在不同硬件平台上至少有两个实现时，应将其提升为 <code class="docutils literal notranslate"><span class="pre">unstable</span></code>。</p>
+</section>
+</section>
+<section id="unstable">
+<span id="api-lifecycle-unstable"></span><h2>不稳定<a class="headerlink" href="#unstable" title="链接到此标题。"></a></h2>
+<p>该 API 正在趋于稳定，但尚未经过足够的实际测试，不能被视为稳定。该 API 被认为具有通用性，可以在不同的硬件平台上使用。</p>
+<p>当 API 的状态变为不稳定 API 时，应在定义该 API 的头文件中标注 API 版本。不稳定 API 的次版本号应大于一（0.y.z | y &gt; 1）。（参见 <a class="reference internal" href="overview.html#api-overview"><span class="std std-ref">API 概览</span></a>）</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>变更不会另行公告。</p>
+</div>
+<section id="id2">
+<h3>外设 API（与硬件相关）<a class="headerlink" href="#id2" title="链接到此标题。"></a></h3>
+<p>当 API 在不同硬件平台上至少有两个实现时，应将其从 <code class="docutils literal notranslate"><span class="pre">experimental</span></code> 提升为 <code class="docutils literal notranslate"><span class="pre">unstable</span></code>。</p>
+</section>
+<section id="hardware-agnostic-apis">
+<h3>与硬件无关的 API<a class="headerlink" href="#hardware-agnostic-apis" title="链接到此标题。"></a></h3>
+<p>对于与硬件无关的 API，需要有多个应用程序使用它，才能将其从 <code class="docutils literal notranslate"><span class="pre">experimental</span></code> 提升为 <code class="docutils literal notranslate"><span class="pre">unstable</span></code>。</p>
+</section>
+</section>
+<section id="stable">
+<span id="api-lifecycle-stable"></span><h2>稳定<a class="headerlink" href="#stable" title="链接到此标题。"></a></h2>
+<p>该 API 已被证明令人满意，但底层代码的清理可能会带来细微变更。在合理的情况下会保持向后兼容。</p>
+<p>满足以下要求后，API 可以被声明为 <code class="docutils literal notranslate"><span class="pre">stable</span></code>：</p>
+<ul class="simple">
+<li><p>为新 API 编写覆盖率达到 100% 的测试用例</p></li>
+<li><p>代码中有完整的文档。所有公共接口都应编写文档，并可在在线文档中查阅。</p></li>
+<li><p>该 API 已投入使用，并且至少在 2 个开发版本中可用</p></li>
+<li><p>稳定 API 随时可以获得向后兼容的更新、缺陷修复和安全修复。</p></li>
+</ul>
+<p>要将 API 声明为 <code class="docutils literal notranslate"><span class="pre">stable</span></code>，需要遵循以下步骤：</p>
+<ol class="arabic simple">
+<li><p>必须提交一个 PR（拉取请求），修改 <a class="reference internal" href="overview.html#api-overview"><span class="std std-ref">API 概览</span></a> 表中的相应条目</p></li>
+<li><p>必须向 <code class="docutils literal notranslate"><span class="pre">devel</span></code> 邮件列表发送邮件，宣布该 API 升级请求</p></li>
+<li><p>该 PR 必须提交到下一次 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/wiki/Architecture-Working-Group">Zephyr Architecture meeting</a> 上讨论，如无异议，该 PR 将被合并</p></li>
+</ol>
+<p>当 API 的状态变为稳定 API 时，应在定义该 API 的头文件中标注 API 版本。稳定 API 的主版本号应大于或等于一（x.y.z | x &gt;= 1）。（参见 <a class="reference internal" href="overview.html#api-overview"><span class="std std-ref">API 概览</span></a>）</p>
+<section id="introducing-breaking-api-changes">
+<span id="breaking-api-changes"></span><h3>引入破坏性的 API 变更<a class="headerlink" href="#introducing-breaking-api-changes" title="链接到此标题。"></a></h3>
+<p>如上所述，稳定 API 力求在整个生命周期内保持向后兼容。然而，在某些情况下，实现这一目标会阻碍技术进步，或者如果不给 API 及其实现的维护带来不合理的负担，根本无法实现。</p>
+<p>破坏性的 API 变更是指迫使用户修改现有代码才能保持应用程序当前行为的变更。需要重新编译应用程序（而不修改应用程序本身）不被视为破坏性的 API 变更。</p>
+<p>为了限制和控制会打破向后兼容承诺的变更的引入，每当认为有必要进行此类变更时，必须遵循以下步骤，项目才会接受该变更：</p>
+<ol class="arabic">
+<li><p>必须在 GitHub 上提交一个 <a class="reference internal" href="../../contribute/proposals_and_rfcs.html#rfcs"><span class="std std-ref">RFC issue</span></a>，内容如下：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Title:     RFC: Breaking API Change: &lt;subsystem&gt;
+Contents:  - Problem Description:
+             - Background information on why the change is required
+           - Proposed Change (detailed):
+             - Brief description of the API change
+           - Detailed RFC:
+             - Function call changes
+             - Device Tree changes (source and bindings)
+             - Kconfig option changes
+           - Dependencies:
+             - Impact to users of the API, including the steps required
+               to adapt out-of-tree users of the API to the change
+</pre></div>
+</div>
+<p>RFC issue 可以不对变更进行文字描述，而是链接到一个以代码形式包含这些变更的 PR。</p>
+</li>
+<li><p>RFC issue 必须打上 GitHub 的 <code class="docutils literal notranslate"><span class="pre">Breaking</span> <span class="pre">API</span> <span class="pre">Change</span></code> 标签</p></li>
+<li><p>RFC issue 必须提交到下一次 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/wiki/Architecture-Working-Group">Zephyr Architecture meeting</a> 上讨论</p></li>
+<li><p>必须向 <code class="docutils literal notranslate"><span class="pre">devel</span></code> 邮件列表发送一封邮件，主题与 RFC issue 标题相同，并附上指向该 RFC issue 的链接</p></li>
+</ol>
+<p>随后，RFC 会通过 issue 评论获得反馈，也会在 Zephyr 架构会议上讨论，相关方和整个社区都有机会对其进行详细讨论。</p>
+<p>最后，如果第一步中尚未提交，则必须在 GitHub 上提交一个 PR。由提出变更的人决定是同时提交 RFC 和 PR，还是等到 RFC 获得足够共识、能够确信实现会被接受之后再进行实现。该 PR 必须包含以下内容：</p>
+<ul class="simple">
+<li><p>与 RFC issue 一致的标题</p></li>
+<li><p>指向 RFC issue 的链接</p></li>
+<li><p>对 API 的实际变更</p>
+<ul>
+<li><p>对 API 头文件的变更</p></li>
+<li><p>对 API 实现的变更</p></li>
+<li><p>对相关 API 文档的变更</p></li>
+<li><p>对设备树源文件和绑定的变更</p></li>
+</ul>
+</li>
+<li><p>使源码树内该 API 的使用者适配此变更所需的修改。视该任务的范围而定，这可能需要相应维护者的额外帮助</p></li>
+<li><p>在下一个即将发布版本的发布说明的“API Changes”部分中添加一个条目</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">API</span></code>、<code class="docutils literal notranslate"><span class="pre">Breaking</span> <span class="pre">API</span> <span class="pre">Change</span></code> 和 <code class="docutils literal notranslate"><span class="pre">Release</span> <span class="pre">Notes</span></code> 标签，以及其他适用的标签</p></li>
+<li><p>如果 RFC 尚未在 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/wiki/Architecture-Working-Group">Zephyr Architecture meeting</a> 上讨论并达成一致，则添加 <code class="docutils literal notranslate"><span class="pre">Architecture</span> <span class="pre">Review</span></code> 标签</p></li>
+</ul>
+<p>完成上述步骤后，提案的结果将取决于相应子系统的维护者是否批准该 PR。与其他任何 PR 一样，作者可以请求在 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/wiki/Zephyr-Committee-and-Working-Group-Meetings#technical-steering-committee-tsc">Zephyr TSC meeting</a> 上讨论，甚至最终进行投票。</p>
+<p>如果该 PR 被合并，则必须向 <code class="docutils literal notranslate"><span class="pre">devel</span></code> 和 <code class="docutils literal notranslate"><span class="pre">user</span></code> 邮件列表发送邮件，告知此变更。</p>
+<p>API 版本应进行变更，以表明存在向后不兼容的变更。这通过递增主版本号来实现（X.y.z | X &gt; 1）。它也可以包含次版本和修订级别的变更。递增主版本号时，修订号和次版本号必须重置为 0。（参见 <a class="reference internal" href="overview.html#api-overview"><span class="std std-ref">API 概览</span></a>）</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>破坏性的 API 变更将在迁移指南中列出并说明。</p>
+</div>
+</section>
+</section>
+<section id="deprecated">
+<h2>已弃用<a class="headerlink" href="#deprecated" title="链接到此标题。"></a></h2>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>不稳定 API 可以随时移除，无需经过弃用阶段。API 的弃用和移除会在发布说明的“API Changes”部分公告。</p>
+</div>
+<p>弃用现有 API 的要求如下：</p>
+<ul class="simple">
+<li><p>弃用期（稳定 API）：2 个版本。API 需要在至少两个完整版本中被标记为已弃用。例如，如果某个 API 首次在 4.0 版本中被弃用，那么最早可以在 4.2 版本中移除。在架构工作组认定的特殊情况下，API 可以更早被弃用。</p></li>
+<li><p>弃用时需要做的工作：</p>
+<ul>
+<li><p>标记为已弃用。可以借助编译器本身实现（函数声明使用 <code class="docutils literal notranslate"><span class="pre">__deprecated</span></code>，宏定义使用 <code class="docutils literal notranslate"><span class="pre">__DEPRECATED_MACRO</span></code>），也可以引入一个 Kconfig 选项（通常名称中包含 <code class="docutils literal notranslate"><span class="pre">DEPRECATED</span></code> 一词），启用后将 API 恢复为之前的形式</p></li>
+<li><p>为弃用编写文档</p></li>
+<li><p>在下一个即将发布版本的发布说明的“API Changes”中写明该弃用</p></li>
+<li><p>需要修改使用了该已弃用 API 的代码，移除对该 API 的使用</p></li>
+<li><p>变更必须是原子的，并且可二分查找（bisectable）</p></li>
+<li><p>在跟踪已弃用 API 移除工作的相应版本 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/labels/deprecation_tracker">GitHub issue</a> 中添加一个条目。在本例中，即 4.2 版本对应的 issue。</p></li>
+</ul>
+</li>
+</ul>
+<p>在弃用等待期间，API 处于 <code class="docutils literal notranslate"><span class="pre">deprecated</span></code> 状态。Zephyr 维护者会在 <code class="docutils literal notranslate"><span class="pre">docs.zephyrproject.org</span></code> 上跟踪已弃用 API 的使用情况，并帮助开发者迁移代码。Zephyr 会持续给出警告：</p>
+<ul class="simple">
+<li><p>API 文档会告知用户该 API 已被弃用。</p></li>
+<li><p>在构建时尝试使用已弃用的 API 会在控制台输出警告。</p></li>
+</ul>
+</section>
+<section id="retired">
+<h2>已退役<a class="headerlink" href="#retired" title="链接到此标题。"></a></h2>
+<p>在此阶段，API 被移除。</p>
+<p>目标移除时间为宣布弃用后的 2 个版本。Zephyr 维护者会决定何时真正移除该 API：这取决于有多少开发者已成功从已弃用的 API 迁移，以及移除该 API 的紧迫程度。</p>
+<p>如果可以移除该 API，就会将其移除。维护者会移除相应的文档，并通过常规渠道告知移除情况：发布说明、邮件列表、GitHub issue 和 PR。</p>
+<p>如果还不能移除该 API，维护者会继续支持迁移工作，并更新路线图，力争在下一个版本中移除该 API。</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 8月 14, 2024.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

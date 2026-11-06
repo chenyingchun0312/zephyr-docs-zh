@@ -1,0 +1,544 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Zephyr 信息安全概述 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/security/security-overview.html" />
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../_static/translations.js?v=540d3cec"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="信息安全漏洞报告" href="reporting.html" />
+    <link rel="prev" title="信息安全" href="index.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../project/index.html">项目与治理</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">信息安全</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Zephyr 信息安全概述</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#introduction">简介</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview-and-scope">概述与范围</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#intended-audience">目标读者</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#nomenclature">术语约定</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#security-document-update">信息安全文档的更新</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#current-security-definition">当前的信息安全定义</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#security-functionality">信息安全功能</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#quality-assurance">质量保证</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#execution-protection">执行保护</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#system-level-security-ecosystem">系统级信息安全（生态系统等）</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#secure-development-process">安全开发流程</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#system-architecture">系统架构</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#secure-coding">安全编码</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id9">质量保证</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#release-and-lifecycle-management">发布与生命周期管理</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#secure-design">安全设计</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#security-architecture">信息安全架构</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#security-vulnerability-reporting">信息安全漏洞报告</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#threat-modeling-and-mitigation">威胁建模与缓解</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#vulnerability-analyses">漏洞分析</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#security-certification">信息安全认证</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#generic-certification-process">通用认证流程</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#certification-options">认证选项</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="reporting.html">信息安全漏洞报告</a></li>
+<li class="toctree-l2"><a class="reference internal" href="secure-coding.html">安全编码</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sensor-threat.html">传感器设备威胁模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="hardening-tool.html">加固工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="control-flow-integrity.html">控制流完整性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vulnerabilities.html">漏洞</a></li>
+<li class="toctree-l2"><a class="reference internal" href="standards/index.html">信息安全标准与 Zephyr</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="index.html">信息安全</a> &raquo;</li>
+  
+  <li>Zephyr 信息安全概述</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="zephyr-security-overview">
+<span id="security-overview"></span><h1>Zephyr 信息安全概述<a class="headerlink" href="#zephyr-security-overview" title="链接到此标题。"></a></h1>
+<section id="introduction">
+<h2>简介<a class="headerlink" href="#introduction" title="链接到此标题。"></a></h2>
+<p>本文档概述了 Zephyr 信息安全小组委员会为建立一套明确的信息安全流程所采取的步骤。该流程帮助开发者构建更安全的软件，同时满足信息安全合规要求。本文档介绍了信息安全流程的关键理念，并概述了需要编写哪些文档。在流程实施完毕、所有配套文档编写完成之后，本文档将作为顶层概述和入口。</p>
+<section id="overview-and-scope">
+<h3>概述与范围<a class="headerlink" href="#overview-and-scope" title="链接到此标题。"></a></h3>
+<p>我们首先概述 Zephyr 的开发流程，主要关注信息安全功能。</p>
+<p>后续各节将详细讨论该流程的各个部分。如图 1 所示，主要步骤包括：</p>
+<ol class="arabic simple">
+<li><p><strong>安全开发</strong>：定义系统架构和开发流程，确保遵守相关的编码原则和质量保证程序。</p></li>
+<li><p><strong>安全设计</strong>：定义信息安全规程，并实施措施来执行这些规程。为系统及相关子模块建立信息安全架构，识别威胁，并设计对策。通过代码审查来检查对策实现的正确性以及威胁模型的有效性。最后，应定义一套报告、分类和缓解信息安全问题的流程。</p></li>
+<li><p><strong>信息安全认证</strong>：定义 Zephyr RTOS 中可认证的部分，包括评估对象、其资产以及如何保护这些资产。应确定认证声明，并以适当的证据加以支持。</p></li>
+</ol>
+<figure class="align-default" id="id18">
+<img alt="../_images/security-process-steps.png" src="../_images/security-process-steps.png" />
+<figcaption>
+<p><span class="caption-text">图 1. 信息安全流程步骤</span><a class="headerlink" href="#id18" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+</section>
+<section id="intended-audience">
+<h3>目标读者<a class="headerlink" href="#intended-audience" title="链接到此标题。"></a></h3>
+<p>本文档是 Zephyr 信息安全小组委员会和 Zephyr 技术指导委员会（Technical Steering Committee）制定信息安全流程的指南。它为（信息安全）工程师和架构师提供了 Zephyr 信息安全流程的概述。</p>
+</section>
+<section id="nomenclature">
+<h3>术语约定<a class="headerlink" href="#nomenclature" title="链接到此标题。"></a></h3>
+<p>在本文档中，关键词“MUST”、“MUST NOT”、“REQUIRED”、“SHALL”、“SHALL NOT”、“SHOULD”、“SHOULD NOT”、“RECOMMENDED”、“MAY”和“OPTIONAL”应按照 <a class="reference internal" href="security-citations.html#rfc2119" id="id1"><span>[RFC2119]</span></a> 中的描述进行解释。</p>
+<p>这些词用于定义绝对要求（或禁止）、强烈建议的要求以及真正可选的要求。正如 RFC-2119 所指出的：“这些术语经常用于规定具有信息安全影响的行为。不实现 MUST 或 SHOULD 要求，或者做了规范中规定 MUST NOT 或 SHOULD NOT 做的事情，对信息安全的影响可能非常微妙。文档作者应花时间详细说明不遵循建议或要求所带来的信息安全影响，因为大多数实现者并没有亲历制定该规范时的经验和讨论。”</p>
+</section>
+<section id="security-document-update">
+<h3>信息安全文档的更新<a class="headerlink" href="#security-document-update" title="链接到此标题。"></a></h3>
+<p>本文档是一份持续更新的文档。当识别出新的要求、特性和变更时，将通过以下流程将其加入本文档：</p>
+<ol class="arabic simple">
+<li><p>相关方通过向 Zephyr 文档仓库提交 PR 来提交更改。</p></li>
+<li><p>Zephyr 信息安全小组委员会将审查这些更改，并给出反馈或接受这些更改。</p></li>
+<li><p>这些更改一经接受，就会成为本文档的一部分。</p></li>
+</ol>
+</section>
+</section>
+<section id="current-security-definition">
+<h2>当前的信息安全定义<a class="headerlink" href="#current-security-definition" title="链接到此标题。"></a></h2>
+<p>本节概述 Zephyr RTOS 中安全开发的现状。目前的重点是信息安全功能和代码质量保证，同时也已规划了更多的信息安全特性。</p>
+<p>目前已实施的三项主要信息安全措施是：</p>
+<ul class="simple">
+<li><p><strong>信息安全</strong> <strong>功能</strong>，重点是密码算法和协议。对密码硬件的支持已规划在未来的版本中。Zephyr 的运行时架构是一个单体二进制文件，不需要动态加载器，从而减少了暴露的攻击面。</p></li>
+<li><p><strong>质量保证</strong> 依靠这样一种开发流程来推动：所有代码在提交到公共仓库之前都必须经过审查。此外，复用网络协议栈等经过验证的构建模块可以提升整体质量水平，并保证 API 的稳定。静态代码分析提供了额外的质量检查。</p></li>
+<li><p><strong>执行保护</strong>，包括线程隔离、栈保护和内存保护，从 1.9.0 版本（栈保护）开始已在上游 Zephyr RTOS 中提供。内存保护和线程隔离分别在 1.10.0 版本中为 X86 加入，在 1.11.0 版本中为 ARM 和 ARC 加入。</p></li>
+</ul>
+<p>以下各小节将更详细地讨论这些主题。</p>
+<section id="security-functionality">
+<h3>信息安全功能<a class="headerlink" href="#security-functionality" title="链接到此标题。"></a></h3>
+<p>Zephyr 中的信息安全功能主要依赖于所包含的密码算法及其单体式的系统设计。</p>
+<p>密码特性通过 PSA Crypto 提供，底层实现为 Mbed TLS。应用程序使用 PSA Crypto API，从而以标准化且安全的方式进行密码操作。Mbed TLS 作为 PSA Crypto 的实现，支持多种密码算法，能够满足各种应用需求。</p>
+<p>计划为厂商特定的硬件和软件密码 IP 提供 API，包括以安全访问模块（SAM）、可信平台模块（TPM）和可信执行环境（TEE）等形式提供的安全密钥存储。</p>
+<p>信息安全架构基于单体式设计，Zephyr 内核和所有应用程序被编译成一个静态二进制文件。系统调用以函数调用的方式实现，不需要上下文切换。静态链接消除了动态加载恶意代码的可能。</p>
+<p>更高的版本中还提供了其他保护特性。栈保护机制用于防止栈溢出。此外，应用程序可以利用线程隔离特性，将系统划分为特权执行环境和非特权执行环境。内存保护特性能够对系统资源（内存、外设地址空间等）进行分区，并将资源分配给单个线程或线程组。栈、线程执行级别和内存保护约束在上下文切换时强制执行。</p>
+</section>
+<section id="quality-assurance">
+<h3>质量保证<a class="headerlink" href="#quality-assurance" title="链接到此标题。"></a></h3>
+<p>Zephyr 项目采用自动化的质量保证流程。目标是建立一套包括强制代码审查、特性与问题的管理/跟踪以及静态代码分析的流程。</p>
+<p>代码审查会被记录在案，并在由负责相应子系统的维护者合入仓库之前，通过投票系统强制执行。代码审查的主要目标是：</p>
+<ul class="simple">
+<li><p>验证实现功能的正确性</p></li>
+<li><p>提高所贡献源代码的可读性和可维护性</p></li>
+<li><p>确保正确使用字符串函数和内存函数</p></li>
+<li><p>验证用户输入</p></li>
+<li><p>审查与信息安全相关的代码，查找潜在问题</p></li>
+</ul>
+<p>目前的编码原则主要关注编码风格和约定。功能正确性由构建系统和审查者的经验来保证。特别是对于与信息安全相关的代码，需要制定具体、详细的指南，并与开发者达成一致（参见 <a class="reference internal" href="secure-coding.html#secure-code"><span class="std std-ref">安全编码</span></a>）。</p>
+<p>Zephyr 代码树会定期进行静态代码分析，参见 <a class="reference internal" href="../contribute/guidelines.html#static-analysis"><span class="std std-ref">静态代码分析</span></a>。</p>
+<p>缺陷与问题的跟踪和管理通过 GitHub 进行。“可生存性”（survivability）一词被用来涵盖主动的信息安全工作，例如信息安全问题的分类和管理。被确认为漏洞的问题在 GitHub 信息安全公告中进行管理。</p>
+<p>静态分析发现的问题在被作为非问题关闭之前，应经过更严格的审查（关闭之前，至少需要另一名受过信息安全流程培训的人员同意其为非问题）。</p>
+<p>已成立一个信息安全小组委员会，负责更详细地制定信息安全流程；本文档就是该流程的一部分。</p>
+</section>
+<section id="execution-protection">
+<h3>执行保护<a class="headerlink" href="#execution-protection" title="链接到此标题。"></a></h3>
+<p>Zephyr 支持执行保护，可分为以下几项任务：</p>
+<ul class="simple">
+<li><p><strong>内存隔离</strong>：内存将被划分为若干区域，并根据该内存区域的所有者分配属性。线程只能访问由其控制的区域。</p></li>
+<li><p><strong>栈保护</strong>：栈保护区（stack guard）将提供检测和捕获栈溢出的机制。各个线程应只能访问自己的栈。</p></li>
+<li><p><strong>线程隔离</strong>：各个线程应只能访问自己的内存资源。线程被调度时，只有该线程拥有的内存资源可以访问。程序流保护和其他防篡改措施等主题目前不在范围之内。</p></li>
+</ul>
+</section>
+<section id="system-level-security-ecosystem">
+<h3>系统级信息安全（生态系统等）<a class="headerlink" href="#system-level-security-ecosystem" title="链接到此标题。"></a></h3>
+<p>系统级信息安全涵盖多种类别，例如：</p>
+<ul class="simple">
+<li><p>安全/可信启动</p></li>
+<li><p>空中（OTA）更新</p></li>
+<li><p>外部通信</p></li>
+<li><p>设备认证</p></li>
+<li><p>板载资源的访问控制</p>
+<ul>
+<li><p>Flash 更新</p></li>
+<li><p>安全存储</p></li>
+<li><p>外设</p></li>
+</ul>
+</li>
+<li><p>信任根</p></li>
+<li><p>减小攻击面</p></li>
+</ul>
+<p>其中一些类别相互关联，需要多个部分同时到位，才能为应用程序构成完整的解决方案。</p>
+</section>
+</section>
+<section id="secure-development-process">
+<h2>安全开发流程<a class="headerlink" href="#secure-development-process" title="链接到此标题。"></a></h2>
+<p>安全代码的开发应遵守一定的准则。其中包括编码指南和开发流程，大致可分为与软件质量相关和与软件信息安全相关的两类。此外，应编写一份系统架构文档，并随着后续开发保持更新。</p>
+<section id="system-architecture">
+<h3>系统架构<a class="headerlink" href="#system-architecture" title="链接到此标题。"></a></h3>
+<figure class="align-default" id="id19">
+<img alt="../_images/security-zephyr-system-architecture.png" src="../_images/security-zephyr-system-architecture.png" />
+<figcaption>
+<p><span class="caption-text">图 2：Zephyr 系统架构</span><a class="headerlink" href="#id19" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<p>图 2 给出了 Zephyr 系统架构的高层示意图。它将架构分为操作系统部分（<em>内核 + 操作系统服务</em>）和用户特定部分（<em>应用服务</em>）。操作系统部分本身包含底层的平台特定驱动，以及 I/O API、文件系统、内核特定功能和密码库的通用实现。</p>
+<p>应编写一份描述系统架构和设计选择的文档，并随着后续开发保持更新。该文档应包括 Zephyr 操作系统的基础架构以及重要子模块的概述。对于每个模块，都应编写一份专门的架构文档，并对照实现进行评估。这些文档应作为新开发者的入门资料，以及信息安全架构的基础。详细信息请参阅 <a class="reference internal" href="../services/index.html#os-services"><span class="std std-ref">Zephyr 子系统文档</span></a>。</p>
+</section>
+<section id="secure-coding">
+<h3>安全编码<a class="headerlink" href="#secure-coding" title="链接到此标题。"></a></h3>
+<p>要将 Zephyr 这样的开放软件系统设计得安全，就需要遵守一套明确的设计标准。这些标准收录在 Zephyr 项目文档中，具体见 <a class="reference internal" href="secure-coding.html#secure-code"><span class="std std-ref">安全编码</span></a> 一节。<a class="reference internal" href="security-citations.html#salt75" id="id2"><span>[SALT75]</span></a> 定义了以下被广泛接受的保护机制原则，以防止违反信息安全的行为并限制其影响：</p>
+<ul class="simple">
+<li><p><strong>开放设计</strong>（Open design）这一设计原则体现了这样一条格言：在任何被广泛使用的系统上，保护机制都无法保密。因此，不应依赖保密的、定制的信息安全措施，而应使用公认的密码算法和成熟的密码库。</p></li>
+<li><p><strong>机制经济性</strong>（Economy of mechanism）规定，系统的底层设计应尽可能简单、精小。在 Zephyr 项目中，这可以通过模块化代码 <a class="reference internal" href="security-citations.html#paul09" id="id3"><span>[PAUL09]</span></a> 和抽象的 API 等方式来实现。</p></li>
+<li><p><strong>完全仲裁</strong>（Complete mediation）要求对每个对象和进程的每次访问都必须先经过认证。应尽可能避免使用存储访问条件的机制。</p></li>
+<li><p><strong>失效安全默认值</strong>（Fail-safe defaults）规定，访问默认是受限的，只有在系统保护方案所定义的特定条件下（例如认证成功之后）才被允许。此外，服务的默认设置应以提供最高信息安全的方式来选择。这对应于“默认安全”（Secure by Default）范式 <a class="reference internal" href="security-citations.html#ms12" id="id4"><span>[MS12]</span></a>。</p></li>
+<li><p><strong>权限分离</strong>（Separation of privilege）原则是指，必须满足两个或更多条件才能授予访问权限。在 Zephyr 项目中，这可以包括拆分密钥 <a class="reference internal" href="security-citations.html#paul09" id="id5"><span>[PAUL09]</span></a>。</p></li>
+<li><p><strong>最小权限</strong>（Least privilege）描述了这样一种访问模型：每个用户、程序和线程都只应拥有执行其任务所需的、系统中尽可能小的权限子集。这种正向信息安全模型旨在最大限度地减小系统的攻击面。</p></li>
+<li><p><strong>最少公共机制</strong>（Least common mechanism）规定，如果并非绝对必要，多个用户或进程共用的机制不应共享。<a class="reference internal" href="security-citations.html#salt75" id="id6"><span>[SALT75]</span></a> 中给出的例子是：某个函数应实现为由每个用户各自执行的共享库，而不是实现为由所有用户共享的特权（supervisor）过程。</p></li>
+<li><p><strong>心理可接受性</strong>（Psychological acceptability）要求信息安全特性易于开发者使用，以确保这些特性得到使用并被正确应用。</p></li>
+</ul>
+<p>除了这些通用原则之外，以下几点专门针对安全 RTOS 的开发：</p>
+<ul class="simple">
+<li><p><strong>互补安全/纵深防御</strong>（Complementary Security/Defense in Depth）：不要依赖单一的威胁缓解手段。在互补安全方法中，部分威胁缓解由底层平台完成。如果平台不提供此类机制，或这些机制不可信，则应采用纵深防御 <a class="reference internal" href="security-citations.html#ms12" id="id7"><span>[MS12]</span></a> 范式。</p></li>
+<li><p><strong>较少使用的服务默认关闭</strong>：为了减少系统暴露于潜在攻击的程度，仅很少使用的特性或服务不应默认启用（<a class="reference internal" href="security-citations.html#ms12" id="id8"><span>[MS12]</span></a> 中给出的阈值为 80%）。在 Zephyr 项目中，这可以通过配置管理来实现。每项功能和每个模块都应表示为一个配置选项，并且需要显式启用。这样，特定用例不需要的所有特性、协议和驱动都可以被禁用。如果启用了底层选项和 API 但应用程序并未使用，应通知用户。</p></li>
+<li><p><strong>变更管理</strong>：为了保证对系统所做更改的可追溯性，每项更改都应遵循规定的流程，包括变更请求、影响分析、批准、实施和验证阶段。每个阶段都应提供相应的文档。所有提交都应关联到问题跟踪系统中的缺陷报告或变更请求。没有有效关联的提交应被拒绝。</p></li>
+</ul>
+<p>应基于这些设计原则和公认的最佳实践，编写并发布一份安全开发指南，并将其落实到 Zephyr 开发流程中。更多细节见 <a class="reference internal" href="#secure-design">Secure Design</a> 一节。</p>
+</section>
+<section id="id9">
+<h3>质量保证<a class="headerlink" href="#id9" title="链接到此标题。"></a></h3>
+<p>质量保证部分包括以下准则：</p>
+<ul class="simple">
+<li><p><strong>遵守编码约定</strong>，包括编码风格以及模块、函数、变量等的命名方案。这可以提高 Zephyr 代码库的可读性，并使代码审查更容易。这些编码约定在代码合入之前由自动化脚本强制检查。</p></li>
+<li><p><strong>遵守部署指南</strong>，以确保版本发布的一致性，提供记录完善的特性集和可跟踪的信息安全问题列表。</p></li>
+<li><p><strong>代码审查</strong> 用于确保代码库功能上的正确性，每项提议的代码更改在合入之前都应经过代码审查。代码审查应至少由一名独立于代码更改作者的审查者进行。这些审查由子系统维护者和开发者在功能层面进行，应与 <a class="reference internal" href="#secure-design">Secure Design</a> 一节所述的信息安全审查区分开来。更多信息请参阅 <a class="reference internal" href="../project/index.html#development-model"><span class="std std-ref">项目与治理</span></a> 文档。</p></li>
+<li><p><strong>静态代码分析</strong> 工具能够高效地发现大型代码库中的常见编码错误。所有代码在合并到主仓库之前都应使用适当的工具进行分析。这不是针对每个单独的提交，而是按一定的时间间隔在特定分支上运行。每次发布之前，必须消除所有发现的问题，或对可能的误报给出豁免。豁免应集中记录，并以注释的形式写入源代码本身。记录内容应包括所使用的工具及其版本、分析日期、分支和父修订版本号、豁免理由、相应代码的作者以及豁免的批准者。至少应在主发布分支和信息安全分支上运行该分析。应确保每个版本在静态代码分析方面的问题数为零（含豁免）。更多信息请参阅 <a class="reference internal" href="../project/index.html#development-model"><span class="std std-ref">项目与治理</span></a> 文档。</p></li>
+<li><p><strong>复杂度分析</strong> 应作为开发流程的一部分进行，并评估圈复杂度等指标。主要目标是使代码尽可能简单。</p></li>
+<li><p><strong>自动化</strong>：审查流程和编码规则符合性检查是提交前检查中的强制部分。为了确保一致地执行，应将它们作为提交前流程的一部分实现自动化。在合并来自子系统的大量代码之前，除了审查流程和编码规则符合性检查之外，还必须运行全部静态代码分析并解决发现的问题。</p></li>
+</ul>
+</section>
+<section id="release-and-lifecycle-management">
+<h3>发布与生命周期管理<a class="headerlink" href="#release-and-lifecycle-management" title="链接到此标题。"></a></h3>
+<p>生命周期管理包含以下几个方面：</p>
+<ul class="simple">
+<li><p><strong>设备管理</strong> 涵盖对已部署的、基于 Zephyr 的设备的操作系统和/或信息安全相关子系统进行更新的能力。</p></li>
+<li><p><strong>生命周期管理</strong>：应定义系统阶段并形成文档，同时在系统状态图中给出各阶段之间的转换。出于信息安全考虑，这应包括在检测到攻击时锁定设备，以及在生命周期结束时终止设备。</p></li>
+<li><p><strong>发布管理</strong> 描述了定义发布周期、记录各个版本，以及维护已知漏洞和缓解措施记录的过程。特别是出于认证目的，需要确保发布版本的完整性，使以后的任何篡改（例如植入后门等）都能被轻松发现。</p></li>
+<li><p><strong>权限管理与保密协议</strong>：如果所选择的认证有此要求，则需要通过适当的权限管理（例如独立的源代码仓库）以及相关各方之间的保密协议（NDA）来确保系统的机密性和完整性。如果仓库由多方共享，应采取措施确保不会有恶意代码被合入。</p></li>
+</ul>
+<p>应评估这些要点对 Zephyr 项目所采用的开发流程的影响。</p>
+</section>
+</section>
+<section id="secure-design">
+<h2>安全设计<a class="headerlink" href="#secure-design" title="链接到此标题。"></a></h2>
+<p>为了获得可认证的系统或产品，需要明确定义信息安全流程，并对其执行情况进行监督和推动。该流程涵盖信息安全相关模块开发的所有阶段，以及对已报告的信息安全问题的管理。此外，需要针对当前已知和未来可能出现的攻击途径建立威胁模型，调查其对系统的影响并加以缓解。详细信息请参阅 Zephyr 项目文档中的 <a class="reference internal" href="secure-coding.html#secure-code"><span class="std std-ref">安全编码</span></a>。</p>
+<p>软件信息安全流程包括：</p>
+<ul class="simple">
+<li><p><strong>遵守安全开发编码规范</strong> 是强制性的，以避免个别组件破坏系统的信息安全，并尽量减少各个模块的漏洞。虽然这可以部分通过自动化测试实现，但对于信息安全关键模块，仍然不可避免地需要人工检查信息安全特性（例如对策）的实现是否正确。</p></li>
+<li><p><strong>信息安全审查</strong> 应由信息安全架构师在每个以信息安全为目标的版本发布之前，以及每次 Zephyr 项目中的信息安全相关模块发生更改时进行。该过程包括验证已实施的信息安全措施的有效性、检查是否遵循全局信息安全策略和架构，以及在需要时为信息安全认证审计做准备。</p></li>
+<li><p><strong>信息安全问题管理</strong> 涵盖对潜在系统漏洞的评估及其缓解，如 <a class="reference internal" href="reporting.html#reporting"><span class="std std-ref">信息安全问题管理</span></a> 中所述。</p></li>
+</ul>
+<p>这些准则和任务需要集成到安全软件的开发流程中，并应尽可能实现自动化。在系统层面，以及对于 Zephyr 安全分支中的每个信息安全相关模块，都应指定一名直接负责的信息安全架构师来指导安全开发流程。</p>
+<section id="security-architecture">
+<h3>信息安全架构<a class="headerlink" href="#security-architecture" title="链接到此标题。"></a></h3>
+<p>上述通用指南应辅以系统层面和模块层面的信息安全架构设计。高层考虑因素包括：</p>
+<ul class="simple">
+<li><p>识别 <strong>信息安全和合规要求</strong></p></li>
+<li><p><strong>信息安全功能</strong>，例如在适用时使用密码函数</p></li>
+<li><p>针对已知攻击途径设计 <strong>对策</strong></p></li>
+<li><p>记录与信息安全相关的 <strong>可审计事件</strong></p></li>
+<li><p>支持 <strong>可信平台模块（TPM）</strong> 和 <strong>可信执行环境（TEE）</strong></p></li>
+<li><p>支持对使用 Zephyr 的设备进行 <strong>现场</strong> <strong>更新</strong> 的机制</p></li>
+<li><p>任务调度器与隔离</p></li>
+</ul>
+<p>信息安全架构的开发基于从整体系统架构的结构概览中得出的资产。在此基础上，各个步骤包括：</p>
+<ol class="arabic simple">
+<li><p><strong>识别资产</strong>，例如用户数据、认证和加密密钥、密钥生成数据（从 RNG 获得）以及与信息安全相关的状态信息。</p></li>
+<li><p><strong>识别</strong> 针对这些资产的 <strong>威胁</strong>，例如破坏机密性、篡改用户数据等。</p></li>
+<li><p><strong>定义</strong> 有关资产信息安全和保护的 <strong>要求</strong>，例如对策或内存保护方案。</p></li>
+</ol>
+<p>信息安全架构应与现有的系统架构和实现相协调，以找出潜在的偏差并缓解现有的弱点。集成到 Zephyr 项目安全分支中的新开发子模块，应各自提供描述其信息安全架构的文档。此外，还应考虑并记录它们对系统级信息安全的影响。</p>
+</section>
+<section id="security-vulnerability-reporting">
+<h3>信息安全漏洞报告<a class="headerlink" href="#security-vulnerability-reporting" title="链接到此标题。"></a></h3>
+<p>有关报告信息安全漏洞的信息，请参见 <a class="reference internal" href="reporting.html#reporting"><span class="std std-ref">信息安全漏洞报告</span></a>。</p>
+</section>
+<section id="threat-modeling-and-mitigation">
+<h3>威胁建模与缓解<a class="headerlink" href="#threat-modeling-and-mitigation" title="链接到此标题。"></a></h3>
+<p>要制定准确的信息安全架构，并满足大多数认证方案的要求，就需要对 Zephyr RTOS 面临的信息安全威胁进行建模。该过程的第一步是定义系统要保护的资产。下一步是对系统如何保护这些资产以及这些资产面临哪些威胁进行建模。识别出威胁后，创建相应的威胁模型。该模型包含资产和系统的漏洞，以及对这些漏洞可能被如何利用的描述。此外，还需要评估对资产、资产所在模块以及整个系统的影响。然后，在模块和系统的信息安全架构中考虑该威胁模型，并定义适当的对策来缓解威胁或限制漏洞利用的影响。</p>
+<p>简而言之，威胁建模过程可以分为以下步骤（改编自 <a class="reference internal" href="security-citations.html#owasp" id="id10"><span>[OWASP]</span></a>）：</p>
+<ol class="arabic simple">
+<li><p>定义资产</p></li>
+<li><p>分解应用程序，并创建相应的数据流图（DFD）</p></li>
+<li><p>使用 <a class="reference internal" href="security-citations.html#stride09" id="id11"><span>[STRIDE09]</span></a> 和 <a class="reference internal" href="security-citations.html#cvss" id="id12"><span>[CVSS]</span></a> 方法识别威胁并进行分类</p></li>
+<li><p>确定对策和其他缓解方法</p></li>
+</ol>
+<p>该过程应在模块的设计阶段进行，并在模块或系统架构发生重大变化之前进行。此外，每当发现新的漏洞或漏洞利用时，都应创建新的模型或更新现有模型。在信息安全审查期间，负责的信息安全架构师应评估威胁模型和缓解技术。</p>
+<p>应根据这些威胁模型和缓解技术推导出测试，以证明对策的有效性。这些测试应集成到持续集成工作流中，以确保信息安全不会因回归而受损。</p>
+</section>
+<section id="vulnerability-analyses">
+<h3>漏洞分析<a class="headerlink" href="#vulnerability-analyses" title="链接到此标题。"></a></h3>
+<p>为了找出软件实现中的薄弱环节，应进行漏洞分析（VA）。尤其值得关注的是对密码算法、关键操作系统任务和连接协议的调查。</p>
+<p>在纯软件层面，这包括：</p>
+<ul class="simple">
+<li><p>在特定硬件平台上对 RTOS 进行 <strong>渗透测试</strong>，即把相应的 Zephyr 操作系统配置和硬件作为一个整体系统进行测试。</p></li>
+<li><p>应考虑 <strong>侧信道攻击</strong>（时间恒定性、功耗恒定性等）。例如，需要确保密码算法和模块的 <strong>时间恒定性</strong>，以减小攻击面。这既适用于软件实现，也适用于使用密码硬件的情况。</p></li>
+<li><p>应对公开的 API 和协议进行 <strong>模糊测试</strong>。</p></li>
+</ul>
+<p>上面给出的列表主要用于举例说明。对于每个模块以及完整的 Zephyr 系统（一般是在特定硬件平台上），都应制定并执行合适的 VA 计划。这些分析的结果应纳入信息安全问题管理流程中考虑，从中获得的经验应整理成指南，并纳入安全编码指南。</p>
+<p>如果可能（例如模糊分析），这些测试应集成到持续集成流程中。</p>
+</section>
+</section>
+<section id="security-certification">
+<h2>信息安全认证<a class="headerlink" href="#security-certification" title="链接到此标题。"></a></h2>
+<p>建立 Zephyr RTOS 安全分支的目标之一，是构建一个可认证的系统或其可认证的子模块。认证范围和认证方案尚未确定。但是，许多认证（例如通用准则（Common Criteria）<a class="reference internal" href="security-citations.html#ccitse12" id="id13"><span>[CCITSE12]</span></a>）都要求提供证据，证明评估声明确实得到满足，因此下面概述一个通用的认证流程。该流程需要根据最终选定的认证方案和评估级别进一步细化。</p>
+<section id="generic-certification-process">
+<h3>通用认证流程<a class="headerlink" href="#generic-certification-process" title="链接到此标题。"></a></h3>
+<p>一般来说，进行认证或预认证（参见 <a class="reference internal" href="security-citations.html#micr16" id="id14"><span>[MICR16]</span></a>）的步骤如下：</p>
+<ol class="arabic simple">
+<li><p><strong>定义</strong> Zephyr RTOS 中要保护的 <strong>资产</strong>。可能的候选资产包括机密信息（例如密码密钥）、用户数据（例如通信日志），以及厂商或制造商的知识产权。</p></li>
+<li><p>建立 <strong>威胁模型</strong> 和 <strong>信息安全架构</strong>，保护资产免遭针对系统漏洞的利用。由于完整的威胁模型涵盖包括硬件平台在内的整个产品，因此可以采用拆分模型来实现：其中包含一个经过预认证的 Zephyr 安全分支，厂商可以基于它来认证自己基于 Zephyr 的产品。</p></li>
+<li><p>制定 <strong>评估对象</strong>，其中包括关于待评估和认证资产信息安全的 <strong>认证声明</strong>，以及关于运行条件的假设。</p></li>
+<li><p>提供声明得到满足的 <strong>证明</strong>。这包括信息安全开发流程等方面的一致文档。</p></li>
+</ol>
+<p>前面各节也部分涉及了这些步骤。与这些章节不同的是，认证流程只需要考虑认证所涵盖的组件。例如，信息安全架构考虑的是系统层面的资产，可能包含与认证无关的内容。</p>
+</section>
+<section id="certification-options">
+<h3>认证选项<a class="headerlink" href="#certification-options" title="链接到此标题。"></a></h3>
+<p>对于信息安全认证本身，可以采取以下几种选项：</p>
+<ol class="arabic simple">
+<li><p><strong>将 Zephyr 作为纯软件系统进行抽象预认证</strong>：该选项需要对底层硬件平台以及运行在 Zephyr 之上的最终应用程序作出假设。如果硬件和应用程序满足这些假设，就可以更容易地获得完整认证。这是最灵活的方法，但给产品厂商带来的负担最大。</p></li>
+<li><p><strong>在特定硬件平台上认证 Zephyr，而不针对特定应用程序</strong>：该方案描述的是构建一个运行 Zephyr RTOS 的安全平台。硬件制造商在对应用程序作出明确假设的前提下对平台进行认证。如果这些假设得到满足，就可以用很少的工作量对最终产品进行认证。</p></li>
+<li><p><strong>认证实际产品</strong>：在这种情况下，要认证的是一个完整的产品，包括特定的硬件、Zephyr RTOS 和应用程序。</p></li>
+</ol>
+<p>在这三种情况下，都需要确定认证方案（例如 FIPS 140-2 <a class="reference internal" href="security-citations.html#nist02" id="id15"><span>[NIST02]</span></a> 或通用准则 <a class="reference internal" href="security-citations.html#ccitse12" id="id16"><span>[CCITSE12]</span></a>）、认证范围（主线 Zephyr、安全分支或特定模块）以及认证/保证级别。</p>
+<p>对于部分认证（选项 1 和 2），认证需要对硬件和/或软件作出假设。这些假设可以包括 <a class="reference internal" href="security-citations.html#ghs10" id="id17"><span>[GHS10]</span></a>：</p>
+<ul class="simple">
+<li><p>硬件平台及其环境具有 <strong>适当的物理安全</strong>。</p></li>
+<li><p>硬件平台本身及所有相连设备上的 <strong>存储信道和时序信道受到充分保护</strong>。（未提及远程连接。）</p></li>
+<li><p>设备上只运行 <strong>可信/有保证的应用程序</strong>。</p></li>
+<li><p>设备及其软件栈由 <strong>经过适当培训、值得信任且无恶意意图的人员</strong> 进行配置和操作。</p></li>
+</ul>
+<p>这些假设应作为信息安全声明和评估对象文档的一部分。</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 5月 12, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

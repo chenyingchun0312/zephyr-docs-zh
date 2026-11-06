@@ -1,0 +1,438 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>生成覆盖率报告 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/develop/test/coverage.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="BabbleSim" href="bsim.html" />
+    <link rel="prev" title="基准测试框架" href="benchmark.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">使用 Zephyr 进行开发</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/index.html">入门指南</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beyond-GSG.html">入门指南之外</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../env_vars.html">环境变量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../application/index.html">应用程序开发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../debug/index.html">调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/index.html">API 状态与准则</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../languages/index.html">编程语言支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../optimizations/index.html">优化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../flash_debug/index.html">烧录与硬件调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html">模块（外部项目）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../west/index.html">West（Zephyr 的元工具）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../twister/index.html">测试运行器（Twister）</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">测试</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="ztest.html">测试框架</a></li>
+<li class="toctree-l3"><a class="reference internal" href="benchmark.html">基准测试框架</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">生成覆盖率报告</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#test-coverage-reports-in-embedded-devices-or-qemu">嵌入式设备或 QEMU 中的测试覆盖率报告</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#overview">概述</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#details">详细说明</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#steps-to-generate-code-coverage-reports">生成代码覆盖率报告的步骤</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#coverage-reports-using-the-posix-architecture">使用 POSIX 架构生成覆盖率报告</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#coverage-reports-using-twister">使用 Twister 生成覆盖率报告</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#per-test-coverage-matrix">按测试统计的覆盖率矩阵</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#visualizing-the-matrix">可视化矩阵</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#using-different-toolchains">使用不同的工具链</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="bsim.html">BabbleSim</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ci_test_plan.html">CI 测试计划选择器（test_plan_v2）</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../sca/index.html">静态代码分析（SCA）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../toolchains/index.html">工具链</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tools/index.html">工具与 IDE</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">使用 Zephyr 进行开发</a> &raquo;</li>
+  
+     <li><a href="index.html">测试</a> &raquo;</li>
+  
+  <li>生成覆盖率报告</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="generating-coverage-reports">
+<span id="coverage"></span><h1>生成覆盖率报告<a class="headerlink" href="#generating-coverage-reports" title="链接到此标题。"></a></h1>
+<p>在 Zephyr 中，可以生成代码覆盖率报告，分析给定的测试或应用程序覆盖了代码的哪些部分。</p>
+<p>有两种方式可以做到：</p>
+<ul class="simple">
+<li><p>在真实的嵌入式目标或 QEMU 中，使用 Zephyr 的 gcov 集成</p></li>
+<li><p>直接在主机上，将应用程序编译为面向 POSIX 架构的程序</p></li>
+</ul>
+<section id="test-coverage-reports-in-embedded-devices-or-qemu">
+<h2>嵌入式设备或 QEMU 中的测试覆盖率报告<a class="headerlink" href="#test-coverage-reports-in-embedded-devices-or-qemu" title="链接到此标题。"></a></h2>
+<section id="overview">
+<h3>概述<a class="headerlink" href="#overview" title="链接到此标题。"></a></h3>
+<p><a class="reference external" href="https://gcc.gnu.org/onlinedocs/gcc/Gcov.html">GCC GCOV</a> 是一个与 GCC 编译器配合使用的测试覆盖率程序，用于分析程序并生成测试覆盖率报告，帮助你编写更高效、运行更快的代码，并发现未经测试的代码路径</p>
+<p>在 Zephyr 中，gcov 会在应用程序运行期间将覆盖率剖析数据收集到 RAM 中（而不是文件系统中）。gcov 的收集和报告支持受到可用 RAM 大小的限制，因此目前只在嵌入式目标的 QEMU 仿真中启用。</p>
+</section>
+<section id="details">
+<h3>详细说明<a class="headerlink" href="#details" title="链接到此标题。"></a></h3>
+<p>启用此功能分为两部分：一是为设备启用覆盖率，二是在测试应用程序中启用覆盖率。如前所述，使用 gcov 进行代码覆盖率统计取决于可用的 RAM。因此，为设备启用覆盖率时，要确保设备有足够的 RAM。例如，frdm_k64f 这样的小型设备可以运行简单的测试应用程序，但启用覆盖率后，消耗更多 RAM 的复杂测试用例会崩溃。</p>
+<p>要为设备启用覆盖率，请在 Kconfig.board 文件中 select <a class="reference internal" href="../../kconfig.html#CONFIG_HAS_COVERAGE_SUPPORT" title="CONFIG_HAS_COVERAGE_SUPPORT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HAS_COVERAGE_SUPPORT</span></code></a>。</p>
+<p>要报告特定测试应用程序的覆盖率，请设置 <a class="reference internal" href="../../kconfig.html#CONFIG_COVERAGE" title="CONFIG_COVERAGE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_COVERAGE</span></code></a>。</p>
+</section>
+<section id="steps-to-generate-code-coverage-reports">
+<h3>生成代码覆盖率报告的步骤<a class="headerlink" href="#steps-to-generate-code-coverage-reports" title="链接到此标题。"></a></h3>
+<p>以下步骤会为单个应用程序生成 HTML 覆盖率报告。</p>
+<ol class="arabic">
+<li><p>使用 CONFIG_COVERAGE=y 构建代码。</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>mps2/an385<span class="w"> </span>--<span class="w"> </span>-DCONFIG_COVERAGE<span class="o">=</span>y<span class="w"> </span>-DCONFIG_COVERAGE_DUMP<span class="o">=</span>y
+</pre></div>
+</div>
+</li>
+<li><p>将模拟器的输出捕获到日志文件中。在覆盖率转储打印完成后，可能需要按 <kbd class="kbd docutils literal notranslate">Ctrl</kbd>-<kbd class="kbd docutils literal notranslate">A</kbd> <kbd class="kbd docutils literal notranslate">X</kbd> 终止模拟器，才能完成这一步：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>ninja<span class="w"> </span>-Cbuild<span class="w"> </span>run<span class="w"> </span><span class="p">|</span><span class="w"> </span>tee<span class="w"> </span>log.log
+</pre></div>
+</div>
+</li>
+<li><p>从保存的日志文件生成 gcov 的 <code class="docutils literal notranslate"><span class="pre">.gcda</span></code> 和 <code class="docutils literal notranslate"><span class="pre">.gcno</span></code> 文件：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>python3<span class="w"> </span>scripts/gen_gcov_files.py<span class="w"> </span>-i<span class="w"> </span>log.log
+</pre></div>
+</div>
+</li>
+<li><p>找到 SDK 中的 gcov 二进制文件。之后调用 <code class="docutils literal notranslate"><span class="pre">gcovr</span></code> 时，需要传入相应架构的 gcov 二进制文件路径：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>find<span class="w"> </span><span class="nv">$ZEPHYR_SDK_INSTALL_DIR</span><span class="w"> </span>-iregex<span class="w"> </span><span class="s2">".*gcov"</span>
+</pre></div>
+</div>
+</li>
+<li><p>为报告创建输出目录：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>mkdir<span class="w"> </span>-p<span class="w"> </span>coverage-report
+</pre></div>
+</div>
+</li>
+<li><p>运行 <code class="docutils literal notranslate"><span class="pre">gcovr</span></code> 获取报告：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>gcovr<span class="w"> </span>-r<span class="w"> </span><span class="nv">$ZEPHYR_BASE</span><span class="w"> </span>.<span class="w"> </span>--html<span class="w"> </span>-o<span class="w"> </span>coverage-report/coverage.html<span class="w"> </span>--html-details<span class="w"> </span>--gcov-executable<span class="w"> </span>&lt;gcov_path_in_SDK&gt;
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+</section>
+<section id="coverage-reports-using-the-posix-architecture">
+<span id="coverage-posix"></span><h2>使用 POSIX 架构生成覆盖率报告<a class="headerlink" href="#coverage-reports-using-the-posix-architecture" title="链接到此标题。"></a></h2>
+<p>为 POSIX 架构编译时，会使用主机的原生工具构建一个原生可执行文件，其中包含你的应用程序、Zephyr OS 以及一些基本的硬件仿真。</p>
+<p>这意味着你可以使用开发其他桌面应用程序时所用的相同工具。</p>
+<p>要使用 <code class="docutils literal notranslate"><span class="pre">gcc</span></code> 的 <a class="reference external" href="https://gcc.gnu.org/onlinedocs/gcc/Gcov.html">gcov</a> 构建应用程序，只需在编译前设置 <a class="reference internal" href="../../kconfig.html#CONFIG_COVERAGE" title="CONFIG_COVERAGE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_COVERAGE</span></code></a>。运行应用程序时，<code class="docutils literal notranslate"><span class="pre">gcov</span></code> 覆盖率数据会被转储到相应的 <code class="docutils literal notranslate"><span class="pre">gcda</span></code> 和 <code class="docutils literal notranslate"><span class="pre">gcno</span></code> 文件中。你可以使用自己喜欢的工具对其进行后处理。例如：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>native_sim<span class="w"> </span>samples/hello_world<span class="w"> </span>--<span class="w"> </span>-DCONFIG_COVERAGE<span class="o">=</span>y
+</pre></div>
+</div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./build/zephyr/zephyr.exe
+<span class="gp"># </span>Press<span class="w"> </span>Ctrl+C<span class="w"> </span>to<span class="w"> </span><span class="nb">exit</span>
+<span class="gp">$ </span>lcov<span class="w"> </span>--capture<span class="w"> </span>--directory<span class="w"> </span>./<span class="w"> </span>--output-file<span class="w"> </span>lcov.info<span class="w"> </span>-q<span class="w"> </span>--rc<span class="w"> </span><span class="nv">lcov_branch_coverage</span><span class="o">=</span><span class="m">1</span>
+<span class="gp">$ </span>genhtml<span class="w"> </span>lcov.info<span class="w"> </span>--output-directory<span class="w"> </span>lcov_html<span class="w"> </span>-q<span class="w"> </span>--ignore-errors<span class="w"> </span><span class="nb">source</span><span class="w"> </span>--branch-coverage<span class="w"> </span>--highlight<span class="w"> </span>--legend
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>需要支持中间文本格式的较新版本 lcov（至少 1.14）。较新的 Linux 发行版中提供了这样的软件包。</p>
+<p>也可以使用 gcovr（至少 4.2 版本）。</p>
+</div>
+</section>
+<section id="coverage-reports-using-twister">
+<h2>使用 Twister 生成覆盖率报告<a class="headerlink" href="#coverage-reports-using-twister" title="链接到此标题。"></a></h2>
+<p>Zephyr 的 <a class="reference internal" href="../twister/index.html#twister-script"><span class="std std-ref">twister 脚本</span></a> 可以根据已执行的测试自动生成覆盖率报告，只需使用 <code class="docutils literal notranslate"><span class="pre">--coverage</span></code> 命令行选项调用它即可。</p>
+<p>例如，可以调用：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>west<span class="w"> </span>twister<span class="w"> </span>--coverage<span class="w"> </span>-p<span class="w"> </span>qemu_x86<span class="w"> </span>-T<span class="w"> </span>tests/kernel
+</pre></div>
+</div>
+<p>或者：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>west<span class="w"> </span>twister<span class="w"> </span>--coverage<span class="w"> </span>-p<span class="w"> </span>native_sim<span class="w"> </span>-T<span class="w"> </span>tests/bluetooth
+</pre></div>
+</div>
+<p>这会生成 <code class="docutils literal notranslate"><span class="pre">twister-out/coverage/index.html</span></code> 报告，以及由 <code class="docutils literal notranslate"><span class="pre">gcovr</span></code> 工具收集到 <code class="docutils literal notranslate"><span class="pre">twister-out/coverage.json</span></code> 中的覆盖率数据。</p>
+<p>可以通过 <code class="docutils literal notranslate"><span class="pre">--coverage-tool</span></code> 和 <code class="docutils literal notranslate"><span class="pre">--coverage-formats</span></code> 命令行选项选择其他报告。</p>
+<p>要生成同时包含 Zephyr 源码和位于 Zephyr 仓库之外的应用程序代码（参见 <a class="reference internal" href="../application/index.html#zephyr-app-types"><span class="std std-ref">应用程序类型</span></a>）的代码覆盖率报告，请在项目目录中使用 <code class="docutils literal notranslate"><span class="pre">--coverage-basedir</span> <span class="pre">$ZEPHYR_BASE</span></code> 命令行选项调用 Twister，例如：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>west<span class="w"> </span>twister<span class="w"> </span>--coverage<span class="w"> </span>-p<span class="w"> </span>native_sim<span class="w"> </span>--coverage-basedir<span class="w"> </span><span class="nv">$ZEPHYR_BASE</span><span class="w"> </span>-T<span class="w"> </span>your_project_dir
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>默认情况下，Twister 调用 <code class="docutils literal notranslate"><span class="pre">gcovr</span></code> 工具，该工具在过滤源文件时假定所有路径都是 <a class="reference external" href="https://github.com/gcovr/gcovr/blob/main/doc/source/guide/filters.rst#filters-for-symlinks">已解析所有符号链接</a> 的真实路径。因此，如果开发环境中有包含符号链接的目录，为了避免 <code class="docutils literal notranslate"><span class="pre">gcovr</span></code> 报告不完整，要么让 <a class="reference internal" href="../application/index.html#important-build-vars"><span class="std std-ref">ZEPHYR_BASE</span></a> 包含真实路径，要么添加 Twister 命令行选项 <code class="docutils literal notranslate"><span class="pre">--coverage-tool</span> <span class="pre">lcov</span></code>，改用 <code class="docutils literal notranslate"><span class="pre">lcov</span></code> 工具代替 <code class="docutils literal notranslate"><span class="pre">gcovr</span></code>。</p>
+</div>
+<p>对于单元测试，流程有所不同，因为单元测试使用主机工具链构建，并且需要使用不同的开发板：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>west<span class="w"> </span>twister<span class="w"> </span>--coverage<span class="w"> </span>-p<span class="w"> </span>unit_testing<span class="w"> </span>-T<span class="w"> </span>tests/unit
+</pre></div>
+</div>
+<p>生成的报告与非单元测试位于相同的位置。</p>
+<section id="per-test-coverage-matrix">
+<h3>按测试统计的覆盖率矩阵<a class="headerlink" href="#per-test-coverage-matrix" title="链接到此标题。"></a></h3>
+<p>默认情况下，覆盖率按测试场景汇总。要将覆盖率细化到单个 <a class="reference internal" href="ztest.html#test-framework"><span class="std std-ref">Ztest</span></a> 测试用例（例如回答“哪些测试执行了 <code class="docutils literal notranslate"><span class="pre">foo.c</span></code> 的第 X 行”这样的问题），请传入 <code class="docutils literal notranslate"><span class="pre">--coverage-per-test</span></code>：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>west<span class="w"> </span>twister<span class="w"> </span>-p<span class="w"> </span>mps2/an385<span class="w"> </span>-T<span class="w"> </span>tests/kernel<span class="w"> </span>--coverage<span class="w"> </span>--coverage-tool<span class="w"> </span>lcov<span class="w"> </span><span class="se">\</span>
+<span class="w">    </span>--coverage-per-test
+</pre></div>
+</div>
+<p>这会启用 <a class="reference internal" href="../../kconfig.html#CONFIG_ZTEST_COVERAGE_PER_TEST" title="CONFIG_ZTEST_COVERAGE_PER_TEST"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZTEST_COVERAGE_PER_TEST</span></code></a>，它会在每个测试用例之前重置 gcov 计数器，并在测试用例之后转储一份独立的、带有测试标记的覆盖率产物。在支持半主机（semihosting）的平台上（QEMU 下的 ARM、RISC-V 和 Xtensa 目标，例如 <code class="docutils literal notranslate"><span class="pre">mps2/an385</span></code>），每个测试的数据会直接写入主机文件系统，从而避免按测试转储时原本会产生的大量串口控制台流量；其他平台则回退到串口控制台传输。</p>
+<p>除了常规的汇总覆盖率报告外，这还会生成：</p>
+<ul class="simple">
+<li><p>在每个构建的 <code class="docutils literal notranslate"><span class="pre">coverage/tests/</span></code> 目录下，为每个测试生成一个 <code class="docutils literal notranslate"><span class="pre">&lt;scenario&gt;.&lt;test&gt;.info</span></code> 跟踪文件；以及</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">twister-out/coverage/test_matrix.json</span></code>，一个机器可读的矩阵，包含 <code class="docutils literal notranslate"><span class="pre">by_line</span></code> 视图（<code class="docutils literal notranslate"><span class="pre">{file:</span> <span class="pre">{line:</span> <span class="pre">[tests]}}</span></code>）和 <code class="docutils literal notranslate"><span class="pre">by_test</span></code> 视图（<code class="docutils literal notranslate"><span class="pre">{test:</span> <span class="pre">{file:</span> <span class="pre">[lines]}}</span></code>）。</p></li>
+</ul>
+<p>按测试的归属信息由该矩阵（及其仪表盘）承载，而不在汇总的 lcov 报告中体现：每个实例的覆盖率在汇总前会被合并为单个跟踪文件，因此运行结束时的报告开销与实例数量成正比，而不是与测试用例总数成正比。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p><code class="docutils literal notranslate"><span class="pre">--coverage-per-test</span></code> 需要使用 <code class="docutils literal notranslate"><span class="pre">lcov</span></code> 覆盖率工具，因为该矩阵依赖于 lcov 按测试记录的 <code class="docutils literal notranslate"><span class="pre">TN</span></code> 跟踪文件记录，而 <code class="docutils literal notranslate"><span class="pre">gcovr</span></code> 没有对应的功能。该选项还隐含启用 <code class="docutils literal notranslate"><span class="pre">--coverage</span></code>。</p>
+</div>
+<section id="visualizing-the-matrix">
+<h4>可视化矩阵<a class="headerlink" href="#visualizing-the-matrix" title="链接到此标题。"></a></h4>
+<p>可以使用独立脚本 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/scripts/gen_test_matrix_dashboard.py">scripts/gen_test_matrix_dashboard.py</a> 将 <code class="docutils literal notranslate"><span class="pre">test_matrix.json</span></code> 转换为一个自包含的交互式 HTML 仪表盘（该脚本不依赖于 Twister，可以对任何以前生成的矩阵运行）：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>scripts/gen_test_matrix_dashboard.py<span class="w"> </span>-i<span class="w"> </span>twister-out/coverage/test_matrix.json
+</pre></div>
+</div>
+<p>这会生成 <code class="docutils literal notranslate"><span class="pre">twister-out/coverage/test_matrix.html</span></code>，其中按测试列出了它覆盖的文件数和行数，以及它 <em>独有</em> 覆盖的行数（即其他测试都未覆盖到的行，可用于找出冗余的或起关键作用的测试），并且可以深入查看某个测试覆盖的文件，或者查询哪些测试覆盖了给定文件的给定行。</p>
+</section>
+</section>
+<section id="using-different-toolchains">
+<h3>使用不同的工具链<a class="headerlink" href="#using-different-toolchains" title="链接到此标题。"></a></h3>
+<p>Twister 会查看环境变量 <code class="docutils literal notranslate"><span class="pre">ZEPHYR_TOOLCHAIN_VARIANT</span></code>，以确定默认使用哪个 gcov 工具。Twister <code class="docutils literal notranslate"><span class="pre">--gcov-tool</span></code> 参数的默认值如下：</p>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>工具链</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">--gcov-tool</span></code> 的值</p></td>
+</tr>
+<tr class="row-even"><td><p>host</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">gcov</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>llvm</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">llvm-cov</span> <span class="pre">gcov</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>zephyr</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">gcov</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 8月 04, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

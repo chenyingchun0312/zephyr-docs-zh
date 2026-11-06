@@ -1,0 +1,692 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>设备树 HOWTO &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/build/dts/howtos.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="设备树故障排除" href="troubleshooting.html" />
+    <link rel="prev" title="/zephyr,user 节点" href="zephyr-user-node.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">构建与配置系统</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../cmake/index.html">构建系统（CMake）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cmake-ref/index.html">CMake 参考</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">设备树</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="index.html#devicetree-guide">设备树指南</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="intro.html">设备树简介</a></li>
+<li class="toctree-l4"><a class="reference internal" href="design.html">设计目标</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bindings.html">设备树绑定</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api-usage.html">从 C/C++ 访问设备树</a></li>
+<li class="toctree-l4"><a class="reference internal" href="phandles.html">phandle</a></li>
+<li class="toctree-l4"><a class="reference internal" href="zephyr-user-node.html"><code class="docutils literal notranslate"><span class="pre">/zephyr,user</span></code> 节点</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">设备树 HOWTO</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#get-your-devicetree-and-generated-header">获取设备树和生成的头文件</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#get-a-struct-device-from-a-devicetree-node">从设备树节点获取 struct device</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#find-a-devicetree-binding">查找设备树绑定</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#set-devicetree-overlays">设置设备树覆盖文件</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#use-devicetree-overlays">使用设备树覆盖文件</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#write-device-drivers-using-devicetree-apis">使用设备树 API 编写设备驱动</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#option-1-create-devices-using-instance-numbers">方式 1：使用实例编号创建设备</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#option-2-create-devices-using-node-labels">方式 2：使用节点标签创建设备</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#device-drivers-that-depend-on-other-devices">依赖其他设备的设备驱动</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#applications-that-depend-on-board-specific-devices">依赖开发板专用设备的应用程序</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="troubleshooting.html">设备树故障排除</a></li>
+<li class="toctree-l4"><a class="reference internal" href="dt-vs-kconfig.html">设备树与 Kconfig 的对比</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#devicetree-reference">设备树参考</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../kconfig/index.html">配置系统（Kconfig）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../snippets/index.html">代码片段（snippet）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../zephyr_cmake_package.html">Zephyr CMake 包</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sysbuild/index.html">Sysbuild（系统构建）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../version/index.html">应用程序版本管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../flashing/index.html">烧录</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../signing/index.html">对二进制文件签名</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">构建与配置系统</a> &raquo;</li>
+  
+     <li><a href="index.html">设备树</a> &raquo;</li>
+  
+  <li>设备树 HOWTO</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="devicetree-howtos">
+<span id="dt-howtos"></span><h1>设备树 HOWTO<a class="headerlink" href="#devicetree-howtos" title="链接到此标题。"></a></h1>
+<p>本页提供使用设备树完成各项任务的分步建议。</p>
+<div class="admonition tip">
+<p class="admonition-title">小技巧</p>
+<p>故障排除建议请参见 <a class="reference internal" href="troubleshooting.html#dt-trouble"><span class="std std-ref">设备树故障排除</span></a>。</p>
+</div>
+<section id="get-your-devicetree-and-generated-header">
+<span id="get-devicetree-outputs"></span><h2>获取设备树和生成的头文件<a class="headerlink" href="#get-your-devicetree-and-generated-header" title="链接到此标题。"></a></h2>
+<p>开发板的设备树（<a class="reference internal" href="intro-input-output.html#devicetree-in-out-files"><span class="std std-ref">BOARD.dts</span></a>）通过 <code class="docutils literal notranslate"><span class="pre">#include</span></code> 预处理指令引入通用的节点定义，其中至少包括 SoC 的 <code class="docutils literal notranslate"><span class="pre">.dtsi</span></code>。了解设备树内容的一种方法是打开这些文件，例如查看 <code class="docutils literal notranslate"><span class="pre">dts/&lt;ARCH&gt;/&lt;vendor&gt;/&lt;soc&gt;.dtsi</span></code>，但这可能很耗时。</p>
+<p>如果只想查看开发板的“最终”设备树，可以构建一个应用程序，然后打开构建目录中的 <code class="file docutils literal notranslate"><span class="pre">zephyr.dts</span></code> 文件。</p>
+<div class="admonition tip">
+<p class="admonition-title">小技巧</p>
+<p>可以构建 <a class="reference internal" href="../../samples/hello_world/README.html#hello_world" title="向控制台打印 &quot;Hello World&quot;。">Hello World</a>，查看开发板未经 <a class="reference internal" href="intro-input-output.html#dt-input-files"><span class="std std-ref">覆盖文件</span></a> 做任何额外修改的“基础”设备树。</p>
+</div>
+<p>例如，使用 <a class="reference internal" href="../../boards/qemu/cortex_m3/doc/index.html#qemu_cortex_m3">QEMU Emulation for ARM Cortex-M3</a> 开发板构建 <a class="reference internal" href="../../samples/hello_world/README.html#hello_world" title="向控制台打印 &quot;Hello World&quot;。">Hello World</a>：</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span><span class="c1"># --cmake-only here just forces CMake to run, skipping the</span>
+<span class="c1"># build process to save time.</span>
+west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>qemu_cortex_m3<span class="w"> </span>samples/hello_world<span class="w"> </span>--cmake-only
+</pre></div>
+</div>
+<p>可以将 <code class="docutils literal notranslate"><span class="pre">qemu_cortex_m3</span></code> 改为你的开发板。</p>
+<p>CMake 会像下面这样打印输入和输出文件的位置：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>-- Found BOARD.dts: .../zephyr/boards/arm/qemu_cortex_m3/qemu_cortex_m3.dts
+-- Generated zephyr.dts: .../zephyr/build/zephyr/zephyr.dts
+-- Generated devicetree_generated.h: .../zephyr/build/zephyr/include/generated/zephyr/devicetree_generated.h
+</pre></div>
+</div>
+<p><code class="file docutils literal notranslate"><span class="pre">zephyr.dts</span></code> 文件是 DTS 格式的最终设备树。</p>
+<p><code class="file docutils literal notranslate"><span class="pre">devicetree_generated.h</span></code> 文件是对应的生成头文件。</p>
+<p>关于这些文件的详细信息请参见 <a class="reference internal" href="intro-input-output.html#devicetree-in-out-files"><span class="std std-ref">输入和输出文件</span></a>。</p>
+</section>
+<section id="get-a-struct-device-from-a-devicetree-node">
+<span id="dt-get-device"></span><h2>从设备树节点获取 struct device<a class="headerlink" href="#get-a-struct-device-from-a-devicetree-node" title="链接到此标题。"></a></h2>
+<p>编写 Zephyr 应用程序时，经常需要获取与某个设备树节点对应的驱动级 <a class="reference internal" href="../../kernel/drivers/index.html#device-model-api"><span class="std std-ref">struct device</span></a>。</p>
+<p>例如，对于下面的设备树片段，你可能需要获取 <code class="docutils literal notranslate"><span class="pre">serial&#64;40002000</span></code> 的 struct device：</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">/</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nf">soc</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nl">serial0</span><span class="p">:</span><span class="w"> </span><span class="nf">serial</span><span class="o">@</span><span class="mi">40002000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"okay"</span><span class="p">;</span>
+<span class="w">                        </span><span class="n">current-speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">115200</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                        </span><span class="cm">/* ... */</span>
+<span class="w">                </span><span class="p">};</span>
+<span class="w">        </span><span class="p">};</span>
+
+<span class="w">        </span><span class="nf">aliases</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">my-serial</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">serial0</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+
+<span class="w">        </span><span class="nf">chosen</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">zephyr</span><span class="p">,</span><span class="n">console</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">serial0</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>首先为你关心的设备创建一个 <a class="reference internal" href="api-usage.html#dt-node-identifiers"><span class="std std-ref">节点标识符</span></a>。创建方法有多种，选择最符合你需求的一种即可。下面是一些示例：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Option 1: by node label */</span>
+<span class="cp">#define MY_SERIAL DT_NODELABEL(serial0)</span>
+
+<span class="cm">/* Option 2: by alias */</span>
+<span class="cp">#define MY_SERIAL DT_ALIAS(my_serial)</span>
+
+<span class="cm">/* Option 3: by chosen node */</span>
+<span class="cp">#define MY_SERIAL DT_CHOSEN(zephyr_console)</span>
+
+<span class="cm">/* Option 4: by path */</span>
+<span class="cp">#define MY_SERIAL DT_PATH(soc, serial_40002000)</span>
+</pre></div>
+</div>
+<p>有了节点标识符后，有两种方法可以继续。获取设备的一种方法是使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">DEVICE_DT_GET</span></code>：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="k">const</span><span class="w"> </span><span class="n">uart_dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DEVICE_DT_GET</span><span class="p">(</span><span class="n">MY_SERIAL</span><span class="p">);</span>
+
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">device_is_ready</span><span class="p">(</span><span class="n">uart_dev</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="cm">/* Not ready, do not use */</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="o">-</span><span class="n">ENODEV</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="xref c c-macro docutils literal notranslate"><span class="pre">DEVICE_DT_GET</span></code> 有一些变体，例如 <code class="xref c c-macro docutils literal notranslate"><span class="pre">DEVICE_DT_GET_OR_NULL</span></code>、<code class="xref c c-macro docutils literal notranslate"><span class="pre">DEVICE_DT_GET_ONE</span></code> 或 <code class="xref c c-macro docutils literal notranslate"><span class="pre">DEVICE_DT_GET_ANY</span></code>。这种写法在构建时获取设备指针，因此没有运行时开销。如果想把设备指针作为配置数据保存，这种方法很有用。但由于设备可能尚未初始化，或者初始化可能失败，在将其传给任何 API 函数之前，必须先确认设备已就绪可用。（<code class="xref c c-func docutils literal notranslate"><span class="pre">device_get_binding()</span></code> 会替你完成此项检查。）</p>
+<p>在某些情况下，设备在构建时无法确定，例如设备取决于用户输入（如 shell 应用程序中）。这种情况下，可以将 <code class="xref c c-func docutils literal notranslate"><span class="pre">device_get_binding()</span></code> 与设备名结合使用来获取 <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span></code>：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">dev_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="cm">/* TODO: insert device name from user */</span><span class="p">;</span>
+<span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">uart_dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">device_get_binding</span><span class="p">(</span><span class="n">dev_name</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>然后可以将 <code class="docutils literal notranslate"><span class="pre">uart_dev</span></code> 与 <a class="reference internal" href="../../hardware/peripherals/uart.html#uart-api"><span class="std std-ref">通用异步收发器（UART）</span></a> API 函数（例如 <code class="xref c c-func docutils literal notranslate"><span class="pre">uart_configure()</span></code>）一起使用。类似的代码也适用于其他设备类型，只要确保为设备使用正确的 API 即可。</p>
+<p>如果遇到问题，请参见 <a class="reference internal" href="troubleshooting.html#dt-trouble"><span class="std std-ref">设备树故障排除</span></a>。首先要检查的是节点是否具有 <code class="docutils literal notranslate"><span class="pre">status</span> <span class="pre">=</span> <span class="pre">&quot;okay&quot;</span></code>，例如：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#define MY_SERIAL DT_NODELABEL(my_serial)</span>
+
+<span class="cp">#if DT_NODE_HAS_STATUS(MY_SERIAL, okay)</span>
+<span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="k">const</span><span class="w"> </span><span class="n">uart_dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DEVICE_DT_GET</span><span class="p">(</span><span class="n">MY_SERIAL</span><span class="p">);</span>
+<span class="cp">#else</span>
+<span class="cp">#error "Node is disabled"</span>
+<span class="cp">#endif</span>
+</pre></div>
+</div>
+<p>如果看到 <code class="docutils literal notranslate"><span class="pre">#error</span></code> 输出，请确保在设备树中启用了该节点。在某些情况下，代码可以编译通过，但链接会失败，并出现类似下面的信息：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>...undefined reference to `__device_dts_ord_N'
+collect2: error: ld returned 1 exit status
+</pre></div>
+</div>
+<p>这很可能意味着存在 Kconfig 问题，导致设备驱动没有被构建，从而产生了对不存在对象的引用。如果代码编译成功，最后要检查的是设备是否已就绪，例如：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">device_is_ready</span><span class="p">(</span><span class="n">uart_dev</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">     </span><span class="n">printk</span><span class="p">(</span><span class="s">"Device not ready</span><span class="se">\n</span><span class="s">"</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>如果发现设备未就绪，很可能意味着设备的初始化函数失败了。这种情况下，启用日志或调试驱动代码可能会有帮助。注意，也可以使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">device_get_binding()</span></code> 在运行时获取引用。如果它返回 <code class="docutils literal notranslate"><span class="pre">NULL</span></code>，可能意味着设备的驱动初始化失败，也可能意味着该设备不存在。</p>
+</section>
+<section id="find-a-devicetree-binding">
+<span id="dts-find-binding"></span><h2>查找设备树绑定<a class="headerlink" href="#find-a-devicetree-binding" title="链接到此标题。"></a></h2>
+<p><a class="reference internal" href="bindings.html#dt-bindings"><span class="std std-ref">设备树绑定</span></a> 是声明可以对其所描述节点进行哪些操作的 YAML 文件，因此能够为所用节点找到对应的绑定至关重要。</p>
+<p>如果还没有这些文件，请参考 <a class="reference internal" href="#get-devicetree-outputs"><span class="std std-ref">获取设备树和生成的头文件</span></a>。要查找节点的绑定，请打开生成的头文件，该文件开头是一个块注释，其中列出了所有节点：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+<span class="cm"> * [...]</span>
+<span class="cm"> * Nodes in dependency order (ordinal and path):</span>
+<span class="cm"> *   0   /</span>
+<span class="cm"> *   1   /aliases</span>
+<span class="cm"> *   2   /chosen</span>
+<span class="cm"> *   3   /flash@0</span>
+<span class="cm"> *   4   /memory@20000000</span>
+<span class="cm"> *          (etc.)</span>
+<span class="cm"> * [...]</span>
+<span class="cm"> */</span>
+</pre></div>
+</div>
+<p>记下要查找的节点的路径，例如 <code class="docutils literal notranslate"><span class="pre">/flash&#64;0</span></code>。在文件中搜索该节点的输出，如果该节点有匹配的绑定，其输出开头类似下面这样：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+<span class="cm"> * Devicetree node:</span>
+<span class="cm"> *   /flash@0</span>
+<span class="cm"> *</span>
+<span class="cm"> * Binding (compatible = soc-nv-flash):</span>
+<span class="cm"> *   $ZEPHYR_BASE/dts/bindings/mtd/soc-nv-flash.yaml</span>
+<span class="cm"> * [...]</span>
+<span class="cm"> */</span>
+</pre></div>
+</div>
+<p>故障排除请参见 <a class="reference internal" href="troubleshooting.html#missing-dt-binding"><span class="std std-ref">检查是否缺少绑定</span></a>。</p>
+</section>
+<section id="set-devicetree-overlays">
+<span id="id1"></span><h2>设置设备树覆盖文件<a class="headerlink" href="#set-devicetree-overlays" title="链接到此标题。"></a></h2>
+<p>设备树覆盖文件在 <a class="reference internal" href="intro.html#devicetree-intro"><span class="std std-ref">设备树简介</span></a> 中有介绍。CMake 变量 <strong class="makevar">DTC_OVERLAY_FILE</strong> 包含要使用的覆盖文件列表，以空格或分号分隔。如果 <strong class="makevar">DTC_OVERLAY_FILE</strong> 指定了多个文件，C 预处理器会按该顺序包含它们。设置 DTC_OVERLAY_FILE 变量时，可以通过转义 Zephyr 模块目录变量来引用 Zephyr 模块中的文件，例如 <code class="docutils literal notranslate"><span class="pre">\${ZEPHYR_&lt;module&gt;_MODULE_DIR}/&lt;path-to&gt;/dts.overlay</span></code>。</p>
+<p>可以将 <strong class="makevar">DTC_OVERLAY_FILE</strong> 设置为恰好包含你想使用的文件。这里有一个使用 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> 的 <a class="reference internal" href="../../develop/west/build-flash-debug.html#west-building-dtc-overlay-file"><span class="std std-ref">示例</span></a>。</p>
+<p>如果没有设置 <strong class="makevar">DTC_OVERLAY_FILE</strong>，构建系统会按以下步骤在应用程序配置目录中查找用作设备树覆盖文件的文件：</p>
+<ol class="arabic simple">
+<li><p>如果文件 <code class="file docutils literal notranslate"><span class="pre">socs/&lt;SOC&gt;_&lt;BOARD_QUALIFIERS&gt;.overlay</span></code> 存在，则使用该文件。</p></li>
+<li><p>如果文件 <code class="file docutils literal notranslate"><span class="pre">boards/&lt;BOARD&gt;.overlay</span></code> 存在，则在上述文件之外还使用该文件。</p></li>
+<li><p>如果当前开发板有 <a class="reference internal" href="../../hardware/porting/board_porting.html#porting-board-revisions"><span class="std std-ref">多个版本</span></a>，并且 <code class="file docutils literal notranslate"><span class="pre">boards/&lt;BOARD&gt;_&lt;revision&gt;.overlay</span></code> 存在，则在上述文件之外还使用该文件。</p></li>
+<li><p>如果前面的步骤中找到了一个或多个文件，构建系统就停止查找，只使用这些文件。</p></li>
+<li><p>否则，如果 <code class="file docutils literal notranslate"><span class="pre">&lt;BOARD&gt;.overlay</span></code> 存在，则使用该文件，并且构建系统停止查找更多文件。</p></li>
+<li><p>否则，如果 <code class="file docutils literal notranslate"><span class="pre">app.overlay</span></code> 存在，则使用该文件。</p></li>
+</ol>
+<p>可以使用 <code class="docutils literal notranslate"><span class="pre">EXTRA_DTC_OVERLAY_FILE</span></code> 提供额外的设备树覆盖文件，这样构建系统仍会自动使用上述步骤中描述的设备树覆盖文件。</p>
+<p>处理设备树覆盖文件时，构建系统会把 <code class="docutils literal notranslate"><span class="pre">EXTRA_DTC_OVERLAY_FILE</span></code> 中指定的覆盖文件追加到 <code class="docutils literal notranslate"><span class="pre">DTC_OVERLAY_FILE</span></code> 中的覆盖文件之后。这意味着通过 <code class="docutils literal notranslate"><span class="pre">EXTRA_DTC_OVERLAY_FILE</span></code> 所做的修改比通过 <code class="docutils literal notranslate"><span class="pre">DTC_OVERLAY_FILE</span></code> 所做的修改优先级更高。</p>
+<p>除了通过 <code class="docutils literal notranslate"><span class="pre">DTC_OVERLAY_FILE</span></code> 或 <code class="docutils literal notranslate"><span class="pre">EXTRA_DTC_OVERLAY_FILE</span></code> 参数给出的绝对路径文件外，所有配置文件都从应用程序配置目录中获取。</p>
+<p>应用程序配置目录的定义方式请参见 <a class="reference internal" href="../../develop/application/index.html#application-configuration-directory"><span class="std std-ref">应用程序配置目录</span></a>。</p>
+<p>使用 <a class="reference internal" href="../../hardware/porting/shields.html#shields"><span class="std std-ref">扩展板</span></a> 也会添加设备树覆盖文件。</p>
+<p><strong class="makevar">DTC_OVERLAY_FILE</strong> 的值存储在 CMake 缓存中，并在后续构建中使用。</p>
+<p><a class="reference internal" href="../index.html#build-overview"><span class="std std-ref">构建系统</span></a> 会在配置阶段像下面这样打印找到的所有设备树覆盖文件：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>-- Found devicetree overlay: .../some/file.overlay
+</pre></div>
+</div>
+</section>
+<section id="use-devicetree-overlays">
+<span id="use-dt-overlays"></span><h2>使用设备树覆盖文件<a class="headerlink" href="#use-devicetree-overlays" title="链接到此标题。"></a></h2>
+<p>如何在构建中添加覆盖文件，请参见 <a class="reference internal" href="#set-devicetree-overlays"><span class="std std-ref">设置设备树覆盖文件</span></a>。</p>
+<p>覆盖文件可以通过多种方式覆盖节点属性值。例如，如果 BOARD.dts 中包含以下节点：</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">/</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nf">soc</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nl">serial0</span><span class="p">:</span><span class="w"> </span><span class="nf">serial</span><span class="o">@</span><span class="mi">40002000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"okay"</span><span class="p">;</span>
+<span class="w">                        </span><span class="n">current-speed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">115200</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                        </span><span class="cm">/* ... */</span>
+<span class="w">                </span><span class="p">};</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>以下是在覆盖文件中覆盖 <code class="docutils literal notranslate"><span class="pre">current-speed</span></code> 值的几种等效写法：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>/* Option 1 */
+&amp;serial0 {
+     current-speed = &lt;9600&gt;;
+};
+
+/* Option 2 */
+&amp;{/soc/serial@40002000} {
+     current-speed = &lt;9600&gt;;
+};
+</pre></div>
+</div>
+<p>后续示例都使用 <code class="docutils literal notranslate"><span class="pre">&amp;serial0</span></code> 这种写法。</p>
+<p>可以使用覆盖文件向设备树中添加别名：别名只是 <code class="docutils literal notranslate"><span class="pre">/aliases</span></code> 节点的一个属性。例如：</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">/</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">     </span><span class="nf">aliases</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">             </span><span class="n">my-serial</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">serial0</span><span class="p">;</span>
+<span class="w">     </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>chosen 节点的用法相同。例如：</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">/</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">     </span><span class="nf">chosen</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">             </span><span class="n">zephyr</span><span class="p">,</span><span class="n">console</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">serial0</span><span class="p">;</span>
+<span class="w">     </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>删除属性（除了一般意义上的删除属性外，如果某个布尔属性在 BOARD.dts 中为 true，也可以用这种方法将其设为 false）：</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="nf">serial0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">     </span><span class="cp">/delete-property/</span><span class="cm"> </span><span class="cp">some-unwanted-property</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>可以使用覆盖文件添加子节点。例如，要在现有总线节点上配置 SPI 或 I2C 子设备，可以这样做：</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="cm">/* SPI device example */</span>
+<span class="o">&amp;</span><span class="nf">spi1</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">     </span><span class="nl">my_spi_device</span><span class="p">:</span><span class="w"> </span><span class="nf">temp-sensor</span><span class="o">@</span><span class="mi">0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">             </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"..."</span><span class="p">;</span>
+<span class="w">             </span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"TEMP_SENSOR_0"</span><span class="p">;</span>
+<span class="w">             </span><span class="cm">/* reg is the chip select number, if needed;</span>
+<span class="cm">              * If present, it must match the node's unit address. */</span>
+<span class="w">             </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">             </span><span class="cm">/* Configure other SPI device properties as needed.</span>
+<span class="cm">              * Find your device's DT binding for details. */</span>
+<span class="w">             </span><span class="n">spi-max-frequency</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="na">DT_FREQ_M</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">     </span><span class="p">};</span>
+<span class="p">};</span>
+
+<span class="cm">/* I2C device example */</span>
+<span class="o">&amp;</span><span class="nf">i2c2</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">     </span><span class="nl">my_i2c_device</span><span class="p">:</span><span class="w"> </span><span class="nf">touchscreen</span><span class="o">@</span><span class="mi">76</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">             </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"..."</span><span class="p">;</span>
+<span class="w">             </span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"TOUCHSCREEN"</span><span class="p">;</span>
+<span class="w">             </span><span class="cm">/* reg is the I2C device address.</span>
+<span class="cm">              * It must match the node's unit address. */</span>
+<span class="w">             </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">76</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">             </span><span class="cm">/* Configure other I2C device properties as needed.</span>
+<span class="cm">              * Find your device's DT binding for details. */</span>
+<span class="w">     </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>其他总线设备可以用类似方式配置：</p>
+<ul class="simple">
+<li><p>将设备创建为父总线的子节点</p></li>
+<li><p>按照其绑定设置属性</p></li>
+</ul>
+<p>假设已有与 <code class="docutils literal notranslate"><span class="pre">my_spi_device</span></code> 和 <code class="docutils literal notranslate"><span class="pre">my_i2c_device</span></code> compatible 关联的合适设备驱动，现在就可以通过 Kconfig 启用该驱动，并为新添加的总线节点 <a class="reference internal" href="#dt-get-device"><span class="std std-ref">获取 struct device</span></a>，然后通过该驱动的 API 使用它。</p>
+</section>
+<section id="write-device-drivers-using-devicetree-apis">
+<span id="dt-create-devices"></span><h2>使用设备树 API 编写设备驱动<a class="headerlink" href="#write-device-drivers-using-devicetree-apis" title="链接到此标题。"></a></h2>
+<p>“感知设备树”的 <a class="reference internal" href="../../kernel/drivers/index.html#device-model-api"><span class="std std-ref">设备驱动</span></a> 应为每个具有该驱动所支持的特定 <a class="reference internal" href="intro-syntax-structure.html#dt-important-props"><span class="std std-ref">compatible</span></a>（或一组相关 compatible）且 <code class="docutils literal notranslate"><span class="pre">status</span> <span class="pre">=</span> <span class="pre">&quot;okay&quot;</span></code> 的设备树节点创建一个 <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span></code>。</p>
+<p>编写感知设备树的驱动，首先要为驱动所支持的设备定义一个 <a class="reference internal" href="bindings.html#dt-bindings"><span class="std std-ref">设备树绑定</span></a>。可以以类似驱动的现有绑定为起点。入门用的骨架绑定只需要以下内容：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;Human-readable description of your binding&gt;</span>
+<span class="nt">compatible</span><span class="p">:</span><span class="w"> </span><span class="s">"foo-company,bar-device"</span>
+<span class="nt">include</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">base.yaml</span>
+</pre></div>
+</div>
+<p>查找现有绑定的更多建议请参见 <a class="reference internal" href="#dts-find-binding"><span class="std std-ref">查找设备树绑定</span></a>。</p>
+<p>编写好绑定后，驱动 C 文件就可以使用设备树 API 查找具有所需 compatible 且 <code class="docutils literal notranslate"><span class="pre">status</span> <span class="pre">=</span> <span class="pre">&quot;okay&quot;</span></code> 的节点，并为每个节点实例化一个 <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span></code>。实例化每个 <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span></code> 有两种方式：使用实例编号，或使用节点标签。</p>
+<p>无论采用哪种方式：</p>
+<ul class="simple">
+<li><p>每个 <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span></code> 的名称都应设置为其设备树节点的 <code class="docutils literal notranslate"><span class="pre">label</span></code> 属性。这样驱动的使用者就可以按常规方式 <a class="reference internal" href="#dt-get-device"><span class="std std-ref">从设备树节点获取 struct device</span></a>。</p></li>
+<li><p>只要可行，每个设备的初始配置都应使用设备树属性中的值。这样用户就可以使用 <a class="reference internal" href="#use-dt-overlays"><span class="std std-ref">设备树覆盖文件</span></a> 配置驱动。</p></li>
+</ul>
+<p>下面是具体做法的示例。这些示例假设你已经实现了设备专用的配置和数据结构以及 API 函数，如下所示：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* my_driver.c */</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/drivers/some_api.h&gt;</span>
+
+<span class="cm">/* Define data (RAM) and configuration (ROM) structures: */</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">my_dev_data</span><span class="w"> </span><span class="p">{</span>
+<span class="w">     </span><span class="cm">/* per-device values to store in RAM */</span>
+<span class="p">};</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">my_dev_cfg</span><span class="w"> </span><span class="p">{</span>
+<span class="w">     </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">freq</span><span class="p">;</span><span class="w"> </span><span class="cm">/* Just an example: initial clock frequency in Hz */</span>
+<span class="w">     </span><span class="cm">/* other configuration to store in ROM */</span>
+<span class="p">};</span>
+
+<span class="cm">/* Implement driver API functions (drivers/some_api.h callbacks): */</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">my_driver_api_func1</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">,</span><span class="w"> </span><span class="kt">uint32_t</span><span class="w"> </span><span class="o">*</span><span class="n">foo</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* ... */</span><span class="w"> </span><span class="p">}</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">my_driver_api_func2</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">,</span><span class="w"> </span><span class="kt">uint64_t</span><span class="w"> </span><span class="n">bar</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* ... */</span><span class="w"> </span><span class="p">}</span>
+<span class="k">static</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">some_api</span><span class="w"> </span><span class="n">my_api_funcs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">     </span><span class="p">.</span><span class="n">func1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">my_driver_api_func1</span><span class="p">,</span>
+<span class="w">     </span><span class="p">.</span><span class="n">func2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">my_driver_api_func2</span><span class="p">,</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<section id="option-1-create-devices-using-instance-numbers">
+<span id="dt-create-devices-inst"></span><h3>方式 1：使用实例编号创建设备<a class="headerlink" href="#option-1-create-devices-using-instance-numbers" title="链接到此标题。"></a></h3>
+<p>如果可能，请使用这种方式，它使用 <a class="reference internal" href="api/api.html#devicetree-inst-apis"><span class="std std-ref">基于实例的 API</span></a>。不过，只有当驱动 <code class="docutils literal notranslate"><span class="pre">compatible</span></code> 对应的设备树节点全部等价，并且不需要区分它们时，这些 API 才适用。</p>
+<p>要使用基于实例的 API，首先将 <code class="docutils literal notranslate"><span class="pre">DT_DRV_COMPAT</span></code> 定义为设备驱动所支持 compatible 的小写加下划线形式。例如，如果驱动在设备树中的 compatible 为 <code class="docutils literal notranslate"><span class="pre">&quot;vnd,my-device&quot;</span></code>，则应在驱动 C 文件中将 <code class="docutils literal notranslate"><span class="pre">DT_DRV_COMPAT</span></code> 定义为 <code class="docutils literal notranslate"><span class="pre">vnd_my_device</span></code>：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+<span class="cm"> * Put this near the top of the file. After the includes is a good place.</span>
+<span class="cm"> * (Note that you can therefore run "git grep DT_DRV_COMPAT drivers" in</span>
+<span class="cm"> * the zephyr Git repository to look for example drivers using this style).</span>
+<span class="cm"> */</span>
+<span class="cp">#define DT_DRV_COMPAT vnd_my_device</span>
+</pre></div>
+</div>
+<div class="admonition important">
+<p class="admonition-title">重要</p>
+<p>如上所示，DT_DRV_COMPAT 宏既不应包含引号，也不应包含特殊字符。根据 compatible 属性创建 <code class="docutils literal notranslate"><span class="pre">DT_DRV_COMPAT</span></code> 时，应去掉引号并把特殊字符转换为下划线。</p>
+</div>
+<p>最后，定义一个实例化宏，使用实例编号创建每个 <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span></code>。请在定义 <code class="docutils literal notranslate"><span class="pre">my_api_funcs</span></code> 之后进行此操作。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+<span class="cm"> * This instantiation macro is named "CREATE_MY_DEVICE".</span>
+<span class="cm"> * Its "inst" argument is an arbitrary instance number.</span>
+<span class="cm"> *</span>
+<span class="cm"> * Put this near the end of the file, e.g. after defining "my_api_funcs".</span>
+<span class="cm"> */</span>
+<span class="cp">#define CREATE_MY_DEVICE(inst)                                       \</span>
+<span class="cp">     static struct my_dev_data my_data_##inst = {                    \</span>
+<span class="cp">             </span><span class="cm">/* initialize RAM values as needed, e.g.: */</span><span class="cp">            \</span>
+<span class="cp">             .freq = DT_INST_PROP(inst, clock_frequency),            \</span>
+<span class="cp">     };                                                              \</span>
+<span class="cp">     static const struct my_dev_cfg my_cfg_##inst = {                \</span>
+<span class="cp">             </span><span class="cm">/* initialize ROM values as needed. */</span><span class="cp">                  \</span>
+<span class="cp">     };                                                              \</span>
+<span class="cp">     DEVICE_DT_INST_DEFINE(inst,                                     \</span>
+<span class="cp">                           my_dev_init_function,                     \</span>
+<span class="cp">                           NULL,                                     \</span>
+<span class="cp">                           &amp;my_data_##inst,                          \</span>
+<span class="cp">                           &amp;my_cfg_##inst,                           \</span>
+<span class="cp">                           MY_DEV_INIT_LEVEL, MY_DEV_INIT_PRIORITY,  \</span>
+<span class="cp">                           &amp;my_api_funcs);</span>
+</pre></div>
+</div>
+<p>注意，这里使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_INST_PROP</span></code> 和 <code class="xref c c-macro docutils literal notranslate"><span class="pre">DEVICE_DT_INST_DEFINE</span></code> 等 API 访问设备树节点数据。这些 API 从设备树中获取 compatible 由 <code class="docutils literal notranslate"><span class="pre">DT_DRV_COMPAT</span></code> 决定的节点中实例编号为 <code class="docutils literal notranslate"><span class="pre">inst</span></code> 的那个节点的数据。</p>
+<p>最后，将实例化宏传给 <code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_INST_FOREACH_STATUS_OKAY</span></code>：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Call the device creation macro for each instance: */</span>
+<span class="n">DT_INST_FOREACH_STATUS_OKAY</span><span class="p">(</span><span class="n">CREATE_MY_DEVICE</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">DT_INST_FOREACH_STATUS_OKAY</span></code> 展开后的代码会为每个具有 <code class="docutils literal notranslate"><span class="pre">DT_DRV_COMPAT</span></code> 所决定 compatible 的已启用节点调用一次 <code class="docutils literal notranslate"><span class="pre">CREATE_MY_DEVICE</span></code>。它不会在 <code class="docutils literal notranslate"><span class="pre">CREATE_MY_DEVICE</span></code> 展开结果的末尾追加分号，因此为了支持多个设备，该宏的展开结果必须以分号或函数定义结尾。</p>
+</section>
+<section id="option-2-create-devices-using-node-labels">
+<h3>方式 2：使用节点标签创建设备<a class="headerlink" href="#option-2-create-devices-using-node-labels" title="链接到此标题。"></a></h3>
+<p>有些设备驱动无法使用实例编号。例如，某些 SoC 外设驱动依赖针对各个 IP 模块专门设计的厂商 HAL API 来实现 Zephyr 驱动回调。这类情况应使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_NODELABEL</span></code> 引用设备树中代表 SoC 上所支持外设的各个节点，然后可以使用 devicetree.h 的 <a class="reference internal" href="api/api.html#devicetree-generic-apis"><span class="std std-ref">通用 API</span></a> 访问节点数据。</p>
+<p>为此，<a class="reference internal" href="intro-input-output.html#dt-input-files"><span class="std std-ref">SoC 的 dtsi 文件</span></a> 必须为驱动所支持的 IP 模块适当定义 <code class="docutils literal notranslate"><span class="pre">mydevice0</span></code>、<code class="docutils literal notranslate"><span class="pre">mydevice1</span></code> 等节点标签。生成的设备树通常类似下面这样：</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">/</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nf">soc</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="nl">mydevice0</span><span class="p">:</span><span class="w"> </span><span class="nf">dev</span><span class="o">@</span><span class="mi">0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"vnd,my-device"</span><span class="p">;</span>
+<span class="w">                </span><span class="p">};</span>
+<span class="w">                </span><span class="nl">mydevice1</span><span class="p">:</span><span class="w"> </span><span class="nf">dev</span><span class="o">@</span><span class="mi">1</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"vnd,my-device"</span><span class="p">;</span>
+<span class="w">                </span><span class="p">};</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>驱动可以使用设备树中的 <code class="docutils literal notranslate"><span class="pre">mydevice0</span></code> 和 <code class="docutils literal notranslate"><span class="pre">mydevice1</span></code> 节点标签来操作特定的设备节点：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/*</span>
+<span class="cm"> * This is a convenience macro for creating a node identifier for</span>
+<span class="cm"> * the relevant devices. An example use is MYDEV(0) to refer to</span>
+<span class="cm"> * the node with label "mydevice0".</span>
+<span class="cm"> */</span>
+<span class="cp">#define MYDEV(idx) DT_NODELABEL(mydevice ## idx)</span>
+
+<span class="cm">/*</span>
+<span class="cm"> * Define your instantiation macro; "idx" is a number like 0 for mydevice0</span>
+<span class="cm"> * or 1 for mydevice1. It uses MYDEV() to create the node label from the</span>
+<span class="cm"> * index.</span>
+<span class="cm"> */</span>
+<span class="cp">#define CREATE_MY_DEVICE(idx)                                        \</span>
+<span class="cp">     static struct my_dev_data my_data_##idx = {                     \</span>
+<span class="cp">             </span><span class="cm">/* initialize RAM values as needed, e.g.: */</span><span class="cp">            \</span>
+<span class="cp">             .freq = DT_PROP(MYDEV(idx), clock_frequency),           \</span>
+<span class="cp">     };                                                              \</span>
+<span class="cp">     static const struct my_dev_cfg my_cfg_##idx = { </span><span class="cm">/* ... */</span><span class="cp"> };    \</span>
+<span class="cp">     DEVICE_DT_DEFINE(MYDEV(idx),                                    \</span>
+<span class="cp">                     my_dev_init_function,                           \</span>
+<span class="cp">                     NULL,                                           \</span>
+<span class="cp">                     &amp;my_data_##idx,                                 \</span>
+<span class="cp">                     &amp;my_cfg_##idx,                                  \</span>
+<span class="cp">                     MY_DEV_INIT_LEVEL, MY_DEV_INIT_PRIORITY,        \</span>
+<span class="cp">                     &amp;my_api_funcs)</span>
+</pre></div>
+</div>
+<p>注意，这里使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_PROP</span></code> 和 <code class="xref c c-macro docutils literal notranslate"><span class="pre">DEVICE_DT_DEFINE</span></code> 等 API 访问设备树节点数据。</p>
+<p>最后，手动检测每个已启用的设备树节点，并使用 <code class="docutils literal notranslate"><span class="pre">CREATE_MY_DEVICE</span></code> 实例化每个 <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span></code>：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#if DT_NODE_HAS_STATUS(DT_NODELABEL(mydevice0), okay)</span>
+<span class="n">CREATE_MY_DEVICE</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="cp">#endif</span>
+
+<span class="cp">#if DT_NODE_HAS_STATUS(DT_NODELABEL(mydevice1), okay)</span>
+<span class="n">CREATE_MY_DEVICE</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="cp">#endif</span>
+</pre></div>
+</div>
+<p>由于这种写法不使用 <code class="docutils literal notranslate"><span class="pre">DT_INST_FOREACH_STATUS_OKAY()</span></code>，驱动作者需要负责为每个可能的节点调用 <code class="docutils literal notranslate"><span class="pre">CREATE_MY_DEVICE()</span></code>，例如根据对所支持 SoC 上可用外设的了解来调用。</p>
+</section>
+</section>
+<section id="device-drivers-that-depend-on-other-devices">
+<span id="dt-drivers-that-depend"></span><h2>依赖其他设备的设备驱动<a class="headerlink" href="#device-drivers-that-depend-on-other-devices" title="链接到此标题。"></a></h2>
+<p>有时，一个 <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span></code> 依赖另一个 <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">device</span></code>，并需要一个指向它的指针。例如，传感器设备可能需要一个指向其 SPI 总线控制器设备的指针。一些建议：</p>
+<ul class="simple">
+<li><p>编写设备树绑定时，尽可能使其允许使用 devicetree.h 中的 <a class="reference internal" href="api/api.html#devicetree-hw-api"><span class="std std-ref">硬件专用 API</span></a>。</p></li>
+<li><p>特别是对于总线设备，驱动的绑定应包含 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/dts/bindings/spi/spi-device.yaml">dts/bindings/spi/spi-device.yaml</a> 之类的文件，这类文件为可通过特定总线寻址的设备提供通用定义。这样就可以使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">DT_BUS</span></code> 等 API 获取总线节点的节点标识符，然后按常规方式为该总线 <a class="reference internal" href="#dt-get-device"><span class="std std-ref">从设备树节点获取 struct device</span></a>。</p></li>
+</ul>
+<p>可以在现有的绑定和设备驱动中查找示例。</p>
+</section>
+<section id="applications-that-depend-on-board-specific-devices">
+<span id="dt-apps-that-depend"></span><h2>依赖开发板专用设备的应用程序<a class="headerlink" href="#applications-that-depend-on-board-specific-devices" title="链接到此标题。"></a></h2>
+<p>让应用程序代码无需修改即可在多块开发板上运行的一种方法，是支持用设备树别名指定硬件相关的部分，<a class="reference internal" href="../../samples/basic/blinky/README.html#blinky" title="使用 GPIO API 让 LED 无限闪烁。">Blinky</a> 示例就是这样做的。然后可以在 <a class="reference internal" href="intro-input-output.html#devicetree-in-out-files"><span class="std std-ref">BOARD.dts</span></a> 文件中或通过 <a class="reference internal" href="#use-dt-overlays"><span class="std std-ref">设备树覆盖文件</span></a> 配置该应用程序。</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 12月 23, 2025.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

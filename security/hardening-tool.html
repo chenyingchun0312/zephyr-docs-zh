@@ -1,0 +1,416 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>加固工具 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/security/hardening-tool.html" />
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../_static/translations.js?v=540d3cec"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="控制流完整性" href="control-flow-integrity.html" />
+    <link rel="prev" title="传感器设备威胁模型" href="sensor-threat.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../project/index.html">项目与治理</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">信息安全</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="security-overview.html">Zephyr 信息安全概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reporting.html">信息安全漏洞报告</a></li>
+<li class="toctree-l2"><a class="reference internal" href="secure-coding.html">安全编码</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sensor-threat.html">传感器设备威胁模型</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">加固工具</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#usage">用法</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#profiles">配置档（profile）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#configuration-options">配置选项</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#the-hardening-database">加固数据库</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#extending-the-database-out-of-tree">在代码树之外扩展数据库</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="control-flow-integrity.html">控制流完整性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vulnerabilities.html">漏洞</a></li>
+<li class="toctree-l2"><a class="reference internal" href="standards/index.html">信息安全标准与 Zephyr</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="index.html">信息安全</a> &raquo;</li>
+  
+  <li>加固工具</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="hardening-tool">
+<span id="hardening"></span><h1>加固工具<a class="headerlink" href="#hardening-tool" title="链接到此标题。"></a></h1>
+<p>产品发布之前，务必确保软件尽可能安全。这个过程称为“加固”（hardening），即增强系统的信息安全，使其免受潜在威胁和漏洞的影响。</p>
+<p>从宏观上看，加固 Zephyr 应用程序可以分为两个方面：</p>
+<ol class="arabic simple">
+<li><p>禁用可能导致信息安全漏洞的特性和编译标志（例如，确保没有使用“实验性”特性，禁用通常用于调试目的的特性，例如断言、Shell 等）。</p></li>
+<li><p>启用有助于提高信息安全的可选特性（例如栈哨兵、硬件栈保护等）。其中一些特性可能依赖于硬件。</p></li>
+</ol>
+<p>为了简化这一过程，Zephyr 提供了一个 <strong>加固工具</strong>，它根据 <strong>加固数据库</strong> 分析应用程序的配置；加固数据库是由 Zephyr <strong>信息安全工作组</strong>（Security Working Group）整理的一组建议。该工具检查构建目标中的 Kconfig 选项，针对信息安全相关的选项给出有针对性的调整建议，并说明每条建议背后的理由。</p>
+<section id="usage">
+<h2>用法<a class="headerlink" href="#usage" title="链接到此标题。"></a></h2>
+<p>使用 west：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>reel_board<span class="w"> </span>samples/hello_world
+west<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>hardenconfig
+</pre></div>
+</div>
+<p>使用 CMake 和 ninja：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+<span class="c1"># Use cmake to configure a Ninja-based buildsystem:</span>
+cmake<span class="w"> </span>-Bbuild<span class="w"> </span>-GNinja<span class="w"> </span>-DBOARD<span class="o">=</span>reel_board<span class="w"> </span>samples/hello_world
+
+<span class="c1"># Now run the build tool on the generated build system:</span>
+ninja<span class="w"> </span>-Cbuild<span class="w"> </span>hardenconfig
+</pre></div>
+</div>
+<p>输出应类似于下表。对于每个被设置为可能导致信息安全漏洞的值的配置选项，表中会给出应当改用的推荐值，并说明该选项为何重要。</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Hardening report for profile: strict</span>
+<span class="go">+------------------------------+-----------+---------------+----------------+--------------------------------------------------+</span>
+<span class="go">| Name                         | Current   | Recommended   | Check result   | Rationale                                        |</span>
+<span class="go">+==============================+===========+===============+================+==================================================+</span>
+<span class="go">| CONFIG_BUILD_OUTPUT_STRIPPED | n         | y             | FAIL           | Produces a stripped copy of the ELF next to the  |</span>
+<span class="go">|                              |           |               |                | unstripped one, so a product that distributes or |</span>
+<span class="go">|                              |           |               |                | flashes the ELF itself ships no symbol names or  |</span>
+<span class="go">|                              |           |               |                | debug information for an attacker to work from.  |</span>
+<span class="go">|                              |           |               |                | Both files are built; deploying the stripped one |</span>
+<span class="go">|                              |           |               |                | remains the user's responsibility.               |</span>
+<span class="go">+------------------------------+-----------+---------------+----------------+--------------------------------------------------+</span>
+<span class="go">| CONFIG_STACK_SENTINEL        | n         | y             | FAIL           | Places a software sentinel value at the end of   |</span>
+<span class="go">|                              |           |               |                | each thread stack and checks it at context       |</span>
+<span class="go">|                              |           |               |                | switches, catching overflows on hardware without |</span>
+<span class="go">|                              |           |               |                | MPU/MMU stack protection.                        |</span>
+<span class="go">+------------------------------+-----------+---------------+----------------+--------------------------------------------------+</span>
+</pre></div>
+</div>
+<p>不适用于当前目标的选项（例如，在没有 MPU 的硬件上基于 MPU 的保护，或在当前配置中没有可见提示的选项）不会被报告。</p>
+<p>除了基于数据库的检查之外，该工具还会标记所有已启用、且在 Kconfig 中本身被标记为实验性、已弃用或不安全的选项（即 select 了 <a class="reference internal" href="../kconfig.html#CONFIG_EXPERIMENTAL" title="CONFIG_EXPERIMENTAL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_EXPERIMENTAL</span></code></a>、<a class="reference internal" href="../kconfig.html#CONFIG_DEPRECATED" title="CONFIG_DEPRECATED"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_DEPRECATED</span></code></a> 或 <a class="reference internal" href="../kconfig.html#CONFIG_NOT_SECURE" title="CONFIG_NOT_SECURE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NOT_SECURE</span></code></a> 的选项）。</p>
+</section>
+<section id="profiles">
+<h2>配置档（profile）<a class="headerlink" href="#profiles" title="链接到此标题。"></a></h2>
+<p>建议按 <strong>配置档</strong> 分组。代码树中提供了两个配置档：</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">base</span></code></dt><dd><p>每个量产构建都应满足的基线加固要求：启用可用的内存保护和漏洞利用缓解特性，并禁用本质上不安全的选项。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">strict</span></code>（默认）</dt><dd><p>包含 <code class="docutils literal notranslate"><span class="pre">base</span></code> 中的全部内容，此外还要求移除会扩大攻击面或泄露内部状态的调试、跟踪和可观测性特性（日志、Shell、断言等）。有些产品确实有理由保留其中一部分特性；如果你的情况如此，请改用 <code class="docutils literal notranslate"><span class="pre">base</span></code> 配置档进行检查：</p>
+</dd>
+</dl>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>hardenconfig<span class="w"> </span>--<span class="w"> </span>-DHARDENCONFIG_PROFILE<span class="o">=</span>base
+</pre></div>
+</div>
+</section>
+<section id="configuration-options">
+<h2>配置选项<a class="headerlink" href="#configuration-options" title="链接到此标题。"></a></h2>
+<p>该工具通过 CMake 缓存变量（如上所示，在 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> 命令行中的 <code class="docutils literal notranslate"><span class="pre">--</span></code> 之后传入）或同名的环境变量进行控制：</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>选项</p></th>
+<th class="head"><p>作用</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">HARDENCONFIG_PROFILE</span></code></p></td>
+<td><p>用于检查的加固配置档。默认值：<code class="docutils literal notranslate"><span class="pre">strict</span></code>。</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">HARDENCONFIG_SHOW_ALL</span></code></p></td>
+<td><p>设置后，除了未通过的选项外，还会列出通过的选项和不适用的选项。</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">HARDENCONFIG_STRICT</span></code></p></td>
+<td><p>设置后，只要有任何检查未通过，就以非零代码退出。可用于将 CI 流水线或发布流程的放行条件设为加固报告无问题。</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">HARDENCONFIG_JSON</span></code></p></td>
+<td><p>文件路径，结果会额外以 JSON 格式写入该文件，供脚本和仪表板使用。</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">HARDENCONFIG_EXTRA_SOURCES</span></code></p></td>
+<td><p>以分号分隔的附加加固数据库文件列表（见下文）。</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="the-hardening-database">
+<h2>加固数据库<a class="headerlink" href="#the-hardening-database" title="链接到此标题。"></a></h2>
+<p>数据库采用分布式组织，每条规则都与它所加固的代码放在一起，并由该代码的维护者审查：</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/scripts/kconfig/hardening.yaml">scripts/kconfig/hardening.yaml</a>：中心文件，由信息安全工作组负责。它定义加固 <strong>配置档</strong>，以及针对顶层 Kconfig 文件中所定义符号的规则。</p></li>
+<li><p>放在相关 Kconfig 文件旁边的 <code class="docutils literal notranslate"><span class="pre">hardening.yaml</span></code> <strong>片段</strong>（例如 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/subsys/bluetooth/hardening.yaml">subsys/bluetooth/hardening.yaml</a> 或 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/arch/x86/hardening.yaml">arch/x86/hardening.yaml</a>），其中只包含规则。工具会在 <code class="docutils literal notranslate"><span class="pre">arch/</span></code>、<code class="docutils literal notranslate"><span class="pre">boards/</span></code>、<code class="docutils literal notranslate"><span class="pre">drivers/</span></code>、<code class="docutils literal notranslate"><span class="pre">kernel/</span></code>、<code class="docutils literal notranslate"><span class="pre">lib/</span></code>、<code class="docutils literal notranslate"><span class="pre">modules/</span></code>、<code class="docutils literal notranslate"><span class="pre">share/</span></code>、<code class="docutils literal notranslate"><span class="pre">soc/</span></code> 和 <code class="docutils literal notranslate"><span class="pre">subsys/</span></code> 下自动发现这些片段。在两个文件中定义同一个符号会报错，在片段中定义配置档也会报错。</p></li>
+</ul>
+<p>所有文件都使用相同的 JSON 模式（schema）<a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/scripts/schemas/hardening-schema.yaml">scripts/schemas/hardening-schema.yaml</a>。每条规则以其所适用的 Kconfig 符号为键，推荐一个确切的值或一个整数约束：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">rules</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">BOOT_BANNER</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">n</span>
+<span class="w">    </span><span class="nt">rationale</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">The boot banner prints the exact Zephyr version to the console,</span>
+<span class="w">      </span><span class="no">letting anyone with console access fingerprint the firmware and</span>
+<span class="w">      </span><span class="no">match it against known vulnerabilities for that release.</span>
+<span class="w">    </span><span class="nt">references</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">CWE-200</span><span class="p p-Indicator">]</span>
+
+<span class="w">  </span><span class="nt">STACK_POINTER_RANDOM</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">min</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">100</span>
+<span class="w">    </span><span class="nt">rationale</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">Randomizing each thread's initial stack pointer makes stack</span>
+<span class="w">      </span><span class="no">addresses unpredictable. The offset is taken out of the thread's</span>
+<span class="w">      </span><span class="no">own stack, which keeps the recommended value small.</span>
+<span class="w">    </span><span class="nt">references</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">CWE-121</span><span class="p p-Indicator">]</span>
+</pre></div>
+</div>
+<p>贡献一条新规则，就是将其添加到相关 Kconfig 文件旁边的 <code class="docutils literal notranslate"><span class="pre">hardening.yaml</span></code> 片段中（如果该子系统还没有片段，则新建一个），并且必须提供 <code class="docutils literal notranslate"><span class="pre">rationale</span></code>，这一要求由模式强制执行。持续集成还会验证：每个文件都能被解析并符合模式；每条规则都引用一个已存在的 Kconfig 符号，且其值与该符号的类型一致；没有规则被重复定义；没有文件看起来像是命名错误的片段。这样，条目就不会在无人察觉的情况下过时或加载失败。</p>
+<p><code class="docutils literal notranslate"><span class="pre">rationale</span></code> 是报告展示给读者的内容，会被折行显示在一个较窄的列中，而且通常是读者唯一的判断依据。请用一两句话、以现在时态、以该特性为主语，说明该选项在信息安全方面的后果：</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">value:</span> <span class="pre">n</span></code></dt><dd><p>说明启用该选项所造成的暴露面，以及在相关时说明谁能够接触到它：“详细的调制解调器日志会转储与调制解调器交换的全部数据，其中可能包括 APN 设置、PIN 码和服务器地址等凭据。”</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">value:</span> <span class="pre">y</span></code></dt><dd><p>说明它所抵御的攻击，或者不启用它会带来什么后果，选择读起来更清楚的一种写法。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">value:</span> <span class="pre">0</span></code>、<code class="docutils literal notranslate"><span class="pre">min</span></code> 和 <code class="docutils literal notranslate"><span class="pre">max</span></code></dt><dd><p>说明其他值会输出什么或无法防止什么，以及边界值本身起什么作用。</p>
+</dd>
+</dl>
+<p>不要：</p>
+<ul class="simple">
+<li><p>说明该选项应该用在哪里。产品是否应当接受该后果由配置档决定；应写“……泄露内部传输状态和地址”，而不是“……只应用于开发构建”。</p></li>
+<li><p>声称一个不采取进一步操作就无法完全实现的效果。例如，某个选项可以启用生成去除符号信息（stripped）的二进制文件，但确保部署的正是该文件则是用户的责任。</p></li>
+<li><p>复述报告中已经显示的某一列。在“0 会完全禁用随机化；建议至少使用 100 字节的随机偏移”中，后半句就是“推荐值”（Recommended）列的内容。</p></li>
+<li><p>重复另一条规则的措辞。可能在同一份报告中同时未通过的两条规则，读起来应当有足够的差别，让读者能够区分它们。</p></li>
+</ul>
+<p>如果某个选项只有在另一条至少覆盖相同配置档的 <code class="docutils literal notranslate"><span class="pre">n</span></code> 规则已被违反时才能启用，就不要为它添加 <code class="docutils literal notranslate"><span class="pre">n</span></code> 规则。例如，一旦 <a class="reference internal" href="../kconfig.html#CONFIG_SHELL" title="CONFIG_SHELL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SHELL</span></code></a> 本身被标记，再为某个 Shell 命令模块添加规则就是多余的，CI 会拒绝这样的规则。而为一个仅仅 <code class="docutils literal notranslate"><span class="pre">select</span></code> 了某个被标记选项的选项添加规则则不算多余：它指出了用户实际需要修改的地方。</p>
+<p>规则不带适用条件：某条建议是否适用于给定目标，已经在 Kconfig 本身中体现（依赖关系、硬件支持），而且该工具会将不适用于当前目标的选项报告为不适用，而不是报告为未通过。</p>
+</section>
+<section id="extending-the-database-out-of-tree">
+<h2>在代码树之外扩展数据库<a class="headerlink" href="#extending-the-database-out-of-tree" title="链接到此标题。"></a></h2>
+<p>产品团队可以通过 <code class="docutils literal notranslate"><span class="pre">HARDENCONFIG_EXTRA_SOURCES</span></code> 在代码树内数据库之上叠加自己的建议。每个附加文件都使用相同的模式，可以定义新的配置档（可选择扩展代码树内的配置档）和新的规则，也可以覆盖代码树内的规则。重新定义已有的配置档会被拒绝，因此无论产品在其上叠加什么内容，代码树内的配置档始终保持本文所记录的含义：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">profiles</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">acme-production</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">extends</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">strict</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ACME product security policy.</span>
+
+<span class="nt">rules</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">MY_VENDOR_DEBUG_INTERFACE</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">value</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">n</span>
+<span class="w">    </span><span class="nt">profiles</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">acme-production</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">rationale</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">|</span>
+<span class="w">      </span><span class="no">The vendor debug interface bypasses the product's authentication.</span>
+</pre></div>
+</div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-t<span class="w"> </span>hardenconfig<span class="w"> </span>--<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-DHARDENCONFIG_EXTRA_SOURCES<span class="o">=</span>/path/to/acme-hardening.yaml<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-DHARDENCONFIG_PROFILE<span class="o">=</span>acme-production
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 8月 19, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

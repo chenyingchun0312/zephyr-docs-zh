@@ -1,0 +1,340 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>致命错误 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/kernel/services/other/fatal.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" />
+    <link rel="next" title="线程本地存储（TLS）" href="thread_local_storage.html" />
+    <link rel="prev" title="断言" href="assert.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">内核</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">内核服务</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../index.html#scheduling-interrupts-and-synchronization">调度、中断与同步</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#data-passing">数据传递</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#memory-management">内存管理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#timing">计时</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html#other">其他</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="atomic.html">原子服务</a></li>
+<li class="toctree-l4"><a class="reference internal" href="float.html">浮点服务</a></li>
+<li class="toctree-l4"><a class="reference internal" href="version.html">版本</a></li>
+<li class="toctree-l4"><a class="reference internal" href="assert.html">断言</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">致命错误</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#software-errors-triggered-in-source-code">源代码中触发的软件错误</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#kernel-oops">内核 Oops</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#kernel-panic">内核 Panic</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#exceptions">异常</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#spurious-interrupts">伪中断</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#stack-overflows">栈溢出</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#other-exceptions">其他异常</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#fatal-error-handling">致命错误处理</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#api-reference">API 参考</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="thread_local_storage.html">线程本地存储（TLS）</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../drivers/index.html">设备驱动模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../usermode/index.html">用户模式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../memory_management/index.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../data_structures/index.html">数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../timing_functions/index.html">计时函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../object_cores/index.html">对象核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../timeutil.html">时间工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../precision_timing.html">精密计时</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../util/index.html">实用工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../iterable_sections/index.html">可迭代段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../code-relocation.html">代码和数据重定位</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanup.html">基于作用域的清理辅助工具</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">内核</a> &raquo;</li>
+  
+     <li><a href="../index.html">内核服务</a> &raquo;</li>
+  
+  <li>致命错误</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="fatal-errors">
+<span id="fatal"></span><h1>致命错误<a class="headerlink" href="#fatal-errors" title="链接到此标题。"></a></h1>
+<section id="software-errors-triggered-in-source-code">
+<h2>源代码中触发的软件错误<a class="headerlink" href="#software-errors-triggered-in-source-code" title="链接到此标题。"></a></h2>
+<p>Zephyr 提供了多种引发致命错误的方法，包括构建时检查、条件编译的断言，以及主动调用的 panic 或 oops。</p>
+<p>运行时断言（<code class="docutils literal notranslate"><span class="pre">ZASSERT()</span></code> 和旧的 <code class="docutils literal notranslate"><span class="pre">__ASSERT()</span></code>）失败会引发致命错误。有关断言 API 及其失败行为的配置方式，请参阅 <a class="reference internal" href="assert.html#assert"><span class="std std-ref">断言</span></a>。</p>
+<section id="kernel-oops">
+<h3>内核 Oops<a class="headerlink" href="#kernel-oops" title="链接到此标题。"></a></h3>
+<p>内核 oops 是通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_oops()</span></code> 触发的软件致命错误，应用于表示应用程序逻辑中出现了不可恢复的情况。</p>
+<p>生成的致命错误原因码为 <code class="docutils literal notranslate"><span class="pre">K_ERR_KERNEL_OOPS</span></code>。</p>
+</section>
+<section id="kernel-panic">
+<h3>内核 Panic<a class="headerlink" href="#kernel-panic" title="链接到此标题。"></a></h3>
+<p>内核 panic 是通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_panic()</span></code> 触发的软件致命错误，应用于表示 Zephyr 内核处于不可恢复的状态。如果内核遇到 panic，<code class="xref c c-func docutils literal notranslate"><span class="pre">k_sys_fatal_error_handler()</span></code> 的实现不应返回，因为整个系统需要复位。</p>
+<p>运行在用户模式下的线程不允许调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_panic()</span></code>，这样做会改为产生内核 oops。否则，生成的致命错误原因码为 <code class="docutils literal notranslate"><span class="pre">K_ERR_KERNEL_PANIC</span></code>。</p>
+</section>
+</section>
+<section id="exceptions">
+<h2>异常<a class="headerlink" href="#exceptions" title="链接到此标题。"></a></h2>
+<section id="spurious-interrupts">
+<h3>伪中断<a class="headerlink" href="#spurious-interrupts" title="链接到此标题。"></a></h3>
+<p>如果 CPU 在某条中断线上收到硬件中断，而该中断线尚未通过 <code class="docutils literal notranslate"><span class="pre">IRQ_CONNECT()</span></code> 或 <code class="xref c c-func docutils literal notranslate"><span class="pre">irq_connect_dynamic()</span></code> 安装处理程序，内核将产生原因码为 <code class="docutils literal notranslate"><span class="pre">K_ERR_SPURIOUS_IRQ()</span></code> 的致命错误。</p>
+</section>
+<section id="stack-overflows">
+<h3>栈溢出<a class="headerlink" href="#stack-overflows" title="链接到此标题。"></a></h3>
+<p>如果线程压入其执行栈的数据超出了栈缓冲区的容量，内核可能能够检测到这种情况，并产生原因码为 <code class="docutils literal notranslate"><span class="pre">K_ERR_STACK_CHK_FAIL</span></code> 的致命错误。</p>
+<p>如果线程运行在用户模式下，栈溢出总能被捕获，因为线程根本没有权限写入栈缓冲区之外的相邻内存地址。由于这是由内存保护硬件强制执行的，因此不存在破坏线程原本无权写入的内存数据的风险。</p>
+<p>如果线程运行在特权（supervisor）模式下，或者未启用 <a class="reference internal" href="../../../kconfig.html#CONFIG_USERSPACE" title="CONFIG_USERSPACE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USERSPACE</span></code></a>，那么栈溢出能否被捕获取决于配置。部分架构支持 <a class="reference internal" href="../../../kconfig.html#CONFIG_HW_STACK_PROTECTION" title="CONFIG_HW_STACK_PROTECTION"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HW_STACK_PROTECTION</span></code></a>，它可以捕获特权模式下的栈溢出，包括代表用户线程处理系统调用时发生的溢出。这通常通过专用的 CPU 特性，或紧邻栈缓冲区放置的只读 MMU/MPU 保护区域来实现。以这种方式捕获的栈溢出能够检测到溢出，但不能保证没有数据被破坏，应当将其视为影响整个系统健康状态的非常严重的情况。</p>
+<p>如果平台缺乏内存管理硬件支持，可以使用 <a class="reference internal" href="../../../kconfig.html#CONFIG_STACK_SENTINEL" title="CONFIG_STACK_SENTINEL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_STACK_SENTINEL</span></code></a>。这是一种纯软件的栈溢出检测功能，它会定期检查栈缓冲区末尾的哨兵值是否被破坏。它不需要硬件支持，但无法防止数据被破坏。由于检查通常在中断退出时进行，溢出可能在栈实际溢出之后相当长的时间才被检测到。</p>
+<p>最后，Zephyr 通过 <a class="reference internal" href="../../../kconfig.html#CONFIG_STACK_CANARIES" title="CONFIG_STACK_CANARIES"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_STACK_CANARIES</span></code></a> 支持 GCC 编译器的栈金丝雀（stack canary）。启用后，编译器会将启动时随机生成的金丝雀值插入函数栈帧中，并在函数退出时检查金丝雀是否被覆盖。如果检查失败，编译器会调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">__stack_chk_fail()</span></code>，其 Zephyr 实现会引发栈溢出致命错误。这种情况下的错误并不表示整个栈缓冲区都已溢出，而是表示当前函数的栈帧已被破坏。更多细节请参阅编译器文档。</p>
+<p>默认情况下，所有线程共享一个在启动时生成的金丝雀值。启用 <a class="reference internal" href="../../../kconfig.html#CONFIG_STACK_CANARIES_TLS" title="CONFIG_STACK_CANARIES_TLS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_STACK_CANARIES_TLS</span></code></a> 后，金丝雀改为存放在 <a class="reference internal" href="thread_local_storage.html#thread-local-storage"><span class="std std-ref">线程本地存储</span></a> 中，使每个线程拥有自己的值，从而使金丝雀的位置和值更难预测，代价是每个线程需要额外的设置工作。</p>
+<p>作为一项补充性的加固措施，<a class="reference internal" href="../../../kconfig.html#CONFIG_STACK_POINTER_RANDOM" title="CONFIG_STACK_POINTER_RANDOM"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_STACK_POINTER_RANDOM</span></code></a> 会在创建线程时为其初始栈指针加上一个随机偏移。这是一种有限形式的地址空间布局随机化，使任意栈帧的位置都不确定，从而阻碍某些类型的安全攻击，代价是每个线程的栈区域最多会消耗所配置的字节数。</p>
+</section>
+<section id="other-exceptions">
+<h3>其他异常<a class="headerlink" href="#other-exceptions" title="链接到此标题。"></a></h3>
+<p>任何其他类型的未处理 CPU 异常都会产生错误码 <code class="docutils literal notranslate"><span class="pre">K_ERR_CPU_EXCEPTION</span></code>。</p>
+</section>
+</section>
+<section id="fatal-error-handling">
+<h2>致命错误处理<a class="headerlink" href="#fatal-error-handling" title="链接到此标题。"></a></h2>
+<p>遇到致命错误时采取何种策略，由 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_sys_fatal_error_handler()</span></code> 函数的实现决定。该函数有一个弱链接的默认实现，它调用 <code class="docutils literal notranslate"><span class="pre">LOG_PANIC()</span></code> 输出所有挂起的日志消息，然后通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_fatal_halt()</span></code> 无条件地停止系统。</p>
+<p>应用程序可以通过覆盖 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_sys_fatal_error_handler()</span></code> 的实现来自行实现错误处理策略。如果该实现返回，出错的线程将被中止，系统其余部分继续运行。更多细节和约束请参阅该函数的文档。</p>
+</section>
+<section id="api-reference">
+<h2>API 参考<a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">fatal_apis</span></dt>
+</dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 8月 07, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

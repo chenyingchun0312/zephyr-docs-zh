@@ -1,0 +1,593 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>调制解调器模块 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/connectivity/modem/index.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" />
+    <link rel="next" title="输入/输出" href="../../io.html" />
+    <link rel="prev" title="Modbus" href="../modbus/index.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">服务</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">连接</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../networking/index.html">网络</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../bluetooth/index.html">Bluetooth</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../usb/index.html">USB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../canbus/index.html">控制器局域网（CAN）总线协议</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lora_lorawan/index.html">LoRa 和 LoRaWAN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modbus/index.html">Modbus</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">调制解调器模块</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#modem-pipe">调制解调器管道</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#modem-ppp">调制解调器 PPP</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#modem-cmux">调制解调器 CMUX</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#modem-pipelink">调制解调器管道链接（pipelink）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#modem-chat">调制解调器 chat</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cellular-modem">蜂窝调制解调器</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#architecture-overview">架构概览</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#connection-lifecycle">连接生命周期</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#power-on-and-hardware-reset">上电和硬件复位</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#initial-at-configuration">初始 AT 配置</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#cmux-bring-up">启动 CMUX</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#apn-configuration-and-dialing">APN 配置和拨号</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#data-connection">数据连接</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#shutdown">关机</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#adding-support-for-a-new-modem">添加对新调制解调器的支持</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#supported-modems">已支持的调制解调器</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#out-of-tree-modem">树外调制解调器</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#board-specific-init-script">开发板专用初始化脚本</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#cmux-power-saving">CMUX 省电</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../index.html">连接</a> &raquo;</li>
+  
+  <li>调制解调器模块</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="modem-modules">
+<span id="modem"></span><h1>调制解调器模块<a class="headerlink" href="#modem-modules" title="链接到此标题。"></a></h1>
+<p>该服务提供与调制解调器通信所需的模块。</p>
+<p>调制解调器是独立的设备，实现了执行射频（Radio-Frequency，RF）通信所需的硬件和软件，包括 GNSS、蜂窝、WiFi 等。</p>
+<p>各调制解调器模块通过数据输入/数据输出管道动态互连，因而可以独立测试，并且非常灵活，确保了稳定性和可扩展性。</p>
+<section id="modem-pipe">
+<h2>调制解调器管道<a class="headerlink" href="#modem-pipe" title="链接到此标题。"></a></h2>
+<p>该模块用于以线程安全的方式，对通过多种机制（如 UART 和 CMUX DLCI 通道）进行的数据输入/数据输出通信进行抽象。</p>
+<p>调制解调器后端内部会包含一个 modem_pipe 结构体实例，以及抽象其底层机制所需的各种缓冲区和其他结构体。</p>
+<img alt="调制解调器管道" class="align-center" src="../../../_images/modem_pipes.svg" />
+<p>调制解调器后端在初始化时会返回指向其内部 modem_pipe 结构体的指针，之后通过调制解调器管道 API 使用该指针与后端交互。</p>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">modem_pipe</span></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../../samples/drivers/modem/at_client/README.html#at_client" title="在控制台与调制解调器之间建立双向 UART 桥接，用于 AT 命令通信。">AT Command Client</a></span><span class="code-sample-description">在控制台与调制解调器之间建立双向 UART 桥接，用于 AT 命令通信。</span></li>
+</ul>
+</div>
+</section>
+<section id="modem-ppp">
+<h2>调制解调器 PPP<a class="headerlink" href="#modem-ppp" title="链接到此标题。"></a></h2>
+<p>该模块定义一个 L2 PPP 网络接口（见 <a class="reference internal" href="../networking/api/net_l2.html#net-l2-interface"><span class="std std-ref">L2 层管理</span></a>），并将其绑定到调制解调器后端。L2 PPP 接口负责发送和接收网络数据包。这些网络数据包在通过调制解调器后端传输之前，必须封装成 PPP 帧。该模块负责完成这一封装。</p>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">modem_ppp</span></dt>
+</dl>
+
+</section>
+<section id="modem-cmux">
+<h2>调制解调器 CMUX<a class="headerlink" href="#modem-cmux" title="链接到此标题。"></a></h2>
+<p>该模块是遵循 3GPP 27.010 规范的 CMUX 实现。CMUX 是一种多路复用协议，支持多个双向数据流，这些数据流称为 DLCI 通道。该模块连接到单个调制解调器后端，并对外提供多个调制解调器后端，每个后端代表一个 DLCI 通道。</p>
+<p>该协议定义了简单的成帧方式，用于将每个 DLC 拆分成小的数据块。</p>
+<img alt="CMUX 基本帧" class="align-center" src="../../../_images/cmux_frame.svg" />
+<p>Zephyr 实现了基本帧类型，其 MTU 大小可在构建时配置。</p>
+<p>对于支持 CMUX 省电命令（Power Saving Command，PSC）的调制解调器，该模块还利用该命令实现了省电功能。更多详细信息，请参阅下文的 <a class="reference internal" href="#cmux-power-saving"><span class="std std-ref">CMUX 省电</span></a> 一节。</p>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">modem_cmux</span></dt>
+</dl>
+
+</section>
+<section id="modem-pipelink">
+<h2>调制解调器管道链接（pipelink）<a class="headerlink" href="#modem-pipelink" title="链接到此标题。"></a></h2>
+<p>该模块用于在全局范围内共享调制解调器管道，目的是将设备驱动中调制解调器管道的创建和设置与这些管道的使用者解耦。有关如何在设备驱动与应用程序之间使用调制解调器管道链接的示例，请参阅 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/drivers/modem/modem_at_shell.c">drivers/modem/modem_at_shell.c</a> 和 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/drivers/modem/modem_cellular.c">drivers/modem/modem_cellular.c</a>。</p>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">modem_pipelink</span></dt>
+</dl>
+
+</section>
+<section id="modem-chat">
+<h2>调制解调器 chat<a class="headerlink" href="#modem-chat" title="链接到此标题。"></a></h2>
+<p>该模块实现了与调制解调器之间基于脚本的 AT 命令通信。AT 命令被组织成<strong>脚本</strong>，每个脚本是一系列命令-响应交互。该模块通过调制解调器管道发送命令字符串，然后等待与某个预期模式相匹配的响应。找到匹配项后，会调用一个可选的回调，并传入解析得到的参数。</p>
+<p>脚本在构建时使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">MODEM_CHAT_SCRIPT_DEFINE</span></code> 和 <code class="xref c c-macro docutils literal notranslate"><span class="pre">MODEM_CHAT_SCRIPT_CMDS_DEFINE</span></code> 宏定义。每个脚本条目将一个请求字符串与一个或多个 <code class="xref c c-struct docutils literal notranslate"><span class="pre">modem_chat_match</span></code> 模式配对。匹配模式支持通过指定分隔符（例如 <code class="docutils literal notranslate"><span class="pre">&quot;,&quot;</span></code>）来解析参数，从而可以方便地从 <code class="docutils literal notranslate"><span class="pre">+CSQ:</span> <span class="pre">20,99</span></code> 这类响应中提取字段。</p>
+<p>除了脚本化的交互之外，该模块还会持续监视数据流中的<strong>非请求</strong>响应，即调制解调器在没有先收到命令的情况下发送的消息（例如 <code class="docutils literal notranslate"><span class="pre">+CEREG:</span></code> 网络注册状态更新）。这些响应由一组单独的匹配模式处理，这些模式在初始化 chat 实例时注册。</p>
+<p>chat 模块可以连接到任意调制解调器管道，因此既可以通过原始 UART 后端通信，也可以通过 CMUX DLCI 通道通信，两者可以互换。</p>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">modem_chat</span></dt>
+</dl>
+
+</section>
+<section id="cellular-modem">
+<span id="id1"></span><h2>蜂窝调制解调器<a class="headerlink" href="#cellular-modem" title="链接到此标题。"></a></h2>
+<p>通用蜂窝调制解调器驱动 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/drivers/modem/modem_cellular.c">drivers/modem/modem_cellular.c</a> 将上述所有模块组合在一起，实现了一个完整的、与硬件无关的蜂窝数据连接。它提供一个标准的 Zephyr 网络接口，使应用程序无需任何调制解调器专用代码即可使用 <a class="reference internal" href="../networking/api/sockets.html#bsd-sockets-interface"><span class="std std-ref">BSD 套接字 API</span></a>。</p>
+<section id="architecture-overview">
+<h3>架构概览<a class="headerlink" href="#architecture-overview" title="链接到此标题。"></a></h3>
+<p>该驱动将各调制解调器模块组装成分层的管道架构：</p>
+<ol class="arabic simple">
+<li><p><strong>UART 后端</strong>：一个 <code class="xref c c-struct docutils literal notranslate"><span class="pre">modem_backend_uart</span></code> 实例提供最底层的调制解调器管道。它将物理 UART 外设抽象为调制解调器管道 API，执行线程安全的、中断驱动的传输。</p></li>
+<li><p><strong>CMUX</strong>：<code class="xref c c-struct docutils literal notranslate"><span class="pre">modem_cmux</span></code> 实例连接到 UART 管道，并按照 3GPP 27.010 规范将其复用为两个 DLCI 通道。</p></li>
+<li><p><strong>DLCI 通道 1（数据）</strong>：该管道在初始化期间承载 AT 命令流量，在连接建立后则承载 PPP 成帧的 IP 数据。</p></li>
+<li><p><strong>DLCI 通道 2（命令）</strong>：在数据连接处于活动状态时，该管道专用于 AT 命令流量，使驱动能够在不中断数据流的情况下查询信号质量、注册状态和其他参数。</p></li>
+<li><p><strong>调制解调器 chat</strong>：一个 <code class="xref c c-struct docutils literal notranslate"><span class="pre">modem_chat</span></code> 实例执行 AT 命令脚本。在 CMUX 启动之前，它直接连接到 UART 管道；之后它会先切换到 DLCI 1 执行初始化脚本，再切换到 DLCI 2 进行周期性监视。</p></li>
+<li><p><strong>调制解调器 PPP</strong>：一个 <code class="xref c c-struct docutils literal notranslate"><span class="pre">modem_ppp</span></code> 实例将 Zephyr IP 数据包封装为 PPP 帧，并通过 DLCI 1 发送。在接收方向上，它会去除 PPP 帧封装，并将数据包交给网络协议栈。</p></li>
+</ol>
+<p>同时使用两个 DLCI 通道是关键所在：调制解调器可以在 DLCI 1 上全速传输 IP 数据，而驱动可以继续在后台通过 DLCI 2 交换 AT 命令。</p>
+</section>
+<section id="connection-lifecycle">
+<h3>连接生命周期<a class="headerlink" href="#connection-lifecycle" title="链接到此标题。"></a></h3>
+<p>该驱动围绕一个内部状态机构建，该状态机依次经历以下阶段：</p>
+<section id="power-on-and-hardware-reset">
+<h4>上电和硬件复位<a class="headerlink" href="#power-on-and-hardware-reset" title="链接到此标题。"></a></h4>
+<p>驱动会对调制解调器的复位和电源 GPIO（如果在设备树中定义了）施加脉冲，并等待调制解调器开始响应。</p>
+</section>
+<section id="initial-at-configuration">
+<h4>初始 AT 配置<a class="headerlink" href="#initial-at-configuration" title="链接到此标题。"></a></h4>
+<p>调制解调器 chat 模块直接连接到 UART 管道，并运行该调制解调器专用的 <code class="docutils literal notranslate"><span class="pre">init_chat_script</span></code>。该脚本通常会关闭回显，查询 IMEI、型号和固件版本，并配置非请求响应的上报。此阶段的所有通信都是通过 UART 进行的普通 AT 通信，CMUX 尚未启用。</p>
+</section>
+<section id="cmux-bring-up">
+<h4>启动 CMUX<a class="headerlink" href="#cmux-bring-up" title="链接到此标题。"></a></h4>
+<p>初始化脚本执行成功后，驱动会发送 <code class="docutils literal notranslate"><span class="pre">AT+CMUX</span></code> 命令，将调制解调器切换到多路复用模式。CMUX 模块连接到 UART 管道，并打开 DLCI 1 和 DLCI 2。从此时起，所有通信都在 CMUX 帧内进行。</p>
+</section>
+<section id="apn-configuration-and-dialing">
+<h4>APN 配置和拨号<a class="headerlink" href="#apn-configuration-and-dialing" title="链接到此标题。"></a></h4>
+<p>驱动将调制解调器 chat 连接到 DLCI 1，先运行一个动态构建的 APN 脚本（<code class="docutils literal notranslate"><span class="pre">AT+CGDCONT</span></code>），再运行拨号脚本（<code class="docutils literal notranslate"><span class="pre">ATD*99#</span></code> 或等效命令）。成功后，调制解调器在 DLCI 1 上进入数据模式。</p>
+</section>
+<section id="data-connection">
+<h4>数据连接<a class="headerlink" href="#data-connection" title="链接到此标题。"></a></h4>
+<p>调制解调器 PPP 模块连接到 DLCI 1 管道，调制解调器 chat 则切换到 DLCI 2。一旦 <code class="docutils literal notranslate"><span class="pre">+CEREG</span></code>（或 <code class="docutils literal notranslate"><span class="pre">+CREG</span></code> / <code class="docutils literal notranslate"><span class="pre">+CGREG</span></code>）非请求响应表明调制解调器已在网络上注册，驱动就会调用 <code class="docutils literal notranslate"><span class="pre">net_if_carrier_on()</span></code>。</p>
+<p>此时，Zephyr 网络协议栈会在 DLCI 1 上协商建立 PPP 会话，应用程序即可正常使用套接字。与此同时，DLCI 2 上的周期性 chat 脚本会监视信号质量和注册状态。</p>
+</section>
+<section id="shutdown">
+<h4>关机<a class="headerlink" href="#shutdown" title="链接到此标题。"></a></h4>
+<p>驱动会运行关机脚本，并对断电 GPIO 施加脉冲，使调制解调器正常断电。状态机随后返回空闲状态。</p>
+</section>
+</section>
+<section id="adding-support-for-a-new-modem">
+<h3>添加对新调制解调器的支持<a class="headerlink" href="#adding-support-for-a-new-modem" title="链接到此标题。"></a></h3>
+<p>通用蜂窝驱动使用通过设备树 compatible 绑定及相关 chat 脚本提供的、针对每种调制解调器的配置。添加新的调制解调器需要以下三项内容：</p>
+<ol class="arabic simple">
+<li><p>一个包含通用蜂窝调制解调器基础绑定的<strong>设备树绑定</strong>。</p></li>
+<li><p><strong>chat 脚本</strong>，定义用于初始化、拨号、周期性监视以及（可选的）关机的 AT 命令序列。</p></li>
+<li><p>一个将 chat 脚本与硬件配置关联起来的<strong>设备实例化宏</strong>。</p></li>
+</ol>
+<p>驱动会自动处理所有管道连接、CMUX 管理、PPP 成帧和状态机逻辑。</p>
+<section id="supported-modems">
+<h4>已支持的调制解调器<a class="headerlink" href="#supported-modems" title="链接到此标题。"></a></h4>
+<p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/drivers/modem/modem_cellular.c">drivers/modem/modem_cellular.c</a> 已支持以下调制解调器：</p>
+<ul class="simple">
+<li><p>Fibocom LE250</p></li>
+<li><p>Quectel BG95, BG96</p></li>
+<li><p>Quectel EG25-G, EG800Q</p></li>
+<li><p>SIMCom SIM7080, A76xx</p></li>
+<li><p>u-blox SARA-R4, SARA-R5, LARA-R6</p></li>
+<li><p>Sierra Wireless HL7800</p></li>
+<li><p>Telit ME910G1, ME310G1, LE910C1 Thread-x, LEx10Q1</p></li>
+<li><p>Nordic Semiconductor nRF91 SLM</p></li>
+<li><p>Sequans GM02S</p></li>
+</ul>
+<p>每种已支持的调制解调器都使用同一组宏（<code class="docutils literal notranslate"><span class="pre">MODEM_CHAT_SCRIPT_CMDS_DEFINE</span></code>、<code class="docutils literal notranslate"><span class="pre">MODEM_CHAT_SCRIPT_DEFINE</span></code>、<code class="docutils literal notranslate"><span class="pre">MODEM_CELLULAR_DEFINE_INSTANCE</span></code> 等）定义。有关初始化、拨号、周期性和关机 chat 脚本的完整示例，请参阅 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/drivers/modem/modem_cellular.c">drivers/modem/modem_cellular.c</a>。所有调制解调器共享的通用基础设备树属性记录在 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/dts/bindings/modem/zephyr,cellular-modem-device.yaml">dts/bindings/modem/zephyr,cellular-modem-device.yaml</a> 中。</p>
+</section>
+<section id="out-of-tree-modem">
+<h4>树外调制解调器<a class="headerlink" href="#out-of-tree-modem" title="链接到此标题。"></a></h4>
+<p>驱动的宏和数据结构通过 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/drivers/modem/modem_cellular.h">include/zephyr/drivers/modem/modem_cellular.h</a> 导出，因此可以在 Zephyr 源码树<strong>之外</strong>（例如在应用程序源码中）定义一个全新的调制解调器，而无需修改任何上游文件。这对于针对特定用例微调 AT 命令序列，或者在提交到上游之前开发对新调制解调器的支持非常有用。</p>
+<p>首先创建一个包含通用基础绑定的设备树绑定，然后使用 <code class="docutils literal notranslate"><span class="pre">modem_cellular.h</span></code> 中的宏编写驱动源文件。只需要以下三个文件。</p>
+<p><strong>设备树绑定</strong>：<code class="docutils literal notranslate"><span class="pre">app/dts/bindings/my,modem.yaml</span></code>：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">compatible</span><span class="p">:</span><span class="w"> </span><span class="s">"my,modem"</span>
+
+<span class="nt">include</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zephyr,cellular-modem-device.yaml</span>
+</pre></div>
+</div>
+<p><strong>设备树覆盖文件（overlay）</strong>：<code class="docutils literal notranslate"><span class="pre">app.overlay</span></code>（部分）：</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="nf">uart30</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nl">modem</span><span class="p">:</span><span class="w"> </span><span class="nf">modem</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"my,modem"</span><span class="p">;</span>
+<span class="w">        </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"okay"</span><span class="p">;</span>
+<span class="w">        </span><span class="n">mdm-power-gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">gpio1</span><span class="w"> </span><span class="mi">13</span><span class="w"> </span><span class="na">GPIO_ACTIVE_HIGH</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p><strong>驱动源文件</strong>：<code class="docutils literal notranslate"><span class="pre">app/src/my_modem.c</span></code>：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/drivers/modem/modem_cellular.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/device.h&gt;</span>
+
+<span class="n">MODEM_CELLULAR_COMMON_CHAT_MATCHES</span><span class="p">();</span>
+<span class="n">MODEM_CHAT_MATCHES_DEFINE</span><span class="p">(</span><span class="n">my_modem_unsol</span><span class="p">,</span>
+<span class="w">    </span><span class="n">MODEM_CELLULAR_COMMON_UNSOL_MATCHES</span><span class="p">);</span>
+
+<span class="cm">/* Init script — configure the modem, enable unsolicited LTE</span>
+<span class="cm"> * registration notifications, then switch to CMUX.</span>
+<span class="cm"> */</span>
+<span class="n">MODEM_CHAT_SCRIPT_CMDS_DEFINE</span><span class="p">(</span><span class="n">init_chat_script_cmds</span><span class="p">,</span>
+<span class="w">    </span><span class="n">MODEM_CHAT_SCRIPT_CMD_RESP</span><span class="p">(</span><span class="s">"ATE0"</span><span class="p">,</span><span class="w">              </span><span class="n">ok_match</span><span class="p">),</span>
+<span class="w">    </span><span class="n">MODEM_CHAT_SCRIPT_CMD_RESP</span><span class="p">(</span><span class="s">"AT+CEREG=1"</span><span class="p">,</span><span class="w">        </span><span class="n">ok_match</span><span class="p">),</span>
+<span class="w">    </span><span class="n">MODEM_CHAT_SCRIPT_CMD_RESP</span><span class="p">(</span><span class="s">"AT+CMUX=0,0,5,127"</span><span class="p">,</span><span class="w"> </span><span class="n">ok_match</span><span class="p">));</span>
+
+<span class="n">MODEM_CHAT_SCRIPT_DEFINE</span><span class="p">(</span><span class="n">init_chat_script</span><span class="p">,</span><span class="w"> </span><span class="n">init_chat_script_cmds</span><span class="p">,</span>
+<span class="w">    </span><span class="n">abort_matches</span><span class="p">,</span><span class="w"> </span><span class="n">modem_cellular_chat_callback_handler</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+
+<span class="cm">/* Dial script — enable the radio and open data mode */</span>
+<span class="n">MODEM_CHAT_SCRIPT_CMDS_DEFINE</span><span class="p">(</span><span class="n">dial_chat_script_cmds</span><span class="p">,</span>
+<span class="w">    </span><span class="n">MODEM_CHAT_SCRIPT_CMD_RESP</span><span class="p">(</span><span class="s">"AT+CFUN=1"</span><span class="p">,</span><span class="w"> </span><span class="n">ok_match</span><span class="p">),</span>
+<span class="w">    </span><span class="n">MODEM_CHAT_SCRIPT_CMD_RESP</span><span class="p">(</span><span class="s">"ATD*99#"</span><span class="p">,</span><span class="w">   </span><span class="n">connect_match</span><span class="p">));</span>
+
+<span class="n">MODEM_CHAT_SCRIPT_DEFINE</span><span class="p">(</span><span class="n">dial_chat_script</span><span class="p">,</span><span class="w"> </span><span class="n">dial_chat_script_cmds</span><span class="p">,</span>
+<span class="w">    </span><span class="n">dial_abort_matches</span><span class="p">,</span><span class="w"> </span><span class="n">modem_cellular_chat_callback_handler</span><span class="p">,</span><span class="w"> </span><span class="mi">60</span><span class="p">);</span>
+
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">modem_cellular_vendor_config</span><span class="w"> </span><span class="n">my_modem_vendor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">.</span><span class="n">scripts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">init</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">init_chat_script</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">dial</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">dial_chat_script</span><span class="p">,</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">.</span><span class="n">unsol_matches</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">matches</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">my_modem_unsol</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ARRAY_SIZE</span><span class="p">(</span><span class="n">my_modem_unsol</span><span class="p">),</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">.</span><span class="n">chat_delimiter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"</span><span class="se">\r</span><span class="s">"</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">chat_filter</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">power_pulse_duration_ms</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">reset_pulse_duration_ms</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">startup_time_ms</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5000</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">shutdown_time_ms</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">5000</span><span class="p">,</span>
+<span class="p">};</span>
+
+<span class="cm">/* Macro for defining a DT instance */</span>
+<span class="cp">#define MY_MODEM_DEVICE(inst)                                                   \</span>
+<span class="cp">    MODEM_DT_INST_PPP_DEFINE(inst,                                              \</span>
+<span class="cp">        MODEM_CELLULAR_INST_NAME(ppp, inst), NULL, 1500, 64);                   \</span>
+<span class="cp">                                                                                \</span>
+<span class="cp">    static struct modem_cellular_data                                           \</span>
+<span class="cp">        MODEM_CELLULAR_INST_NAME(data, inst);                                   \</span>
+<span class="cp">                                                                                \</span>
+<span class="cp">    MODEM_CELLULAR_DEFINE_AND_INIT_USER_PIPES(inst,                             \</span>
+<span class="cp">        (user_pipe_0, 3), (user_pipe_1, 4))                                     \</span>
+<span class="cp">                                                                                \</span>
+<span class="cp">    MODEM_CELLULAR_DEFINE_INSTANCE(inst, &amp;my_modem_vendor, NULL)</span>
+
+<span class="cp">#define DT_DRV_COMPAT my_modem</span>
+<span class="n">DT_INST_FOREACH_STATUS_OKAY</span><span class="p">(</span><span class="n">MY_MODEM_DEVICE</span><span class="p">)</span>
+<span class="cp">#undef DT_DRV_COMPAT</span>
+</pre></div>
+</div>
+<p>上面的示例虽然很精简，但足以在通用蜂窝调制解调器上建立 PPP 连接。更完整的示例请参阅 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/drivers/modem/modem_cellular.c">drivers/modem/modem_cellular.c</a>。</p>
+</section>
+</section>
+<section id="board-specific-init-script">
+<h3>开发板专用初始化脚本<a class="headerlink" href="#board-specific-init-script" title="链接到此标题。"></a></h3>
+<p>初始化、网络和拨号脚本的作用域是厂商级的（以设备树 compatible 为键），因此对于使用同一调制解调器的不同开发板之间存在差异的配置（例如射频调谐器的频段路由），原本需要复制并修改厂商驱动。作为替代，开发板可以使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">MODEM_CELLULAR_BOARD_INIT_DEFINE</span></code> 注册自己的 chat 脚本。该脚本在 CMUX 建立之后、APN 和网络配置之前，通过 AT 控制通道运行。未注册脚本的开发板不会增加任何 ROM 或 RAM 占用。</p>
+<p>驱动会用推进连接流程的回调覆盖该脚本的完成回调，因此脚本上设置的任何回调都会被忽略。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">MODEM_CHAT_MATCH_DEFINE</span><span class="p">(</span><span class="n">board_init_ok_match</span><span class="p">,</span><span class="w"> </span><span class="s">"OK"</span><span class="p">,</span><span class="w"> </span><span class="s">""</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+<span class="n">MODEM_CHAT_SCRIPT_CMDS_DEFINE</span><span class="p">(</span><span class="n">board_init_cmds</span><span class="p">,</span>
+<span class="w">    </span><span class="n">MODEM_CHAT_SCRIPT_CMD_RESP</span><span class="p">(</span><span class="s">"AT+QCFG=</span><span class="se">\"</span><span class="s">rf/tuner_cfg</span><span class="se">\"</span><span class="s">,0,</span><span class="se">\"</span><span class="s">12,28</span><span class="se">\"</span><span class="s">"</span><span class="p">,</span><span class="w"> </span><span class="n">board_init_ok_match</span><span class="p">));</span>
+<span class="n">MODEM_CHAT_SCRIPT_NO_ABORT_DEFINE</span><span class="p">(</span><span class="n">board_init</span><span class="p">,</span><span class="w"> </span><span class="n">board_init_cmds</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">);</span>
+
+<span class="n">MODEM_CELLULAR_BOARD_INIT_DEFINE</span><span class="p">(</span><span class="n">DT_NODELABEL</span><span class="p">(</span><span class="n">modem</span><span class="p">),</span><span class="w"> </span><span class="o">&amp;</span><span class="n">board_init</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="cmux-power-saving">
+<span id="id2"></span><h2>CMUX 省电<a class="headerlink" href="#cmux-power-saving" title="链接到此标题。"></a></h2>
+<p>3GPP TS 27.010 为 CMUX 规定了一种省电机制，当调制解调器支持该机制时，可以在 Zephyr 中使用。</p>
+<p>规范的以下章节描述了该省电机制：</p>
+<ul class="simple">
+<li><p>5.2.5 Inter-frame Fill（帧间填充）</p></li>
+<li><p>5.4.6.3.2 Power Saving Control (PSC) message（省电控制（PSC）消息）</p></li>
+<li><p>5.4.7 Power Control and Wake-up Mechanisms（电源控制和唤醒机制）</p></li>
+</ul>
+<p>该省电机制允许对 CMUX 模块所使用的 UART 设备进行运行时电源管理。当任何 DLCI 通道上都没有数据需要发送或接收时，CMUX 模块会在一段可配置的超时之后进入空闲状态。在空闲状态下，CMUX 模块会向调制解调器发送一条省电控制消息，请求其进入低功耗状态。随后 CMUX 模块可以关闭管道设备；如果启用了运行时电源管理，UART 设备就可以断电。</p>
+<p>当任何 DLCI 通道上有数据需要发送或接收时，CMUX 模块会退出空闲状态，并通过持续发送标志字符来唤醒调制解调器，直到收到调制解调器发回的标志字符为止。</p>
+<p>有些调制解调器通过 CMUX 之外的硬件信号线来控制休眠和唤醒，而不是通过带内协议。对于这类调制解调器，可以使用 <code class="docutils literal notranslate"><span class="pre">cmux-no-powersave-handshake</span></code> 属性在进入和退出两个阶段都跳过握手。进入时，CMUX 跳过 PSC 帧交换，直接转入省电状态。退出时，CMUX 跳过标志字符交换，在管道重新打开后直接转入已连接状态。下一个发出的帧会自行重新同步成帧。</p>
+<p>有些调制解调器只有在 DTR（Data Terminal Ready，数据终端就绪）信号无效时才允许 UART 断电。在这种情况下，可以将支持 DTR 的 UART 设备与 CMUX 模块配合使用，根据 UART 的电源状态控制 DTR 信号。</p>
+<p>要在 UART 断电时因收到数据而唤醒，需要调制解调器支持用 RING 信号唤醒主机。RING 信号由调制解调器驱动处理，驱动在检测到 RING 信号时打开管道设备，使 CMUX 模块能够唤醒调制解调器并处理收到的数据。</p>
+<p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/subsys/modem/modem_cmux.c">subsys/modem/modem_cmux.c</a> 模块使用以下状态机实现省电机制。</p>
+<img alt="使用省电功能时的 CMUX 状态机" class="align-center" src="../../../_images/cmux_state_machine.svg" />
+<p>在已连接状态下，<code class="docutils literal notranslate"><span class="pre">modem_cmux_process_received_byte()</span></code> 需要按照规范 5.2.5 Inter-frame Fill 中的描述回复重复的标志字符。空闲定时器保持运行，并在每次发送或接收帧时清零。定时器到期将启动向省电模式的转换。</p>
+<p>在 POWERSAVE 状态下，所有 DLC 管道保持打开，但通往 UART 的管道被阻塞或关闭，因此所有数据都缓存在 CMUX 环形缓冲区中，等待唤醒。在此状态下，同样会回复重复的标志字符，以便远端按照 5.4.7 中的描述继续执行唤醒过程。如果管道已关闭，并且启用了运行时电源管理，UART 设备就可以断电。</p>
+<p>当空闲定时器在 CONNECTED 状态下到期时，CMUX 状态机会阻塞所有 DLC 管道，并向远端发送 PSC 命令，以启动向 POWERSAVE 状态的转换。PSC 命令得到回复后，CMUX 转入 POWERSAVE 模式。</p>
+<p>在 CONNECTED 状态下，远端也可以发送 PSC 命令来启动向省电模式的转换。CMUX 会阻塞所有 DLC 管道并发送 PSC 响应。TX 缓冲区清空后，CMUX 进入 POWERSAVE 状态。</p>
+<p>在 POWERSAVE 状态下，当任一 DLC 管道尝试发送数据时，CMUX 会缓存该数据并转入 WAKEUP 状态，按照 5.4.7 的规定，通过发送连续的标志字符流来启动唤醒过程。远端回复标志字符，表示已准备好接收数据。CMUX 随后停止发送标志字符，返回 CONNECTED 状态，恢复正常运行。</p>
+<p>CMUX 省电机制可以通过以下设备树属性进行配置：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">cmux-enable-runtime-power-save</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">boolean</span>
+<span class="w">  </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Enable runtime power saving using CMUX PSC commands.</span>
+<span class="w">               </span><span class="l l-Scalar l-Scalar-Plain">This requires modem to support CMUX and PSC commands while keeping the data</span>
+<span class="w">               </span><span class="l l-Scalar l-Scalar-Plain">connection active.</span>
+<span class="nt">cmux-close-pipe-on-power-save</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">boolean</span>
+<span class="w">  </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Close the modem pipe when entering power save mode.</span>
+<span class="w">              </span><span class="l l-Scalar l-Scalar-Plain">When runtime power management is enabled, this closes the UART.</span>
+<span class="w">              </span><span class="l l-Scalar l-Scalar-Plain">This requires modem to support waking up the UART using RING signal.</span>
+<span class="nt">cmux-idle-timeout-ms</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">int</span>
+<span class="w">  </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Time in milliseconds after which CMUX will enter power save mode.</span>
+<span class="w">  </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">10000</span>
+</pre></div>
+</div>
+<p>带省电功能的 CMUX 设备树设置示例：</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="nf">uart1</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">  </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"okay"</span><span class="p">;</span>
+<span class="w">  </span><span class="n">zephyr</span><span class="p">,</span><span class="n">pm-device-runtime-auto</span><span class="p">;</span>
+
+<span class="w">  </span><span class="nl">uart_dtr</span><span class="p">:</span><span class="w"> </span><span class="nf">uart-dtr</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"zephyr,uart-dtr"</span><span class="p">;</span>
+<span class="w">    </span><span class="n">dtr-gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">interface_to_nrf9160</span><span class="w"> </span><span class="mi">4</span><span class="w"> </span><span class="na">GPIO_ACTIVE_LOW</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"okay"</span><span class="p">;</span>
+<span class="w">    </span><span class="n">zephyr</span><span class="p">,</span><span class="n">pm-device-runtime-auto</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nl">modem</span><span class="p">:</span><span class="w"> </span><span class="nf">modem</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">      </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"nordic,nrf91-slm"</span><span class="p">;</span>
+<span class="w">      </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"okay"</span><span class="p">;</span>
+<span class="w">      </span><span class="n">mdm-ring-gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">interface_to_nrf9160</span><span class="w"> </span><span class="mi">5</span><span class="w"> </span><span class="p">(</span><span class="na">GPIO_PULL_UP</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="na">GPIO_ACTIVE_LOW</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">      </span><span class="n">zephyr</span><span class="p">,</span><span class="n">pm-device-runtime-auto</span><span class="p">;</span>
+<span class="w">      </span><span class="n">cmux-enable-runtime-power-save</span><span class="p">;</span>
+<span class="w">      </span><span class="n">cmux-close-pipe-on-power-save</span><span class="p">;</span>
+<span class="w">      </span><span class="n">cmux-idle-timeout-ms</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">5000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="w">  </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>上面的示例展示了一个支持 DTR 的 UART 设备，由一个支持 CMUX 和 PSC 命令的调制解调器使用。DTR 信号用于控制 UART 的电源状态。调制解调器断电时，其 RING 信号用于唤醒调制解调器子系统。</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 9月 05, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

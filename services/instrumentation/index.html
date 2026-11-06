@@ -1,0 +1,465 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>插桩 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/instrumentation/index.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="CPU 负载" href="../cpu_load/index.html" />
+    <link rel="prev" title="Perf" href="../profiling/perf.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">服务</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../connectivity/index.html">连接</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../messaging.html">进程间通信</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../observability.html">日志、跟踪与调试</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../logging/index.html">日志</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tracing/index.html">跟踪</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../debugging/index.html">调试</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../profiling/index.html">性能剖析</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">插桩</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">概述</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#operational-modes">工作模式</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#callgraph-mode-tracing">调用图模式（跟踪）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#statistical-mode-profiling">统计模式（性能剖析）</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#configuration">配置</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#zaru-py-usage"><code class="docutils literal notranslate"><span class="pre">zaru.py</span></code> 用法</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#limitations-and-considerations">限制与注意事项</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api-reference">API 参考</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../cpu_load/index.html">CPU 负载</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../shell/index.html">Shell</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../task_wdt/index.html">任务看门狗</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../observability.html">日志、跟踪与调试</a> &raquo;</li>
+  
+  <li>插桩</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="instrumentation">
+<span id="id1"></span><h1>插桩<a class="headerlink" href="#instrumentation" title="链接到此标题。"></a></h1>
+<section id="overview">
+<h2>概述<a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>插桩（instrumentation）子系统为 Zephyr 应用程序提供由编译器管理的运行时系统插桩能力。它让开发者只需很少的手动插桩工作，就能跟踪函数调用、观察上下文切换并剖析应用程序性能。</p>
+<p><a class="reference internal" href="../tracing/index.html#tracing"><span class="std std-ref">跟踪</span></a> 子系统提供感知 RTOS 的跟踪功能和结构化的事件 API，而插桩子系统则利用编译器的插桩钩子，在更低的层次上工作。这种方法几乎可以捕获任何函数的进入和退出事件，而无需在代码中手动添加跟踪调用。</p>
+<div class="hint admonition">
+<p class="admonition-title">跟踪与插桩的比较</p>
+<p><strong>何时使用跟踪</strong>：当你需要感知 RTOS 的事件跟踪（例如线程切换、信号量操作等）并希望尽量降低开销时，选择跟踪子系统。</p>
+<p><strong>何时使用插桩</strong>：当你需要函数级执行的详细视图，以便更好地理解代码流程，或在不添加手动跟踪点的情况下找出性能瓶颈时，选择插桩。</p>
+</div>
+<p>插桩子系统依赖编译器对自动函数插桩的支持。启用后，编译器会在应用程序中每个函数（显式标记为 <code class="docutils literal notranslate"><span class="pre">__no_instrumentation__</span></code> 的函数除外）的入口和出口处自动插入对特殊插桩处理函数的调用。目前只支持带 <code class="docutils literal notranslate"><span class="pre">-finstrument-functions</span></code> 编译选项的 GCC。</p>
+<p>该子系统在 RAM 初始化之后自动初始化，并使用触发/停止函数来控制何时进行记录。默认的触发函数和停止函数都设为 <code class="docutils literal notranslate"><span class="pre">main()</span></code>（可通过 Kconfig 配置），也就是说插桩会捕获从 <code class="docutils literal notranslate"><span class="pre">main()</span></code> 开始到其返回的整个执行过程。</p>
+<p>记录的数据存储在 RAM 中，主机可以通过一个提供一组简单命令的 UART 后端访问这些数据。<a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/scripts/instrumentation/zaru.py">scripts/instrumentation/zaru.py</a> 脚本可以通过高层命令行界面执行这些命令，并便于以适合进一步分析（例如使用 <a class="reference external" href="https://perfetto.dev/">Perfetto</a>）的格式获取数据。</p>
+</section>
+<section id="operational-modes">
+<h2>工作模式<a class="headerlink" href="#operational-modes" title="链接到此标题。"></a></h2>
+<p>插桩子系统支持两种模式，可以单独启用，也可以同时启用：</p>
+<section id="callgraph-mode-tracing">
+<h3>调用图模式（跟踪）<a class="headerlink" href="#callgraph-mode-tracing" title="链接到此标题。"></a></h3>
+<p>在调用图模式（通过 <a class="reference internal" href="../../kconfig.html#CONFIG_INSTRUMENTATION_MODE_CALLGRAPH" title="CONFIG_INSTRUMENTATION_MODE_CALLGRAPH"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_INSTRUMENTATION_MODE_CALLGRAPH</span></code></a> 启用）下，子系统把函数的进入和退出事件连同时间戳和上下文信息记录到内存缓冲区中。这可以用于：</p>
+<ul class="simple">
+<li><p>重建完整的函数调用图</p></li>
+<li><p>观察线程上下文切换</p></li>
+<li><p>分析执行流程和时序关系</p></li>
+</ul>
+<p>跟踪缓冲区可以工作在环形缓冲区模式（默认，覆盖旧条目）或固定缓冲区模式（满时停止）。缓冲区大小可通过 <a class="reference internal" href="../../kconfig.html#CONFIG_INSTRUMENTATION_MODE_CALLGRAPH_TRACE_BUFFER_SIZE" title="CONFIG_INSTRUMENTATION_MODE_CALLGRAPH_TRACE_BUFFER_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_INSTRUMENTATION_MODE_CALLGRAPH_TRACE_BUFFER_SIZE</span></code></a> 配置。</p>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text">调用图模式的输出示例。更多详情请参阅 <a class="reference internal" href="#zaru-usage"><span class="std std-ref">zaru.py 用法</span></a>。</span><a class="headerlink" href="#id2" title="链接到此段代码"></a></div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./scripts/instrumentation/zaru.py<span class="w"> </span>trace
+
+<span class="go">   Thread Name      Thread ID  CPU  Mode     Timestamp          Function(s)</span>
+<span class="go">------------------------------------------------------------------------------------------------</span>
+<span class="go">            ... (truncated) ...</span>
+
+<span class="go">            main    0x20001a38   0)    0 |    187837720 ns |               sys_dlist_append();</span>
+<span class="go">            main    0x20001a38   0)    0 |    188802680 ns |             };   /* z_priq_simple_add */</span>
+<span class="go">            main    0x20001a38   0)    0 |    189282840 ns |           };   /* add_to_waitq_locked */</span>
+<span class="go">            main    0x20001a38   0)    0 |    189770000 ns |           add_thread_timeout();</span>
+<span class="go">            main    0x20001a38   0)    0 |    190732920 ns |         };   /* pend_locked */</span>
+<span class="go">            main    0x20001a38   0)    0 |    191198480 ns |         k_spin_release();</span>
+<span class="go">            main    0x20001a38   0)    0 |    192125560 ns |         z_swap() {</span>
+<span class="go">            main    0x20001a38   0)    0 |    192590080 ns |           k_spin_release();</span>
+<span class="go">            main    0x20001a38   0)    0 |    193520000 ns |           z_swap_irqlock() {</span>
+<span class="go">            main    0x20001a38   0)    0 |    193987840 ns |             __set_BASEPRI() {</span>
+<span class="go">            main    0x20001a38   0)    0 |    194474640 ns | /* --&gt; Scheduler switched OUT from thread 'main' */</span>
+<span class="go">     thread-none   none-thread   0)    0 |    195178000 ns | /* &lt;-- Scheduler switched IN thread 'thread-none' */</span>
+<span class="go">     thread-none   none-thread   0)    0 |    195851520 ns | z_thread_entry() {</span>
+<span class="go">     thread-none   none-thread   0)    0 |    196312600 ns |   k_sched_current_thread_query() {</span>
+<span class="go">     thread-none   none-thread   0)    0 |    196774680 ns |     z_impl_k_sched_current_thread_query();</span>
+<span class="go">     thread-none   none-thread   0)    0 |    197694480 ns |   };   /* k_sched_current_thread_query */</span>
+<span class="go">        thread_A    0x200000d8   0)    7 |    198160000 ns | thread_A() {</span>
+<span class="go">        thread_A    0x200000d8   0)    7 |    198443400 ns |   get_sem_and_exec_function() {</span>
+<span class="go">        thread_A    0x200000d8   0)    7 |    198727440 ns |     k_sem_take() {</span>
+<span class="go">        thread_A    0x200000d8   0)    7 |    199011840 ns |       z_impl_k_sem_take() {</span>
+<span class="go">        thread_A    0x200000d8   0)    7 |    199397520 ns |         k_spin_lock() {</span>
+<span class="go">        thread_A    0x200000d8   0)    7 |    199784200 ns |           __get_BASEPRI();</span>
+<span class="go">        thread_A    0x200000d8   0)    7 |    200557840 ns |           __set_BASEPRI_MAX();</span>
+<span class="go">        thread_A    0x200000d8   0)    7 |    201333640 ns |           __ISB();</span>
+<span class="go">        thread_A    0x200000d8   0)    7 |    202111360 ns |           z_spinlock_validate_pre();</span>
+<span class="go">        thread_A    0x200000d8   0)    7 |    202891000 ns |           z_spinlock_validate_post();</span>
+<span class="go">        thread_A    0x200000d8   0)    7 |    203664760 ns |         };   /* k_spin_lock */</span>
+<span class="go">        thread_A    0x200000d8   0)    7 |    204058000 ns |         k_spin_unlock() {</span>
+<span class="go">        thread_A    0x200000d8   0)    7 |    204450840 ns |           __set_BASEPRI();</span>
+<span class="go">        thread_A    0x200000d8   0)    7 |    205231640 ns |           __ISB();</span>
+<span class="go">        thread_A    0x200000d8   0)    7 |    206009600 ns |         };   /* k_spin_unlock */</span>
+<span class="go">        thread_A    0x200000d8   0)    7 |    206291600 ns |       };   /* z_impl_k_sem_take */</span>
+<span class="go">        thread_A    0x200000d8   0)    7 |    206572920 ns |     };   /* k_sem_take */</span>
+
+<span class="go">        ... (truncated) ...</span>
+</pre></div>
+</div>
+</div>
+</section>
+<section id="statistical-mode-profiling">
+<h3>统计模式（性能剖析）<a class="headerlink" href="#statistical-mode-profiling" title="链接到此标题。"></a></h3>
+<p>在统计模式（通过 <a class="reference internal" href="../../kconfig.html#CONFIG_INSTRUMENTATION_MODE_STATISTICAL" title="CONFIG_INSTRUMENTATION_MODE_STATISTICAL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_INSTRUMENTATION_MODE_STATISTICAL</span></code></a> 启用）下，子系统为触发点和停止点之间执行的每个不同函数累计时间统计。它提供每个函数的总执行时间，有助于找出性能瓶颈。子系统最多跟踪 <a class="reference internal" href="../../kconfig.html#CONFIG_INSTRUMENTATION_MODE_STATISTICAL_MAX_NUM_FUNC" title="CONFIG_INSTRUMENTATION_MODE_STATISTICAL_MAX_NUM_FUNC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_INSTRUMENTATION_MODE_STATISTICAL_MAX_NUM_FUNC</span></code></a> 个不同函数。</p>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text">统计模式的输出示例（开销最大的前 10 个函数）。更多详情请参阅 <a class="reference internal" href="#zaru-usage"><span class="std std-ref">zaru.py 用法</span></a>。</span><a class="headerlink" href="#id3" title="链接到此段代码"></a></div>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./scripts/instrumentation/zaru.py<span class="w"> </span>profile<span class="w"> </span>-n<span class="w"> </span><span class="m">10</span>
+
+<span class="go">9.45% 0000061d main</span>
+<span class="go">6.00% 0000049d k_msleep</span>
+<span class="go">5.98% 00000469 k_sleep</span>
+<span class="go">5.95% 0000aea1 k_sleep_ticks</span>
+<span class="go">5.93% 0000ad6d z_impl_k_sleep_ticks</span>
+<span class="go">5.66% 00000431 k_sem_take</span>
+<span class="go">5.65% 00007e65 z_impl_k_sem_take</span>
+<span class="go">5.51% 0000ac29 z_pend_curr</span>
+<span class="go">2.83% 000063ed sys_clock_isr</span>
+<span class="go">2.67% 0000d361 sys_clock_announce</span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+<section id="configuration">
+<h2>配置<a class="headerlink" href="#configuration" title="链接到此标题。"></a></h2>
+<p>使用以下方式启用插桩：</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">CONFIG_INSTRUMENTATION</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_INSTRUMENTATION_MODE_CALLGRAPH</span><span class="o">=</span><span class="s">y</span><span class="w">    </span><span class="c1"># For tracing</span>
+<span class="na">CONFIG_INSTRUMENTATION_MODE_STATISTICAL</span><span class="o">=</span><span class="s">y</span><span class="w">  </span><span class="c1"># For profiling</span>
+</pre></div>
+</div>
+<p>插桩子系统通过 UART 控制台与目标设备通信。请确保 <code class="docutils literal notranslate"><span class="pre">zephyr_console</span></code> chosen 节点指向所需的 UART 控制器。</p>
+<p><a class="reference internal" href="../storage/retention/index.html#retention-api"><span class="std std-ref">保留内存</span></a> 可以让触发/停止函数的地址在重启后保留。此功能是可选的，通过 <a class="reference internal" href="../../kconfig.html#CONFIG_INSTRUMENTATION_DYNAMIC_TRIGGER" title="CONFIG_INSTRUMENTATION_DYNAMIC_TRIGGER"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_INSTRUMENTATION_DYNAMIC_TRIGGER</span></code></a> Kconfig 选项启用。启用后，设备树中必须指定一个保留内存区域：</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nf">/</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nf">sram</span><span class="o">@</span><span class="mi">2003FC00</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"zephyr,memory-region"</span><span class="p">,</span><span class="w"> </span><span class="s">"mmio-sram"</span><span class="p">;</span>
+<span class="w">        </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x2003FC00</span><span class="w"> </span><span class="na">DT_SIZE_K</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">zephyr</span><span class="p">,</span><span class="n">memory-region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"RetainedMem"</span><span class="p">;</span>
+
+<span class="w">        </span><span class="nf">retainedmem</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">            </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"zephyr,retained-ram"</span><span class="p">;</span>
+<span class="w">            </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"okay"</span><span class="p">;</span>
+
+<span class="w">            </span><span class="nl">instrumentation_triggers</span><span class="p">:</span><span class="w"> </span><span class="nf">retention</span><span class="o">@</span><span class="mi">0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"zephyr,retention"</span><span class="p">;</span>
+<span class="w">                </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"okay"</span><span class="p">;</span>
+<span class="w">                </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x0</span><span class="w"> </span><span class="mh">0x10</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">            </span><span class="p">};</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="w">    </span><span class="p">};</span>
+<span class="p">};</span>
+
+<span class="cm">/* Adjust main SRAM to exclude retained region */</span>
+<span class="o">&amp;</span><span class="nf">sram0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x20000000</span><span class="w"> </span><span class="na">DT_SIZE_K</span><span class="p">(</span><span class="mi">255</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>完整的配置示例请参阅 <a class="reference internal" href="../../samples/subsys/instrumentation/README.html#instrumentation" title="演示插桩子系统的跟踪和性能分析功能。">Instrumentation</a> 示例。其他选项包括缓冲区大小、触发函数以及函数/文件排除列表（参见以 <a class="reference internal" href="../../kconfig.html#!CONFIG_INSTRUMENTATION_*"><code class="xref kconfig kconfig-option-regex docutils literal notranslate"><span class="pre">CONFIG_INSTRUMENTATION_*</span></code></a> 开头的 Kconfig 选项）。</p>
+</section>
+<section id="zaru-py-usage">
+<span id="zaru-usage"></span><h2><code class="docutils literal notranslate"><span class="pre">zaru.py</span></code> 用法<a class="headerlink" href="#zaru-py-usage" title="链接到此标题。"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">zaru.py</span></code> 命令行工具（位于 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/scripts/instrumentation/zaru.py">scripts/instrumentation/zaru.py</a>）提供了一个通过 UART 控制插桩并从目标提取数据的接口。</p>
+<p>该工具提供以下几个命令：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">status</span></code>：检查目标设备是否支持</p>
+<ul>
+<li><p>调用图（跟踪）模式</p></li>
+<li><p>统计（性能剖析）模式</p></li>
+<li><p>动态配置触发/停止函数</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">trace</span></code>：捕获并显示函数调用跟踪。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">profile</span></code>：捕获并显示函数性能剖析数据。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">reboot</span></code>：重启目标设备。</p></li>
+</ul>
+<p>运行 <code class="docutils literal notranslate"><span class="pre">zaru.py</span> <span class="pre">&lt;command&gt;</span> <span class="pre">--help</span></code> 可以获取各命令的帮助。</p>
+<p>默认情况下，<code class="docutils literal notranslate"><span class="pre">zaru.py</span></code> 尝试使用 <code class="docutils literal notranslate"><span class="pre">/dev/ttyACM0</span></code> 连接目标设备。可以使用 <code class="docutils literal notranslate"><span class="pre">--serial</span></code> 选项指定其他串口：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>./scripts/instrumentation/zaru.py<span class="w"> </span>--serial<span class="w"> </span>/dev/ttyACM1<span class="w"> </span>status
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">--build-dir</span></code> 选项用于指定 Zephyr 构建目录，需要它来找到用于符号解析的 ELF 文件。如果未提供，<code class="docutils literal notranslate"><span class="pre">zaru.py</span></code> 会尝试自动查找。</p>
+<p>详细的使用说明请参阅 <a class="reference internal" href="../../samples/subsys/instrumentation/README.html#instrumentation" title="演示插桩子系统的跟踪和性能分析功能。">Instrumentation</a> 示例文档。</p>
+</section>
+<section id="limitations-and-considerations">
+<h2>限制与注意事项<a class="headerlink" href="#limitations-and-considerations" title="链接到此标题。"></a></h2>
+<dl class="simple">
+<dt>编译器支持</dt><dd><p>插桩子系统需要支持 <code class="docutils literal notranslate"><span class="pre">-finstrument-functions</span></code> 的 GCC，不支持其他编译器。</p>
+</dd>
+<dt>栈大小要求</dt><dd><p>插桩会给每次函数调用增加开销，从而增加栈的使用量。你可能需要增大线程栈大小，以容纳插桩处理函数和嵌套函数调用所需的额外空间。</p>
+</dd>
+<dt>执行开销</dt><dd><p>所有函数调用都会产生插桩开销。由于增加了插桩调用，代码体积会增大，性能也会受到影响。</p>
+</dd>
+<dt>初始化限制</dt><dd><p>在 RAM 初始化之前运行的代码（例如早期启动函数）不会被捕获，因为它们在插桩子系统初始化之前运行。</p>
+</dd>
+</dl>
+<p>为降低开销，请使用触发/停止函数只对感兴趣的代码区域插桩，并通过 <a class="reference internal" href="../../kconfig.html#CONFIG_INSTRUMENTATION_EXCLUDE_FUNCTION_LIST" title="CONFIG_INSTRUMENTATION_EXCLUDE_FUNCTION_LIST"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_INSTRUMENTATION_EXCLUDE_FUNCTION_LIST</span></code></a> 和 <a class="reference internal" href="../../kconfig.html#CONFIG_INSTRUMENTATION_EXCLUDE_FILE_LIST" title="CONFIG_INSTRUMENTATION_EXCLUDE_FILE_LIST"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_INSTRUMENTATION_EXCLUDE_FILE_LIST</span></code></a> 排除对性能要求高的函数。</p>
+</section>
+<section id="api-reference">
+<h2>API 参考<a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">instrumentation_api</span></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/subsys/instrumentation/README.html#instrumentation" title="演示插桩子系统的跟踪和性能分析功能。">Instrumentation</a></span><span class="code-sample-description">演示插桩子系统的跟踪和性能分析功能。</span></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 8月 15, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

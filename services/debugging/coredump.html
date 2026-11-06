@@ -1,0 +1,695 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>核心转储 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/debugging/coredump.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="UDP coredump via shell" href="../../samples/subsys/debug/coredump_udp_demos/demo_shell/README.html" />
+    <link rel="prev" title="线程分析器" href="thread-analyzer.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">服务</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../connectivity/index.html">连接</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../messaging.html">进程间通信</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../observability.html">日志、跟踪与调试</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../logging/index.html">日志</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../tracing/index.html">跟踪</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">调试</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="thread-analyzer.html">线程分析器</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">核心转储</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#configuration">配置</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#usage">用法</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#example">示例</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#starting-the-gdb-server-from-within-gdb">在 GDB 内部启动 GDB 服务器</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#file-format">文件格式</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#file-header">文件头</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#architecture-specific-block">架构相关块</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#threads-metadata-block">线程元数据块</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#memory-block">内存块</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#adding-new-target">添加新目标</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#udp-logging-backend-sample">UDP 日志后端示例</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="../../samples/subsys/debug/coredump_udp_demos/demo_shell/README.html">UDP coredump via shell</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#api-documentation">API 文档</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="gdbstub.html">GDB stub</a></li>
+<li class="toctree-l4"><a class="reference internal" href="debugmon.html">Cortex-M 调试监视器</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mipi_stp_decoder.html">MIPI STP 解码器</a></li>
+<li class="toctree-l4"><a class="reference internal" href="symtab.html">符号表（Symtab）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="cs_trace_defmt.html">ARM Coresight 跟踪解格式化器</a></li>
+<li class="toctree-l4"><a class="reference internal" href="zyclictest.html">Zyclictest</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../profiling/index.html">性能剖析</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../instrumentation/index.html">插桩</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cpu_load/index.html">CPU 负载</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../shell/index.html">Shell</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../task_wdt/index.html">任务看门狗</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../observability.html">日志、跟踪与调试</a> &raquo;</li>
+  
+     <li><a href="index.html">调试</a> &raquo;</li>
+  
+  <li>核心转储</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="core-dump">
+<span id="coredump"></span><h1>核心转储<a class="headerlink" href="#core-dump" title="链接到此标题。"></a></h1>
+<p>核心转储（core dump）模块可以转储 CPU 寄存器和内存内容，供离线调试使用。遇到致命错误时会调用该模块，它根据启用的后端打印或存储数据。</p>
+<section id="configuration">
+<h2>配置<a class="headerlink" href="#configuration" title="链接到此标题。"></a></h2>
+<p>使用以下选项配置该模块。</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">DEBUG_COREDUMP</span></code>：启用该模块。</p></li>
+</ul>
+<p>以下是启用核心转储输出后端的选项：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">DEBUG_COREDUMP_BACKEND_LOGGING</span></code>：使用日志模块输出核心转储。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DEBUG_COREDUMP_BACKEND_LOGGING_UDP</span></code>：与日志后端相同，但可选择以原始 UDP 方式传输；对端为 <code class="docutils literal notranslate"><span class="pre">DEBUG_COREDUMP_LOGGING_UDP_HOST</span></code>，这是一个由 <code class="docutils literal notranslate"><span class="pre">net_ipaddr_parse()</span></code> 解析的字符串（IPv4 或 IPv6，可选 <code class="docutils literal notranslate"><span class="pre">:port</span></code>，省略时默认 UDP 端口为 <code class="docutils literal notranslate"><span class="pre">17777</span></code>）。使用 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/scripts/coredump/coredump_udp_receiver.py">scripts/coredump/coredump_udp_receiver.py</a> 为 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/scripts/coredump/coredump_gdbserver.py">scripts/coredump/coredump_gdbserver.py</a> 生成二进制文件。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DEBUG_COREDUMP_BACKEND_FLASH_PARTITION</span></code>：使用 Flash 分区输出核心转储。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DEBUG_COREDUMP_BACKEND_NULL</span></code>：在无法启用其他后端时使用的后备核心转储后端。所有输出都发送到 null。</p></li>
+</ul>
+<p>以下是关于内存转储的选项：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">DEBUG_COREDUMP_MEMORY_DUMP_MIN</span></code>：只转储发生异常的线程的栈、其线程结构体，以及支持在调试器中遍历栈所需的其他最少量数据。仅在需要转储绝对最少数据时使用。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DEBUG_COREDUMP_MEMORY_DUMP_THREADS</span></code>：转储所有线程的线程结构体和栈，以及调试线程所需的全部数据。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">DEBUG_COREDUMP_MEMORY_DUMP_LINKER_RAM</span></code>：转储 _image_ram_start[] 与 _image_ram_end[] 之间的内存区域。其中至少包括 data、noinit 和 BSS 段。这是默认选项。</p></li>
+</ul>
+<p>可以通过一个或多个 <a class="reference internal" href="../../hardware/peripherals/coredump.html#coredump-device-api"><span class="std std-ref">核心转储设备</span></a> 在转储中加入更多内存（即使选择了“DEBUG_COREDUMP_MEMORY_DUMP_MIN”配置）</p>
+</section>
+<section id="usage">
+<h2>用法<a class="headerlink" href="#usage" title="链接到此标题。"></a></h2>
+<p>启用核心转储模块后，发生致命错误时，会根据启用的后端打印或存储 CPU 寄存器和内存内容。这些核心转储数据可以输入一个定制的 GDB 服务器，作为 GDB（及其他兼容 GDB 的调试器）的远程目标。在调试器中可以检查 CPU 寄存器、内存内容和栈。</p>
+<p>通常包括以下步骤：</p>
+<ol class="arabic simple">
+<li><p>根据启用的后端，从设备获取核心转储日志。例如，如果使用日志模块后端，则从日志模块后端获取日志输出。</p></li>
+<li><p>将核心转储日志转换为 GDB 服务器可以解析的二进制格式。例如，可以使用 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/scripts/coredump/coredump_serial_log_parser.py">scripts/coredump/coredump_serial_log_parser.py</a> 将串口控制台日志转换为二进制文件。如果启用了 UDP 核心转储后端（<code class="docutils literal notranslate"><span class="pre">DEBUG_COREDUMP_BACKEND_LOGGING_UDP</span></code>），则在收集端主机上运行 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/scripts/coredump/coredump_udp_receiver.py">scripts/coredump/coredump_udp_receiver.py</a>，把 UDP 数据报重新组装成 <strong>相同</strong> 的原始二进制格式。</p></li>
+<li><p>使用脚本 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/scripts/coredump/coredump_gdbserver.py">scripts/coredump/coredump_gdbserver.py</a> 启动定制的 GDB 服务器，以核心转储二进制日志文件和 Zephyr ELF 文件作为参数。也可以在 GDB 内部启动 GDB 服务器，见下文。</p></li>
+<li><p>启动与目标架构对应的调试器。</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>使用 <code class="docutils literal notranslate"><span class="pre">ZEPHYR_TOOLCHAIN_VARIANT=zephyr</span></code> 的 Intel ADSP CAVS 15-25 平台开发者应使用 SDK 中 <code class="docutils literal notranslate"><span class="pre">xtensa-intel_apl_adsp</span></code> 工具链里的调试器。</p>
+</div>
+<ol class="arabic" start="5">
+<li><p>启用 <code class="docutils literal notranslate"><span class="pre">DEBUG_COREDUMP_BACKEND_FLASH_PARTITION</span></code> 时，核心转储数据存储在 Flash 分区中。该 Flash 分区必须在设备树中定义：</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="nf">flash0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">   </span><span class="nf">partitions</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nl">coredump_partition</span><span class="p">:</span><span class="w"> </span><span class="nf">partition</span><span class="o">@</span><span class="mi">255000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">         </span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"coredump-partition"</span><span class="p">;</span>
+<span class="w">         </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x255000</span><span class="w"> </span><span class="na">DT_SIZE_K</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">      </span><span class="p">};</span>
+<span class="w">   </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</li>
+</ol>
+<section id="example">
+<h3>示例<a class="headerlink" href="#example" title="链接到此标题。"></a></h3>
+<p>本示例使用连接到串口控制台的日志模块后端，在 <a class="reference internal" href="../../boards/qemu/x86/doc/index.html#qemu_x86">QEMU Emulation for X86</a> 上进行，场景是解引用了空指针。</p>
+<p>以下是来自串口控制台的核心转储日志，保存在 <code class="file docutils literal notranslate"><span class="pre">coredump.log</span></code> 中：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Booting from ROM..*** Booting Zephyr OS build zephyr-v2.3.0-1840-g7bba91944a63  ***
+Hello World! qemu_x86
+E: Page fault at address 0x0 (error code 0x2)
+E: Linear address not present in page tables
+E:   PDE: 0x0000000000115827 Writable, User, Execute Enabled
+E:   PTE: Non-present
+E: EAX: 0x00000000, EBX: 0x00000000, ECX: 0x00119d74, EDX: 0x000003f8
+E: ESI: 0x00000000, EDI: 0x00101aa7, EBP: 0x00119d10, ESP: 0x00119d00
+E: EFLAGS: 0x00000206 CS: 0x0008 CR3: 0x00119000
+E: call trace:
+E: EIP: 0x00100459
+E:      0x00100477 (0x0)
+E:      0x00100492 (0x0)
+E:      0x001004c8 (0x0)
+E:      0x00105465 (0x105465)
+E:      0x00101abe (0x0)
+E: &gt;&gt;&gt; ZEPHYR FATAL ERROR 0: CPU exception on CPU 0
+E: Current thread: 0x00119080 (unknown)
+E: #CD:BEGIN#
+E: #CD:5a4501000100050000000000
+E: #CD:4101003800
+E: #CD:0e0000000200000000000000749d1100f803000000000000009d1100109d1100
+E: #CD:00000000a71a100059041000060200000800000000901100
+E: #CD:4d010080901100e0901100
+E: #CD:0100000000000000000000000180000000000000000000000000000000000000
+E: #CD:00000000000000000000000000000000e364100000000000000000004c9c1100
+E: #CD:000000000000000000000000b49911000004000000000000fc03000000000000
+E: #CD:4d0100b4991100b49d1100
+E: #CD:f8030000020000000200000002000000f8030000fd03000a02000000dc9e1100
+E: #CD:149a1160fd03000002000000dc9e1100249a110087201000049f11000a000000
+E: #CD:349a11000a4f1000049f11000a9e1100449a11000a8b10000200000002000000
+E: #CD:449a1100388b1000049f11000a000000549a1100ad201000049f11000a000000
+E: #CD:749a11000a201000049f11000a000000649a11000a201000049f11000a000000
+E: #CD:749a1100e8201000049f11000a000000949a1100890b10000a0000000a000000
+E: #CD:a49a1100890b10000a0000000a000000f8030000189b11000200000002000000
+E: #CD:f49a1100289b11000a000000189b1100049b11009b0710000a000000289b1100
+E: #CD:f49a110087201000049f110045000000f49a1100509011000a00000020901100
+E: #CD:f49a110060901100049f1100ffffffff0000000000000000049f1100ffffffff
+E: #CD:0000000000000000630b1000189b1100349b1100af0b1000630b1000289b1100
+E: #CD:55891000789b11000000000020901100549b1100480000004a891000609b1100
+E: #CD:649b1100d00b10004a891000709b110000000000609b11000a00000000000000
+E: #CD:849b1100709b11004a89100000000000949b1100794a10000000000058901100
+E: #CD:20901100c34a10000a00001734020000d001000000000000d49b110038000000
+E: #CD:c49b110078481000b49911000004000000000000000000000c9c11000c9c1100
+E: #CD:149c110000000000d49b110038000000f49b1100da481000b499110000040000
+E: #CD:0e0000000200000000000000744d0100b4991100b49d1100009d1100109d1100
+E: #CD:149c110099471000b4991100000400000800000000901100ad861000409c1100
+E: #CD:349c1100e94710008090110000000000349c1100b64710008086100045000000
+E: #CD:849c11002d53100000000000d09c11008090110020861000f5ffffff8c9c1100
+E: #CD:000000000000000000000000a71a1000a49c1100020200008090110000000000
+E: #CD:a49c1100020200000800000000000000a49c11001937100000000000d09c1100
+E: #CD:0c9d0000bc9c0000b49d1100b4991100c49c1100ae37100000000000d09c1100
+E: #CD:0800000000000000c888100000000000109d11005d031000d09c1100009d1100
+E: #CD:109d11000000000000000000a71a1000f803000000000000749d110002000000
+E: #CD:5904100008000000060200000e0000000202000002020000000000002c9d1100
+E: #CD:7704100000000000d00b1000c9881000549d110000000000489d110092041000
+E: #CD:00000000689d1100549d11000000000000000000689d1100c804100000000000
+E: #CD:c0881000000000007c9d110000000000749d11007c9d11006554100065541000
+E: #CD:00000000000000009c9d1100be1a100000000000000000000000000038041000
+E: #CD:08000000020200000000000000000000f4531000000000000000000000000000
+E: #CD:END#
+E: Halting system
+</pre></div>
+</div>
+<ol class="arabic">
+<li><p>运行核心转储串口日志转换器：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./scripts/coredump/coredump_serial_log_parser.py coredump.log coredump.bin</span>
+</pre></div>
+</div>
+</li>
+<li><p>启动定制的 GDB 服务器：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">./scripts/coredump/coredump_gdbserver.py build/zephyr/zephyr.elf coredump.bin</span>
+</pre></div>
+</div>
+</li>
+<li><p>启动 GDB：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">&lt;path to SDK&gt;/x86_64-zephyr-elf/bin/x86_64-zephyr-elf-gdb build/zephyr/zephyr.elf</span>
+</pre></div>
+</div>
+</li>
+<li><p>在 GDB 中，通过端口 1234 连接到 GDB 服务器：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp gp-VirtualEnv">(gdb)</span> <span class="go">target remote localhost:1234</span>
+</pre></div>
+</div>
+</li>
+<li><p>检查 CPU 寄存器：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp gp-VirtualEnv">(gdb)</span> <span class="go">info registers</span>
+</pre></div>
+</div>
+<p>GDB 的输出：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>eax            0x0                 0
+ecx            0x119d74            1154420
+edx            0x3f8               1016
+ebx            0x0                 0
+esp            0x119d00            0x119d00 &lt;z_main_stack+844&gt;
+ebp            0x119d10            0x119d10 &lt;z_main_stack+860&gt;
+esi            0x0                 0
+edi            0x101aa7            1055399
+eip            0x100459            0x100459 &lt;func_3+16&gt;
+eflags         0x206               [ PF IF ]
+cs             0x8                 8
+ss             &lt;unavailable&gt;
+ds             &lt;unavailable&gt;
+es             &lt;unavailable&gt;
+fs             &lt;unavailable&gt;
+gs             &lt;unavailable&gt;
+</pre></div>
+</div>
+</li>
+<li><p>检查回溯：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp gp-VirtualEnv">(gdb)</span> <span class="go">bt</span>
+</pre></div>
+</div>
+<p>GDB 的输出：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>#0  0x00100459 in func_3 (addr=0x0) at zephyr/rtos/zephyr/samples/hello_world/src/main.c:14
+#1  0x00100477 in func_2 (addr=0x0) at zephyr/rtos/zephyr/samples/hello_world/src/main.c:21
+#2  0x00100492 in func_1 (addr=0x0) at zephyr/rtos/zephyr/samples/hello_world/src/main.c:28
+#3  0x001004c8 in main () at zephyr/rtos/zephyr/samples/hello_world/src/main.c:42
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+<section id="starting-the-gdb-server-from-within-gdb">
+<h3>在 GDB 内部启动 GDB 服务器<a class="headerlink" href="#starting-the-gdb-server-from-within-gdb" title="链接到此标题。"></a></h3>
+<p>可以使用 <code class="docutils literal notranslate"><span class="pre">target</span> <span class="pre">remote</span> <span class="pre">|</span></code> 在 GDB 内部启动定制的 GDB 服务器，而不必在单独的 shell 中启动。</p>
+<ol class="arabic">
+<li><p>启动 GDB：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">&lt;path to SDK&gt;/x86_64-zephyr-elf/bin/x86_64-zephyr-elf-gdb build/zephyr/zephyr.elf</span>
+</pre></div>
+</div>
+</li>
+<li><p>在 GDB 中，使用 <code class="docutils literal notranslate"><span class="pre">--pipe</span></code> 选项启动 GDB 服务器：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp gp-VirtualEnv">(gdb)</span> <span class="go">target remote | ./scripts/coredump/coredump_gdbserver.py --pipe build/zephyr/zephyr.elf coredump.bin</span>
+</pre></div>
+</div>
+</li>
+</ol>
+</section>
+</section>
+<section id="file-format">
+<h2>文件格式<a class="headerlink" href="#file-format" title="链接到此标题。"></a></h2>
+<p>核心转储二进制文件由一个文件头、一个架构相关块、零个或一个线程元数据块以及多个内存块组成。下面各头部中的所有数字都是小端序。</p>
+<section id="file-header">
+<h3>文件头<a class="headerlink" href="#file-header" title="链接到此标题。"></a></h3>
+<p>文件头由以下字段组成：</p>
+<table class="docutils align-default" id="id1">
+<caption><span class="caption-text">核心转储二进制文件头</span><a class="headerlink" href="#id1" title="链接到此表格。"></a></caption>
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 10.0%" />
+<col style="width: 70.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>字段</p></th>
+<th class="head"><p>数据类型</p></th>
+<th class="head"><p>描述</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>ID</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">char[2]</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Z</span></code>、<code class="docutils literal notranslate"><span class="pre">E</span></code>，作为文件的标识符。</p></td>
+</tr>
+<tr class="row-odd"><td><p>头部版本</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">uint16_t</span></code></p></td>
+<td><p>标识头部的版本。每当修改头部结构体时都需要递增该值。这样解析器可以拒绝旧版本的头部，避免错误地解析头部。</p></td>
+</tr>
+<tr class="row-even"><td><p>目标代码</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">uint16_t</span></code></p></td>
+<td><p>指明目标（例如架构或 SoC），以便解析器实例化正确的寄存器块解析器。</p></td>
+</tr>
+<tr class="row-odd"><td><p>指针大小</p></td>
+<td><p>'uint8_t'</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">uintptr_t</span></code> 的大小，以 2 的幂表示（例如 32 位为 5，64 位为 6）。解析内存块地址时需要它来兼顾 32 位和 64 位目标。</p></td>
+</tr>
+<tr class="row-even"><td><p>标志</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">uint8_t</span></code></p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p>致命错误原因</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span></code></p></td>
+<td><p>致命错误的原因，与 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/fatal.h">include/zephyr/fatal.h</a> 中定义的 <code class="docutils literal notranslate"><span class="pre">enum</span> <span class="pre">k_fatal_error_reason</span></code> 相同</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="architecture-specific-block">
+<h3>架构相关块<a class="headerlink" href="#architecture-specific-block" title="链接到此标题。"></a></h3>
+<p>架构相关块包含目标架构特有数据（例如 CPU 寄存器）的字节流</p>
+<table class="docutils align-default" id="id2">
+<caption><span class="caption-text">架构相关块</span><a class="headerlink" href="#id2" title="链接到此表格。"></a></caption>
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 10.0%" />
+<col style="width: 70.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>字段</p></th>
+<th class="head"><p>数据类型</p></th>
+<th class="head"><p>描述</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>ID</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">char</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">A</span></code>，表示这是一个架构相关块。</p></td>
+</tr>
+<tr class="row-odd"><td><p>头部版本</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">uint16_t</span></code></p></td>
+<td><p>标识该块的版本，由目标架构相关块解析器解释。</p></td>
+</tr>
+<tr class="row-even"><td><p>字节数</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">uint16_t</span></code></p></td>
+<td><p>头部之后包含目标数据字节流的字节数。字节流的格式与目标相关，只由目标解析器解析。</p></td>
+</tr>
+<tr class="row-odd"><td><p>寄存器字节流</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">uint8_t[]</span></code></p></td>
+<td><p>包含目标架构特有的数据。</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="threads-metadata-block">
+<h3>线程元数据块<a class="headerlink" href="#threads-metadata-block" title="链接到此标题。"></a></h3>
+<p>线程元数据块包含调试线程所需数据的字节流。</p>
+<table class="docutils align-default" id="id3">
+<caption><span class="caption-text">线程元数据块</span><a class="headerlink" href="#id3" title="链接到此表格。"></a></caption>
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 10.0%" />
+<col style="width: 70.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>字段</p></th>
+<th class="head"><p>数据类型</p></th>
+<th class="head"><p>描述</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>ID</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">char</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">T</span></code>，表示这是一个线程元数据块。</p></td>
+</tr>
+<tr class="row-odd"><td><p>头部版本</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">uint16_t</span></code></p></td>
+<td><p>标识头部的版本。每当修改头部结构体时都需要递增该值。这样解析器可以拒绝旧版本的头部，避免错误地解析头部。</p></td>
+</tr>
+<tr class="row-even"><td><p>字节数</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">uint16_t</span></code></p></td>
+<td><p>头部之后包含目标数据字节流的字节数。</p></td>
+</tr>
+<tr class="row-odd"><td><p>字节流</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">uint8_t[]</span></code></p></td>
+<td><p>包含调试线程所需的数据。</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="memory-block">
+<h3>内存块<a class="headerlink" href="#memory-block" title="链接到此标题。"></a></h3>
+<p>内存块包含内存区域的起始地址、结束地址以及该区域内的数据。</p>
+<table class="docutils align-default" id="id4">
+<caption><span class="caption-text">内存块</span><a class="headerlink" href="#id4" title="链接到此表格。"></a></caption>
+<colgroup>
+<col style="width: 20.0%" />
+<col style="width: 10.0%" />
+<col style="width: 70.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>字段</p></th>
+<th class="head"><p>数据类型</p></th>
+<th class="head"><p>描述</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>ID</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">char</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">M</span></code>，表示这是一个内存块。</p></td>
+</tr>
+<tr class="row-odd"><td><p>头部版本</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">uint16_t</span></code></p></td>
+<td><p>标识头部的版本。每当修改头部结构体时都需要递增该值。这样解析器可以拒绝旧版本的头部，避免错误地解析头部。</p></td>
+</tr>
+<tr class="row-even"><td><p>起始地址</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">uintptr_t</span></code></p></td>
+<td><p>内存区域的起始地址。</p></td>
+</tr>
+<tr class="row-odd"><td><p>结束地址</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">uintptr_t</span></code></p></td>
+<td><p>内存区域的结束地址。</p></td>
+</tr>
+<tr class="row-even"><td><p>内存字节流</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">uint8_t[]</span></code></p></td>
+<td><p>包含起始地址与结束地址之间的内存内容。</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="adding-new-target">
+<h2>添加新目标<a class="headerlink" href="#adding-new-target" title="链接到此标题。"></a></h2>
+<p>架构相关块与目标相关，新目标需要新的转储例程和解析器。要添加新目标，需要完成以下工作：</p>
+<ol class="arabic simple">
+<li><p>在 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/debug/coredump.h">include/zephyr/debug/coredump.h</a> 的 <code class="docutils literal notranslate"><span class="pre">enum</span> <span class="pre">coredump_tgt_code</span></code> 中添加新的目标代码。</p></li>
+<li><p>实现 <code class="xref c c-func docutils literal notranslate"><span class="pre">arch_coredump_tgt_code_get()</span></code>，只需返回新引入的目标代码。</p></li>
+<li><p>实现 <code class="xref c c-func docutils literal notranslate"><span class="pre">arch_coredump_info_dump()</span></code>，构造目标架构块并调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">coredump_buffer_output()</span></code> 将该块输出到核心转储后端。</p></li>
+<li><p>在 <code class="docutils literal notranslate"><span class="pre">scripts/coredump/gdbstubs/</span></code> 下的核心转储 GDB stub 脚本中添加解析器</p>
+<ol class="arabic simple">
+<li><p>继承 <code class="docutils literal notranslate"><span class="pre">gdbstubs.gdbstub.GdbStub</span></code> 类。</p></li>
+<li><p>在 <code class="docutils literal notranslate"><span class="pre">__init__</span></code> 中，将与异常原因对应的 GDB 信号存入 <code class="docutils literal notranslate"><span class="pre">self.gdb_signal</span></code>。</p></li>
+<li><p>从 <code class="docutils literal notranslate"><span class="pre">self.logfile.get_arch_data()</span></code> 解析架构相关块。其格式需要与第 3 步中（<code class="xref c c-func docutils literal notranslate"><span class="pre">arch_coredump_info_dump()</span></code> 内）实现的格式一致。</p></li>
+<li><p>实现抽象方法 <code class="docutils literal notranslate"><span class="pre">handle_register_group_read_packet</span></code>，按 GDB 期望的方式返回寄存器组。关于新目标 GDB 期望什么，请参阅 GDB 的代码和文档。</p></li>
+<li><p>可选地实现 <code class="docutils literal notranslate"><span class="pre">handle_register_single_read_packet</span></code>，用于 <code class="docutils literal notranslate"><span class="pre">g</span></code> 数据包未涵盖的寄存器。</p></li>
+</ol>
+</li>
+<li><p>扩展 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/scripts/coredump/gdbstubs/__init__.py">scripts/coredump/gdbstubs/__init__.py</a> 中的 <code class="docutils literal notranslate"><span class="pre">get_gdbstub()</span></code>，使其返回新实现的 GDB stub。</p></li>
+</ol>
+</section>
+<section id="udp-logging-backend-sample">
+<h2>UDP 日志后端示例<a class="headerlink" href="#udp-logging-backend-sample" title="链接到此标题。"></a></h2>
+<p>演示 UDP 核心转储路径的示例 README 页面链接到本章，以便 Sphinx 将其纳入文档树：</p>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+<section id="api-documentation">
+<h2>API 文档<a class="headerlink" href="#api-documentation" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">coredump_apis</span></dt>
+</dl>
+
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">arch-coredump</span></dt>
+</dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 6月 09, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

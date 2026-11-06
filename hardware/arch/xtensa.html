@@ -1,0 +1,325 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Xtensa 开发者指南 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/hardware/arch/xtensa.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="屏障 API" href="../barriers/index.html" />
+    <link rel="prev" title="x86 开发者指南" href="x86.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">硬件支持</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">架构相关指南</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="arc-support-status.html">Zephyr 在 ARC 处理器上的支持状态</a></li>
+<li class="toctree-l3"><a class="reference internal" href="arm_cortex_m.html">Arm Cortex-M 开发者指南</a></li>
+<li class="toctree-l3"><a class="reference internal" href="arm64.html">ARM64 开发者指南</a></li>
+<li class="toctree-l3"><a class="reference internal" href="risc-v.html">Zephyr 在 RISC-V 处理器上的支持状态</a></li>
+<li class="toctree-l3"><a class="reference internal" href="semihost.html">半主机（Semihosting）指南</a></li>
+<li class="toctree-l3"><a class="reference internal" href="tricore.html">TriCore AURIX 开发者指南</a></li>
+<li class="toctree-l3"><a class="reference internal" href="x86.html">x86 开发者指南</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">Xtensa 开发者指南</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">概述</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#hifi-audio-engine-dsp">HiFi 音频引擎 DSP</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#concepts">概念</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#no-hifi-registers-mode">无 HiFi 寄存器模式</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#unshared-hifi-registers-mode">非共享 HiFi 寄存器模式</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#shared-hifi-registers-mode">共享 HiFi 寄存器模式</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#configuration-options">配置选项</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../barriers/index.html">屏障 API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cache/index.html">缓存</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../emulator/index.html">Zephyr 的设备仿真器/模拟器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../emulator/bus_emulators.html">外部总线及总线所连外设的仿真器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../firmware/index.html">固件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../peripherals/index.html">外设</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pinctrl/index.html">引脚控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../porting/index.html">移植</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../virtualization/index.html">虚拟化</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">硬件支持</a> &raquo;</li>
+  
+     <li><a href="index.html">架构相关指南</a> &raquo;</li>
+  
+  <li>Xtensa 开发者指南</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="xtensa-developer-guide">
+<span id="id1"></span><h1>Xtensa 开发者指南<a class="headerlink" href="#xtensa-developer-guide" title="链接到此标题。"></a></h1>
+<section id="overview">
+<h2>概述<a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>本页介绍为基于 Xtensa 的平台进行开发时需要注意的某些方面。</p>
+</section>
+<section id="hifi-audio-engine-dsp">
+<h2>HiFi 音频引擎 DSP<a class="headerlink" href="#hifi-audio-engine-dsp" title="链接到此标题。"></a></h2>
+<p>在支持 HiFi 音频引擎 DSP 寄存器的开发板上，内核允许线程使用这些寄存器。内核只支持线程使用 HiFi 寄存器，不支持 ISR 使用。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>目前只有 Intel ADSP ACE 硬件平台默认配置了 HiFi 支持。</p>
+</div>
+<section id="concepts">
+<h3>概念<a class="headerlink" href="#concepts" title="链接到此标题。"></a></h3>
+<p>可以对内核进行配置，使应用程序能够利用 Xtensa HiFi 音频引擎 DSP 提供的服务。内核支持以下三种工作模式。</p>
+<section id="no-hifi-registers-mode">
+<h4>无 HiFi 寄存器模式<a class="headerlink" href="#no-hifi-registers-mode" title="链接到此标题。"></a></h4>
+<p>当应用程序中没有使用 HiFi 寄存器的线程时使用此模式。这是内核默认的 HiFi 服务模式。</p>
+</section>
+<section id="unshared-hifi-registers-mode">
+<h4>非共享 HiFi 寄存器模式<a class="headerlink" href="#unshared-hifi-registers-mode" title="链接到此标题。"></a></h4>
+<p>当应用程序中只有一个线程使用 HiFi 寄存器时使用此模式。发生上下文切换时，HiFi 寄存器保持不变。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>如果有两个或更多线程尝试使用 HiFi 寄存器，行为是未定义的，因为内核不会尝试检测（也不会阻止）多个线程使用这些寄存器。</p>
+</div>
+</section>
+<section id="shared-hifi-registers-mode">
+<h4>共享 HiFi 寄存器模式<a class="headerlink" href="#shared-hifi-registers-mode" title="链接到此标题。"></a></h4>
+<p>当应用程序中有两个或更多线程使用 HiFi 寄存器时使用此模式。启用后，内核会自动允许所有线程使用 HiFi 寄存器。从概念上讲，它可以细分为两种子模式：积极（eager）模式和惰性（lazy）模式。两者都会保存和恢复 HiFi 寄存器，区别在于保存和恢复寄存器的时机，以及寄存器保存到何处、从何处恢复。</p>
+<p>在积极共享模型中，每次线程上下文切换时都会保存和恢复 HiFi 寄存器，无论线程是否使用过它们。每个线程可能需要额外的栈空间，用于保存这些额外的寄存器。这是两种模型中的默认模型。</p>
+<p>在惰性共享模型中，内核会跟踪“拥有”协处理器的线程。当“拥有者”线程被切换出去时，HiFi 寄存器不会立即保存，直到有新线程尝试使用 HiFi 时才保存，之后该新线程成为新的拥有者，并加载它自己的 HiFi 寄存器。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>如果 SMP 系统检测到即将成为拥有者的线程仍是另一个 CPU 上的拥有者，就会向该 CPU 发送 IPI，使其开始将 HiFi 寄存器保存到内存中。当前处理器随后会自旋等待，直到 HiFi 寄存器保存完毕。这种自旋可能偶尔造成较长的延迟。为获得最佳性能，建议将使用 HiFi 的线程固定在单个 CPU 上。</p>
+</div>
+</section>
+</section>
+<section id="configuration-options">
+<h3>配置选项<a class="headerlink" href="#configuration-options" title="链接到此标题。"></a></h3>
+<p>当禁用配置选项 <a class="reference internal" href="../../kconfig.html#CONFIG_XTENSA_HIFI_SHARING" title="CONFIG_XTENSA_HIFI_SHARING"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_XTENSA_HIFI_SHARING</span></code></a>，但启用了配置选项 <a class="reference internal" href="../../kconfig.html#CONFIG_XTENSA_HIFI3" title="CONFIG_XTENSA_HIFI3"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_XTENSA_HIFI3</span></code></a> 和/或 <a class="reference internal" href="../../kconfig.html#CONFIG_XTENSA_HIFI4" title="CONFIG_XTENSA_HIFI4"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_XTENSA_HIFI4</span></code></a> 时，选择非共享 HiFi 寄存器模式。</p>
+<p>当除了配置选项 <a class="reference internal" href="../../kconfig.html#CONFIG_XTENSA_HIFI3" title="CONFIG_XTENSA_HIFI3"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_XTENSA_HIFI3</span></code></a> 和/或 <a class="reference internal" href="../../kconfig.html#CONFIG_XTENSA_HIFI4" title="CONFIG_XTENSA_HIFI4"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_XTENSA_HIFI4</span></code></a> 之外，还启用了配置选项 <a class="reference internal" href="../../kconfig.html#CONFIG_XTENSA_HIFI_SHARING" title="CONFIG_XTENSA_HIFI_SHARING"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_XTENSA_HIFI_SHARING</span></code></a> 时，选择共享 HiFi 寄存器模式。如上所述，线程必须有足够的栈空间，以便在上下文切换时保存 HiFi 寄存器的值。</p>
+<p>积极和惰性两种 HiFi 共享模式都要求启用配置选项 <a class="reference internal" href="../../kconfig.html#CONFIG_XTENSA_HIFI_SHARING" title="CONFIG_XTENSA_HIFI_SHARING"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_XTENSA_HIFI_SHARING</span></code></a>。虽然积极 HiFi 共享是默认模式，但也可以通过启用配置选项 <a class="reference internal" href="../../kconfig.html#CONFIG_XTENSA_EAGER_HIFI_SHARING" title="CONFIG_XTENSA_EAGER_HIFI_SHARING"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_XTENSA_EAGER_HIFI_SHARING</span></code></a> 显式选择它。若要改为选择惰性 HiFi 共享，请启用配置选项 <a class="reference internal" href="../../kconfig.html#CONFIG_XTENSA_LAZY_HIFI_SHARING" title="CONFIG_XTENSA_LAZY_HIFI_SHARING"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_XTENSA_LAZY_HIFI_SHARING</span></code></a>。</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 6月 17, 2025.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

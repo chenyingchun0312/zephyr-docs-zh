@@ -1,0 +1,563 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="使用 IPC 实现安全镜像与非安全镜像之间的通信。" name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TF-M IPC &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/samples/tfm_integration/tfm_ipc/README.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" />
+    <link rel="next" title="TF-M 平台安全架构测试示例" href="../tfm_psa_test/README.html" />
+    <link rel="prev" title="TF-M Firmware Update" href="../tfm_fwu/README.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1 current"><a class="category-link reference internal" href="../../index.html">Samples and Demos</a><ul class="current">
+<li class="toctree-l2"><a class="category-link reference internal" href="../../boards/96boards/index.html">96Boards</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../boards/96boards/argonkey/index.html">96Boards ArgonKey</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../drivers/adc/index.html">ADC</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../boards/adi/index.html">ADI</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../boards/amd/index.html">AMD</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../application_development/application_development.html">Application Development</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../arch/index.html">Architecture-dependent Samples</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../drivers/audio/index.html">Audio</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/authentication/authentication.html">Authentication</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../boards/bbc/index.html">BBC</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../boards/bbc/microbit/microbit.html">BBC micro:bit</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../basic/basic.html">Basic</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/bindesc/bindesc.html">Binary Descriptor</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../drivers/biometrics/index.html">Biometrics</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../bluetooth/bluetooth.html">Bluetooth</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../bluetooth/audio/index.html">Bluetooth Audio</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../boards/boards.html">Boards</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../drivers/buzzer/index.html">Buzzer</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../cpp/cpp.html">C++</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/portability/cmsis_rtos_v1/cmsis_rtos_v1.html">CMSIS RTOS v1</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/portability/cmsis_rtos_v2/cmsis_rtos_v2.html">CMSIS RTOS v2</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../modules/cmsis_dsp/cmsis_dsp.html">CMSIS-DSP</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/cpu_freq/cpu_freq.html">CPU Freq</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../drivers/clock_monitor/index.html">Clock Monitor</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/console/console.html">Console</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../drivers/can/index.html">Controller Area Network (CAN)</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/canbus/canbus.html">Controller Area Network (CAN) Bus</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../drivers/counter/index.html">Counter</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../data_structures/data_structures.html">Data Structures</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/debug/index.html">Debug</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/display/display.html">Display</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../drivers/drivers.html">Drivers</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../modules/index.html">External modules</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/fs/fs.html">File Systems</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/input/input.html">Input</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/ipc/ipc.html">Inter-Processor Communication (IPC)</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../net/cloud/README.html">IoT Cloud</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../kernel/index.html">Kernel and Scheduler</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/kvss/kvss.html">Key-Value Storage Systems</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/llext/llext.html">Linkable Loadable Extensions (LLEXT)</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/lorawan/lorawan.html">LoRaWAN</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/logging/logging.html">Logging</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../net/mcp/mcp.html">MCP (Model Context Protocol)</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/pmci/mctp/mctp.html">MCTP</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/mgmt/mgmt.html">Management</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/modbus/modbus.html">Modbus</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../net/ethernet/README.html">Network Ethernet</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../net/net.html">Networking</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/pmci/index.html">PMCI</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/portability/posix/posix.html">POSIX API</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../psa/index.html">PSA</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/portability/portability.html">Portability</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/pm/index.html">Power Management</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/profiling/profiling.html">Profiling</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/rtio/rtio.html">Real Time I/O (RTIO)</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../regulator/index.html">Regulator</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/sensing/sensing.html">Sensing</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../sensor/sensor.html">Sensors</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/shell/shell.html">Shell</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../shields/shields.html">Shields</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/smf/smf.html">State Machine Framework</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/subsys.html">Subsystems</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../sysbuild/sysbuild.html">Sysbuild</a></li>
+<li class="toctree-l2 current"><a class="category-link reference internal" href="../tfm_integration.html">TF-M Integration</a><ul class="current">
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../tfm_fwu/README.html" title="使用 PSA 固件更新 API 执行固件更新。">TF-M Firmware Update</a></li>
+<li class="toctree-l3 current"><a class="code-sample-link current reference internal" href="#" title="使用 IPC 实现安全镜像与非安全镜像之间的通信。">TF-M IPC</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../psa_crypto/README.html" title="使用 PSA 加密 API 进行加密运算和生成设备证书签名请求。">TF-M PSA crypto</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../psa_protected_storage/README.html" title="使用受保护存储（PS）API 存储加密数据。">TF-M PSA Protected Storage</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../tfm_secure_partition/README.html" title="创建一个提供安全服务的安全分区。">TF-M Secure Partition</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../userspace/index.html">Userspace</a></li>
+<li class="toctree-l2"><a class="code-sample-link reference internal" href="../../synchronization/README.html" title="操作基本的内核同步原语。">Basic Synchronization</a></li>
+<li class="toctree-l2"><a class="code-sample-link reference internal" href="../../philosophers/README.html" title="使用 Zephyr 内核服务实现哲学家就餐问题的解决方案。">Dining Philosophers</a></li>
+<li class="toctree-l2"><a class="code-sample-link reference internal" href="../../hello_world/README.html" title="向控制台打印 &quot;Hello World&quot;。">Hello World</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">示例与演示</a> &raquo;</li>
+  
+     <li><a href="../tfm_integration.html">TF-M 集成</a> &raquo;</li>
+  
+  <li>TF-M IPC</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="tfm_ipc">
+<h1>TF-M IPC<a class="headerlink" href="#tfm_ipc" title="链接到此标题。"></a></h1>
+<p>
+                <a href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0//samples\tfm_integration\tfm_ipc\README.rst/.." class="btn btn-info fa fa-github"
+                    target="_blank" style="text-align: center;">
+                    Browse source code on GitHub
+                </a>
+                </p>
+<section id="overview">
+<h2>概述<a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>这是一个简单的 TF-M 集成示例，可用于受支持的 ARMv8-M 开发板。</p>
+<p>它使用 <strong>IPC 模式</strong> 进行通信，即通过 IPC 机制调用安全镜像中的 TF-M API；与之相对的是 <strong>库模式</strong>，该模式绕过 IPC 机制，改为直接调用。</p>
+<p>Zephyr 使用 Trusted Firmware（TF-M）平台安全架构（PSA）API 在安全配置中运行本示例，Zephyr 本身则运行在非安全配置中。</p>
+<p>本示例以单线程或多线程应用程序的形式将测试信息打印到控制台。</p>
+<p>本示例会在 5 秒后重启，以演示在 TF-M 下的重启。由于非安全应用程序不允许直接执行重启，sys_reboot 调用会被转发给 TF-M。</p>
+</section>
+<section id="building-and-running">
+<h2>构建与运行<a class="headerlink" href="#building-and-running" title="链接到此标题。"></a></h2>
+<p>本项目将测试状态和信息输出到控制台。可以在 MPS2+ AN521 和 ST Nucleo L552ZE Q 上构建并执行。</p>
+<section id="on-mps2-an521">
+<h3>On MPS2+ AN521:<a class="headerlink" href="#on-mps2-an521" title="链接到此标题。"></a></h3>
+<ol class="arabic">
+<li><p>使用非安全配置构建 Zephyr（<code class="docutils literal notranslate"><span class="pre">-DBOARD=mps2/an521/cpu0/ns</span></code>）。</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span><span class="nv">$ZEPHYR_ROOT</span>/samples/tfm_integration/tfm_ipc/
+mkdir<span class="w"> </span>build
+<span class="nb">cd</span><span class="w"> </span>build
+cmake<span class="w"> </span>-DBOARD<span class="o">=</span>mps2/an521/cpu0/ns<span class="w"> </span>..
+make
+</pre></div>
+</div>
+</li>
+</ol>
+<p>也可以按如下方式使用 west：</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>west<span class="w"> </span>build<span class="w"> </span>-p<span class="w"> </span>-b<span class="w"> </span>mps2/an521/cpu0/ns<span class="w"> </span>zephyr/samples/tfm_integration/tfm_ipc
+</pre></div>
+</div>
+</div></blockquote>
+<ol class="arabic">
+<li><p>将应用程序二进制文件（mcuboot.bin 和 tfm_sign.bin）复制到 <code class="docutils literal notranslate"><span class="pre">&lt;MPS2</span> <span class="pre">device</span> <span class="pre">name&gt;/SOFTWARE/</span></code>。</p></li>
+<li><p>打开 <code class="docutils literal notranslate"><span class="pre">&lt;MPS2</span> <span class="pre">device</span> <span class="pre">name&gt;/MB/HBI0263C/AN521/images.txt</span></code>，按如下方式编辑 <code class="docutils literal notranslate"><span class="pre">AN521/images.txt</span></code> 文件：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>TITLE:<span class="w"> </span>Versatile<span class="w"> </span>Express<span class="w"> </span>Images<span class="w"> </span>Configuration<span class="w"> </span>File
+
+<span class="o">[</span>IMAGES<span class="o">]</span>
+TOTALIMAGES:<span class="w"> </span><span class="m">2</span><span class="w"> </span><span class="p">;</span>Number<span class="w"> </span>of<span class="w"> </span>Images<span class="w"> </span><span class="o">(</span>Max:<span class="w"> </span><span class="m">32</span><span class="o">)</span>
+
+IMAGE0ADDRESS:<span class="w"> </span>0x10000000
+IMAGE0FILE:<span class="w"> </span><span class="se">\S</span>OFTWARE<span class="se">\m</span>cuboot.bin<span class="w">  </span><span class="p">;</span><span class="w"> </span>BL2<span class="w"> </span>bootloader
+
+IMAGE1ADDRESS:<span class="w"> </span>0x10080000
+IMAGE1FILE:<span class="w"> </span><span class="se">\S</span>OFTWARE<span class="se">\t</span>fm_sign.bin<span class="w"> </span><span class="p">;</span><span class="w"> </span>TF-M<span class="w"> </span>with<span class="w"> </span>application<span class="w"> </span>binary<span class="w"> </span>blob
+</pre></div>
+</div>
+</li>
+<li><p>复位 MPS2+ 开发板。</p></li>
+</ol>
+<p>如果运行 cmake 时出现以下错误：</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>CMake<span class="w"> </span>Error<span class="w"> </span>at<span class="w"> </span>cmake/Common/FindGNUARM.cmake:121<span class="w"> </span><span class="o">(</span>message<span class="o">)</span>:
+arm-none-eabi-gcc<span class="w"> </span>can<span class="w"> </span>not<span class="w"> </span>be<span class="w"> </span>found.<span class="w">  </span>Either<span class="w"> </span>put<span class="w"> </span>arm-none-eabi-gcc<span class="w"> </span>on<span class="w"> </span>the
+PATH<span class="w"> </span>or<span class="w"> </span><span class="nb">set</span><span class="w"> </span>GNUARM_PATH<span class="w"> </span>properly.
+</pre></div>
+</div>
+</div></blockquote>
+<p>可能需要编辑 <code class="docutils literal notranslate"><span class="pre">tfm_ipc</span></code> 项目文件夹中的 <code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> 文件，更新 <code class="docutils literal notranslate"><span class="pre">-DGNUARM_PATH=/opt/toolchain/arm-none-eabi</span></code> 路径。</p>
+</section>
+<section id="on-qemu">
+<h3>On QEMU:<a class="headerlink" href="#on-qemu" title="链接到此标题。"></a></h3>
+<p>MPS2+ AN521 目标（<code class="docutils literal notranslate"><span class="pre">mps2/an521/cpu0/ns</span></code>）基于双核 ARM Cortex-M33 配置。如果手头没有受支持的 ARMv8-M 开发板，也可以通过 QEMU 使用该目标运行 TF-M 测试。</p>
+<p>在上述常规构建流程中，还会生成一个可通过 <code class="docutils literal notranslate"><span class="pre">qemu-system-arm</span></code> 运行的二进制文件。可按如下方式执行该二进制文件：</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>qemu-system-arm<span class="w"> </span>-M<span class="w"> </span>mps2-an521<span class="w"> </span>-device<span class="w"> </span>loader,file<span class="o">=</span>build/zephyr/tfm_merged.hex<span class="w"> </span>-serial<span class="w"> </span>stdio
+</pre></div>
+</div>
+</div></blockquote>
+<p>也可以在 <code class="docutils literal notranslate"><span class="pre">west</span></code> 构建过程中运行该二进制文件，方法是在构建命令末尾追加 <code class="docutils literal notranslate"><span class="pre">-t</span> <span class="pre">run</span></code> 参数；如果使用 ninja 或 make，则添加 <code class="docutils literal notranslate"><span class="pre">run</span></code> 命令：</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>mps2/an521/cpu0/ns<span class="w"> </span>zephyr/samples/tfm_integration/tfm_ipc<span class="w"> </span>-t<span class="w"> </span>run
+</pre></div>
+</div>
+</div></blockquote>
+<p>或者在构建完成后运行：</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>ninja<span class="w"> </span>run
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+<section id="on-st-nucleo-l552ze-q-or-stm32l562e-dk-discovery">
+<h3>在 ST Nucleo L552ZE Q 或 STM32L562E-DK Discovery 上：<a class="headerlink" href="#on-st-nucleo-l552ze-q-or-stm32l562e-dk-discovery" title="链接到此标题。"></a></h3>
+<p>本示例已在 Ubuntu 18.04 上使用 Zephyr SDK 0.11.3 测试。</p>
+<p>使用非安全配置构建 Zephyr：</p>
+<blockquote>
+<div><p>示例：为 Nucleo L552ZE Q 构建非安全配置</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>nucleo_l552ze_q/stm32l552xx/ns<span class="w"> </span>samples/tfm_integration/tfm_ipc/
+</pre></div>
+</div>
+<p>示例：为 STM32L562E-DK Discovery 构建非安全配置</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>stm32l562e_dk/stm32l562xx/ns<span class="w"> </span>samples/tfm_integration/tfm_ipc/
+</pre></div>
+</div>
+</div></blockquote>
+<p>用于初始化设备的脚本位于 <code class="docutils literal notranslate"><span class="pre">build/tfm</span></code> 文件夹中：</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">regression.sh</span></code>：设置平台选项字节配置并擦除平台。</p></li>
+</ul>
+</div></blockquote>
+<p>按以下顺序运行这些脚本以烧录开发板：</p>
+<blockquote>
+<div><blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>./build/tfm/api_ns/regression.sh
+$<span class="w"> </span>west<span class="w"> </span>flash
+</pre></div>
+</div>
+</div></blockquote>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>注意，PATH 变量中必须能找到 <code class="docutils literal notranslate"><span class="pre">arm-none-eabi-gcc</span></code>，并且运行 <code class="docutils literal notranslate"><span class="pre">regression.sh</span></code> 需要 <code class="docutils literal notranslate"><span class="pre">STM32_Programmer_CLI</span></code>（参见 <a class="reference external" href="https://www.st.com/en/development-tools/stm32cubeprog.html">https://www.st.com/en/development-tools/stm32cubeprog.html</a>）。如果运行这些脚本时仍有问题，请查看 <a class="reference internal" href="../../../boards/st/nucleo_l552ze_q/doc/nucleol552ze_q.html#nucleo_l552ze_q">Nucleo L552ZE Q</a> 或 <a class="reference internal" href="../../../boards/st/stm32l562e_dk/doc/index.html#stm32l562e_dk">STM32L562E-DK Discovery</a> 文档中的“编程与调试”一节。</p>
+</div>
+</div></blockquote>
+</section>
+<section id="on-lpcxpresso55s69">
+<h3>On LPCxpresso55S69:<a class="headerlink" href="#on-lpcxpresso55s69" title="链接到此标题。"></a></h3>
+<p>使用非安全配置构建 Zephyr：</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>west<span class="w"> </span>build<span class="w"> </span>-p<span class="w"> </span>-b<span class="w"> </span>lpcxpresso55s69_ns<span class="w"> </span>samples/tfm_integration/tfm_ipc/<span class="w"> </span>--
+</pre></div>
+</div>
+</div></blockquote>
+<p>确保开发板已配置为使用 <a class="reference internal" href="../../../develop/flash_debug/probes.html#lpclink2-jlink-onboard-debug-probe"><span class="std std-ref">LPC-Link2 J-Link 板载调试探针</span></a>，因为这不是开发板出厂时自带的调试接口；</p>
+<p>接下来需要按如下方式使用 J-Link 手动烧录生成的镜像（<code class="docutils literal notranslate"><span class="pre">tfm_merged.bin</span></code>）：</p>
+<blockquote>
+<div><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">JLinkExe -device lpc55s69 -if swd -speed 2000 -autoconnect 1</span>
+<span class="go">J-Link&gt;r</span>
+<span class="go">J-Link&gt;erase</span>
+<span class="go">J-Link&gt;loadfile build/zephyr/tfm_merged.bin</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>复位并擦除开发板会解锁开发板，这在开发板处于未知状态、无法烧录时很有用。</p>
+<p>烧录镜像后，需要手动复位开发板才能运行这段代码。</p>
+</section>
+<section id="on-nrf5340-and-nrf9160">
+<h3>在 nRF5340 和 nRF9160 上：<a class="headerlink" href="#on-nrf5340-and-nrf9160" title="链接到此标题。"></a></h3>
+<p>使用非安全配置构建 Zephyr（<code class="docutils literal notranslate"><span class="pre">-DBOARD=nrf5340dk/nrf5340/cpuapp/ns</span></code> 或 <code class="docutils literal notranslate"><span class="pre">-DBOARD=nrf9160dk/nrf9160/ns</span></code>）。</p>
+<blockquote>
+<div><p>例如，对于 nRF9160，使用 <code class="docutils literal notranslate"><span class="pre">cmake</span></code> 和 <code class="docutils literal notranslate"><span class="pre">ninja</span></code></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>&lt;ZEPHYR_ROOT&gt;/samples/tfm_integration/tfm_ipc/
+rm<span class="w"> </span>-rf<span class="w"> </span>build
+mkdir<span class="w"> </span>build<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>build
+cmake<span class="w"> </span>-GNinja<span class="w"> </span>-DBOARD<span class="o">=</span>nrf9160dk/nrf9160/ns<span class="w"> </span>..
+</pre></div>
+</div>
+</div></blockquote>
+<p>如果构建时启用了 BL2（MCUboot 引导加载程序），请手动烧录 MCUboot 引导加载程序镜像二进制文件（<code class="docutils literal notranslate"><span class="pre">bl2.hex</span></code>）。</p>
+<blockquote>
+<div><p>例如，在 nRF9160 上使用 <code class="docutils literal notranslate"><span class="pre">nrfjprog</span></code>：</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>nrfjprog<span class="w"> </span>-f<span class="w"> </span>NRF91<span class="w"> </span>--program<span class="w"> </span>tfm/bin/bl2.hex<span class="w"> </span>--sectorerase
+</pre></div>
+</div>
+</div></blockquote>
+<p>最后，烧录合并后的 TF-M + Zephyr 二进制文件。</p>
+<blockquote>
+<div><p>例如，对于 nRF9160</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>flash
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+<section id="on-bl5340">
+<h3>On BL5340:<a class="headerlink" href="#on-bl5340" title="链接到此标题。"></a></h3>
+<p>使用非安全配置构建 Zephyr（<code class="docutils literal notranslate"><span class="pre">-DBOARD=bl5340_dvk/nrf5340/cpuapp/ns</span></code>）。</p>
+<blockquote>
+<div><p>使用 <code class="docutils literal notranslate"><span class="pre">cmake</span></code> 和 <code class="docutils literal notranslate"><span class="pre">ninja</span></code> 的示例</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>&lt;ZEPHYR_ROOT&gt;/samples/tfm_integration/tfm_ipc/
+rm<span class="w"> </span>-rf<span class="w"> </span>build
+mkdir<span class="w"> </span>build<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>build
+cmake<span class="w"> </span>-GNinja<span class="w"> </span>-DBOARD<span class="o">=</span>bl5340_dvk/nrf5340/cpuapp/ns<span class="w"> </span>..
+</pre></div>
+</div>
+</div></blockquote>
+<p>烧录合并后的 TF-M + Zephyr 二进制文件。</p>
+<blockquote>
+<div><p>使用 <code class="docutils literal notranslate"><span class="pre">west</span></code> 的示例</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>flash<span class="w"> </span>--hex-file<span class="w"> </span>zephyr/tfm_merged.hex
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+<section id="on-frdm-mcxn947">
+<h3>On FRDM-MCXN947:<a class="headerlink" href="#on-frdm-mcxn947" title="链接到此标题。"></a></h3>
+<p>使用非安全配置构建 Zephyr：</p>
+<blockquote>
+<div><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>west<span class="w"> </span>build<span class="w"> </span>-p<span class="w"> </span>-b<span class="w"> </span>frdm_mcxn947/mcxn947/cpu0/ns<span class="w"> </span>samples/tfm_integration/tfm_ipc/
+</pre></div>
+</div>
+</div></blockquote>
+<p>确保开发板已配置为使用 <a class="reference internal" href="../../../develop/flash_debug/probes.html#lpclink2-jlink-onboard-debug-probe"><span class="std std-ref">LPC-Link2 J-Link 板载调试探针</span></a>，因为出厂开发板默认提供的调试接口并不是它；</p>
+<p>构建完成后，使用 J-Link 调试探针将生成的镜像（<code class="docutils literal notranslate"><span class="pre">tfm_merged.bin</span></code>）手动烧录到目标，如下所示：</p>
+<blockquote>
+<div><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">JLinkExe -device MCXN947_M33_0 -if swd -speed 4000 -autoconnect 1</span>
+<span class="go">J-Link&gt;r</span>
+<span class="go">J-Link&gt;erase</span>
+<span class="go">J-Link&gt;loadfile build/zephyr/tfm_merged.bin</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>先复位再完全擦除设备，可以确保设备解锁并恢复到已知状态。如果开发板处于未知状态或受保护状态而无法烧录，这一步尤其有用。</p>
+<p>镜像烧录成功后，手动复位开发板，开始执行新烧录的固件。</p>
+</section>
+<section id="sample-output">
+<h3>示例输出<a class="headerlink" href="#sample-output" title="链接到此标题。"></a></h3>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">[INF] Starting bootloader</span>
+<span class="go">[INF] Beginning BL2 provisioning</span>
+<span class="go">[WRN] TFM_DUMMY_PROVISIONING is not suitable for production! This device is NOT SECURE</span>
+<span class="go">[INF] Image index: 1, Swap type: none</span>
+<span class="go">[INF] Image index: 0, Swap type: none</span>
+<span class="go">[INF] Bootloader chainload address offset: 0x80000</span>
+<span class="go">[INF] Jumping to the first image slot</span>
+<span class="go">[INF] Beginning TF-M provisioning</span>
+<span class="go">[WRN] TFM_DUMMY_PROVISIONING is not suitable for production! This device is NOT SECURE</span>
+<span class="go">[WRN] This device was provisioned with dummy keys. This device is NOT SECURE</span>
+<span class="go">[Sec Thread] Secure image initializing!</span>
+<span class="go">Booting TF-M v2.0.0</span>
+<span class="go">Creating an empty ITS flash layout.</span>
+<span class="go">Creating an empty PS flash layout.</span>
+<span class="go">[INF][Crypto] Provisioning entropy seed... complete.</span>
+<span class="go">Timer with period zero, disabling</span>
+<span class="go">*** Booting Zephyr OS build v3.6.0 ***</span>
+<span class="go">TF-M IPC on (.*)</span>
+<span class="go">The version of the PSA Framework API is 257.</span>
+<span class="go">The PSA Crypto service minor version is 1.</span>
+<span class="go">Generating 256 bytes of random data:</span>
+<span class="go">[...]</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<script type="application/ld+json">
+                {"@context": "http://schema.org", "@type": "SoftwareSourceCode", "name": "TF-M IPC", "description": "\u4f7f\u7528 IPC \u5b9e\u73b0\u5b89\u5168\u955c\u50cf\u4e0e\u975e\u5b89\u5168\u955c\u50cf\u4e4b\u95f4\u7684\u901a\u4fe1\u3002", "codeSampleType": "full", "codeRepository": "https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0//samples\\tfm_integration\\tfm_ipc\\README.rst"}
+                </script>
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 8月 19, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

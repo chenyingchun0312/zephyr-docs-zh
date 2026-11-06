@@ -1,0 +1,5 @@
+var structsensor__game__rotation__vector__data_1_1sensor__game__rotation__vector__sample__data =
+[
+    [ "[union].__unnamed0__", "unionsensor__game__rotation__vector__data_1_1sensor__game__rotation__vector__sample__data_1_1_0funion_0e_8____unnamed0____.html", "unionsensor__game__rotation__vector__data_1_1sensor__game__rotation__vector__sample__data_1_1_0funion_0e_8____unnamed0____" ],
+    [ "timestamp_delta", "structsensor__game__rotation__vector__data_1_1sensor__game__rotation__vector__sample__data.html#af453e301f5d1fdacf86daddc0c683498", null ]
+];

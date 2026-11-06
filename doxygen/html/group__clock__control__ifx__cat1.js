@@ -1,0 +1,43 @@
+var group__clock__control__ifx__cat1 =
+[
+    [ "clock_control_ifx_cat1.h", "clock__control__ifx__cat1_8h.html", null ],
+    [ "ifx_cat1_clock", "structifx__cat1__clock.html", [
+      [ "block", "structifx__cat1__clock.html#ae8032f282998a9d9a31c5d967f384a4e", null ],
+      [ "channel", "structifx__cat1__clock.html#ac02e464103810c9907c16194eba88979", null ],
+      [ "funcs", "structifx__cat1__clock.html#a95619b170032a2b9b111d2f59602fbe7", null ],
+      [ "group", "structifx__cat1__clock.html#a0e1e36ab2abe21b227f8b76d195fc627", null ],
+      [ "instance", "structifx__cat1__clock.html#a4361f9f52e5621aedc0b4f2e0e011896", null ],
+      [ "reserved", "structifx__cat1__clock.html#af59f4aff030f57cffc4a44d761f18d66", null ]
+    ] ],
+    [ "ifx_cat1_resource_inst", "structifx__cat1__resource__inst.html", [
+      [ "block_num", "structifx__cat1__resource__inst.html#a50f1d0589e90b071ddc451efcbb56892", null ],
+      [ "channel_num", "structifx__cat1__resource__inst.html#ad71f2ec8d25fa0792e287b1e0a58ca3f", null ],
+      [ "type", "structifx__cat1__resource__inst.html#a711df9cb83f6d7545b939fd56a7e10e7", null ]
+    ] ],
+    [ "CLK_HF0", "group__clock__control__ifx__cat1.html#ga7585bc918f0435fcea3de69f5d2368c2", null ],
+    [ "CLK_HF1", "group__clock__control__ifx__cat1.html#gab9ed6e703b1b98d5a713a8ec4cfbab79", null ],
+    [ "CLK_HF10", "group__clock__control__ifx__cat1.html#ga726332ad1db3729a208a2be1458478ec", null ],
+    [ "CLK_HF11", "group__clock__control__ifx__cat1.html#gaf1b81772f3de1dfcd08b5eaf96b60b33", null ],
+    [ "CLK_HF12", "group__clock__control__ifx__cat1.html#gad3b7e5ef1f3c470006b5b9ffec0050f7", null ],
+    [ "CLK_HF13", "group__clock__control__ifx__cat1.html#ga4c10fa4f6073001fde1fd49fe3769181", null ],
+    [ "CLK_HF2", "group__clock__control__ifx__cat1.html#gab111d1af9166ca01d139b3e0512a811b", null ],
+    [ "CLK_HF3", "group__clock__control__ifx__cat1.html#ga5deb0165e6f3e18acd4d3b841f96c50b", null ],
+    [ "CLK_HF4", "group__clock__control__ifx__cat1.html#ga16cf7a3976d594e17bdcb595d024a6f7", null ],
+    [ "CLK_HF5", "group__clock__control__ifx__cat1.html#ga5516442b0c25b62024b765545fa2b18f", null ],
+    [ "CLK_HF6", "group__clock__control__ifx__cat1.html#gad55fafafdec37c322f2faf036e955dcf", null ],
+    [ "CLK_HF7", "group__clock__control__ifx__cat1.html#gadf9e87e3582b2042993c3237afe20383", null ],
+    [ "CLK_HF8", "group__clock__control__ifx__cat1.html#gae2c2ae8c1143a5d28a73508dcc423444", null ],
+    [ "CLK_HF9", "group__clock__control__ifx__cat1.html#ga4b7e7866dd86214ce5910c2d01dcf49c", null ],
+    [ "ifx_cat1_clock_block", "group__clock__control__ifx__cat1.html#gab62704a8cdfda5914cfb7dfe81afa8c0", null ],
+    [ "ifx_cat1_clock_control_get_frequency", "group__clock__control__ifx__cat1.html#ga04bb0312c12347d0ceac9fc033993221", null ],
+    [ "ifx_cat1_utils_peri_is_fract_div", "group__clock__control__ifx__cat1.html#gacacef8eba03b64537cbd0f09c3425089", null ],
+    [ "ifx_cat1_utils_peri_pclk_assign_divider", "group__clock__control__ifx__cat1.html#ga9ffa2a2c7427ea6049d7790f725ec185", null ],
+    [ "ifx_cat1_utils_peri_pclk_disable_divider", "group__clock__control__ifx__cat1.html#ga6bfb0915441740364a239ca3a68d6d8b", null ],
+    [ "ifx_cat1_utils_peri_pclk_enable_divider", "group__clock__control__ifx__cat1.html#gadda478f75d4546b4de8d978e56dba1fa", null ],
+    [ "ifx_cat1_utils_peri_pclk_get_divider", "group__clock__control__ifx__cat1.html#gafe5b77c891a50a08f364fa4d85af29ac", null ],
+    [ "ifx_cat1_utils_peri_pclk_get_frac_divider", "group__clock__control__ifx__cat1.html#ga1b13def736a7046ee628830ab686ef3a", null ],
+    [ "ifx_cat1_utils_peri_pclk_get_frequency", "group__clock__control__ifx__cat1.html#ga0421e7b519bd9b829baa8a2e7b234931", null ],
+    [ "ifx_cat1_utils_peri_pclk_get_hfclk", "group__clock__control__ifx__cat1.html#gaf8c74267c99cdebf0ae977555336f65c", null ],
+    [ "ifx_cat1_utils_peri_pclk_set_divider", "group__clock__control__ifx__cat1.html#ga933b6bafae3eef87ac8e0a4ae7a849d4", null ],
+    [ "ifx_cat1_utils_peri_pclk_set_frac_divider", "group__clock__control__ifx__cat1.html#ga1dba84b96bf16b98d672369a4bbe58c8", null ]
+];

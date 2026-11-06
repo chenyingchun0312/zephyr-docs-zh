@@ -1,0 +1,570 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>改进型 Inter-Integrated Circuit（I3C）总线 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/hardware/peripherals/i3c.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="串行外设接口（SPI）总线" href="spi.html" />
+    <link rel="prev" title="Inter-Integrated Circuit（I2C）总线" href="i2c.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">硬件支持</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../arch/index.html">架构相关指南</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../barriers/index.html">屏障 API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cache/index.html">缓存</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../emulator/index.html">Zephyr 的设备仿真器/模拟器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../emulator/bus_emulators.html">外部总线及总线所连外设的仿真器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../firmware/index.html">固件</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">外设</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="analog.html">模拟</a></li>
+<li class="toctree-l3"><a class="reference internal" href="audio/index.html">音频</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="communication.html">通信</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="can/index.html">控制器局域网（CAN）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="i2c.html">Inter-Integrated Circuit（I2C）总线</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">改进型 Inter-Integrated Circuit（I3C）总线</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#i3c-controller-api">I3C 控制器 API</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#in-band-interrupt-ibi">带内中断（IBI）</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#device-tree">设备树</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#device-drivers-for-i3c-devices">I3C 设备的设备驱动</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#i2c-devices-under-i3c-bus">I3C 总线上的 I<sup>2</sup>C 设备</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#configuration-options">配置选项</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#api-reference">API 参考</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="spi.html">串行外设接口（SPI）总线</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pcie.html">高速外设组件互连总线（PCIe）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="uart.html">通用异步收发器（UART）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="espi.html">增强型串行外设接口（eSPI）总线</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mdio.html">管理数据输入/输出（MDIO）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mspi.html">多位 SPI 总线</a></li>
+<li class="toctree-l4"><a class="reference internal" href="smbus.html">系统管理总线（SMBus）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="ipm.html">处理器间邮箱（IPM）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="lin.html">局部互联网络（LIN）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="mbox.html">多通道处理器间邮箱（MBOX）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="w1.html">1-Wire 总线</a></li>
+<li class="toctree-l4"><a class="reference internal" href="pulse_io.html">脉冲 IO</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="display.html">显示</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gpio_input.html">GPIO 与输入</a></li>
+<li class="toctree-l3"><a class="reference internal" href="memory_storage.html">存储器与存储</a></li>
+<li class="toctree-l3"><a class="reference internal" href="power.html">电源</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sensors.html">传感器</a></li>
+<li class="toctree-l3"><a class="reference internal" href="motion_actuation.html">运动与执行</a></li>
+<li class="toctree-l3"><a class="reference internal" href="system_diagnostics.html">系统与诊断</a></li>
+<li class="toctree-l3"><a class="reference internal" href="timing.html">定时</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../pinctrl/index.html">引脚控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../porting/index.html">移植</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../virtualization/index.html">虚拟化</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">硬件支持</a> &raquo;</li>
+  
+     <li><a href="index.html">外设</a> &raquo;</li>
+  
+     <li><a href="communication.html">通信</a> &raquo;</li>
+  
+  <li>改进型 Inter-Integrated Circuit（I3C）总线</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="improved-inter-integrated-circuit-i3c-bus">
+<span id="i3c-api"></span><h1>改进型 Inter-Integrated Circuit（I3C）总线<a class="headerlink" href="#improved-inter-integrated-circuit-i3c-bus" title="链接到此标题。"></a></h1>
+<p>I3C（Improved Inter-Integrated Circuit，改进型内部集成电路）是一种双信号线共享外设接口总线。总线上的设备可以担任两种角色：发起事务并控制时钟的“控制器”（controller），或响应事务命令的“目标”（target）。</p>
+<p>目前该 API 基于 <a class="reference external" href="https://www.mipi.org/specifications/i3c-sensor-specification">I3C Specification</a> 1.1.1 版。</p>
+<nav class="contents local" id="id1">
+<ul class="simple">
+<li><p><a class="reference internal" href="#i3c-controller-api" id="id3">I3C 控制器 API</a></p>
+<ul>
+<li><p><a class="reference internal" href="#in-band-interrupt-ibi" id="id4">带内中断（IBI）</a></p></li>
+<li><p><a class="reference internal" href="#device-tree" id="id5">设备树</a></p></li>
+<li><p><a class="reference internal" href="#device-drivers-for-i3c-devices" id="id6">I3C 设备的设备驱动</a></p></li>
+<li><p><a class="reference internal" href="#i2c-devices-under-i3c-bus" id="id7">I3C 总线上的 I<sup>2</sup>C 设备</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#configuration-options" id="id8">配置选项</a></p></li>
+<li><p><a class="reference internal" href="#api-reference" id="id9">API 参考</a></p></li>
+</ul>
+</nav>
+<section id="i3c-controller-api">
+<span id="id2"></span><h2><a class="toc-backref" href="#id3" role="doc-backlink">I3C 控制器 API</a><a class="headerlink" href="#i3c-controller-api" title="链接到此标题。"></a></h2>
+<p>当 I3C 控制器控制总线（尤其是起始条件、停止条件和时钟）时，使用 Zephyr 的 I3C 控制器 API。这是最常见的模式，用于与传感器等 I3C 目标设备交互。</p>
+<p>由于 I3C 的特性，总线上有些设备上电时可能没有地址，因此 I3C 控制器需要额外执行动态地址分配。为此，控制器需要维护单独的结构来跟踪设备状态。这可以在构建时完成，例如为 I3C 和 I<sup>2</sup>C 设备分别创建设备描述符数组：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">i3c_device_desc</span><span class="w"> </span><span class="n">i3c_device_array</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">I3C_DEVICE_ARRAY_DT_INST</span><span class="p">(</span><span class="n">inst</span><span class="p">);</span>
+<span class="k">static</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">i3c_i2c_device_desc</span><span class="w"> </span><span class="n">i2c_device_array</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">I3C_I2C_DEVICE_ARRAY_DT_INST</span><span class="p">(</span><span class="n">inst</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>宏 <code class="xref c c-macro docutils literal notranslate"><span class="pre">I3C_DEVICE_ARRAY_DT_INST</span></code> 和 <code class="xref c c-macro docutils literal notranslate"><span class="pre">I3C_I2C_DEVICE_ARRAY_DT_INST</span></code> 是辅助宏，用于创建与 I3C 控制器下的设备树节点相对应的设备描述符数组。</p>
+<p>下面是在设备驱动初始化函数中初始化 I3C 控制器和 I3C 总线的通用步骤：</p>
+<ol class="arabic simple">
+<li><p>初始化 I3C 控制器设备驱动实例的数据结构。可以使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">DEVICE_DT_INST_DEFINE</span></code> 等常用的设备定义宏，并将初始化函数作为参数传给该宏。</p>
+<ul class="simple">
+<li><p><code class="xref c c-struct docutils literal notranslate"><span class="pre">i3c_addr_slots</span></code> 和 <code class="xref c c-struct docutils literal notranslate"><span class="pre">i3c_dev_list</span></code> 是用于辅助地址分配和设备列表管理的结构体。如果使用它们，需要调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">i3c_addr_slots_init()</span></code> 初始化该结构体。这两个结构体还可以配合各种辅助函数使用。</p></li>
+<li><p>如果控制器驱动需要，初始化设备描述符。</p></li>
+</ul>
+</li>
+<li><p>初始化硬件，包括但不限于：</p>
+<ul class="simple">
+<li><p>设置引脚复用和方向。</p></li>
+<li><p>为控制器设置时钟。</p></li>
+<li><p>为硬件上电。</p></li>
+<li><p>配置硬件（例如 SCL 时钟频率）。</p></li>
+</ul>
+</li>
+<li><p>执行总线初始化。通用辅助函数 <code class="xref c c-func docutils literal notranslate"><span class="pre">i3c_bus_init()</span></code> 会执行以下步骤。如果控制器在总线初始化期间不需要任何特殊处理，可以使用该函数。</p>
+<ol class="arabic simple">
+<li><p>执行 <code class="docutils literal notranslate"><span class="pre">RSTDAA</span></code>，复位已连接设备的动态地址。如果已连接的设备已被分配了地址（例如在上电时），记录用的数据结构中并没有这些地址的记录。因此最好先复位，再为它们分配新地址。</p></li>
+<li><p>执行 <code class="docutils literal notranslate"><span class="pre">DISEC</span></code>，禁止来自设备的所有事件。</p></li>
+<li><p>如有需要，执行 <code class="docutils literal notranslate"><span class="pre">SETDASA</span></code>，使用设备的静态地址为其分配动态地址。</p>
+<ul class="simple">
+<li><p>并非所有已连接设备都支持用 <code class="docutils literal notranslate"><span class="pre">SETAASA</span></code> 将静态地址分配为动态地址。</p></li>
+<li><p>需要单独获取 BCR 和 DCR，以填充 I3C 目标设备描述符结构体中的相应字段。</p></li>
+</ul>
+</li>
+<li><p>如果仍有设备没有地址，执行 <code class="docutils literal notranslate"><span class="pre">ENTDAA</span></code> 开始动态地址分配。</p>
+<ul class="simple">
+<li><p>如果有设备在等待地址，它会回传其预置 ID（Provisioned ID）、BCR 和 DCR。将收到的预置 ID 与已注册的 I3C 设备列表进行匹配。</p>
+<ul>
+<li><p>如果匹配成功，为其分配地址（若尚未执行 <code class="docutils literal notranslate"><span class="pre">SETDASA</span></code>，则使用所声明的静态地址，否则使用一个空闲地址）。</p>
+<ul>
+<li><p>同时设置设备描述符结构体中的 BCR 和 DCR 字段。</p></li>
+</ul>
+</li>
+<li><p>如果没有匹配，根据策略可以为其分配一个空闲地址，也可以由设备驱动停止分配过程并报错。</p>
+<ul>
+<li><p>注意，I3C API 需要设备描述符才能工作。没有设备描述符的设备无法通过该 API 访问。</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>如果没有需要 DAA 的已连接设备，可以跳过此步骤。</p></li>
+</ul>
+</li>
+<li><p>以下步骤是可选的，但强烈建议执行：</p>
+<ul class="simple">
+<li><p>执行 <code class="docutils literal notranslate"><span class="pre">GETMRL</span></code> 和 <code class="docutils literal notranslate"><span class="pre">GETMWL</span></code>，获取最大读/写长度。</p></li>
+<li><p>执行 <code class="docutils literal notranslate"><span class="pre">GETMXDS</span></code>，获取最大读/写速度和最大读周转时间。</p></li>
+<li><p>辅助函数 <code class="xref c c-func docutils literal notranslate"><span class="pre">i3c_bus_init()</span></code> 会获取 BCR、DCR、MRL 和 MWL 等基本设备信息。</p></li>
+</ul>
+</li>
+<li><p>执行 <code class="docutils literal notranslate"><span class="pre">ENEC</span></code>，重新使能来自设备的事件。</p>
+<ul class="simple">
+<li><p>辅助函数 <code class="xref c c-func docutils literal notranslate"><span class="pre">i3c_bus_init()</span></code> 只会重新使能热加入（hot-join）事件。IBI 事件只应在使能某个设备的 IBI 时才使能。</p></li>
+</ul>
+</li>
+</ol>
+</li>
+</ol>
+<section id="in-band-interrupt-ibi">
+<h3><a class="toc-backref" href="#id4" role="doc-backlink">带内中断（IBI）</a><a class="headerlink" href="#in-band-interrupt-ibi" title="链接到此标题。"></a></h3>
+<p>如果目标设备可以产生带内中断（IBI，In-Band Interrupt），需要让控制器知道这一点。</p>
+<ul class="simple">
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">i3c_ibi_enable()</span></code> 用于使能目标设备的 IBI。</p>
+<ul>
+<li><p>有些控制器硬件带有 IBI 槽位，需要对其进行编程，控制器才能识别来自特定目标设备的 IBI。</p>
+<ul>
+<li><p>如果硬件带有 IBI 槽位，<code class="xref c c-func docutils literal notranslate"><span class="pre">i3c_ibi_enable()</span></code> 需要对这些 IBI 槽位进行编程。</p></li>
+<li><p>注意，控制器上的 IBI 槽位通常有限，因此该操作可能失败。</p></li>
+</ul>
+</li>
+<li><p>驱动中的实现还应发送 <code class="docutils literal notranslate"><span class="pre">ENEC</span></code> 命令，使能该目标设备的中断。</p></li>
+</ul>
+</li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">i3c_ibi_disable()</span></code> 用于禁止目标设备的 IBI。</p>
+<ul>
+<li><p>如果控制器硬件使用 IBI 槽位，此操作会从槽位中移除该目标设备的描述。</p></li>
+<li><p>驱动中的实现还应发送 <code class="docutils literal notranslate"><span class="pre">DISEC</span></code> 命令，禁止该目标设备的中断。</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="device-tree">
+<h3><a class="toc-backref" href="#id5" role="doc-backlink">设备树</a><a class="headerlink" href="#device-tree" title="链接到此标题。"></a></h3>
+<p>下面是在设备树中定义 I3C 控制器的示例：</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nl">i3c0</span><span class="p">:</span><span class="w"> </span><span class="nf">i3c</span><span class="o">@</span><span class="mi">10000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"vendor,i3c"</span><span class="p">;</span>
+
+<span class="w">        </span><span class="kr">#address-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x3</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="kr">#size-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x0</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">        </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x10000</span><span class="w"> </span><span class="mh">0x1000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">interrupts</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x1F</span><span class="w"> </span><span class="mh">0x0</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">pinctrl-0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">pinmux</span><span class="o">-</span><span class="na">i3c</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">pinctrl-names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"default"</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">i2c-scl-hz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">400000</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">        </span><span class="n">i3c-scl-hz</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">12000000</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">        </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"okay"</span><span class="p">;</span>
+
+<span class="w">        </span><span class="nl">i3c-dev0</span><span class="p">:</span><span class="w"> </span><span class="nf">i3c-dev0</span><span class="o">@</span><span class="mi">420000ABCD12345678</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"vendor,i3c-dev"</span><span class="p">;</span>
+
+<span class="w">                </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x42</span><span class="w"> </span><span class="mh">0xABCD</span><span class="w"> </span><span class="mh">0x12345678</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">                </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"okay"</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+
+<span class="w">        </span><span class="nl">i2c-dev0</span><span class="p">:</span><span class="w"> </span><span class="nf">i2c-dev0</span><span class="o">@</span><span class="mi">380000000000000050</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"vendor-i2c-dev"</span><span class="p">;</span>
+
+<span class="w">                </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x38</span><span class="w"> </span><span class="mh">0x0</span><span class="w"> </span><span class="mh">0x50</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">                </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"okay"</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<section id="i3c-devices">
+<h4>I3C 设备<a class="headerlink" href="#i3c-devices" title="链接到此标题。"></a></h4>
+<p>对于 I3C 设备，<code class="docutils literal notranslate"><span class="pre">reg</span></code> 属性包含 3 个元素：</p>
+<ul class="simple">
+<li><p>第一个元素是设备的静态地址。</p>
+<ul>
+<li><p>如果不使用静态地址，可以为零。此时地址将在 DAA（动态地址分配，Dynamic Address Assignment）期间分配。</p></li>
+<li><p>如果非零且未设置 <code class="docutils literal notranslate"><span class="pre">assigned-address</span></code> 属性，则在发出 SETDASA（根据静态地址设置动态地址，Set Dynamic Address from Static Address）后，该值即为设备地址。</p></li>
+</ul>
+</li>
+<li><p>第二个元素是预置 ID（PID）的高 16 位，其中包含左移 1 位的制造商 ID，对应 48 位预置 ID 的第 33-47 位（从零开始计数）。</p>
+<ul>
+<li><p>必须为非零值。第二个元素为零会把该节点标记为 I<sup>2</sup>C 设备（如下文所述），辅助宏会为其创建传统 I<sup>2</sup>C 描述符，而不是 I3C 描述符。即使设备通过 SETDASA 寻址、PID 在其他方面并未使用，也要指定 PID。</p></li>
+</ul>
+</li>
+<li><p>第三个元素包含预置 ID 的低 32 位，由器件 ID（左移 16 位，即 PID 的第 16-31 位）和实例 ID（左移 12 位，即 PID 的第 12-15 位）组合而成。</p></li>
+</ul>
+<p>注意，单元地址（<code class="docutils literal notranslate"><span class="pre">&#64;</span></code> 之后的部分）必须与 <code class="docutils literal notranslate"><span class="pre">reg</span></code> 属性完全一致：每个元素视为 32 位整数，组合成一个 96 位整数。这是正确生成设备树宏所必需的。</p>
+</section>
+<section id="i2c-devices">
+<h4>I<sup>2</sup>C 设备<a class="headerlink" href="#i2c-devices" title="链接到此标题。"></a></h4>
+<p>对于设备驱动支持在 I3C 总线上工作的 I<sup>2</sup>C 设备，其设备节点可以描述为 I3C 控制器的子节点。如果设备驱动只能与 I<sup>2</sup>C 控制器配合工作，请按下文所述将节点定义在 I<sup>2</sup>C 虚拟控制器之下。否则，<code class="docutils literal notranslate"><span class="pre">reg</span></code> 属性与 I3C 设备类似，包含 3 个元素：</p>
+<ul class="simple">
+<li><p>第一个元素是设备的静态地址。由于 I<sup>2</sup>C 设备不支持动态地址分配，该地址必须有效。</p></li>
+<li><p>第二个元素始终为零。</p>
+<ul>
+<li><p>各种辅助宏据此判断设备树条目是否对应 I<sup>2</sup>C 设备。</p></li>
+</ul>
+</li>
+<li><p>第三个元素是 LVR（传统虚拟寄存器，Legacy Virtual Register）：</p>
+<ul>
+<li><p>bit[31:8] 未使用。</p></li>
+<li><p>bit[7:5] 是 I<sup>2</sup>C 设备索引：</p>
+<ul>
+<li><p>索引 <code class="docutils literal notranslate"><span class="pre">0</span></code></p>
+<ul>
+<li><p>I3C 设备带有 50 ns 尖峰滤波器，不受 SCL 上高频信号的影响。</p></li>
+</ul>
+</li>
+<li><p>索引 <code class="docutils literal notranslate"><span class="pre">1</span></code></p>
+<ul>
+<li><p>I<sup>2</sup>C 设备没有 50 ns 尖峰滤波器，但可以在 SCL 高频下工作。</p></li>
+</ul>
+</li>
+<li><p>索引 <code class="docutils literal notranslate"><span class="pre">2</span></code></p>
+<ul>
+<li><p>I3C 设备没有 50 ns 尖峰滤波器，且无法在 SCL 高频下工作。</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>bit[4] 是 I<sup>2</sup>C 模式指示位：</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">0</span></code> 表示 FM+ 模式。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">1</span></code> 表示 FM 模式。</p></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<p>与 I3C 设备类似，单元地址必须与 <code class="docutils literal notranslate"><span class="pre">reg</span></code> 属性完全一致：每个元素视为 32 位整数，组合成一个 96 位整数。</p>
+</section>
+</section>
+<section id="device-drivers-for-i3c-devices">
+<h3><a class="toc-backref" href="#id6" role="doc-backlink">I3C 设备的设备驱动</a><a class="headerlink" href="#device-drivers-for-i3c-devices" title="链接到此标题。"></a></h3>
+<p>I3C 控制器 API 的所有传输函数都需要使用设备描述符 <code class="xref c c-struct docutils literal notranslate"><span class="pre">i3c_device_desc</span></code>。该结构体包含 I3C 设备的运行时信息，例如其动态地址、BCR、DCR、MRL 和 MWL。因此，I3C 设备的驱动应使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">i3c_device_find()</span></code> 从控制器获取指向该设备描述符的指针。该函数接受一个 <code class="xref c c-struct docutils literal notranslate"><span class="pre">i3c_device_id</span></code> 类型的 ID 参数用于匹配。返回的指针随后可用于对控制器的后续 API 调用。</p>
+</section>
+<section id="i2c-devices-under-i3c-bus">
+<h3><a class="toc-backref" href="#id7" role="doc-backlink">I3C 总线上的 I<sup>2</sup>C 设备</a><a class="headerlink" href="#i2c-devices-under-i3c-bus" title="链接到此标题。"></a></h3>
+<p>由于 I3C 向后兼容 I<sup>2</sup>C，只要控制器设备驱动实现了 I2C API，I3C 控制器 API 无需修改即可处理 I2C API 调用。其优点是现有 I2C 设备可以直接使用，无需修改其设备驱动。不过，由于 I3C 控制器 API 基于设备描述符工作，每次调用 I2C API 都需要根据 I2C 设备地址查找对应的设备描述符，这会给 I2C API 调用增加一些处理开销。</p>
+<p>另一方面，也可以扩展设备驱动，通过 I3C 控制器 API 使用原生的 I2C 设备支持。在设备初始化期间，需要调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">i3c_i2c_device_find()</span></code> 获取指向设备描述符的指针。该指针可用于后续 API 调用。</p>
+<p>注意，无论使用上述哪种方法，I2C 设备的设备树节点都必须按照 I3C 标准声明：</p>
+<p>I<sup>2</sup>C 虚拟控制器设备驱动提供了一种在 I3C 总线上连接 I<sup>2</sup>C 设备的方式，相关设备驱动可以原样使用，无需修改。这需要在设备树中添加一个中间节点：</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nl">i3c0</span><span class="p">:</span><span class="w"> </span><span class="nf">i3c</span><span class="o">@</span><span class="mi">10000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="o">&lt;</span><span class="p">...</span><span class="w"> </span><span class="na">I3C</span><span class="w"> </span><span class="na">controller</span><span class="w"> </span><span class="na">related</span><span class="w"> </span><span class="na">properties</span><span class="w"> </span><span class="p">...</span><span class="o">&gt;</span>
+<span class="w">        </span><span class="o">&lt;</span><span class="p">...</span><span class="w"> </span><span class="na">Nodes</span><span class="w"> </span><span class="na">of</span><span class="w"> </span><span class="na">I3C</span><span class="w"> </span><span class="na">devices</span><span class="p">,</span><span class="w"> </span><span class="na">if</span><span class="w"> </span><span class="na">any</span><span class="w"> </span><span class="p">...</span><span class="o">&gt;</span>
+
+<span class="w">        </span><span class="nl">i2c-dev0</span><span class="p">:</span><span class="w"> </span><span class="nf">i2c-dev0</span><span class="o">@</span><span class="mi">420000000000000050</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"vendor-i2c-dev"</span><span class="p">;</span>
+
+<span class="w">                </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x42</span><span class="w"> </span><span class="mh">0x0</span><span class="w"> </span><span class="mh">0x50</span><span class="o">&gt;</span><span class="p">;</span>
+
+<span class="w">                </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"okay"</span><span class="p">;</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="configuration-options">
+<h2><a class="toc-backref" href="#id8" role="doc-backlink">配置选项</a><a class="headerlink" href="#configuration-options" title="链接到此标题。"></a></h2>
+<p>相关配置选项：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_I3C" title="CONFIG_I3C"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_I3C</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_I3C_USE_IBI" title="CONFIG_I3C_USE_IBI"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_I3C_USE_IBI</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_I3C_IBI_MAX_PAYLOAD_SIZE" title="CONFIG_I3C_IBI_MAX_PAYLOAD_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_I3C_IBI_MAX_PAYLOAD_SIZE</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_I3C_CONTROLLER_INIT_PRIORITY" title="CONFIG_I3C_CONTROLLER_INIT_PRIORITY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_I3C_CONTROLLER_INIT_PRIORITY</span></code></a></p></li>
+</ul>
+</section>
+<section id="api-reference">
+<h2><a class="toc-backref" href="#id9" role="doc-backlink">API 参考</a><a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">i3c_interface</span></dt>
+</dl>
+
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">i3c_ccc</span></dt>
+</dl>
+
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">i3c_addresses</span></dt>
+</dl>
+
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">i3c_target_device</span></dt>
+</dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 9月 11, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

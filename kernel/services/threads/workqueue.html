@@ -1,0 +1,563 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>工作队列线程 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/kernel/services/threads/workqueue.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" />
+    <link rel="next" title="无线程运行" href="nothread.html" />
+    <link rel="prev" title="系统线程" href="system_threads.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">内核</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">内核服务</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html#scheduling-interrupts-and-synchronization">调度、中断与同步</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="index.html">线程</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scheduling/index.html">调度</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../scheduling/index.html#cpu-idling">CPU 空闲</a></li>
+<li class="toctree-l4"><a class="reference internal" href="system_threads.html">系统线程</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">工作队列线程</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#work-item-lifecycle">工作项生命周期</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#delayable-work">可延迟工作</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#triggered-work">触发式工作</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#system-workqueue">系统工作队列</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#how-to-use-workqueues">如何使用工作队列</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#defining-and-controlling-a-workqueue">定义和控制工作队列</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#submitting-a-work-item">提交工作项</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#scheduling-a-delayable-work-item">调度可延迟工作项</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#synchronizing-with-work-items">与工作项同步</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#workqueue-best-practices">工作队列最佳实践</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#avoid-race-conditions">避免竞态条件</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#check-return-values">检查返回值</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#don-t-optimize-prematurely">不要过早优化</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#suggested-uses">建议用法</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#configuration-options">配置选项</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#api-reference">API 参考</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="nothread.html">无线程运行</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../interrupts.html">中断</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../polling.html">轮询 API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../synchronization/semaphores.html">信号量</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../synchronization/mutexes.html">互斥量</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../synchronization/condvar.html">条件变量</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../synchronization/events.html">事件</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../synchronization/spinlocks.html">自旋锁</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../smp/smp.html">对称多处理</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#data-passing">数据传递</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#memory-management">内存管理</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#timing">计时</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#other">其他</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../drivers/index.html">设备驱动模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../usermode/index.html">用户模式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../memory_management/index.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../data_structures/index.html">数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../timing_functions/index.html">计时函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../object_cores/index.html">对象核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../timeutil.html">时间工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../precision_timing.html">精密计时</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../util/index.html">实用工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../iterable_sections/index.html">可迭代段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../code-relocation.html">代码和数据重定位</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanup.html">基于作用域的清理辅助工具</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">内核</a> &raquo;</li>
+  
+     <li><a href="../index.html">内核服务</a> &raquo;</li>
+  
+  <li>工作队列线程</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="workqueue-threads">
+<span id="workqueues-v2"></span><h1>工作队列线程<a class="headerlink" href="#workqueue-threads" title="链接到此标题。"></a></h1>
+<nav class="contents local" id="id1">
+<ul class="simple">
+<li><p><a class="reference internal" href="#work-item-lifecycle" id="id2">工作项生命周期</a></p></li>
+<li><p><a class="reference internal" href="#delayable-work" id="id3">可延迟工作</a></p></li>
+<li><p><a class="reference internal" href="#triggered-work" id="id4">触发式工作</a></p></li>
+<li><p><a class="reference internal" href="#system-workqueue" id="id5">系统工作队列</a></p></li>
+<li><p><a class="reference internal" href="#how-to-use-workqueues" id="id6">如何使用工作队列</a></p></li>
+<li><p><a class="reference internal" href="#workqueue-best-practices" id="id7">工作队列最佳实践</a></p></li>
+<li><p><a class="reference internal" href="#suggested-uses" id="id8">建议用法</a></p></li>
+<li><p><a class="reference internal" href="#configuration-options" id="id9">配置选项</a></p></li>
+<li><p><a class="reference internal" href="#api-reference" id="id10">API 参考</a></p></li>
+</ul>
+</nav>
+<p>工作队列（<em class="dfn">workqueue</em>）是一种内核对象，它使用一个专用线程以先进先出的方式处理工作项。每个工作项通过调用该工作项指定的函数来处理。工作队列通常由 ISR 或高优先级线程使用，将非紧急的处理工作转交给较低优先级的线程，从而不影响时间敏感的处理。</p>
+<p>可以定义任意数量的工作队列（仅受可用 RAM 限制）。每个工作队列通过其内存地址引用。</p>
+<p>工作队列具有以下关键属性：</p>
+<ul class="simple">
+<li><p>一个 <strong>队列</strong>，存放已添加但尚未处理的工作项。</p></li>
+<li><p>一个 <strong>线程</strong>，负责处理队列中的工作项。该线程的优先级可配置，可根据需要设为协作式或抢占式。</p></li>
+</ul>
+<p>无论工作队列线程的优先级如何，它在处理每个已提交的工作项之间都会让出（yield）CPU，以防止协作式工作队列使其他线程得不到运行。</p>
+<p>工作队列必须先初始化才能使用。初始化会将其队列置为空，并创建工作队列的线程。该线程永久运行，但在没有可处理的工作项时会休眠。</p>
+<section id="work-item-lifecycle">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">工作项生命周期</a><a class="headerlink" href="#work-item-lifecycle" title="链接到此标题。"></a></h2>
+<p>可以定义任意数量的 <strong>工作项</strong>。每个工作项通过其内存地址引用。</p>
+<p>每个工作项都被指定一个 <strong>处理函数</strong>，即工作队列线程处理该工作项时执行的函数。该函数接受一个参数，即工作项本身的地址。工作项还会维护有关其状态的信息。</p>
+<p>工作项必须先初始化才能使用。初始化会记录工作项的处理函数，并将其标记为未挂起。</p>
+<p>ISR 或线程可以将工作项提交到工作队列，使其处于 <strong>已排队</strong> 状态（<code class="xref c c-enumerator docutils literal notranslate"><span class="pre">K_WORK_QUEUED</span></code>）。提交工作项会将它追加到工作队列的队列中。工作队列线程处理完队列中排在前面的所有工作项后，会从队列中取出下一个工作项并调用其处理函数。根据工作队列线程的调度优先级以及队列中其他工作项所需的工作量，已排队的工作项可能很快得到处理，也可能在队列中停留较长时间。</p>
+<p>可延迟工作项可以被 <strong>调度</strong> 到工作队列（<code class="xref c c-enumerator docutils literal notranslate"><span class="pre">K_WORK_DELAYED</span></code>），参见 <a class="reference internal" href="#delayable-work">Delayable Work</a>。</p>
+<p>工作项在工作队列上运行时处于 <strong>运行中</strong> 状态（<code class="xref c c-enumerator docutils literal notranslate"><span class="pre">K_WORK_RUNNING</span></code>）；如果它在某个线程请求取消之前已开始运行，还可能处于 <strong>正在取消</strong> 状态（<code class="xref c c-enumerator docutils literal notranslate"><span class="pre">K_WORK_CANCELING</span></code>）。</p>
+<p>一个工作项可以同时处于多种状态，例如它可以：</p>
+<ul class="simple">
+<li><p>正在某个队列上运行；</p></li>
+<li><p>被标记为正在取消（因为某个线程使用了 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_cancel_sync()</span></code> 等待该工作项完成）；</p></li>
+<li><p>已排队，等待在同一队列上再次运行；</p></li>
+<li><p>已调度，等待提交到某个（可能不同的）队列</p></li>
+</ul>
+<p><em>以上状态同时存在</em>。处于以上任一状态的工作项都属于 <strong>挂起</strong>（<code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_is_pending()</span></code>）或 <strong>忙碌</strong>（<code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_busy_get()</span></code>）状态。</p>
+<p>处理函数可以使用线程可用的任何内核 API。但是，可能阻塞的操作（例如获取信号量）必须谨慎使用，因为在处理函数执行完毕之前，工作队列无法处理其队列中的后续工作项。</p>
+<p>如果不需要，可以忽略传给处理函数的那个参数。如果处理函数需要关于所执行工作的额外信息，可以将工作项嵌入到一个更大的数据结构中。处理函数随后可以利用该参数值，通过 <code class="xref c c-macro docutils literal notranslate"><span class="pre">CONTAINER_OF</span></code> 计算外层数据结构的地址，从而获取所需的额外信息。</p>
+<p>工作项通常只初始化一次，之后每当需要执行工作时就提交到特定的工作队列。如果 ISR 或线程试图提交一个已排队的工作项，该工作项不受影响：它保持在工作队列中的当前位置，工作只执行一次。</p>
+<p>处理函数可以将作为参数传入的工作项重新提交到工作队列，因为此时该工作项已不在队列中。这样处理函数就可以分阶段执行工作，而不会过度延迟工作队列中其他工作项的处理。</p>
+<div class="admonition important">
+<p class="admonition-title">重要</p>
+<p>在工作队列线程处理完挂起的工作项之前，<em>不得</em> 修改该工作项。这意味着工作项处于忙碌状态时不得重新初始化。此外，在处理函数执行完毕之前，不得修改其执行工作所需的任何额外信息。</p>
+</div>
+</section>
+<section id="delayable-work">
+<span id="k-delayable-work"></span><h2><a class="toc-backref" href="#id3" role="doc-backlink">可延迟工作</a><a class="headerlink" href="#delayable-work" title="链接到此标题。"></a></h2>
+<p>ISR 或线程可能需要调度一个工作项，使其在指定时间段之后而不是立即得到处理。这可以通过 <strong>调度</strong> 一个 <strong>可延迟工作项</strong>，让它在将来某个时间提交到工作队列来实现。</p>
+<p>可延迟工作项包含一个标准工作项，并增加了记录该工作项应在何时、提交到何处的字段。</p>
+<p>可延迟工作项的初始化及调度到工作队列的方式与标准工作项类似，只是使用不同的内核 API。发出调度请求时，内核会启动一个超时机制，在指定延迟结束后触发。超时发生后，内核将工作项提交到指定的工作队列，工作项在其中保持排队状态，直到以标准方式得到处理。</p>
+<p>注意，可延迟工作所用的工作处理函数接收到的仍是指向底层不可延迟工作结构的指针，而该结构无法从 <code class="xref c c-struct docutils literal notranslate"><span class="pre">k_work_delayable</span></code> 公开访问。要访问包含该可延迟工作对象的对象，请使用以下惯用写法：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">work_handler</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">k_work</span><span class="w"> </span><span class="o">*</span><span class="n">work</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="k">struct</span><span class="w"> </span><span class="nc">k_work_delayable</span><span class="w"> </span><span class="o">*</span><span class="n">dwork</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">k_work_delayable_from_work</span><span class="p">(</span><span class="n">work</span><span class="p">);</span>
+<span class="w">        </span><span class="k">struct</span><span class="w"> </span><span class="nc">work_context</span><span class="w"> </span><span class="o">*</span><span class="n">ctx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CONTAINER_OF</span><span class="p">(</span><span class="n">dwork</span><span class="p">,</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">work_context</span><span class="p">,</span>
+<span class="w">                                                </span><span class="n">timed_work</span><span class="p">);</span>
+<span class="w">        </span><span class="p">...</span>
+</pre></div>
+</div>
+</section>
+<section id="triggered-work">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">触发式工作</a><a class="headerlink" href="#triggered-work" title="链接到此标题。"></a></h2>
+<p><code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_poll_submit()</span></code> 接口会调度一个响应 <strong>轮询事件</strong>（参见 <a class="reference internal" href="../polling.html#polling-v2"><span class="std std-ref">轮询 API</span></a>）的触发式工作项，当被监视的资源变为可用、轮询信号被触发或发生超时时，它会调用用户定义的函数。与 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_poll()</span></code> 不同，触发式工作不需要专门的线程来等待或主动轮询轮询事件。</p>
+<p>触发式工作项是一个标准工作项，额外具有以下属性：</p>
+<ul class="simple">
+<li><p>一个指针，指向会触发向工作队列提交工作项的轮询事件数组</p></li>
+<li><p>包含轮询事件的数组的大小。</p></li>
+</ul>
+<p>触发式工作项的初始化及提交到工作队列的方式与标准工作项类似，只是使用专门的内核 API。发出提交请求后，内核开始观察轮询事件所指定的内核对象。一旦至少有一个被观察的内核对象改变状态，工作项就会被提交到指定的工作队列，并在其中保持排队状态，直到以标准方式得到处理。</p>
+<div class="admonition important">
+<p class="admonition-title">重要</p>
+<p>在触发式工作项的整个生命周期内（从提交到工作项执行或被取消），触发式工作项及其引用的轮询事件数组都必须保持有效，且不能修改。</p>
+</div>
+<p>只要触发式工作项仍在等待轮询事件，提交它的 ISR 或线程就可以 <strong>取消</strong> 它。此时内核停止等待所关联的轮询事件，指定的工作也不会执行。否则无法取消。</p>
+</section>
+<section id="system-workqueue">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">系统工作队列</a><a class="headerlink" href="#system-workqueue" title="链接到此标题。"></a></h2>
+<p>内核定义了一个称为 <em>系统工作队列</em> 的工作队列，任何需要工作队列支持的应用程序或内核代码都可以使用它。系统工作队列是可选的，只有在应用程序使用它时才存在。</p>
+<div class="admonition important">
+<p class="admonition-title">重要</p>
+<p>只有在无法向系统工作队列提交新工作项时，才应定义额外的工作队列，因为每个新工作队列都会带来很大的内存开销。如果新工作项无法与现有系统工作队列的工作项共存而不产生不可接受的影响，就有理由使用新的工作队列；例如，新工作项会执行阻塞操作，使系统工作队列的其他处理延迟到不可接受的程度。</p>
+<p>另请注意：系统工作队列默认使用最低的协作式优先级。这意味着处理完系统工作队列中的工作优先于 <em>所有可抢占线程</em>。将系统工作队列的优先级配置为可抢占是有风险的，因为子系统和驱动可能隐式依赖于工作项在协作式上下文中执行。因此，对于低优先级任务，使用一个优先级更低的独立工作队列可能更合适。</p>
+</div>
+</section>
+<section id="how-to-use-workqueues">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">如何使用工作队列</a><a class="headerlink" href="#how-to-use-workqueues" title="链接到此标题。"></a></h2>
+<section id="defining-and-controlling-a-workqueue">
+<h3>定义和控制工作队列<a class="headerlink" href="#defining-and-controlling-a-workqueue" title="链接到此标题。"></a></h3>
+<p>工作队列使用 <code class="xref c c-struct docutils literal notranslate"><span class="pre">k_work_q</span></code> 类型的变量定义。初始化工作队列的步骤是：定义其线程使用的栈区域，初始化 <code class="xref c c-struct docutils literal notranslate"><span class="pre">k_work_q</span></code>（将其内存清零或调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_queue_init()</span></code>），然后调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_queue_start()</span></code>。栈区域必须使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_THREAD_STACK_DEFINE</span></code> 定义，以确保它在内存中被正确设置。</p>
+<p>以下代码定义并初始化一个工作队列：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#define MY_STACK_SIZE 512</span>
+<span class="cp">#define MY_PRIORITY 5</span>
+
+<span class="n">K_THREAD_STACK_DEFINE</span><span class="p">(</span><span class="n">my_stack_area</span><span class="p">,</span><span class="w"> </span><span class="n">MY_STACK_SIZE</span><span class="p">);</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">k_work_q</span><span class="w"> </span><span class="n">my_work_q</span><span class="p">;</span>
+
+<span class="n">k_work_queue_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_work_q</span><span class="p">);</span>
+
+<span class="n">k_work_queue_start</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_work_q</span><span class="p">,</span><span class="w"> </span><span class="n">my_stack_area</span><span class="p">,</span>
+<span class="w">                   </span><span class="n">K_THREAD_STACK_SIZEOF</span><span class="p">(</span><span class="n">my_stack_area</span><span class="p">),</span><span class="w"> </span><span class="n">MY_PRIORITY</span><span class="p">,</span>
+<span class="w">                   </span><span class="nb">NULL</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>此外，可以通过可选的最后一个参数控制队列标识以及与线程重新调度相关的某些行为；详见 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_queue_start()</span></code>。</p>
+<p>可以使用以下 API 与工作队列交互：</p>
+<ul class="simple">
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_queue_drain()</span></code> 可用于阻塞调用者，直到工作队列中没有剩余工作项。队列排空期间，从工作队列线程重新提交的工作项会被接受，但来自其他任何线程或 ISR 的工作项都会被拒绝。可以将禁止提交更多工作的限制延续到排空操作完成之后，使阻塞的线程能在队列被“堵住”期间执行其他工作。注意，排空队列不影响可延迟工作项的调度或处理，但如果队列被堵住而截止时间到期，该工作项将提交失败且不会给出任何提示。</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_queue_unplug()</span></code> 解除之前的排空操作对向该队列提交工作所施加的阻止。</p></li>
+</ul>
+</section>
+<section id="submitting-a-work-item">
+<h3>提交工作项<a class="headerlink" href="#submitting-a-work-item" title="链接到此标题。"></a></h3>
+<p>工作项使用 <code class="xref c c-struct docutils literal notranslate"><span class="pre">k_work</span></code> 类型的变量定义。它必须通过调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_init()</span></code> 初始化，除非它是用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_WORK_DEFINE</span></code> 定义的，此时初始化在编译时完成。</p>
+<p>已初始化的工作项可以通过调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_submit()</span></code> 提交到系统工作队列，或通过调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_submit_to_queue()</span></code> 提交到指定的工作队列。</p>
+<p>以下代码演示 ISR 如何将错误消息的打印工作转交给系统工作队列。注意，如果 ISR 在工作项仍处于排队状态时试图重新提交它，该工作项保持不变，相应的错误消息也不会被打印。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">device_info</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">k_work</span><span class="w"> </span><span class="n">work</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">char</span><span class="w"> </span><span class="n">name</span><span class="p">[</span><span class="mi">16</span><span class="p">]</span>
+<span class="p">}</span><span class="w"> </span><span class="n">my_device</span><span class="p">;</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">my_isr</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">arg</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">error</span><span class="w"> </span><span class="n">detected</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">k_work_submit</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_device</span><span class="p">.</span><span class="n">work</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">print_error</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">k_work</span><span class="w"> </span><span class="o">*</span><span class="n">item</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">device_info</span><span class="w"> </span><span class="o">*</span><span class="n">the_device</span><span class="w"> </span><span class="o">=</span>
+<span class="w">        </span><span class="n">CONTAINER_OF</span><span class="p">(</span><span class="n">item</span><span class="p">,</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">device_info</span><span class="p">,</span><span class="w"> </span><span class="n">work</span><span class="p">);</span>
+<span class="w">    </span><span class="n">printk</span><span class="p">(</span><span class="s">"Got error on device %s</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="w"> </span><span class="n">the_device</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="cm">/* initialize name info for a device */</span>
+<span class="n">strcpy</span><span class="p">(</span><span class="n">my_device</span><span class="p">.</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="s">"FOO_dev"</span><span class="p">);</span>
+
+<span class="cm">/* initialize work item for printing device's error messages */</span>
+<span class="n">k_work_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_device</span><span class="p">.</span><span class="n">work</span><span class="p">,</span><span class="w"> </span><span class="n">print_error</span><span class="p">);</span>
+
+<span class="cm">/* install my_isr() as interrupt handler for the device (not shown) */</span>
+<span class="p">...</span>
+</pre></div>
+</div>
+<p>可以使用以下 API 检查工作项的状态或与其同步：</p>
+<ul class="simple">
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_busy_get()</span></code> 返回表示工作项状态的标志快照。值为零表示该工作未被调度、未被提交、未在执行，也没有以其他方式仍被工作队列基础设施引用。</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_is_pending()</span></code> 是一个辅助函数，当且仅当工作已被调度、已排队或正在运行时返回 <code class="docutils literal notranslate"><span class="pre">true</span></code>。</p></li>
+<li><p>线程可以调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_flush()</span></code> 阻塞，直到工作项完成。如果工作未处于挂起状态，它会立即返回。</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_cancel()</span></code> 尝试阻止工作项执行，不一定能成功。可以在 ISR 中安全调用。</p></li>
+<li><p>线程可以调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_cancel_sync()</span></code> 阻塞，直到工作完成；如果取消成功或无需取消（工作未提交或未运行），它会立即返回。可以在（ISR 中）调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_cancel()</span></code> 之后使用它，确认由 ISR 发起的取消已经完成。</p></li>
+</ul>
+</section>
+<section id="scheduling-a-delayable-work-item">
+<h3>调度可延迟工作项<a class="headerlink" href="#scheduling-a-delayable-work-item" title="链接到此标题。"></a></h3>
+<p>可延迟工作项使用 <code class="xref c c-struct docutils literal notranslate"><span class="pre">k_work_delayable</span></code> 类型的变量定义。它必须通过调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_init_delayable()</span></code> 初始化。</p>
+<p>延迟工作有两种常见用例，区别在于发生新事件时是否应延长截止时间。一个例子是收集异步到达的数据，例如来自键盘所连 UART 的字符。有两个 API 可在延迟之后提交工作：</p>
+<ul class="simple">
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_schedule()</span></code>（或 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_schedule_for_queue()</span></code>）将工作调度为在特定时间或延迟之后执行。在延迟结束前再次使用该 API 调度同一工作项，不会改变该工作项被提交到其队列的时间。如果策略是从收到 <strong>第一个</strong> 未处理数据起，持续收集数据直到指定延迟结束，请使用该 API；</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_reschedule()</span></code>（或 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_reschedule_for_queue()</span></code>）无条件地设置工作的截止时间，替换之前任何未完成的延迟，并在必要时更改目标队列。如果策略是从收到 <strong>最后一个</strong> 未处理数据起，持续收集数据直到指定延迟结束，请使用该 API。</p></li>
+</ul>
+<p>如果工作项未被调度，这两个 API 的行为相同。如果将 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_NO_WAIT</span></code> 指定为延迟，其行为就如同工作项被立即直接提交到目标队列，而不等待最小超时（除非使用的是 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_schedule()</span></code> 且之前的延迟尚未结束）。</p>
+<p>两者都有可以控制提交所用队列的变体。</p>
+<p>辅助函数 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_delayable_from_work()</span></code> 可用于从传给工作处理函数的 <code class="xref c c-struct docutils literal notranslate"><span class="pre">k_work</span></code> 指针，获取指向包含它的 <code class="xref c c-struct docutils literal notranslate"><span class="pre">k_work_delayable</span></code> 的指针。</p>
+<p>还可以使用以下 API 检查工作项的状态或与其同步：</p>
+<ul class="simple">
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_delayable_busy_get()</span></code> 是 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_busy_get()</span></code> 针对可延迟工作的对应函数。</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_delayable_is_pending()</span></code> 是 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_is_pending()</span></code> 针对可延迟工作的对应函数。</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_flush_delayable()</span></code> 是 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_flush()</span></code> 针对可延迟工作的对应函数。</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_cancel_delayable()</span></code> 是 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_cancel()</span></code> 针对可延迟工作的对应函数；<code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_cancel_delayable_sync()</span></code> 也与此类似。</p></li>
+</ul>
+</section>
+<section id="synchronizing-with-work-items">
+<h3>与工作项同步<a class="headerlink" href="#synchronizing-with-work-items" title="链接到此标题。"></a></h3>
+<p>虽然在任何上下文中都可以使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_busy_get()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_delayable_busy_get()</span></code> 确定普通工作项和可延迟工作项的状态，但有些用例需要在工作项提交之后与其同步。可以在线程上下文中调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_flush()</span></code>、<code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_cancel_sync()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_cancel_delayable_sync()</span></code>，等待达到所请求的状态。</p>
+<p>调用这些 API 时必须提供一个 <code class="xref c c-struct docutils literal notranslate"><span class="pre">k_work_sync</span></code> 对象，该对象没有供应用程序查看的成员，但需要用它来提供同步对象。如果代码需要在启用 <a class="reference internal" href="../../../kconfig.html#CONFIG_KERNEL_COHERENCE" title="CONFIG_KERNEL_COHERENCE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_KERNEL_COHERENCE</span></code></a> 的架构上工作，不应在栈上分配这些对象。</p>
+</section>
+</section>
+<section id="workqueue-best-practices">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">工作队列最佳实践</a><a class="headerlink" href="#workqueue-best-practices" title="链接到此标题。"></a></h2>
+<section id="avoid-race-conditions">
+<h3>避免竞态条件<a class="headerlink" href="#avoid-race-conditions" title="链接到此标题。"></a></h3>
+<p>有时工作项要处理的数据天然是线程安全的，例如由某个线程放入 <code class="xref c c-struct docutils literal notranslate"><span class="pre">k_queue</span></code>、再在工作线程中处理的数据。更常见的情况是需要外部同步来避免数据竞争：即工作线程可能检查或操作正被另一个线程或中断访问的共享状态。这种状态可能是表示需要执行工作的标志，也可能是由 ISR 或线程填充、由工作处理函数读取的共享对象。</p>
+<p>对于简单的标志，使用 <a class="reference internal" href="../other/atomic.html#atomic-v2"><span class="std std-ref">原子服务</span></a> 可能就足够了。其他情况下，可以使用自旋锁（<code class="xref c c-struct docutils literal notranslate"><span class="pre">k_spinlock</span></code>）或感知线程的锁（<code class="xref c c-struct docutils literal notranslate"><span class="pre">k_sem</span></code>、<code class="xref c c-struct docutils literal notranslate"><span class="pre">k_mutex</span></code> 等）来确保不发生数据竞争。</p>
+<p>如果所选的锁机制可能 <a class="reference internal" href="../../../develop/api/terminology.html#api-term-sleep"><span class="std std-ref">sleep</span></a>，那么让工作线程睡眠会使工作队列中的其他工作项得不到运行，而这些工作项可能需要继续执行才能让锁被释放。工作处理函数应尝试以不等待的方式获取锁。例如：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">work_handler</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">work</span><span class="w"> </span><span class="o">*</span><span class="n">work</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="k">struct</span><span class="w"> </span><span class="nc">work_context</span><span class="w"> </span><span class="o">*</span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">CONTAINER_OF</span><span class="p">(</span><span class="n">work</span><span class="p">,</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">work_context</span><span class="p">,</span>
+<span class="w">                                                   </span><span class="n">work_item</span><span class="p">);</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">k_mutex_lock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">parent</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">,</span><span class="w"> </span><span class="n">K_NO_WAIT</span><span class="p">)</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="cm">/* NB: Submit will fail if the work item is being cancelled. */</span>
+<span class="w">                </span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">k_work_submit</span><span class="p">(</span><span class="n">work</span><span class="p">);</span>
+<span class="w">                </span><span class="k">return</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="cm">/* do stuff under lock */</span>
+<span class="w">        </span><span class="n">k_mutex_unlock</span><span class="p">(</span><span class="o">&amp;</span><span class="n">parent</span><span class="o">-&gt;</span><span class="n">lock</span><span class="p">);</span>
+<span class="w">        </span><span class="cm">/* do stuff without lock */</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>注意，如果持有锁的线程优先级低于工作队列，重新提交可能会使本应释放锁的线程得不到运行，导致应用程序失败。在需要上述惯用写法的场合，最好使用可延迟工作项，并以非零延迟（重新）调度工作，让持有锁的线程能够继续执行。</p>
+<p>注意，如果工作项已被取消，从工作处理函数中提交可能会失败。这通常是可以接受的，因为处理函数结束后取消就会完成。如果不可接受，上述代码必须采取其他措施，通知应用程序该工作无法执行。</p>
+<p>单独看，工作项本身是自锁的，因此仅仅为了提交或调度它们，无需持有外部锁。即使你使用受此类锁保护的外部状态来阻止进一步的重新提交，只要能确定该工作项最终会获取它的锁并检查该状态以决定是否需要做什么，重新提交就是安全的。如果可延迟工作项因无法获取锁而在其处理函数中被重新调度，则需要其他自锁状态（例如应用程序/驱动在发起取消时设置的原子标志）来检测取消，避免已取消的工作项在截止时间到达后再次被提交。</p>
+</section>
+<section id="check-return-values">
+<h3>检查返回值<a class="headerlink" href="#check-return-values" title="链接到此标题。"></a></h3>
+<p>所有工作 API 函数都会返回底层操作的状态，很多情况下必须验证是否得到了预期结果。</p>
+<ul class="simple">
+<li><p>如果工作正在被取消，或者队列不接受新工作项，提交工作项（<code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_submit_to_queue()</span></code>）可能会失败。此时该工作不会执行，这可能导致依靠工作处理函数驱动的子系统失去响应。</p></li>
+<li><p>异步取消（<code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_cancel()</span></code> 或 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_cancel_delayable()</span></code>）可能在工作项仍由处理函数运行时就已完成。此时继续操作与工作处理函数共享的状态会导致数据竞争，进而引发故障。</p></li>
+</ul>
+<p>Zephyr 代码中曾经出现过许多竞态条件，原因就是没有检查操作的结果。</p>
+<p>有时可能有充分理由认为，表示操作未按预期完成的返回值并不构成问题。这种情况下，代码应清楚地说明这一点：(1) 将返回值强制转换为 <code class="docutils literal notranslate"><span class="pre">void</span></code>，表明有意忽略该结果；(2) 说明在意外情况下会发生什么。例如：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* If this fails, the work handler will check pub-&gt;active and</span>
+<span class="cm"> * exit without transmitting.</span>
+<span class="cm"> */</span>
+<span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="n">k_work_cancel_delayable</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pub</span><span class="o">-&gt;</span><span class="n">timer</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>但在这种情况下，后续代码仍必须避免数据竞争，因为它无法保证工作线程没有在访问与工作相关的状态。</p>
+</section>
+<section id="don-t-optimize-prematurely">
+<h3>不要过早优化<a class="headerlink" href="#don-t-optimize-prematurely" title="链接到此标题。"></a></h3>
+<p>工作队列 API 在设计上可以安全地从多个线程和中断中调用。试图从外部检查工作项的状态并根据结果做决定，很可能会引入新的问题。</p>
+<p>因此，有新工作到来时，直接提交即可。不要试图通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_is_pending()</span></code> 或 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_busy_get()</span></code> 检查状态快照来判断工作项是否已提交，或者检查 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_delayable_remaining_get()</span></code> 是否返回非零延迟，以此进行“优化”。这些检查并不可靠：“忙碌”指示在检查结果返回时可能已经过时；如果工作从多个上下文提交，或者（对可延迟工作而言）截止时间已到但工作仍处于已排队或运行中状态，“不忙碌”指示也可能是错的。</p>
+<p>一个通用的最佳实践是，始终在共享状态中维护某个条件，供处理函数检查以确认是否有工作要做。这样就可以把工作处理函数当作标准的清理路径：不必在提交工作项的地方处理取消和清理，而是可能把所有事情都放在工作处理函数中完成。</p>
+<p>可以安全使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_is_pending()</span></code> 的少见情况是：如果你 <em>确定</em> 在检查期间不会有其他代码提交该工作（通常是因为你持有一个锁，阻止了对提交所用状态的访问），就可以用它进行检查，以避免调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_flush()</span></code> 或 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_cancel_sync()</span></code>。</p>
+</section>
+</section>
+<section id="suggested-uses">
+<h2><a class="toc-backref" href="#id8" role="doc-backlink">建议用法</a><a class="headerlink" href="#suggested-uses" title="链接到此标题。"></a></h2>
+<p>使用系统工作队列将复杂的中断相关处理从 ISR 推迟到一个共享线程中执行。这样既能及时完成中断相关处理，又不影响系统响应后续中断的能力，也不需要应用程序另外定义和管理一个线程来执行这些处理。</p>
+</section>
+<section id="configuration-options">
+<h2><a class="toc-backref" href="#id9" role="doc-backlink">配置选项</a><a class="headerlink" href="#configuration-options" title="链接到此标题。"></a></h2>
+<p>相关配置选项：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_SYSTEM_WORKQUEUE_STACK_SIZE" title="CONFIG_SYSTEM_WORKQUEUE_STACK_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SYSTEM_WORKQUEUE_STACK_SIZE</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_SYSTEM_WORKQUEUE_PRIORITY" title="CONFIG_SYSTEM_WORKQUEUE_PRIORITY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SYSTEM_WORKQUEUE_PRIORITY</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_SYSTEM_WORKQUEUE_NO_YIELD" title="CONFIG_SYSTEM_WORKQUEUE_NO_YIELD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SYSTEM_WORKQUEUE_NO_YIELD</span></code></a></p></li>
+</ul>
+</section>
+<section id="api-reference">
+<h2><a class="toc-backref" href="#id10" role="doc-backlink">API 参考</a><a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">workqueue_apis</span></dt>
+</dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 9月 01, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

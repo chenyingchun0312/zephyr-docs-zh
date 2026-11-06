@@ -1,0 +1,418 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>内核对象 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/kernel/usermode/kernelobjects.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="系统调用" href="syscalls.html" />
+    <link rel="prev" title="内存保护设计" href="memory_domain.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">内核</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../services/index.html">内核服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../drivers/index.html">设备驱动模型</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">用户模式</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="overview.html">概述</a></li>
+<li class="toctree-l3"><a class="reference internal" href="memory_domain.html">内存保护设计</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">内核对象</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#object-placement">对象的放置</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#dynamic-objects">动态对象</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#implementation-details">实现细节</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#supervisor-thread-access-permission">管理态线程的访问权限</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#user-thread-access-permission">用户线程的访问权限</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#initialization-state">初始化状态</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#creating-new-kernel-object-types">创建新的内核对象类型</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#creating-new-core-kernel-objects">创建新的核心内核对象</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#creating-new-driver-subsystem-kernel-objects">创建新的驱动子系统内核对象</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#configuration-options">配置选项</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api-reference">API 参考</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="syscalls.html">系统调用</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mpu_stack_objects.html">MPU 栈对象</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mpu_userspace.html">基于 MPU 的用户空间</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../memory_management/index.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data_structures/index.html">数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../timing_functions/index.html">计时函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../object_cores/index.html">对象核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../timeutil.html">时间工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../precision_timing.html">精密计时</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../util/index.html">实用工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../iterable_sections/index.html">可迭代段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../code-relocation.html">代码和数据重定位</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanup.html">基于作用域的清理辅助工具</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">内核</a> &raquo;</li>
+  
+     <li><a href="index.html">用户模式</a> &raquo;</li>
+  
+  <li>内核对象</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="kernel-objects">
+<span id="kernelobjects"></span><h1>内核对象<a class="headerlink" href="#kernel-objects" title="链接到此标题。"></a></h1>
+<p>内核对象可以是以下三类数据之一：</p>
+<ul class="simple">
+<li><p>核心内核对象，例如信号量、线程、管道等。</p></li>
+<li><p>线程栈，即 <code class="xref c c-struct docutils literal notranslate"><span class="pre">z_thread_stack_element</span></code> 数组，使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_THREAD_STACK_DEFINE()</span></code> 声明</p></li>
+<li><p>属于某个已定义子系统集合的设备驱动实例（const struct device）</p></li>
+</ul>
+<p>已知的内核对象和驱动子系统集合在 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/sys/kobject.h">include/zephyr/sys/kobject.h</a> 中定义为 <code class="xref c c-enum docutils literal notranslate"><span class="pre">k_objects</span></code>。</p>
+<p>内核对象对用户线程完全不透明。用户线程在进行 API 调用时使用内核对象的地址，但绝不能解引用这些地址，否则会引发内存保护故障。所有内核对象都必须放在用户线程无法访问的内存中。</p>
+<p>由于用户线程不能直接操作内核对象，对内核对象的所有使用都必须通过系统调用进行。对内核对象执行系统调用时，系统调用处理函数会检查该内核对象地址是否有效，以及调用线程是否有足够的权限使用它。</p>
+<p>对对象拥有权限还具有对该对象持有引用的语义。这对于某些会进行临时分配的对象 API，或者本身是从运行时内存池中分配的对象来说很重要。</p>
+<p>如果一个对象失去了所有引用，可能会发生两件事：</p>
+<ul class="simple">
+<li><p>如果该对象有关联的清理函数，可能会调用该清理函数来释放该对象正在使用的所有运行时分配的缓冲区。</p></li>
+<li><p>如果该对象本身是动态分配的，则会释放该对象的内存。</p></li>
+</ul>
+<section id="object-placement">
+<h2>对象的放置<a class="headerlink" href="#object-placement" title="链接到此标题。"></a></h2>
+<p>仅由管理态线程使用的内核对象没有任何限制，可以位于二进制文件中的任何位置，甚至可以在栈上声明。但为了防止用户线程意外或故意破坏它们，这些对象不得位于用户线程可以直接访问的任何内存中。</p>
+<p>要让用户线程能够通过系统调用 API 使用静态内核对象，该内核对象的声明方式必须满足以下几个条件：</p>
+<ul class="simple">
+<li><p>该对象必须在构建时声明为顶层全局对象，使其出现在 ELF 符号表中。允许以 static 作用域声明内核对象。构建后脚本 <a class="reference internal" href="../../build/cmake/index.html#gen-kobject-list-py"><span class="std std-ref">scripts/build/gen_kobject_list.py</span></a> 会扫描生成的 ELF 文件以查找内核对象，并将其内存地址放入一张特殊的内核对象元数据表中。内核对象可以是数组的成员，也可以嵌入在其他数据结构中。</p></li>
+<li><p>内核对象必须位于为内核保留的内存中，不得位于任何用户可访问的内存分区中。</p></li>
+<li><p>为内核对象保留的任何内存都必须专供该对象使用。内核对象不能是联合体（union）类型的成员。</p></li>
+</ul>
+<p>被找到但不满足上述条件的内核对象，不会被纳入生成的表中，而该表用于校验从用户模式传入的内核对象指针。</p>
+<p>在调试某个对象为何意外地未被跟踪时，<a class="reference internal" href="../../build/cmake/index.html#gen-kobject-list-py"><span class="std std-ref">scripts/build/gen_kobject_list.py</span></a> 脚本的调试输出可能会有帮助。如果运行脚本时带有 <code class="docutils literal notranslate"><span class="pre">--verbose</span></code> 标志，或者以详细输出模式调用构建系统，就会打印这些信息。</p>
+</section>
+<section id="dynamic-objects">
+<h2>动态对象<a class="headerlink" href="#dynamic-objects" title="链接到此标题。"></a></h2>
+<p>如果启用了 <a class="reference internal" href="../../kconfig.html#CONFIG_DYNAMIC_OBJECTS" title="CONFIG_DYNAMIC_OBJECTS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_DYNAMIC_OBJECTS</span></code></a>，还可以在运行时分配内核对象。此时可以使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_object_alloc()</span></code> API 从调用线程的资源池中实例化对象。这类分配可以通过两种方式释放：</p>
+<ul class="simple">
+<li><p>管理态线程可以调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_object_free()</span></code> 强制释放动态对象。</p></li>
+<li><p>如果对象的引用计数降为零（即没有任何线程对其拥有权限），该对象会被自动释放。用户线程可以用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_object_release()</span></code> 放弃自己对某个对象的权限，线程终止时其权限也会被自动清除。此外，管理态线程还可以使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_object_access_revoke()</span></code> 撤销另一个线程的引用。</p></li>
+</ul>
+<p>由于权限也用于引用计数，即使权限系统的访问控制部分对管理态线程不起作用，管理态线程也应获取其所用对象的权限，这一点很重要。</p>
+<section id="implementation-details">
+<h3>实现细节<a class="headerlink" href="#implementation-details" title="链接到此标题。"></a></h3>
+<p><a class="reference internal" href="../../build/cmake/index.html#gen-kobject-list-py"><span class="std std-ref">scripts/build/gen_kobject_list.py</span></a> 脚本是一个构建后步骤，用于找出二进制文件中所有有效的内核对象实例。它通过解析为内核生成的 ELF 文件中的 DWARF 调试信息来实现这一点。</p>
+<p>对于与内核对象对应、且满足对象放置条件的所有结构体或数组实例，其内存地址都会被放入一张由“gperf”工具生成的特殊内核对象完美哈希表中。当进行系统调用、内核拿到一个可能是也可能不是有效内核对象的内存地址时，可以通过在该表中进行常数时间查找来校验该地址。</p>
+<p>驱动是一种特殊情况。所有驱动都是 <code class="xref c c-struct docutils literal notranslate"><span class="pre">device</span></code> 的实例，但必须知道驱动属于哪个子系统，才能阻止错误的操作，例如在传感器驱动对象上调用 UART API。找到 device 结构体后，会检查其 API 指针，以确定该驱动属于哪个子系统。</p>
+<p>该表本身把内核对象的内存地址映射到 <code class="xref c c-struct docutils literal notranslate"><span class="pre">z_object</span></code> 实例，后者包含该对象的所有元数据，包括：</p>
+<ul class="simple">
+<li><p>一个表示该对象权限的位域。所有线程在构建时都会被分配一个数字 ID，用于索引对象的权限位域，以判断该线程是否对其拥有权限。该位域的大小由 <a class="reference internal" href="../../kconfig.html#CONFIG_MAX_THREAD_BYTES" title="CONFIG_MAX_THREAD_BYTES"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MAX_THREAD_BYTES</span></code></a> 选项控制，如果该值过小，构建系统会报错。</p></li>
+<li><p>一个表示对象种类的类型字段，其值为 <code class="xref c c-enum docutils literal notranslate"><span class="pre">k_objects</span></code> 的某个成员。</p></li>
+<li><p>该对象的一组标志，目前用于跟踪初始化状态以及对象是否为公开对象。</p></li>
+<li><p>一个额外数据字段。该字段的语义因对象类型而异，参见 <code class="xref c c-union docutils literal notranslate"><span class="pre">z_object_data</span></code> 的定义。</p></li>
+</ul>
+<p>运行时分配的动态对象在一棵运行时红黑树中跟踪，校验对象指针时会同时查询这棵树和 gperf 表。</p>
+</section>
+</section>
+<section id="supervisor-thread-access-permission">
+<h2>管理态线程的访问权限<a class="headerlink" href="#supervisor-thread-access-permission" title="链接到此标题。"></a></h2>
+<p>管理态线程可以访问任何内核对象。但出于以下两个原因，仍然会跟踪管理态线程的权限：</p>
+<ul class="simple">
+<li><p>如果管理态线程调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_user_mode_enter()</span></code>，该线程随后将以用户模式运行，并拥有它作为管理态线程时被授予（在很多情况下是由它自己授予）的所有权限。</p></li>
+<li><p>如果管理态线程使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_INHERIT_PERMS</span></code> 选项创建用户线程，子线程将被授予与父线程相同的权限，但父线程对象本身除外。</p></li>
+</ul>
+</section>
+<section id="user-thread-access-permission">
+<h2>用户线程的访问权限<a class="headerlink" href="#user-thread-access-permission" title="链接到此标题。"></a></h2>
+<p>默认情况下，用户线程创建时只对其自身的线程对象拥有访问权限，其他内核对象默认都不可用。对它们的访问需要显式或隐式地授予，有以下几种方式。</p>
+<ul class="simple">
+<li><p>如果线程以 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_INHERIT_PERMS</span></code> 创建，该线程将继承父线程的所有权限，但父线程对象本身除外。</p></li>
+<li><p>对某个对象拥有权限或运行在管理态模式下的线程，可以通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_object_access_grant()</span></code> API 把该对象的权限授予另一个线程。也可以使用便捷的伪函数 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_access_grant()</span></code>，它接受任意数量的内核对象指针，并对每个指针调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_object_access_grant()</span></code>。被授予权限的线程以及被授予访问权限的对象都不必处于已初始化状态。如果调用者来自用户模式，则调用者必须同时对该内核对象和目标线程对象拥有权限。</p></li>
+<li><p>管理态线程可以使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_object_access_all_grant()</span></code> API 将某个内核对象声明为公开对象，供当前和将来的所有线程使用。此时必须假定任何不可信或被攻破的代码都能访问该对象。请谨慎使用此 API！</p></li>
+<li><p>如果线程是用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_THREAD_DEFINE()</span></code> 静态声明的，则可以使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_THREAD_ACCESS_GRANT()</span></code> 在启动时授予该线程对一组内核对象的访问权限。</p></li>
+</ul>
+<p>线程被授予对某个对象的访问权限后，可以用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_object_access_revoke()</span></code> API 移除该权限。用户线程不能使用此 API，但可以使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_object_release()</span></code> 放弃自己对某个对象的权限。</p>
+<p>管理态线程可以使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_object_access_revoke_others()</span></code> 撤销除调用者以外所有线程的访问权限。如果之前曾把访问权限授予某个不可信的用户线程，而该线程可能又把权限转授给了其他线程，此 API 可用于重置该对象的权限。此 API 还会撤销先前可能通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_object_access_all_grant()</span></code> 设置的公开访问状态。</p>
+<p>从管理态模式调用 API 为未被内核跟踪的内核对象设置权限，不会有任何效果。从用户模式这样做则会导致调用线程发生致命错误。</p>
+<p>用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_object_alloc()</span></code> 分配的对象会隐式地把该对象的权限授予调用线程。</p>
+</section>
+<section id="initialization-state">
+<h2>初始化状态<a class="headerlink" href="#initialization-state" title="链接到此标题。"></a></h2>
+<p>如果对象被认为处于未初始化状态，对内核对象的大多数操作都会失败。必须先执行该对象相应的初始化函数。</p>
+<p>有些对象会在启动时被隐式初始化：</p>
+<ul class="simple">
+<li><p>用静态初始化宏（例如信号量的 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_SEM_DEFINE</span></code>）声明的内核对象在构建时就处于已初始化状态。</p></li>
+<li><p>设备驱动对象在内核于启动过程早期运行其初始化函数之后，即被视为已初始化。</p></li>
+</ul>
+<p>如果内核对象是用私有的静态初始化器初始化的，则必须由管理态线程在某个时刻对该对象调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_object_init()</span></code>，否则当用户线程访问该对象时，内核会认为它未初始化。这种情况很少见，通常只出现在嵌入某个更大的结构体中并被静态初始化的内核对象上。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">foo</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">k_sem</span><span class="w"> </span><span class="n">sem</span><span class="p">;</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="p">};</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">foo</span><span class="w"> </span><span class="n">my_foo</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">.</span><span class="n">sem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Z_SEM_INITIALIZER</span><span class="p">(</span><span class="n">my_foo</span><span class="p">.</span><span class="n">sem</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="p">};</span>
+
+<span class="p">...</span>
+<span class="n">k_object_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_foo</span><span class="p">.</span><span class="n">sem</span><span class="p">);</span>
+<span class="p">...</span>
+</pre></div>
+</div>
+</section>
+<section id="creating-new-kernel-object-types">
+<h2>创建新的内核对象类型<a class="headerlink" href="#creating-new-kernel-object-types" title="链接到此标题。"></a></h2>
+<p>在实现新的内核特性或驱动子系统时，可能需要定义一些新的内核对象类型。创建核心内核对象和新的驱动子系统所需的步骤有所不同。</p>
+<section id="creating-new-core-kernel-objects">
+<h3>创建新的核心内核对象<a class="headerlink" href="#creating-new-core-kernel-objects" title="链接到此标题。"></a></h3>
+<ul class="simple">
+<li><p>在 <code class="docutils literal notranslate"><span class="pre">scripts/build/gen_kobject_list.py</span></code> 中，把该结构体的名称加入 <code class="xref py py-data docutils literal notranslate"><span class="pre">kobjects</span></code> 列表。</p></li>
+</ul>
+<p>此后新结构体的实例就会被跟踪。</p>
+</section>
+<section id="creating-new-driver-subsystem-kernel-objects">
+<h3>创建新的驱动子系统内核对象<a class="headerlink" href="#creating-new-driver-subsystem-kernel-objects" title="链接到此标题。"></a></h3>
+<p>所有驱动实例都是 <code class="xref c c-struct docutils literal notranslate"><span class="pre">device</span></code>，它们通过所设置的 API 结构体加以区分。</p>
+<ul class="simple">
+<li><p>在 <code class="docutils literal notranslate"><span class="pre">scripts/build/gen_kobject_list.py</span></code> 中，把新子系统的 API 结构体名称加入 <code class="xref py py-data docutils literal notranslate"><span class="pre">subsystems</span></code> 列表。</p></li>
+</ul>
+<p>此后新子系统的驱动实例就会被跟踪。</p>
+</section>
+</section>
+<section id="configuration-options">
+<h2>配置选项<a class="headerlink" href="#configuration-options" title="链接到此标题。"></a></h2>
+<p>相关配置选项：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_USERSPACE" title="CONFIG_USERSPACE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USERSPACE</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_MAX_THREAD_BYTES" title="CONFIG_MAX_THREAD_BYTES"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MAX_THREAD_BYTES</span></code></a></p></li>
+</ul>
+</section>
+<section id="api-reference">
+<h2>API 参考<a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">usermode_apis</span></dt>
+</dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 4月 07, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

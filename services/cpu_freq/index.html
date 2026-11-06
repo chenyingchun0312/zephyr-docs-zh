@@ -1,0 +1,316 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CPU 频率调节 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/cpu_freq/index.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="CPU 频率调节策略" href="policies/index.html" />
+    <link rel="prev" title="电源管理 API" href="../pm/api/index.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">服务</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../connectivity/index.html">连接</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../memory_management.html">内存管理</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../power_management.html">电源管理</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../pm/index.html">电源管理</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">CPU 频率调节</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="policies/index.html">CPU 频率调节策略</a></li>
+<li class="toctree-l4"><a class="reference internal" href="thermal_cap.html">CPU 频率温度上限</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#overview">概述</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#design-goals">设计目标</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#p-state-policies">P-state 策略</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#metrics">指标</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#thermal-cap">温度上限</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#p-state-drivers">P-state 驱动</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#usage-considerations">使用注意事项</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../poweroff.html">关机</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resource_management/index.html">资源管理</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../power_management.html">电源管理</a> &raquo;</li>
+  
+  <li>CPU 频率调节</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="cpu-frequency-scaling">
+<span id="cpu-freq"></span><h1>CPU 频率调节<a class="headerlink" href="#cpu-frequency-scaling" title="链接到此标题。"></a></h1>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="policies/index.html">CPU 频率调节策略</a></li>
+<li class="toctree-l1"><a class="reference internal" href="thermal_cap.html">CPU 频率温度上限</a></li>
+</ul>
+</div>
+<section id="overview">
+<h2>概述<a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>Zephyr 中的 CPU 频率调节子系统提供了一个框架，让 SoC 能够根据所监测的指标和性能状态（P-state）策略算法动态调整处理器频率。</p>
+</section>
+<section id="design-goals">
+<h2>设计目标<a class="headerlink" href="#design-goals" title="链接到此标题。"></a></h2>
+<p>CPU 频率调节子系统旨在提供一个框架，让任何策略算法都能与任何 P-state 驱动配合使用，并让每个策略可以利用一个或多个指标来确定最佳 CPU 频率。该子系统应足够灵活，允许 SoC 厂商定义自定义的 P-state、阈值和指标。</p>
+</section>
+<section id="p-state-policies">
+<h2>P-state 策略<a class="headerlink" href="#p-state-policies" title="链接到此标题。"></a></h2>
+<p>P-state 策略是一种算法，它根据所使用的指标以及为每个 P-state 定义的阈值来确定 CPU 的最佳 P-state。策略可以使用一个或多个指标，根据期望的系统统计数据确定最佳 CPU 频率。</p>
+<p>标准策略列表请参阅 <a class="reference internal" href="policies/index.html#cpu-freq-policies"><span class="std std-ref">策略</span></a>。</p>
+</section>
+<section id="metrics">
+<h2>指标<a class="headerlink" href="#metrics" title="链接到此标题。"></a></h2>
+<p>P-state 策略应包含一个或多个作为决策依据的指标。指标的例子包括 CPU 负载百分比、SoC 温度等。</p>
+<p>有关指标的使用示例，请参阅 <a class="reference internal" href="policies/on_demand.html#on-demand-policy"><span class="std std-ref">on_demand</span></a> 策略。</p>
+</section>
+<section id="thermal-cap">
+<h2>温度上限<a class="headerlink" href="#thermal-cap" title="链接到此标题。"></a></h2>
+<p>可选的 <a class="reference internal" href="thermal_cap.html#cpu-freq-thermal-cap"><span class="std std-ref">CPU 频率温度上限</span></a> 根据温度触发点限制当前策略所允许的最高性能 P-state。它是一个约束层，而不是 P-state 策略，用于减少过多的发热并保护 SoC 免受热应力损害。</p>
+</section>
+<section id="p-state-drivers">
+<h2>P-state 驱动<a class="headerlink" href="#p-state-drivers" title="链接到此标题。"></a></h2>
+<p>支持 CPU 频率调节子系统的 SoC 必须实现一个 P-state 驱动，其中实现 <code class="xref c c-func docutils literal notranslate"><span class="pre">cpu_freq_pstate_set()</span></code>，该函数在被调用时将传入的 <code class="docutils literal notranslate"><span class="pre">p_state</span></code> 应用到 CPU。</p>
+<p>SoC 还必须在设备树中通过一个兼容 <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,pstate</span></code> 的节点提供可用的 P-state。SoC 也可以定义自己的 P-state 绑定，在 <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,pstate</span></code> 的基础上扩展额外的属性，供 SoC 的 P-state 驱动使用。</p>
+</section>
+<section id="usage-considerations">
+<h2>使用注意事项<a class="headerlink" href="#usage-considerations" title="链接到此标题。"></a></h2>
+<p>CPU 频率调节子系统设计为可在 UP 和 SMP 系统上工作。在 SMP 系统上，默认假定所有 CPU 以相同的频率运行。因此，只要有一个 CPU 进行 P-state 转换，所有其他 CPU 也会进行相同的 P-state 转换。SoC 可以通过启用 <a class="reference internal" href="../../kconfig.html#CONFIG_CPU_FREQ_PER_CPU_SCALING" title="CONFIG_CPU_FREQ_PER_CPU_SCALING"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_CPU_FREQ_PER_CPU_SCALING</span></code></a> 配置选项覆盖这一行为，让每个 CPU 独立设置时钟频率。</p>
+<p>支持 CPU 频率调节的 SoC 必须遵守 Zephyr 的要求：系统定时器频率在程序的整个生命周期内保持稳定。更多信息请参阅 <a class="reference internal" href="../../kernel/services/timing/clocks.html#kernel-timing"><span class="std std-ref">内核计时</span></a>。</p>
+<p>CPU 频率调节子系统作为 <code class="docutils literal notranslate"><span class="pre">k_timer</span></code> 的处理函数运行，这意味着它在中断上下文（IRQ）中运行。SoC 的 P-state 驱动必须确保其 <code class="xref c c-func docutils literal notranslate"><span class="pre">cpu_freq_pstate_set()</span></code> 实现在 IRQ 上下文中是安全的。如果 P-state 转换无法在 IRQ 上下文中于合理时间内完成，建议 SoC 的 P-state 驱动将其任务实现为工作队列项。</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 4月 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

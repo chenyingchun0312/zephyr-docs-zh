@@ -1,0 +1,449 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="测量高频时钟与低频时钟之间的偏差。" name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>nRF5x Clock Skew &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/samples/boards/nordic/clock_skew/README.html" />
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../../search.html" />
+    <link rel="next" title="Coresight STM benchmark" href="../coresight_stm/README.html" />
+    <link rel="prev" title="nRF clock control" href="../clock_control/README.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html">
+            
+              <img src="../../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">示例与演示</a><ul class="current">
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../application_development/application_development.html">Application Development</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../arch/index.html">Architecture-dependent Samples</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../basic/basic.html">Basic</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../bluetooth/bluetooth.html">Bluetooth</a></li>
+<li class="toctree-l2 current"><a class="category-link reference internal" href="../../boards.html">Boards</a><ul class="current">
+<li class="toctree-l3"><a class="category-link reference internal" href="../../st/bluetooth/index.html">Bluetooth</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../st/board_specific/index.html">Board-specific STM32 samples</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../enjoydigital/index.html">EnjoyDigital</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../espressif/index.html">Espressif ESP32 boards</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../google/index.html">Google</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../infineon/index.html">Infineon</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../intel/index.html">Intel</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../microchip/index.html">Microchip</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../nxp/index.html">NXP</a></li>
+<li class="toctree-l3 current"><a class="category-link reference internal" href="../index.html">Nordic Semiconductor</a><ul class="current">
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../battery/README.html" title="测量设备电源电压。">Battery Voltage Measurement</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../coresight_stm/README.html" title="">Coresight STM benchmark</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../coresight_stm_shell/README.html" title="">Coresight STM with remote shell</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../dynamic_pinctrl/README.html" title="在启动时动态更改引脚配置。">Dynamic Pin Control</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../ieee802154/802154_rpmsg/README.html" title="使用 RPMsg 传输将 nRF IEEE 802.15.4 无线电驱动提供给另一台设备或 CPU。">IEEE 802.15.4 over RPMsg</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../nrf_led_matrix/README.html" title="使用 nRF LED 点阵显示驱动驱动 LED 点阵。">LED matrix</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../mesh/onoff_level_lighting_vnd_app/README.html" title="建立一个具有多种模型（Generic OnOff、Generic Level 等）的蓝牙 Mesh 节点。">Mesh Models</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../mesh/onoff-app/README.html" title="使用蓝牙 Mesh OnOff 模型控制 mesh 网络中的 LED。">Mesh OnOff Model</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../flash/README.html" title="在低功耗蓝牙射频处于活动状态时写入 Flash。">Nordic flash write during Bluetooth LE activity</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../nrf_ironside/update/README.html" title="更新 Nordic IronSide SE 固件。">Nordic IronSide SE firmware update</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../clock_control/README.html" title="在运行时请求最低时钟要求。">nRF clock control</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../nrf_sys_event/README.html" title="使用 nRF 系统事件 API 管理 Nordic SoC 上的全局恒定延迟模式。">nRF System Events</a></li>
+<li class="toctree-l4 current"><a class="code-sample-link current reference internal" href="#" title="测量高频时钟与低频时钟之间的偏差。">nRF5x Clock Skew</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../nrfx/README.html" title="使用 nrfx 库与 nRF 外设交互。">nrfx</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../nrfx_prs/README.html" title="使用共享相同 ID 和基地址的 nRF 外设。">nrfx peripheral resource sharing</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../spis_wakeup/README.html" title="在使用 SPIS 时通过处理唤醒线降低电流消耗。">SPIS wake up</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../nrf53_sync_rtc/README.html" title="同步系统核与网络核的 RTC 时钟。">Synchronized RTC</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../system_off/README.html" title="在 Nordic 平台上使用深度睡眠。">System Off</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../phytec/index.html">PHYTEC</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../quicklogic/index.html">QuickLogic</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../raspberrypi/index.html">Raspberry Pi</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../renesas/index.html">Renesas</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../st/index.html">STMicroelectronics</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../st/board_specific/steval_stwinbx1/index.html">STWIN.box</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../st/board_specific/sensortile_box/index.html">SensorTile.box</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../st/board_specific/sensortile_box_pro/index.html">SensorTile.box Pro</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../ti/index.html">Texas Instruments</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../adi/power_mgmt/gpio_wakeup/README.html" title="使用 GPIO 将系统从低功耗状态唤醒">ADI MAX32 GPIO Wakeup</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../adi/power_mgmt/power_modes/README.html" title="运行给定 SoC 的各种电源模式">ADI Power Modes</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../amd/xclk_wiz/README.html" title="使能、重新配置并读回 AXI Clocking Wizard 的输出时钟。">AXI Clocking Wizard</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../bbc/microbit/display/README.html" title="使用 BBC micro:bit 开发板上的 5x5 LED 点阵显示屏。">LED matrix display</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../bbc/microbit/line_follower_robot/README.html" title="使用 BBC micro:bit 开发板和机器人底盘实现一台循迹机器人。">Line following robot</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../96boards/argonkey/microphone/README.html" title="通过 ArgonKey 板载的 MP34DT05 麦克风采集音频。">Microphone</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../bbc/microbit/pong/README.html" title="单人玩乒乓球游戏，或在两台 micro:bit 设备之间通过蓝牙对战。">Pong game</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../96boards/argonkey/sensors/README.html" title="从 ArgonKey 开发板的板载传感器读取数据。">Sensors</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../bbc/microbit/sound/README.html" title="使用 BBC micro:bit 开发板上的压电蜂鸣器。">Sound</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cpp/cpp.html">C++</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../data_structures/data_structures.html">数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../drivers/drivers.html">驱动</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../hello_world/README.html">Hello World</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../kernel/index.html">内核与调度器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/index.html">外部模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../net/net.html">网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../philosophers/README.html">Dining Philosophers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../psa/index.html">PSA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../regulator/index.html">稳压器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../sensor/sensor.html"><span class="xref std std-ref">传感器</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../shields/shields.html">扩展板（shield）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../subsys/subsys.html">子系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../synchronization/README.html">Basic Synchronization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../sysbuild/sysbuild.html">Sysbuild</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tfm_integration/tfm_integration.html">TF-M 集成</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../userspace/index.html">用户空间</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../sample_definition_and_criteria.html">示例的定义与标准</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../../index.html">示例与演示</a> &raquo;</li>
+  
+     <li><a href="../../boards.html">开发板</a> &raquo;</li>
+  
+     <li><a href="../index.html">Nordic Semiconductor</a> &raquo;</li>
+  
+  <li>nRF5x Clock Skew</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="nrf_clock_skew">
+<h1>nRF5x Clock Skew<a class="headerlink" href="#nrf_clock_skew" title="链接到此标题。"></a></h1>
+<p>
+                <a href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0//samples\boards\nordic\clock_skew\README.rst/.." class="btn btn-info fa fa-github"
+                    target="_blank" style="text-align: center;">
+                    Browse source code on GitHub
+                </a>
+                </p>
+<section id="overview">
+<h2>概述<a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>本示例使用时间源关联 API 测量 HFCLK（用于 CPU）与 LFCLK（用于系统时间）之间的偏差。它还展示如何利用该偏差，将在 LFCLK 域中测得的时长校正为 HFCLK 域中的时长。</p>
+<p>可以选择 <code class="docutils literal notranslate"><span class="pre">CONFIG_APP_ENABLE_HFXO</span></code> Kconfig 选项，将高频时钟配置为使用晶体振荡器，而不是默认的 RC 振荡器。（蓝牙等需要精确高频时钟的功能通常会自动启用该时钟源。）启用 HFXO 后，相对误差会显著降低。</p>
+</section>
+<section id="requirements">
+<h2>要求<a class="headerlink" href="#requirements" title="链接到此标题。"></a></h2>
+<p>本应用程序可使用任意 nRF51 DK 或 nRF52 DK 开发板进行演示。</p>
+</section>
+<section id="building-flashing-and-running">
+<h2>构建、烧录与运行<a class="headerlink" href="#building-flashing-and-running" title="链接到此标题。"></a></h2>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>nrf52dk/nrf52832<span class="w"> </span>samples/boards/nordic/clock_skew
+west<span class="w"> </span>flash
+</pre></div>
+</div>
+<p>运行：</p>
+<section id="sample-output">
+<h3>示例输出<a class="headerlink" href="#sample-output" title="链接到此标题。"></a></h3>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">*** Booting Zephyr OS build v2.5.0-rc3-94-g06a4b650467b  ***</span>
+<span class="go">Power-up clocks: LFCLK[ON]: Running LFXO ; HFCLK[OFF]: Running HFINT</span>
+<span class="go">Start TIMER_0: 0</span>
+<span class="go">Timer-running clocks: LFCLK[ON]: Running LFXO ; HFCLK[OFF]: Running HFINT</span>
+<span class="go">Checking TIMER_0 at 16000000 Hz against ticks at 32768 Hz</span>
+<span class="go">Timer wraps every 268 s</span>
+
+<span class="go">Ty  Latest           Base             Span             Err</span>
+<span class="go">HF  00:00:00.015666</span>
+<span class="go">LF  00:00:00.404937</span>
+<span class="go">Started sync: 0</span>
+
+<span class="go">Ty  Latest           Base             Span             Err</span>
+<span class="go">HF  00:00:09.978436  00:00:00.015666  00:00:09.962769</span>
+<span class="go">LF  00:00:10.414520  00:00:00.404937  00:00:10.009582  00:00:00.046813</span>
+<span class="go">RHF 00:00:09.978435                                   -00:00:00.000000</span>
+<span class="go">Skew 0.995323 ; err 4676818 ppb</span>
+
+<span class="go">Ty  Latest           Base             Span             Err</span>
+<span class="go">HF  00:00:19.959136  00:00:00.015666  00:00:19.943469</span>
+<span class="go">LF  00:00:20.441589  00:00:00.404937  00:00:20.036651  00:00:00.093182</span>
+<span class="go">RHF 00:00:19.959117                                   -00:00:00.000018</span>
+<span class="go">Skew 0.995349 ; err 4650592 ppb</span>
+
+<span class="go">Ty  Latest           Base             Span             Err</span>
+<span class="go">HF  00:00:29.937181  00:00:00.015666  00:00:29.921514</span>
+<span class="go">LF  00:00:30.468627  00:00:00.404937  00:00:30.063690  00:00:00.142176</span>
+<span class="go">RHF 00:00:29.937175                                   -00:00:00.000005</span>
+<span class="go">Skew 0.995271 ; err 4729151 ppb</span>
+
+<span class="go">Ty  Latest           Base             Span             Err</span>
+<span class="go">HF  00:00:39.917347  00:00:00.015666  00:00:39.901680</span>
+<span class="go">LF  00:00:40.495666  00:00:00.404937  00:00:40.090728  00:00:00.189048</span>
+<span class="go">RHF 00:00:39.917339                                   -00:00:00.000008</span>
+<span class="go">Skew 0.995284 ; err 4715502 ppb</span>
+
+<span class="go">Ty  Latest           Base             Span             Err</span>
+<span class="go">HF  00:00:49.899493  00:00:00.015666  00:00:49.883826</span>
+<span class="go">LF  00:00:50.522674  00:00:00.404937  00:00:50.117736  00:00:00.233910</span>
+<span class="go">RHF 00:00:49.899486                                   -00:00:00.000007</span>
+<span class="go">Skew 0.995333 ; err 4667222 ppb</span>
+
+<span class="go">Ty  Latest           Base             Span             Err</span>
+<span class="go">HF  00:00:59.878166  00:00:00.015666  00:00:59.862499</span>
+<span class="go">LF  00:01:00.549713  00:00:00.404937  00:01:00.144775  00:00:00.282276</span>
+<span class="go">RHF 00:00:59.878154                                   -00:00:00.000011</span>
+<span class="go">Skew 0.995307 ; err 4693269 ppb</span>
+<span class="go">...</span>
+<span class="go">Ty  Latest           Base             Span             Err</span>
+<span class="go">HF  00:02:59.654855  00:00:00.015666  00:02:59.639188</span>
+<span class="go">LF  00:03:00.873901  00:00:00.404937  00:03:00.468963  00:00:00.829775</span>
+<span class="go">RHF 00:02:59.654857                                    00:00:00.000001</span>
+<span class="go">Skew 0.995402 ; err 4597902 ppb</span>
+<span class="go">...</span>
+<span class="go">Ty  Latest           Base             Span             Err</span>
+<span class="go">HF  00:04:59.410593  00:00:00.015666  00:04:59.394926</span>
+<span class="go">LF  00:05:01.198181  00:00:00.404937  00:05:00.793243  00:00:01.398317</span>
+<span class="go">RHF 00:04:59.410594                                    00:00:00.000001</span>
+<span class="go">Skew 0.995351 ; err 4648745 ppb</span>
+<span class="go">...</span>
+<span class="go">Ty  Latest           Base             Span             Err</span>
+<span class="go">HF  00:09:58.829511  00:00:00.015666  00:09:58.813845</span>
+<span class="go">LF  00:10:02.008911  00:00:00.404937  00:10:01.603973  00:00:02.790128</span>
+<span class="go">RHF 00:09:58.829509                                   -00:00:00.000002</span>
+<span class="go">Skew 0.995362 ; err 4637837 ppb</span>
+<span class="go">...</span>
+<span class="go">Ty  Latest           Base             Span             Err</span>
+<span class="go">HF  00:29:56.607589  00:00:00.015666  00:29:56.591923</span>
+<span class="go">LF  00:30:05.250732  00:00:00.404937  00:30:04.845794  00:00:08.253871</span>
+<span class="go">RHF 00:29:56.607585                                   -00:00:00.000004</span>
+<span class="go">Skew 0.995427 ; err 4573166 ppb</span>
+<span class="go">...</span>
+<span class="go">Ty  Latest           Base             Span             Err</span>
+<span class="go">HF  00:59:43.781443  00:00:00.015666  00:59:43.765776</span>
+<span class="go">LF  01:00:00.085113  00:00:00.404937  00:59:59.680175  00:00:15.914399</span>
+<span class="go">RHF 00:59:43.781535                                    00:00:00.000092</span>
+<span class="go">Skew 0.995579 ; err 4421055 ppb</span>
+<span class="go">...</span>
+<span class="go">Ty  Latest           Base             Span             Err</span>
+<span class="go">HF  01:59:37.666395  00:00:00.015666  01:59:37.650728</span>
+<span class="go">LF  02:00:09.810913  00:00:00.404937  02:00:09.405975  00:00:31.755247</span>
+<span class="go">RHF 01:59:37.666057                                   -00:00:00.000338</span>
+<span class="go">Skew 0.995595 ; err 4404723 ppb</span>
+<span class="go">...</span>
+<span class="go">Ty  Latest           Base             Span             Err</span>
+<span class="go">HF  05:58:33.905236  00:00:00.015666  05:58:33.889570</span>
+<span class="go">LF  06:00:08.604980  00:00:00.404937  06:00:08.200042  00:01:34.310472</span>
+<span class="go">RHF 05:58:33.904338                                   -00:00:00.000898</span>
+<span class="go">..</span>
+<span class="go">Skew 0.995635 ; err 4364550 ppb</span>
+<span class="go">Ty  Latest           Base             Span             Err</span>
+<span class="go">HF  11:56:59.503922  00:00:00.015666  11:56:59.488255</span>
+<span class="go">LF  12:00:06.793182  00:00:00.404937  12:00:06.388244  00:03:06.899989</span>
+<span class="go">RHF 11:56:59.503948                                    00:00:00.000025</span>
+<span class="go">Skew 0.995674 ; err 4325747 ppb</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<script type="application/ld+json">
+                {"@context": "http://schema.org", "@type": "SoftwareSourceCode", "name": "nRF5x Clock Skew", "description": "\u6d4b\u91cf\u9ad8\u9891\u65f6\u949f\u4e0e\u4f4e\u9891\u65f6\u949f\u4e4b\u95f4\u7684\u504f\u5dee\u3002", "codeSampleType": "full", "codeRepository": "https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0//samples\\boards\\nordic\\clock_skew\\README.rst"}
+                </script>
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 9月 06, 2024.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

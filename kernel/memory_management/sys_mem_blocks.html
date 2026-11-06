@@ -1,0 +1,423 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>内存块分配器 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/kernel/memory_management/sys_mem_blocks.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="按需分页" href="demand_paging.html" />
+    <link rel="prev" title="内存块（slab）" href="slabs.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">内核</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../services/index.html">内核服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../drivers/index.html">设备驱动模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usermode/index.html">用户模式</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">内存管理</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="heap.html">内存堆</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shared_multi_heap.html">共享多堆</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slabs.html">内存块（slab）</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">内存块分配器</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#concepts">概念</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#internal-operation">内部运作</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#id2">内存块分配器</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#multi-memory-blocks-allocator-group">多内存块分配器组</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#usage">用法</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#defining-a-memory-blocks-allocator">定义内存块分配器</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#allocating-memory-blocks">分配内存块</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#releasing-a-memory-block">释放内存块</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#using-multi-memory-blocks-allocator-group">使用多内存块分配器组</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#api-reference">API 参考</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="demand_paging.html">按需分页</a></li>
+<li class="toctree-l3"><a class="reference internal" href="virtual_memory.html">虚拟内存</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../data_structures/index.html">数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../timing_functions/index.html">计时函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../object_cores/index.html">对象核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../timeutil.html">时间工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../precision_timing.html">精密计时</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../util/index.html">实用工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../iterable_sections/index.html">可迭代段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../code-relocation.html">代码和数据重定位</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanup.html">基于作用域的清理辅助工具</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">内核</a> &raquo;</li>
+  
+     <li><a href="index.html">内存管理</a> &raquo;</li>
+  
+  <li>内存块分配器</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="memory-blocks-allocator">
+<span id="sys-mem-blocks"></span><h1>内存块分配器<a class="headerlink" href="#memory-blocks-allocator" title="链接到此标题。"></a></h1>
+<p>内存块分配器允许从指定的内存区域动态分配内存块，其特点是：</p>
+<ul class="simple">
+<li><p>所有内存块大小固定且相同。</p></li>
+<li><p>可以一次分配或释放多个块。</p></li>
+<li><p>一起分配的一组块可能不连续。这对分散-聚集（scatter-gather）DMA 传输等操作很有用。</p></li>
+<li><p>已分配块的簿记在相关缓冲区之外进行（与内存块（slab）不同）。这使得缓冲区可以位于能够断电以节省能耗的内存区域中。</p></li>
+</ul>
+<nav class="contents local" id="id1">
+<ul class="simple">
+<li><p><a class="reference internal" href="#concepts" id="id3">概念</a></p>
+<ul>
+<li><p><a class="reference internal" href="#internal-operation" id="id4">内部运作</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#id2" id="id5">内存块分配器</a></p></li>
+<li><p><a class="reference internal" href="#multi-memory-blocks-allocator-group" id="id6">多内存块分配器组</a></p></li>
+<li><p><a class="reference internal" href="#usage" id="id7">用法</a></p>
+<ul>
+<li><p><a class="reference internal" href="#defining-a-memory-blocks-allocator" id="id8">定义内存块分配器</a></p></li>
+<li><p><a class="reference internal" href="#allocating-memory-blocks" id="id9">分配内存块</a></p></li>
+<li><p><a class="reference internal" href="#releasing-a-memory-block" id="id10">释放内存块</a></p></li>
+<li><p><a class="reference internal" href="#using-multi-memory-blocks-allocator-group" id="id11">使用多内存块分配器组</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#api-reference" id="id12">API 参考</a></p></li>
+</ul>
+</nav>
+<section id="concepts">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">概念</a><a class="headerlink" href="#concepts" title="链接到此标题。"></a></h2>
+<p>可以定义任意数量的内存块分配器（仅受可用 RAM 限制）。每个分配器通过其内存地址引用。</p>
+<p>内存块分配器具有以下关键属性：</p>
+<ul class="simple">
+<li><p>每个块的 <strong>块大小</strong>，以字节为单位。必须至少为 4N 字节，其中 N 大于 0。</p></li>
+<li><p>可供分配的 <strong>块数量</strong>。必须大于零。</p></li>
+<li><p>一个 <strong>缓冲区</strong>，作为内存块分配器分配块时所用的后备存储。其长度必须至少为“块大小”乘以“块数量”字节。</p></li>
+<li><p>一个 <strong>块位图</strong>，用于跟踪哪些块已被分配。</p></li>
+</ul>
+<p>缓冲区必须按 N 字节边界对齐，其中 N 是大于 2 的 2 的幂（即 4、8、16……）。为确保缓冲区中的所有内存块都同样按该边界对齐，块大小也必须是 N 的整数倍。</p>
+<p>由于需要使用并创建内部簿记结构，每个内存块分配器都必须在编译时声明和定义。</p>
+<section id="internal-operation">
+<h3><a class="toc-backref" href="#id4" role="doc-backlink">内部运作</a><a class="headerlink" href="#internal-operation" title="链接到此标题。"></a></h3>
+<p>与分配器关联的每个缓冲区都是一个由固定大小的块组成的数组，块与块之间没有浪费的空间。</p>
+<p>内存块分配器使用位图跟踪未分配的块。</p>
+</section>
+</section>
+<section id="id2">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">内存块分配器</a><a class="headerlink" href="#id2" title="链接到此标题。"></a></h2>
+<p>在内部，内存块分配器使用位图跟踪哪些块已被分配。每个分配器借助 <code class="docutils literal notranslate"><span class="pre">sys_bitarray</span></code> 接口，从后备缓冲区中逐个获取内存块，直到达到所请求的块数。分配器的所有元数据都存储在后备缓冲区之外。由于分配器代码从不接触缓冲区的内容，后备缓冲区所在的内存区域可以断电以节省能耗。</p>
+</section>
+<section id="multi-memory-blocks-allocator-group">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">多内存块分配器组</a><a class="headerlink" href="#multi-memory-blocks-allocator-group" title="链接到此标题。"></a></h2>
+<p>多内存块分配器组的工具函数用于方便地管理一组分配器。可以编写自定义函数，选择使用该组管理的哪个分配器来分配块。</p>
+<p>分配器组应在运行时通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">sys_multi_mem_blocks_init()</span></code> 初始化，之后可以通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">sys_multi_mem_blocks_add_allocator()</span></code> 添加各个分配器。</p>
+<p>要从分配器组中分配内存块，需要调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">sys_multi_mem_blocks_alloc()</span></code> 并传入一个不透明的“配置”参数。该参数会直接传给分配器选择函数，以便选出合适的分配器。选定分配器后，通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">sys_mem_blocks_alloc()</span></code> 分配内存块。</p>
+<p>已分配的内存块可以通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">sys_multi_mem_blocks_free()</span></code> 释放。调用者不需要传入配置参数。分配器代码会根据传入的内存地址匹配找到正确的分配器，然后通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">sys_mem_blocks_free()</span></code> 释放内存块。</p>
+</section>
+<section id="usage">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">用法</a><a class="headerlink" href="#usage" title="链接到此标题。"></a></h2>
+<section id="defining-a-memory-blocks-allocator">
+<h3><a class="toc-backref" href="#id8" role="doc-backlink">定义内存块分配器</a><a class="headerlink" href="#defining-a-memory-blocks-allocator" title="链接到此标题。"></a></h3>
+<p>内存块分配器使用 <code class="xref c c-type docutils literal notranslate"><span class="pre">sys_mem_blocks_t</span></code> 类型的变量定义。它需要在编译时通过调用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">SYS_MEM_BLOCKS_DEFINE</span></code> 进行定义和初始化。</p>
+<p>以下代码定义并初始化一个内存块分配器，它包含 4 个长度为 64 字节的块，每个块都按 4 字节边界对齐：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">SYS_MEM_BLOCKS_DEFINE</span><span class="p">(</span><span class="n">allocator</span><span class="p">,</span><span class="w"> </span><span class="mi">64</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>类似地，也可以在私有作用域中定义内存块分配器：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">SYS_MEM_BLOCKS_DEFINE_STATIC</span><span class="p">(</span><span class="n">static_allocator</span><span class="p">,</span><span class="w"> </span><span class="mi">64</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>也可以为分配器提供一个预先定义的缓冲区，这样缓冲区可以单独放置。注意，定义该缓冲区时 <strong>必须</strong> 指定其对齐方式。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">uint8_t</span><span class="w"> </span><span class="nf">__aligned</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span><span class="w"> </span><span class="n">backing_buffer</span><span class="p">[</span><span class="mi">64</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="mi">4</span><span class="p">];</span>
+<span class="n">SYS_MEM_BLOCKS_DEFINE_WITH_EXT_BUF</span><span class="p">(</span><span class="n">allocator</span><span class="p">,</span><span class="w"> </span><span class="mi">64</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="n">backing_buffer</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="allocating-memory-blocks">
+<h3><a class="toc-backref" href="#id9" role="doc-backlink">分配内存块</a><a class="headerlink" href="#allocating-memory-blocks" title="链接到此标题。"></a></h3>
+<p>调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">sys_mem_blocks_alloc()</span></code> 分配内存块。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+<span class="kt">uintptr_t</span><span class="w"> </span><span class="n">blocks</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+
+<span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sys_mem_blocks_alloc</span><span class="p">(</span><span class="n">allocator</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">blocks</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>如果 <code class="docutils literal notranslate"><span class="pre">ret</span> <span class="pre">==</span> <span class="pre">0</span></code>，数组 <code class="docutils literal notranslate"><span class="pre">blocks</span></code> 中将包含指向已分配块的内存地址。</p>
+</section>
+<section id="releasing-a-memory-block">
+<h3><a class="toc-backref" href="#id10" role="doc-backlink">释放内存块</a><a class="headerlink" href="#releasing-a-memory-block" title="链接到此标题。"></a></h3>
+<p>调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">sys_mem_blocks_free()</span></code> 释放内存块。</p>
+<p>以下代码基于上面的示例，分配 2 个内存块，然后在不再需要时将其释放。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+<span class="kt">uintptr_t</span><span class="w"> </span><span class="n">blocks</span><span class="p">[</span><span class="mi">2</span><span class="p">];</span>
+
+<span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sys_mem_blocks_alloc</span><span class="p">(</span><span class="n">allocator</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">blocks</span><span class="p">);</span>
+<span class="p">...</span><span class="w"> </span><span class="cm">/* perform some operations on the allocated memory blocks */</span>
+<span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sys_mem_blocks_free</span><span class="p">(</span><span class="n">allocator</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="n">blocks</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="using-multi-memory-blocks-allocator-group">
+<h3><a class="toc-backref" href="#id11" role="doc-backlink">使用多内存块分配器组</a><a class="headerlink" href="#using-multi-memory-blocks-allocator-group" title="链接到此标题。"></a></h3>
+<p>以下代码演示如何初始化分配器组：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">sys_mem_blocks_t</span><span class="w"> </span><span class="o">*</span><span class="nf">choice_fn</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">sys_multi_mem_blocks</span><span class="w"> </span><span class="o">*</span><span class="n">group</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">cfg</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="p">...</span><span class="w"> </span><span class="cm">/* choose which allocator in the group to use based on cfg */</span>
+<span class="p">}</span>
+
+<span class="n">SYS_MEM_BLOCKS_DEFINE</span><span class="p">(</span><span class="n">allocator0</span><span class="p">,</span><span class="w"> </span><span class="mi">64</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span>
+<span class="n">SYS_MEM_BLOCKS_DEFINE</span><span class="p">(</span><span class="n">allocator1</span><span class="p">,</span><span class="w"> </span><span class="mi">64</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span>
+
+<span class="k">static</span><span class="w"> </span><span class="n">sys_multi_mem_blocks_t</span><span class="w"> </span><span class="n">alloc_group</span><span class="p">;</span>
+
+<span class="n">sys_multi_mem_blocks_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">alloc_group</span><span class="p">,</span><span class="w"> </span><span class="n">choice_fn</span><span class="p">);</span>
+<span class="n">sys_multi_mem_blocks_add_allocator</span><span class="p">(</span><span class="o">&amp;</span><span class="n">alloc_group</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">allocator0</span><span class="p">);</span>
+<span class="n">sys_multi_mem_blocks_add_allocator</span><span class="p">(</span><span class="o">&amp;</span><span class="n">alloc_group</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">allocator1</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>从分配器组中分配和释放内存块：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+<span class="kt">uintptr_t</span><span class="w"> </span><span class="n">blocks</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+<span class="kt">size_t</span><span class="w"> </span><span class="n">blk_size</span><span class="p">;</span>
+
+<span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sys_multi_mem_blocks_alloc</span><span class="p">(</span><span class="o">&amp;</span><span class="n">alloc_group</span><span class="p">,</span><span class="w"> </span><span class="n">UINT_TO_POINTER</span><span class="p">(</span><span class="mi">0</span><span class="p">),</span>
+<span class="w">                                 </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">blocks</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">blk_size</span><span class="p">);</span>
+
+<span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sys_multi_mem_blocks_free</span><span class="p">(</span><span class="o">&amp;</span><span class="n">alloc_group</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="n">blocks</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="api-reference">
+<h2><a class="toc-backref" href="#id12" role="doc-backlink">API 参考</a><a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">mem_blocks_apis</span></dt>
+</dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 5月 20, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

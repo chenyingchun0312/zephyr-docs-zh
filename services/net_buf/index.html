@@ -1,0 +1,976 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>网络缓冲区 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/net_buf/index.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@12.1.0/dist/mermaid.esm.min.mjs";
+
+
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = "pre.mermaid {\n    /* Same as .mermaid-container > pre */\n    display: block;\n    width: 100%;\n}\n\npre.mermaid > svg {\n    /* Same as .mermaid-container > pre > svg */\n    height: auto;\n    width: 100%;\n    max-width: 100% !important;\n}";
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = ".mermaid-container {\n    position: relative;\n    display: flex;\n    flex-direction: row;\n    width: 100%;\n}\n\n.mermaid-container > pre {\n    display: block;\n    width: 100%;\n}\n\n.mermaid-container > pre > svg {\n    height: auto;\n    width: 100%;\n    max-width: 100% !important;\n}\n\n.mermaid-fullscreen-btn {\n    position: absolute;\n    width: 28px;\n    height: 28px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.3);\n    border-radius: 4px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    transition: all 0.2s;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);\n    font-size: 14px;\n    line-height: 1;\n    padding: 0;\n    color: #333;\n}\n\n.mermaid-fullscreen-btn:hover {\n    opacity: 100% !important;\n    background: rgba(255, 255, 255, 1);\n    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-btn.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.3);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-btn.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal {\n    display: none;\n    position: fixed !important;\n    top: 0 !important;\n    left: 0 !important;\n    width: 95vw;\n    height: 100vh;\n    background: rgba(255, 255, 255, 0.98);\n    z-index: 9999;\n    padding: 20px;\n    overflow: auto;\n}\n\n.mermaid-fullscreen-modal.dark-theme {\n    background: rgba(0, 0, 0, 0.98);\n}\n\n.mermaid-fullscreen-modal.active {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen {\n    position: relative;\n    width: 95vw;\n    height: 90vh;\n    max-width: 95vw;\n    max-height: 90vh;\n    background: white;\n    border-radius: 8px;\n    padding: 20px;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);\n    overflow: auto;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen.dark-theme {\n    background: #1a1a1a;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);\n}\n\n.mermaid-container-fullscreen pre.mermaid {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen .mermaid svg {\n    height: 100% !important;\n    width: 100% !important;\n    cursor: grab;\n}\n\n.mermaid-fullscreen-close {\n    position: fixed !important;\n    top: 20px !important;\n    right: 20px !important;\n    width: 40px;\n    height: 40px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.2);\n    border-radius: 50%;\n    cursor: pointer;\n    z-index: 10000;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);\n    transition: all 0.2s;\n    font-size: 24px;\n    line-height: 1;\n    color: #333;\n}\n\n.mermaid-fullscreen-close:hover {\n    background: white;\n    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-close.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.2);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-close.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal .mermaid-fullscreen-btn {\n    display: none !important;\n}";
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+let _lazyObserver = null;
+let _renderQueue = Promise.resolve();
+let closeModal = () => {};
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('active')) {
+        closeModal();
+    }
+});
+
+// Apply d3 zoom to each SVG. Idempotent: an SVG already wrapped is skipped,
+// so this is safe to call both for the initial batch and for diagrams that
+// render lazily once they become visible.
+const addZoomToSvgs = (svgs) => {
+    svgs.each(function() {
+        if (this.getAttribute('data-zoom-applied') === 'true') return;
+        var svg = d3.select(this);
+        svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+        var inner = svg.select("g");
+        var zoom = d3.zoom().on("zoom", function(event) {
+            inner.attr("transform", event.transform);
+        });
+        svg.call(zoom);
+        this.setAttribute('data-zoom-applied', 'true');
+    });
+};
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        // Disconnect any previous lazy rendering observer
+        if (_lazyObserver) {
+            _lazyObserver.disconnect();
+            _lazyObserver = null;
+        }
+
+        all_mermaids.forEach((el) => {
+            el.removeAttribute('data-mermaid-deferred');
+            el.removeAttribute('data-mermaid-render-failed');
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+
+        // Separate visible and hidden elements. Mermaid's layout engine measures
+        // text dimensions via the DOM, which fails for elements hidden by a parent
+        // (e.g., Reveal.js non-active slides, sphinx-design unopened tabs),
+        // producing broken SVGs. Render visible elements now, defer hidden ones.
+        const visible = [];
+        const hidden = [];
+        all_mermaids.forEach((el) => {
+            // offsetParent is null for display:none ancestors.
+            // getClientRects().length > 0 catches position:fixed elements
+            // (which also have null offsetParent but are still visible).
+            if (el.offsetParent !== null || el.getClientRects().length > 0) {
+                visible.push(el);
+            } else {
+                hidden.push(el);
+                el.setAttribute('data-mermaid-deferred', 'true');
+            }
+        });
+
+        if (visible.length > 0) {
+            try {
+                await mermaid.run({ nodes: visible });
+            } catch (e) {
+                console.error("Mermaid rendering failed:", e);
+            }
+        }
+
+        // Lazily render hidden elements when they become visible.
+        // Uses a promise chain (_renderQueue) to serialize rendering,
+        // since IntersectionObserver may report multiple entries at once
+        // and mermaid.run() is not safe to call concurrently.
+        if (hidden.length > 0) {
+            if (typeof IntersectionObserver === 'undefined') {
+                console.warn("IntersectionObserver not available; hidden mermaid diagrams will not render.");
+            } else {
+                _renderQueue = Promise.resolve();
+                _lazyObserver = new IntersectionObserver((entries) => {
+                    for (const entry of entries) {
+                        if (entry.isIntersecting && entry.target.getAttribute("data-processed") !== "true") {
+                            _lazyObserver.unobserve(entry.target);
+                            const el = entry.target;
+                            _renderQueue = _renderQueue.then(async () => {
+                                try {
+                                    await mermaid.run({ nodes: [el] });
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    // Apply zoom to the now-rendered diagram, matching
+                                    // the decoration visible diagrams receive.
+                                    if (false) {
+                                        addZoomToSvgs(d3.selectAll("").select(function() {
+                                            return this.querySelector("svg");
+                                        }));
+                                    }
+                                } catch (e) {
+                                    console.error("Mermaid deferred rendering failed:", e);
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    el.setAttribute('data-mermaid-render-failed', 'true');
+                                }
+                            });
+                        }
+                    }
+                });
+                hidden.forEach((el) => _lazyObserver.observe(el));
+            }
+        }
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    // Exclude deferred (hidden) and render-failed elements from completion checks
+    const mermaids_active = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])");
+    const mermaids_processed = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])[data-processed='true']");
+
+    if (false) {
+        const mermaids_to_add_zoom = 0 === -1 ? mermaids_active.length : 0;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("").select(function() {
+                return this.querySelector("svg");
+            });
+            // Wait until every active (visible) diagram has rendered. Deferred
+            // diagrams are excluded, so a fixed d3_node_count that counts a
+            // hidden diagram no longer loops forever waiting for its SVG.
+            if(mermaids_active.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            }
+            addZoomToSvgs(svgs);
+        }
+    } else if(mermaids_active.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if (!true) return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = "\u26f6";
+        fullscreenBtn.style.opacity = "50%";
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scrollX, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.display = 'block';
+
+                if (false) {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+
+
+const load = async () => {
+    initStyles();
+
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...{"startOnLoad": false},
+                ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...{"startOnLoad": false},
+    ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+    }
+);
+
+window.addEventListener("load", load);
+window.runMermaid = runMermaid;</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="电源管理" href="../power_management.html" />
+    <link rel="prev" title="内存属性" href="../mem_mgmt/index.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">服务</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../connectivity/index.html">连接</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../memory_management.html">内存管理</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../mem_mgmt/index.html">内存属性</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">网络缓冲区</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">概述</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#buffer-layout">缓冲区布局</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#creating-buffers">创建缓冲区</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#pool-types">缓冲池类型</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#allocation-timeouts">分配超时</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#common-operations">常用操作</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#simple-buffers">简单缓冲区</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fragments">分片</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#ownership">所有权</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#debugging">调试</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#common-mistakes">常见错误</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api-reference">API 参考</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../memory_management.html">内存管理</a> &raquo;</li>
+  
+  <li>网络缓冲区</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="network-buffers">
+<span id="net-buf-interface"></span><h1>网络缓冲区<a class="headerlink" href="#network-buffers" title="链接到此标题。"></a></h1>
+<nav class="contents local" id="id1">
+<ul class="simple">
+<li><p><a class="reference internal" href="#overview" id="id5">概述</a></p></li>
+<li><p><a class="reference internal" href="#buffer-layout" id="id6">缓冲区布局</a></p></li>
+<li><p><a class="reference internal" href="#creating-buffers" id="id7">创建缓冲区</a></p>
+<ul>
+<li><p><a class="reference internal" href="#pool-types" id="id8">缓冲池类型</a></p></li>
+<li><p><a class="reference internal" href="#allocation-timeouts" id="id9">分配超时</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#common-operations" id="id10">常用操作</a></p></li>
+<li><p><a class="reference internal" href="#simple-buffers" id="id11">简单缓冲区</a></p></li>
+<li><p><a class="reference internal" href="#fragments" id="id12">分片</a></p></li>
+<li><p><a class="reference internal" href="#ownership" id="id13">所有权</a></p></li>
+<li><p><a class="reference internal" href="#debugging" id="id14">调试</a></p></li>
+<li><p><a class="reference internal" href="#common-mistakes" id="id15">常见错误</a></p></li>
+<li><p><a class="reference internal" href="#api-reference" id="id16">API 参考</a></p></li>
+</ul>
+</nav>
+<section id="overview">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">概述</a><a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>网络缓冲区是网络协议栈（以及蓝牙协议栈）传递数据的核心概念。其 API 定义在 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/net_buf.h">include/zephyr/net_buf.h</a> 中。</p>
+</section>
+<section id="buffer-layout">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">缓冲区布局</a><a class="headerlink" href="#buffer-layout" title="链接到此标题。"></a></h2>
+<p>缓冲区的数据保存在一块存储空间中，其大小在分配缓冲区时确定。数据不必从存储空间的开头开始：数据之前可以有空闲空间，称为头部空间（headroom）；数据之后也可以有空闲空间，称为尾部空间（tailroom）。</p>
+<figure class="align-default" id="id2">
+<pre  class="mermaid">
+        block-beta
+  %% The widest label per column sets the text size, so the long labels span several columns
+  columns 16
+  space:2 size&lt;[&quot;size&quot;]&gt;(x):12 space:2
+  space:2 headroom[&quot;headroom&quot;]:3 len[&quot;len&quot;]:5 tailroom[&quot;tailroom&quot;]:4 space:2
+  p0[&quot;__buf&quot;]:4 p1[&quot;data&quot;]:2 space:2 p2[&quot;data + len&quot;]:4 p3[&quot;__buf + size&quot;]:4
+
+  classDef ptr fill:none,stroke:none
+  classDef free stroke-dasharray:5,fill-opacity:0.3
+  class p0,p1,p2,p3 ptr
+  class headroom,tailroom free
+    </pre><figcaption>
+<p><span class="caption-text">网络缓冲区的布局</span><a class="headerlink" href="#id2" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<p>缓冲区的以下四个字段描述了这种布局：</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">data</span></code></dt><dd><p>指向数据的起始位置。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">len</span></code></dt><dd><p><code class="docutils literal notranslate"><span class="pre">data</span></code> 指针之后的数据长度。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">size</span></code></dt><dd><p>存储空间的大小，包括头部空间和尾部空间。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">__buf</span></code></dt><dd><p>存储空间的起始位置。不要直接访问，请改用 <code class="docutils literal notranslate"><span class="pre">data</span></code> 指针。</p>
+</dd>
+</dl>
+<p><code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_headroom()</span></code> 返回头部空间，<code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_tailroom()</span></code> 返回尾部空间，<code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_tail()</span></code> 返回 <code class="docutils literal notranslate"><span class="pre">data</span> <span class="pre">+</span> <span class="pre">len</span></code>，即下一个添加到缓冲区的字节所在的位置。可容纳更多数据的剩余空间是尾部空间，而不是 <code class="docutils literal notranslate"><span class="pre">size</span></code> 减去 <code class="docutils literal notranslate"><span class="pre">len</span></code>，因为 <code class="docutils literal notranslate"><span class="pre">size</span></code> 也包含了头部空间。</p>
+</section>
+<section id="creating-buffers">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">创建缓冲区</a><a class="headerlink" href="#creating-buffers" title="链接到此标题。"></a></h2>
+<p><code class="xref c c-struct docutils literal notranslate"><span class="pre">net_buf</span></code> 从缓冲池中分配，缓冲池需要先使用对应池类型的宏来定义（参见 <a class="reference internal" href="#pool-types">Pool Types</a>）。<code class="xref c c-struct docutils literal notranslate"><span class="pre">net_buf_simple</span></code> 不需要缓冲池（参见 <a class="reference internal" href="#simple-buffers">Simple Buffers</a>）。固定大小缓冲区的缓冲池按如下方式定义：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">NET_BUF_POOL_FIXED_DEFINE</span><span class="p">(</span><span class="n">pool_name</span><span class="p">,</span><span class="w"> </span><span class="n">buf_count</span><span class="p">,</span><span class="w"> </span><span class="n">buf_size</span><span class="p">,</span><span class="w"> </span><span class="n">user_data_size</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>缓冲池是一个静态变量，因此如果需要将其导出给其他模块，需要另外定义一个指针。</p>
+<p>定义缓冲池之后，可以按如下方式从中分配缓冲区：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">buf</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">net_buf_alloc</span><span class="p">(</span><span class="o">&amp;</span><span class="n">pool_name</span><span class="p">,</span><span class="w"> </span><span class="n">timeout</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>缓冲池及其缓冲区没有显式的初始化函数，初始化是在调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_alloc()</span></code> 时隐式完成的。</p>
+<p>如果需要在缓冲区中为稍后添加到前面的协议头预留空间，可以按如下方式预留头部空间：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">net_buf_reserve</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="n">headroom</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>除了实际的协议数据和通用解析上下文之外，网络缓冲区还可以包含协议特定的上下文，称为用户数据。用户数据的大小是缓冲池的属性：池中每个缓冲区都有 <code class="docutils literal notranslate"><span class="pre">user_data_size</span></code> 字节的用户数据，可通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_user_data()</span></code> 获取。</p>
+<p>缓冲池定义的最后一个参数是一个可选的销毁回调。当缓冲区的最后一个引用被释放时，会调用该回调，而不是将缓冲区归还缓冲池；该回调最终必须调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_destroy()</span></code> 来归还缓冲区。</p>
+<p>缓冲区原生支持通过 k_fifo 内核对象传递。使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_fifo_put()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_fifo_get()</span></code> 可以在线程之间传递缓冲区。</p>
+<p>缓冲区还可以通过其 <code class="docutils literal notranslate"><span class="pre">node</span></code> 字段保存在 <code class="xref c c-type docutils literal notranslate"><span class="pre">sys_slist_t</span></code> 中。<code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_slist_put()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_slist_get()</span></code> 会在自旋锁保护下追加和移除缓冲区，因此只要对链表的每次访问都通过这两个函数进行，该链表就可以在线程和中断处理程序之间共享。对于这样的链表，请使用它们，而不是 <code class="xref c c-func docutils literal notranslate"><span class="pre">sys_slist_append()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">sys_slist_get()</span></code>。一个缓冲区只有一个 <code class="docutils literal notranslate"><span class="pre">node</span></code> 字段，因此无论它有多少个引用，同一时刻只能位于一个 FIFO 或链表中。</p>
+<section id="pool-types">
+<h3><a class="toc-backref" href="#id8" role="doc-backlink">缓冲池类型</a><a class="headerlink" href="#pool-types" title="链接到此标题。"></a></h3>
+<p>缓冲池类型决定其缓冲区数据的来源：</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 30.0%" />
+<col style="width: 35.0%" />
+<col style="width: 35.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>缓冲池</p></th>
+<th class="head"><p>数据存储</p></th>
+<th class="head"><p>数据分配</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">NET_BUF_POOL_FIXED_DEFINE</span></code></p></td>
+<td><p>一个静态数组，每个缓冲区对应一块 <code class="docutils literal notranslate"><span class="pre">data_size</span></code> 字节的数据块。</p></td>
+<td><p>总是分配整个数据块。从不等待。</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">NET_BUF_POOL_VAR_DEFINE</span></code></p></td>
+<td><p>一个 <code class="docutils literal notranslate"><span class="pre">data_size</span></code> 字节的堆，由池中的缓冲区共享。</p></td>
+<td><p>按每个缓冲区请求的大小分配。等待堆内存，直到分配超时到期。</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">NET_BUF_POOL_VAR_ALIGN_DEFINE</span></code></p></td>
+<td><p>与 <code class="xref c c-macro docutils literal notranslate"><span class="pre">NET_BUF_POOL_VAR_DEFINE</span></code> 相同。</p></td>
+<td><p>与 <code class="xref c c-macro docutils literal notranslate"><span class="pre">NET_BUF_POOL_VAR_DEFINE</span></code> 相同，但数据起始位置按 <code class="docutils literal notranslate"><span class="pre">align</span></code> 对齐，分配大小向上取整为其倍数。请求少于 <code class="docutils literal notranslate"><span class="pre">align</span></code> 字节的分配会失败，除非请求的数据大小为零。</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">NET_BUF_POOL_HEAP_DEFINE</span></code></p></td>
+<td><p>系统堆，通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_malloc()</span></code> 分配。需要 <a class="reference internal" href="../../kconfig.html#CONFIG_HEAP_MEM_POOL_SIZE" title="CONFIG_HEAP_MEM_POOL_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HEAP_MEM_POOL_SIZE</span></code></a>。</p></td>
+<td><p>按每个缓冲区请求的大小分配。从不等待：堆耗尽时立即失败。</p></td>
+</tr>
+</tbody>
+</table>
+<p>在所有缓冲池类型中，缓冲区本身都来自一个包含 <code class="docutils literal notranslate"><span class="pre">buf_count</span></code> 个条目的固定数组，分配时会等待空闲缓冲区，直到超时到期。之后再在同一超时的剩余时间内分配数据。因此，即使使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_FOREVER</span></code>，从堆缓冲池分配也可能返回 <code class="docutils literal notranslate"><span class="pre">NULL</span></code>。每次从可变缓冲池或堆缓冲池分配时，还会占用堆中的若干字节用于记录管理信息，确定可变缓冲池的堆大小时必须考虑这部分开销。</p>
+<p><code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_alloc()</span></code> 按其缓冲池的固定数据大小分配缓冲区，适用于固定缓冲池：从可变缓冲池或堆缓冲池分配时，它返回的缓冲区没有数据存储空间。对于这两类缓冲池，请使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_alloc_len()</span></code>。<code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_alloc_with_data()</span></code> 适用于所有缓冲池类型：此时缓冲区使用调用者提供的存储空间，缓冲池不为其分配数据。缓冲区初始时以全部存储空间作为其数据，因此没有尾部空间；释放缓冲区也不会释放该存储空间，调用者必须在缓冲区存在期间保证该存储空间有效。</p>
+</section>
+<section id="allocation-timeouts">
+<h3><a class="toc-backref" href="#id9" role="doc-backlink">分配超时</a><a class="headerlink" href="#allocation-timeouts" title="链接到此标题。"></a></h3>
+<p>分配的超时是指分配操作等待空闲缓冲区（对于可变缓冲池，还包括等待数据内存）的最长时间。中断处理程序不能等待，必须使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_NO_WAIT</span></code>。</p>
+<p>如果一个缓冲池的缓冲区只能由某个线程释放（直接释放，或通过该线程自己处理的工作释放），那么该线程以 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_FOREVER</span></code> 在这个缓冲池上等待时将永远不会被唤醒。在这种上下文中请使用有限的超时，并处理返回 <code class="docutils literal notranslate"><span class="pre">NULL</span></code> 的情况。</p>
+</section>
+</section>
+<section id="common-operations">
+<h2><a class="toc-backref" href="#id10" role="doc-backlink">常用操作</a><a class="headerlink" href="#common-operations" title="链接到此标题。"></a></h2>
+<p>网络缓冲区 API 提供了一些实用的辅助函数，用于在缓冲区中编码和解码数据。要完全理解这些辅助函数，最好先了解它们所用的基本操作名称：</p>
+<figure class="align-default" id="id3">
+<pre  class="mermaid">
+        block-beta
+  columns 24
+  space:2 push&lt;[&quot;push&quot;]&gt;(left):4 space:10 add&lt;[&quot;add&quot;]&gt;(right):4 space:4
+  headroom[&quot;headroom&quot;]:6 len[&quot;len&quot;]:10 tailroom[&quot;tailroom&quot;]:8
+  space:6 pull&lt;[&quot;pull&quot;]&gt;(right):4 space:2 remove&lt;[&quot;remove&quot;]&gt;(left):4 space:8
+
+  classDef free stroke-dasharray:5,fill-opacity:0.3
+  class headroom,tailroom free
+    </pre><figcaption>
+<p><span class="caption-text">四种操作修改缓冲区数据的位置</span><a class="headerlink" href="#id3" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 12.0%" />
+<col style="width: 18.0%" />
+<col style="width: 18.0%" />
+<col style="width: 22.0%" />
+<col style="width: 30.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>操作</p></th>
+<th class="head"><p>作用位置</p></th>
+<th class="head"><p>修改</p></th>
+<th class="head"><p>前提</p></th>
+<th class="head"><p>典型用途</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Add（添加）</p></td>
+<td><p>数据末尾</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">len</span></code></p></td>
+<td><p>足够的尾部空间</p></td>
+<td><p>从头开始编码消息</p></td>
+</tr>
+<tr class="row-odd"><td><p>Remove（移除）</p></td>
+<td><p>数据末尾</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">len</span></code></p></td>
+<td><p>足够的数据</p></td>
+<td><p>解码尾部字段，例如校验和</p></td>
+</tr>
+<tr class="row-even"><td><p>Push（压入）</p></td>
+<td><p>数据开头</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">data</span></code> 和 <code class="docutils literal notranslate"><span class="pre">len</span></code></p></td>
+<td><p>足够的头部空间</p></td>
+<td><p>在前面添加下层协议的头部</p></td>
+</tr>
+<tr class="row-odd"><td><p>Pull（拉出）</p></td>
+<td><p>数据开头</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">data</span></code> 和 <code class="docutils literal notranslate"><span class="pre">len</span></code></p></td>
+<td><p>足够的数据</p></td>
+<td><p>解码头部</p></td>
+</tr>
+</tbody>
+</table>
+<p>每种操作针对每种数据类型都有一个函数，例如 Add 操作：</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">net_buf_add_mem()</span></code></dt><dd><p>复制一块内存区域。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">net_buf_add_u8()</span></code></dt><dd><p>添加一个 8 位值。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">net_buf_add_le16()</span></code>, <code class="docutils literal notranslate"><span class="pre">net_buf_add_be16()</span></code></dt><dd><p>以小端序或大端序添加一个 16 位值。24、32、40、48 和 64 位也都有这两种字节序的版本。</p>
+</dd>
+</dl>
+<p>Push、Pull 和 Remove 也有同样的一组函数，分别命名为 <code class="docutils literal notranslate"><span class="pre">net_buf_push_*()</span></code>、<code class="docutils literal notranslate"><span class="pre">net_buf_pull_*()</span></code> 和 <code class="docutils literal notranslate"><span class="pre">net_buf_remove_*()</span></code>。Pull 和 Remove 的定宽版本会返回拉出或移除的值。<code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_add()</span></code>、<code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_push()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_pull()</span></code> 只将边界移动一定长度而不复制任何数据，并返回指向缓冲区内部的指针：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">foo_hdr</span><span class="w"> </span><span class="o">*</span><span class="n">hdr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">net_buf_push</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="o">*</span><span class="n">hdr</span><span class="p">));</span>
+
+<span class="n">hdr</span><span class="o">-&gt;</span><span class="n">opcode</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FOO_OP_WRITE</span><span class="p">;</span>
+<span class="n">hdr</span><span class="o">-&gt;</span><span class="n">len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sys_cpu_to_le16</span><span class="p">(</span><span class="n">len</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="simple-buffers">
+<h2><a class="toc-backref" href="#id11" role="doc-backlink">简单缓冲区</a><a class="headerlink" href="#simple-buffers" title="链接到此标题。"></a></h2>
+<p><code class="xref c c-struct docutils literal notranslate"><span class="pre">net_buf</span></code> 构建在 <code class="xref c c-struct docutils literal notranslate"><span class="pre">net_buf_simple</span></code> 之上，后者只有缓冲区布局中的四个字段。<code class="xref c c-struct docutils literal notranslate"><span class="pre">net_buf</span></code> 增加的是缓冲区在不同上下文之间传递所需的内容：引用计数、缓冲区归还的目标缓冲池、用于 FIFO 和链表的链接、分片链以及用户数据。</p>
+<p>对于某个函数或对象独自使用的缓冲区（例如在栈上编码的一条短消息），<code class="xref c c-struct docutils literal notranslate"><span class="pre">net_buf_simple</span></code> 就足够了。<code class="xref c c-macro docutils literal notranslate"><span class="pre">NET_BUF_SIMPLE_DEFINE</span></code> 定义一个这样的缓冲区及其存储空间，<code class="xref c c-macro docutils literal notranslate"><span class="pre">NET_BUF_SIMPLE_DEFINE_STATIC</span></code> 则定义一个静态的。add、remove、push 和 pull 系列函数都有对应的 <code class="docutils literal notranslate"><span class="pre">net_buf_simple_</span></code> 版本：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">NET_BUF_SIMPLE_DEFINE</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">);</span>
+
+<span class="n">net_buf_simple_add_u8</span><span class="p">(</span><span class="o">&amp;</span><span class="n">msg</span><span class="p">,</span><span class="w"> </span><span class="n">opcode</span><span class="p">);</span>
+<span class="n">net_buf_simple_add_le16</span><span class="p">(</span><span class="o">&amp;</span><span class="n">msg</span><span class="p">,</span><span class="w"> </span><span class="n">handle</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>解析器在把缓冲区交给会从中拉出数据的代码之前，可以先用 <code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_simple_save()</span></code> 保存数据的位置，之后再用 <code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_simple_restore()</span></code> 恢复到该位置：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">NET_BUF_SIMPLE_DEFINE</span><span class="p">(</span><span class="n">msg</span><span class="p">,</span><span class="w"> </span><span class="mi">32</span><span class="p">);</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">net_buf_simple_state</span><span class="w"> </span><span class="n">state</span><span class="p">;</span>
+
+<span class="n">net_buf_simple_add_mem</span><span class="p">(</span><span class="o">&amp;</span><span class="n">msg</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">len</span><span class="p">);</span>
+
+<span class="n">net_buf_simple_save</span><span class="p">(</span><span class="o">&amp;</span><span class="n">msg</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">state</span><span class="p">);</span>
+<span class="n">err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">parse_header</span><span class="p">(</span><span class="o">&amp;</span><span class="n">msg</span><span class="p">);</span>
+<span class="n">net_buf_simple_restore</span><span class="p">(</span><span class="o">&amp;</span><span class="n">msg</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">state</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>保存的状态是数据的位置，而不是数据的内容：期间写入缓冲区的数据不会被撤销。</p>
+</section>
+<section id="fragments">
+<h2><a class="toc-backref" href="#id12" role="doc-backlink">分片</a><a class="headerlink" href="#fragments" title="链接到此标题。"></a></h2>
+<p>无法放入单个缓冲区的数据，或由多个片段拼接而成的数据，保存在通过 <code class="docutils literal notranslate"><span class="pre">frags</span></code> 字段链接起来的缓冲区链中。链中的第一个缓冲区称为链头。</p>
+<figure class="align-default" id="id4">
+<pre  class="mermaid">
+        block-beta
+  columns 17
+  block:b0:4
+    columns 4
+    t0[&quot;head&quot;]:4
+    h0[&quot; &quot;] l0[&quot;len&quot;]:2 r0[&quot; &quot;]
+    f0[&quot;frags&quot;]:4
+  end
+  a0&lt;[&quot;&amp;nbsp;&quot;]&gt;(right)
+  block:b1:4
+    columns 4
+    t1[&quot;fragment&quot;]:4
+    h1[&quot; &quot;] l1[&quot;len&quot;]:3
+    f1[&quot;frags&quot;]:4
+  end
+  a1&lt;[&quot;&amp;nbsp;&quot;]&gt;(right)
+  block:b2:4
+    columns 4
+    t2[&quot;fragment&quot;]:4
+    l2[&quot;len&quot;]:3 r2[&quot; &quot;]
+    f2[&quot;frags&quot;]:4
+  end
+  a2&lt;[&quot;&amp;nbsp;&quot;]&gt;(right)
+  n[&quot;NULL&quot;]:2
+
+  classDef ptr fill:none,stroke:none
+  classDef free stroke-dasharray:5,fill-opacity:0.3
+  class t0,t1,t2,n ptr
+  class h0,r0,h1,r2 free
+    </pre><figcaption>
+<p><span class="caption-text">由三个缓冲区组成的链</span><a class="headerlink" href="#id4" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<p>链中的每个缓冲区都有自己的头部空间和尾部空间，其 <code class="docutils literal notranslate"><span class="pre">len</span></code> 只计算自身的数据。<code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_frags_len()</span></code> 返回整条链中数据的长度。</p>
+<p><code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_frag_add()</span></code> 将一个分片添加到链的末尾，<code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_frag_insert()</span></code> 在给定缓冲区之后插入一个分片，<code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_frag_del()</span></code> 移除一个分片并释放链对它的引用。链中缓冲区的所有权归属见 <a class="reference internal" href="#ownership">Ownership</a>。</p>
+<p>有些函数作用于整条链的数据：<code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_linearize()</span></code> 将链中的数据复制到一个连续的缓冲区，<code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_append_bytes()</span></code> 将数据添加到链的末尾并按需分配更多分片，<code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_data_match()</span></code> 将数据与链的内容进行比较。它们返回的长度都可能小于请求的长度。<code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_skip()</span></code> 从链的开头移除数据，释放被清空的分片，并返回链的剩余部分。</p>
+</section>
+<section id="ownership">
+<h2><a class="toc-backref" href="#id13" role="doc-backlink">所有权</a><a class="headerlink" href="#ownership" title="链接到此标题。"></a></h2>
+<p>与 <code class="xref c c-struct docutils literal notranslate"><span class="pre">net_buf_simple</span></code> 不同，<code class="xref c c-struct docutils literal notranslate"><span class="pre">net_buf</span></code> 采用引用计数。新分配的缓冲区有一个引用，当最后一个引用被释放时，缓冲区归还其缓冲池。每个引用恰好有一个所有者。所有者要么将引用转移给新的所有者（例如 FIFO、链表或接管缓冲区所有权的函数），要么释放它。转移之后，原所有者不得再使用该缓冲区，除非它持有通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_ref()</span></code> 获取的另一个属于自己的引用。</p>
+<p>有两个辅助函数作用于持有引用的指针，使原所有者得到的是 <code class="docutils literal notranslate"><span class="pre">NULL</span></code>，而不是指向一个已不再拥有的缓冲区的指针。<code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_take()</span></code> 将引用从该指针中移出，<code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_drop()</span></code> 则释放该引用。<code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_drop()</span></code> 适用于在释放之后仍然存在的指针（例如结构体成员），或可能已经是 <code class="docutils literal notranslate"><span class="pre">NULL</span></code> 的指针。对于在离开作用域时持有引用的局部指针，只需调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_unref()</span></code>。</p>
+<p>分片链通过其链头拥有。链中的每个缓冲区都拥有对下一个分片的一个引用，并在自身被释放时释放该引用，因此释放链头的最后一个引用时，会沿着链依次释放，直到遇到第一个仍被其他地方引用的分片。<code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_frag_insert()</span></code> 会接管所传入分片的所有权；链头不为 <code class="docutils literal notranslate"><span class="pre">NULL</span></code> 时，<code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_frag_add()</span></code> 也是如此。链头为 <code class="docutils literal notranslate"><span class="pre">NULL</span></code> 时，<code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_frag_add()</span></code> 返回带有一个新引用的分片，调用者保留自己的引用。</p>
+<p>被传入缓冲区的函数或回调会以下列方式之一处理该引用，其文档应说明属于哪一种：</p>
+<dl class="simple">
+<dt>借用</dt><dd><p>函数可以在返回之前使用该缓冲区，但既不能保留也不能转移它。要保留借用的缓冲区，函数需先用 <code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_ref()</span></code> 获取一个自己的引用。</p>
+</dd>
+<dt>接管所有权</dt><dd><p>无论以何种方式返回（包括出错时），引用都会转移给该函数。</p>
+</dd>
+<dt>成功时接管所有权</dt><dd><p>只有函数执行成功时引用才会转移。出错时，缓冲区仍归调用者所有。</p>
+</dd>
+</dl>
+<p>将缓冲区放入 FIFO 或链表会把引用转移给该队列。接收方甚至可能在 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_fifo_put()</span></code> 返回之前就处理并释放该缓冲区，例如有更高优先级的线程正在等待该 FIFO 时。请在同一个表达式中用 <code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_take()</span></code> 转移引用：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">k_fifo_put</span><span class="p">(</span><span class="o">&amp;</span><span class="n">tx_queue</span><span class="p">,</span><span class="w"> </span><span class="n">net_buf_take</span><span class="p">(</span><span class="o">&amp;</span><span class="n">buf</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>即使 <code class="docutils literal notranslate"><span class="pre">buf</span></code> 在调用之后立即离开作用域，也要这样做：普通指针参数看起来与仅被借用的参数无异，而 <code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_take()</span></code> 能在调用处表明引用发生了转移。</p>
+<p>将 <code class="docutils literal notranslate"><span class="pre">net_buf_take(&amp;buf)</span></code> 作为参数传递，只适用于总是接管所有权的调用，例如 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_fifo_put()</span></code>、<code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_slist_put()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_frag_insert()</span></code>。当向一个仅在成功时接管所有权的函数传入普通指针时，无论结果如何，调用者的指针都保持不变，只有返回值能说明缓冲区是否仍归自己所有。</p>
+<p>因此，新编写的接管所有权的函数应接受一个指向调用者缓冲区指针的指针，并在接管时用 <code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_take()</span></code> 移出引用。这样，调用者的指针恰好在所有权转移时变为 <code class="docutils literal notranslate"><span class="pre">NULL</span></code>，并且无论结果如何，调用之后使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_drop()</span></code> 都是正确的：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">foo_send</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">foo</span><span class="w"> </span><span class="o">*</span><span class="n">foo</span><span class="p">,</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">net_buf</span><span class="w"> </span><span class="o">**</span><span class="n">buf</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">foo</span><span class="o">-&gt;</span><span class="n">ready</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="o">-</span><span class="n">EAGAIN</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">k_fifo_put</span><span class="p">(</span><span class="o">&amp;</span><span class="n">foo</span><span class="o">-&gt;</span><span class="n">tx_queue</span><span class="p">,</span><span class="w"> </span><span class="n">net_buf_take</span><span class="p">(</span><span class="n">buf</span><span class="p">));</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">err</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">foo_send</span><span class="p">(</span><span class="n">foo</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">buf</span><span class="p">);</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">err</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">LOG_WRN</span><span class="p">(</span><span class="s">"Not sent (err %d)"</span><span class="p">,</span><span class="w"> </span><span class="n">err</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="cm">/* Releases the buffer only if foo_send() did not take it */</span>
+<span class="n">net_buf_drop</span><span class="p">(</span><span class="o">&amp;</span><span class="n">buf</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>将现有函数改为这种形式会破坏其调用者，因此最好在该函数本来就要重写时再进行。</p>
+</section>
+<section id="debugging">
+<h2><a class="toc-backref" href="#id14" role="doc-backlink">调试</a><a class="headerlink" href="#debugging" title="链接到此标题。"></a></h2>
+<dl class="simple">
+<dt><a class="reference internal" href="../../kconfig.html#CONFIG_NET_BUF_LOG" title="CONFIG_NET_BUF_LOG"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_BUF_LOG</span></code></a></dt><dd><p>启用该库的日志。在警告或更高的日志级别下，当使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_FOREVER</span></code> 的分配不得不等待缓冲区时，会输出一条警告，提示可能存在 <a class="reference internal" href="#allocation-timeouts">Allocation Timeouts</a> 中描述的死锁。</p>
+</dd>
+<dt><a class="reference internal" href="../../kconfig.html#CONFIG_NET_BUF_POOL_USAGE" title="CONFIG_NET_BUF_POOL_USAGE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_BUF_POOL_USAGE</span></code></a></dt><dd><p>跟踪每个缓冲池中空闲缓冲区的数量以及同时使用的最大数量，分别由 <code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_get_available()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_get_max_used()</span></code> 返回。这有助于确定缓冲池的大小。</p>
+</dd>
+<dt><a class="reference internal" href="../../kconfig.html#CONFIG_NET_BUF_HARDENING" title="CONFIG_NET_BUF_HARDENING"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_BUF_HARDENING</span></code></a></dt><dd><p>为 add、remove、push 和 pull 系列函数添加不依赖断言（断言默认禁用）的检查。被拒绝的操作并不总是会向调用者报告。<code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_is_valid()</span></code> 可按需检查缓冲区是否一致且仍被引用。</p>
+</dd>
+</dl>
+</section>
+<section id="common-mistakes">
+<h2><a class="toc-backref" href="#id15" role="doc-backlink">常见错误</a><a class="headerlink" href="#common-mistakes" title="链接到此标题。"></a></h2>
+<dl class="simple">
+<dt>所有权</dt><dd><p>在错误路径上没有释放的缓冲区会从其缓冲池中丢失，缓冲池要到很久以后才会耗尽，而且出问题的地方与原因相距甚远。被释放两次的缓冲区可能在另一个所有者仍在使用时就归还给了缓冲池。请遵循 <a class="reference internal" href="#ownership">Ownership</a> 中的规则：每个引用只有一个所有者；转移给队列或总是接管所有权的函数时，用 <code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_take()</span></code> 编写；保存起来的引用用 <code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_drop()</span></code> 释放。</p>
+</dd>
+<dt>两个线程操作同一个缓冲区</dt><dd><p>缓冲池能防止并发的分配和释放，但缓冲区的字段不受保护：两个线程不得同时修改同一个缓冲区的 <code class="docutils literal notranslate"><span class="pre">data</span></code>、<code class="docutils literal notranslate"><span class="pre">len</span></code> 或 <code class="docutils literal notranslate"><span class="pre">frags</span></code>。请通过队列将缓冲区从一个线程传给另一个线程，或者让每个线程各持一个引用，并保持缓冲区不变。拉出数据也会修改缓冲区：解析共享缓冲区的线程应从自己的 <code class="xref c c-struct docutils literal notranslate"><span class="pre">net_buf_simple</span></code> 中拉出数据，该结构体通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_simple_clone()</span></code> 设置，指向相同的数据。</p>
+</dd>
+<dt>头部空间和尾部空间</dt><dd><p><code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_push()</span></code> 需要头部空间，这部分空间由 <code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_reserve()</span></code> 在添加任何数据之前预留；<code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_add()</span></code> 需要尾部空间：可容纳更多数据的剩余空间是 <code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_tailroom()</span></code>，而不是 <code class="docutils literal notranslate"><span class="pre">size</span></code>。只有断言（默认禁用）或 <a class="reference internal" href="../../kconfig.html#CONFIG_NET_BUF_HARDENING" title="CONFIG_NET_BUF_HARDENING"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_BUF_HARDENING</span></code></a> 才会检查这两种空间是否耗尽。push 或 pull 还会移动 <code class="docutils literal notranslate"><span class="pre">data</span></code> 指针，因此之前保存的该指针副本随后就会失效，而且不会有任何检查。</p>
+</dd>
+<dt>缓冲池大小</dt><dd><p>如果多个相互独立的数据流（例如发送和接收）共享一个缓冲池，其中一个数据流可能会让另一个数据流得不到缓冲区。请为每个数据流使用单独的缓冲池，并根据同时使用的缓冲区数量确定其大小，该数量可用 <a class="reference internal" href="../../kconfig.html#CONFIG_NET_BUF_POOL_USAGE" title="CONFIG_NET_BUF_POOL_USAGE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_BUF_POOL_USAGE</span></code></a> 测量（参见 <a class="reference internal" href="#debugging">Debugging</a>）。</p>
+</dd>
+<dt>用户数据</dt><dd><p>持有缓冲区的每一层都可以读写其用户数据，用户数据随缓冲区一起转手。除非接收方 API 有相应说明，否则不要假定缓冲区传递后用户数据会被保留。只有一个模块需要的状态，可以改为保存在缓冲池旁边的一个数组中，用 <code class="xref c c-func docutils literal notranslate"><span class="pre">net_buf_id()</span></code> 作为索引。</p>
+</dd>
+</dl>
+</section>
+<section id="api-reference">
+<h2><a class="toc-backref" href="#id16" role="doc-backlink">API 参考</a><a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">net_buf</span></dt>
+</dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 10月 08, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

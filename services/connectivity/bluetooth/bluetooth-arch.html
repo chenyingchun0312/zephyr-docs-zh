@@ -1,0 +1,395 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>协议栈架构 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/connectivity/bluetooth/bluetooth-arch.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" />
+    <link rel="next" title="LE 主机" href="bluetooth-le-host.html" />
+    <link rel="prev" title="在 Linux 上运行 AutoPTS" href="autopts/autopts-linux.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">服务</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">连接</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../networking/index.html">网络</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">Bluetooth</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="features.html">支持的功能</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bluetooth-qual.html">认证</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">协议栈架构</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#overview">概述</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#bluetooth-le-layers">Bluetooth LE 分层</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#host-controller-interface">主机控制器接口（Host Controller Interface）</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#configurations">配置</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#build-types">构建类型</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#source-tree-layout">源码树结构</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="bluetooth-le-host.html">LE 主机</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/audio/bluetooth-le-audio-arch.html">LE Audio 协议栈</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/audio/bluetooth-le-audio-arch.html#le-audio-resources">LE Audio 资源</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bluetooth-ctlr-arch.html">LE 控制器</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bluetooth-dev.html">应用程序开发</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/index.html">API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bluetooth-tools.html">工具</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bluetooth-shell.html">Shell</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../usb/index.html">USB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../canbus/index.html">控制器局域网（CAN）总线协议</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lora_lorawan/index.html">LoRa 和 LoRaWAN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modbus/index.html">Modbus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modem/index.html">调制解调器模块</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../index.html">连接</a> &raquo;</li>
+  
+     <li><a href="index.html">Bluetooth</a> &raquo;</li>
+  
+  <li>协议栈架构</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="stack-architecture">
+<span id="bluetooth-arch"></span><h1>协议栈架构<a class="headerlink" href="#stack-architecture" title="链接到此标题。"></a></h1>
+<section id="overview">
+<h2>概述<a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>本页介绍 Zephyr Bluetooth 协议栈的软件架构。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>Zephyr 主要支持 Bluetooth Low Energy（LE），即 Bluetooth 规范的低功耗版本。Zephyr 对 BR/EDR 主机的部分功能也提供有限支持。</p>
+</div>
+<section id="bluetooth-le-layers">
+<span id="bluetooth-layers"></span><h3>Bluetooth LE 分层<a class="headerlink" href="#bluetooth-le-layers" title="链接到此标题。"></a></h3>
+<p>一个完整的 Bluetooth Low Energy 协议栈由 3 个主要层共同构成：</p>
+<ul class="simple">
+<li><p><strong>主机（Host）</strong>：该层位于应用程序正下方，由多个（非实时的）网络和传输协议组成，使应用程序能够以标准且可互操作的方式与对端设备通信。</p></li>
+<li><p><strong>控制器（Controller）</strong>：控制器实现链路层（LE LL），这是一种底层实时协议，它与无线电硬件配合，提供符合标准、可互操作的空中通信。链路层负责调度数据包的接收和发送，保证数据的送达，并处理所有链路层控制过程。</p></li>
+<li><p><strong>无线电硬件（Radio Hardware）</strong>：硬件实现所需的模拟和数字基带功能模块，使链路层固件能够在 2.4GHz 频段收发数据。</p></li>
+</ul>
+</section>
+<section id="host-controller-interface">
+<span id="bluetooth-hci"></span><h3>主机控制器接口（Host Controller Interface）<a class="headerlink" href="#host-controller-interface" title="链接到此标题。"></a></h3>
+<p><a class="reference external" href="https://www.bluetooth.com/specifications/bluetooth-core-specification">Bluetooth Specification</a> 规定了主机与控制器通信时必须使用的格式，称为主机控制器接口（HCI）协议。HCI 可以通过多种不同的物理传输方式实现，例如 UART、SPI 或 USB。该协议定义了主机可以发送给控制器的命令、主机可预期收到的返回事件，以及需要通过空中传输的用户数据和协议数据的格式。HCI 确保不同的主机和控制器实现能够以标准方式通信，从而可以组合来自不同厂商的主机和控制器。</p>
+</section>
+<section id="configurations">
+<span id="bluetooth-configs"></span><h3>配置<a class="headerlink" href="#configurations" title="链接到此标题。"></a></h3>
+<p>协议的三个独立分层和标准化接口使得主机和控制器可以在不同的平台上实现。常用的配置有以下两种：</p>
+<ul class="simple">
+<li><p><strong>单芯片配置</strong>：在这种配置中，一个微控制器实现全部三个层以及应用程序本身，也可称为片上系统（SoC）实现。此时 Bluetooth 主机和 Bluetooth 控制器直接通过函数调用和 RAM 中的队列通信。Bluetooth 规范没有规定在单芯片配置中如何实现 HCI，因此两者之间 HCI 命令、事件和数据的传递方式可以由具体实现决定。由于所有内容都运行在单个 IC 上，这种配置非常适合要求占用空间小、功耗尽可能低的应用和设计。</p></li>
+<li><p><strong>双芯片配置</strong>：这种配置使用两个独立的 IC，一个运行应用程序和主机，另一个运行控制器并带有无线电硬件，有时也称为连接芯片（connectivity-chip）配置。当使用 Zephyr OS 作为控制器时，这种配置允许搭配更多种类的主机。由于 HCI 确保了主机和控制器实现之间的互操作性（当然也包括 Zephyr 自己的 Bluetooth 主机和控制器），Zephyr 控制器的用户可以选择在任何平台上运行任意主机。例如，主机可以是运行在任何支持 Linux 的处理器上的 Linux Bluetooth 主机协议栈（BlueZ）。主机处理器当然也可以运行 Zephyr 及 Zephyr OS Bluetooth 主机。反过来，也支持将运行 Zephyr 主机的 IC 与不运行 Zephyr 的外部控制器组合使用。</p></li>
+</ul>
+</section>
+<section id="build-types">
+<span id="bluetooth-build-types"></span><h3>构建类型<a class="headerlink" href="#build-types" title="链接到此标题。"></a></h3>
+<p>作为 RTOS，Zephyr 软件栈具有高度可配置性。特别是 Bluetooth 子系统，可以在构建过程中以多种方式配置，只包含所需的功能和层，以减少 RAM 和 ROM 占用以及功耗。以下简要列出了可以从 Zephyr 项目代码库生成的几种启用 Bluetooth 的构建：</p>
+<ul>
+<li><p><strong>仅控制器构建</strong>：作为 Bluetooth 控制器构建时，Zephyr 包含链路层和一个特殊的应用程序。根据为 HCI 选择的物理传输方式，该应用程序有所不同：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../../samples/bluetooth/hci_uart/README.html#bluetooth_hci_uart" title="通过 UART 将蓝牙控制器提供给另一台设备或 CPU。">HCI UART</a></p></li>
+<li><p><a class="reference internal" href="../../../samples/bluetooth/hci_usb/README.html#bluetooth_hci_usb" title="将 Zephyr 开发板变成 USB 蓝牙适配器（兼容所有操作系统）。">HCI USB</a></p></li>
+<li><p><a class="reference internal" href="../../../samples/bluetooth/hci_spi/README.html#bluetooth_hci_spi" title="通过 SPI 将蓝牙控制器提供给另一台设备或 CPU。">HCI SPI</a></p></li>
+</ul>
+<p>该应用程序充当 UART、SPI 或 USB 外设与控制器子系统之间的桥梁，监听 HCI 命令、发送应用数据，并以事件和接收到的数据进行响应。这种类型的构建会设置以下 Kconfig 选项值：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_BT" title="CONFIG_BT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT</span></code></a> <code class="docutils literal notranslate"><span class="pre">=y</span></code></p></li>
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_BT_HCI" title="CONFIG_BT_HCI"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_HCI</span></code></a> <code class="docutils literal notranslate"><span class="pre">=y</span></code></p></li>
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_BT_HCI_RAW" title="CONFIG_BT_HCI_RAW"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_HCI_RAW</span></code></a> <code class="docutils literal notranslate"><span class="pre">=y</span></code></p></li>
+</ul>
+<p>控制器本身也需要启用，通常是确保相应的设备树节点处于启用状态。</p>
+</li>
+<li><p><strong>仅主机构建</strong>：Zephyr OS 主机构建包含应用程序和 Bluetooth 主机，以及一个用于连接外部控制器芯片的 HCI 驱动（UART 或 SPI）。这种类型的构建会设置以下 Kconfig 选项值：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_BT" title="CONFIG_BT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT</span></code></a> <code class="docutils literal notranslate"><span class="pre">=y</span></code></p></li>
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_BT_HCI" title="CONFIG_BT_HCI"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_HCI</span></code></a> <code class="docutils literal notranslate"><span class="pre">=y</span></code></p></li>
+</ul>
+<p>此外，如果平台还支持本地控制器，则需要将其禁用，通常是禁用相应的设备树节点。同时还要启用其他某个 HCI 驱动的设备树节点，并确保 <code class="docutils literal notranslate"><span class="pre">zephyr,bt-hci</span></code> 设备树 chosen 属性指向该节点。</p>
+<p>除用于仅控制器构建的示例外，<code class="docutils literal notranslate"><span class="pre">samples/bluetooth</span></code> 下的所有示例都可以按仅主机方式构建</p>
+</li>
+<li><p><strong>组合构建</strong>：包含应用程序、主机和控制器，仅用于单芯片（SoC）配置。这种类型的构建会设置以下 Kconfig 选项值：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_BT" title="CONFIG_BT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT</span></code></a> <code class="docutils literal notranslate"><span class="pre">=y</span></code></p></li>
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_BT_HCI" title="CONFIG_BT_HCI"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_HCI</span></code></a> <code class="docutils literal notranslate"><span class="pre">=y</span></code></p></li>
+</ul>
+<p>控制器本身也需要启用，通常是确保相应的设备树节点处于启用状态。</p>
+<p>除用于仅控制器构建的示例外，<code class="docutils literal notranslate"><span class="pre">samples/bluetooth</span></code> 下的所有示例都可以按组合方式构建</p>
+</li>
+</ul>
+<p>下图展示了使用 Zephyr 组合构建（即在烧录到芯片上的同一个固件镜像中同时包含 Bluetooth 主机和控制器）时的 SoC 或单芯片配置：</p>
+<figure class="align-center" id="id1">
+<img alt="单芯片上的 Bluetooth 组合构建" src="../../../_images/ble_cfg_single.png" />
+<figcaption>
+<p><span class="caption-text">单芯片配置上的组合构建</span><a class="headerlink" href="#id1" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<p>使用连接芯片或双芯片配置时，可以有多种主机和控制器组合，其中一些如下图所示：</p>
+<figure class="align-center" id="id2">
+<img alt="Bluetooth 双芯片配置构建" src="../../../_images/ble_cfg_dual.png" />
+<figcaption>
+<p><span class="caption-text">双芯片配置上的仅主机构建和仅控制器构建</span><a class="headerlink" href="#id2" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<p>使用 Zephyr 主机时（图左侧），必须以不同配置构建两个 Zephyr OS 实例，生成两个独立的镜像，分别烧录到两个芯片中。主机构建镜像包含应用程序、Bluetooth 主机和所选的 HCI 驱动（UART 或 SPI），而控制器构建则运行 <a class="reference internal" href="../../../samples/bluetooth/hci_uart/README.html#bluetooth_hci_uart" title="通过 UART 将蓝牙控制器提供给另一台设备或 CPU。">HCI UART</a> 或 <a class="reference internal" href="../../../samples/bluetooth/hci_spi/README.html#bluetooth_hci_spi" title="通过 SPI 将蓝牙控制器提供给另一台设备或 CPU。">HCI SPI</a> 应用程序，为 Bluetooth 控制器提供接口。</p>
+<p>如图右侧所示，这种配置并不限于使用 Zephyr OS 主机。实际上可以使用众多现有 GNU/Linux 发行版中的任意一个（其中大多数都包含 Linux 自带的 Bluetooth 主机 BlueZ），通过 UART 或 USB 将其连接到一个或多个 Zephyr OS 控制器构建实例。对于需要多个 Bluetooth 无线电同时工作、但共享同一个主机协议栈的应用程序，BlueZ 作为主机支持同时连接多个控制器。</p>
+</section>
+</section>
+<section id="source-tree-layout">
+<h2>源码树结构<a class="headerlink" href="#source-tree-layout" title="链接到此标题。"></a></h2>
+<p>协议栈在源码树中的划分如下：</p>
+<dl class="simple">
+<dt><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/subsys/bluetooth/host">subsys/bluetooth/host</a></dt><dd><p><a class="reference internal" href="bluetooth-le-host.html#bluetooth-le-host"><span class="std std-ref">主机协议栈</span></a>。HCI 命令和事件处理以及连接跟踪都在这里进行。L2CAP、ATT 和 SMP 等核心协议的实现也位于此处。</p>
+</dd>
+<dt><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/subsys/bluetooth/controller">subsys/bluetooth/controller</a></dt><dd><p><a class="reference internal" href="bluetooth-ctlr-arch.html#bluetooth-ctlr-arch"><span class="std std-ref">Bluetooth LE 控制器</span></a> 的实现。实现了 HCI 的控制器端、链路层以及对无线电收发器的访问。</p>
+</dd>
+<dt><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/bluetooth/">include/zephyr/bluetooth/</a></dt><dd><p><a class="reference internal" href="api/index.html#bluetooth-api"><span class="std std-ref">公共 API</span></a> 头文件。应用程序需要包含这些头文件才能使用 Bluetooth 功能。</p>
+</dd>
+<dt><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/drivers/bluetooth/">drivers/bluetooth/</a></dt><dd><p>HCI 传输驱动。每种 HCI 传输都需要自己的驱动。例如，两种常见的 UART 传输协议（3 线和 5 线）各有自己的驱动。</p>
+</dd>
+<dt><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/samples/bluetooth/">samples/bluetooth/</a></dt><dd><p><a class="reference internal" href="../../../samples/bluetooth/bluetooth.html#bluetooth"><span class="xref zephyr zephyr-code-sample-category">Sample Bluetooth code</span></a>。这是开始开发 Bluetooth 应用程序时的良好参考。</p>
+</dd>
+<dt><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/tests/bluetooth/">tests/bluetooth/</a></dt><dd><p>测试应用程序。这些应用程序用于验证 Bluetooth 协议栈的功能，但不一定是示例代码的最佳来源（请改为参考 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/samples/bluetooth">samples/bluetooth</a>）。</p>
+</dd>
+<dt><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/doc/services/connectivity/bluetooth/">doc/services/connectivity/bluetooth/</a></dt><dd><p>额外的文档，例如 PICS 文档。</p>
+</dd>
+</dl>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 4月 15, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

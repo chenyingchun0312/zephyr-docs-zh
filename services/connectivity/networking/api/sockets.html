@@ -1,0 +1,647 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BSD 套接字 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/connectivity/networking/api/sockets.html" />
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../../search.html" />
+    <link rel="next" title="套接字服务" href="socket_service.html" />
+    <link rel="prev" title="网络 API" href="apis.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html">
+            
+              <img src="../../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">服务</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">连接</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">网络</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../overview.html">概述</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../net-stack-architecture.html">网络协议栈架构</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../net_config_guide.html">网络配置指南</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../networking_with_host.html">与主机系统联网</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../network_monitoring.html">监视网络流量</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../network_tracing.html">网络跟踪</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../conformance/index.html">使用 TTCN-3 进行协议一致性测试</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="index.html">网络 API</a><ul class="current">
+<li class="toctree-l5 current"><a class="reference internal" href="apis.html">网络 API</a><ul class="current">
+<li class="toctree-l6 current"><a class="current reference internal" href="#">BSD 套接字</a></li>
+<li class="toctree-l6"><a class="reference internal" href="socket_service.html">套接字服务</a></li>
+<li class="toctree-l6"><a class="reference internal" href="ip_4_6.html">IPv4/IPv6 基本类型与辅助函数</a></li>
+<li class="toctree-l6"><a class="reference internal" href="dns_resolve.html">DNS 解析</a></li>
+<li class="toctree-l6"><a class="reference internal" href="dplpmtud.html">数据报 PLPMTUD API</a></li>
+<li class="toctree-l6"><a class="reference internal" href="net_mgmt.html">网络管理</a></li>
+<li class="toctree-l6"><a class="reference internal" href="net_stats.html">网络统计</a></li>
+<li class="toctree-l6"><a class="reference internal" href="net_timeout.html">网络超时</a></li>
+<li class="toctree-l6"><a class="reference internal" href="net_context.html">网络上下文</a></li>
+<li class="toctree-l6"><a class="reference internal" href="promiscuous.html">混杂模式</a></li>
+<li class="toctree-l6"><a class="reference internal" href="sntp.html">简单网络时间协议库</a></li>
+<li class="toctree-l6"><a class="reference internal" href="socks5.html">SOCKS5 代理支持</a></li>
+<li class="toctree-l6"><a class="reference internal" href="trickle.html">Trickle 定时器库</a></li>
+<li class="toctree-l6"><a class="reference internal" href="websocket.html">Websocket 客户端 API</a></li>
+<li class="toctree-l6"><a class="reference internal" href="capture.html">网络数据包捕获</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="buf_mgmt.html">网络数据包管理</a></li>
+<li class="toctree-l5"><a class="reference internal" href="net_tech.html">网络技术</a></li>
+<li class="toctree-l5"><a class="reference internal" href="protocols.html">协议</a></li>
+<li class="toctree-l5"><a class="reference internal" href="quic.html">QUIC 传输接口</a></li>
+<li class="toctree-l5"><a class="reference internal" href="system_mgmt.html">网络系统管理</a></li>
+<li class="toctree-l5"><a class="reference internal" href="tsn.html">时间敏感网络</a></li>
+<li class="toctree-l5"><a class="reference internal" href="zperf.html">zperf：网络流量生成器</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../conn_mgr/index.html">连接管理器</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../dsa.html">分布式交换架构（DSA）</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../bluetooth/index.html">Bluetooth</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../usb/index.html">USB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../canbus/index.html">控制器局域网（CAN）总线协议</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lora_lorawan/index.html">LoRa 和 LoRaWAN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modbus/index.html">Modbus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modem/index.html">调制解调器模块</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../../index.html">连接</a> &raquo;</li>
+  
+     <li><a href="../index.html">网络</a> &raquo;</li>
+  
+     <li><a href="index.html">网络 API</a> &raquo;</li>
+  
+     <li><a href="apis.html">网络 API</a> &raquo;</li>
+  
+  <li>BSD 套接字</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="bsd-sockets">
+<span id="bsd-sockets-interface"></span><h1>BSD 套接字<a class="headerlink" href="#bsd-sockets" title="链接到此标题。"></a></h1>
+<nav class="contents local" id="id1">
+<ul class="simple">
+<li><p><a class="reference internal" href="#overview" id="id3">概述</a></p></li>
+<li><p><a class="reference internal" href="#ipv4-and-ipv6-socket-options" id="id4">IPv4 和 IPv6 套接字选项</a></p>
+<ul>
+<li><p><a class="reference internal" href="#ipv4-options" id="id5">IPv4 选项</a></p></li>
+<li><p><a class="reference internal" href="#ipv6-options" id="id6">IPv6 选项</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#secure-sockets" id="id7">安全套接字</a></p>
+<ul>
+<li><p><a class="reference internal" href="#tls-credentials-subsystem" id="id8">TLS 凭据子系统</a></p></li>
+<li><p><a class="reference internal" href="#secure-socket-creation" id="id9">创建安全套接字</a></p></li>
+<li><p><a class="reference internal" href="#secure-sockets-options" id="id10">安全套接字选项</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#socket-offloading" id="id11">套接字卸载</a></p>
+<ul>
+<li><p><a class="reference internal" href="#offloaded-socket-creation" id="id12">卸载套接字的创建</a></p></li>
+<li><p><a class="reference internal" href="#dealing-with-multiple-offloaded-interfaces" id="id13">处理多个卸载接口</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#api-reference" id="id14">API 参考</a></p>
+<ul>
+<li><p><a class="reference internal" href="#id2" id="id15">BSD 套接字</a></p></li>
+<li><p><a class="reference internal" href="#tls-credentials" id="id16">TLS 凭据</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<section id="overview">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">概述</a><a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>Zephyr 实现了 BSD 套接字 API（POSIX 标准的一部分）的一个子集。借助该 API，可以沿用已有的编程经验，并将现有的简单网络应用程序移植到 Zephyr。</p>
+<p>以下是指导 Zephyr 实现 BSD 套接字兼容 API 的主要要求和理念：</p>
+<ul class="simple">
+<li><p>开销最小，这与其他 Zephyr 子系统的要求类似。</p></li>
+<li><p>默认带有命名空间，以避免与 <code class="docutils literal notranslate"><span class="pre">close()</span></code> 等常见名称冲突，这些名称可能属于 libc 或其他 POSIX 兼容库。如果通过 <a class="reference internal" href="../../../../kconfig.html#CONFIG_POSIX_API" title="CONFIG_POSIX_API"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_POSIX_API</span></code></a> 启用，还会提供 POSIX 兼容的 API。</p></li>
+</ul>
+<p>BSD 套接字兼容 API 通过 <a class="reference internal" href="../../../../kconfig.html#CONFIG_NET_SOCKETS" title="CONFIG_NET_SOCKETS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_SOCKETS</span></code></a> 配置选项启用，并实现以下操作：<code class="docutils literal notranslate"><span class="pre">socket()</span></code>、<code class="docutils literal notranslate"><span class="pre">close()</span></code>、<code class="docutils literal notranslate"><span class="pre">recv()</span></code>、<code class="docutils literal notranslate"><span class="pre">recvfrom()</span></code>、<code class="docutils literal notranslate"><span class="pre">send()</span></code>、<code class="docutils literal notranslate"><span class="pre">sendto()</span></code>、<code class="docutils literal notranslate"><span class="pre">connect()</span></code>、<code class="docutils literal notranslate"><span class="pre">bind()</span></code>、<code class="docutils literal notranslate"><span class="pre">listen()</span></code>、<code class="docutils literal notranslate"><span class="pre">accept()</span></code>、<code class="docutils literal notranslate"><span class="pre">fcntl()</span></code> （用于设置非阻塞模式）、<code class="docutils literal notranslate"><span class="pre">getsockopt()</span></code>、<code class="docutils literal notranslate"><span class="pre">setsockopt()</span></code>、<code class="docutils literal notranslate"><span class="pre">poll()</span></code>、<code class="docutils literal notranslate"><span class="pre">select()</span></code>、<code class="docutils literal notranslate"><span class="pre">getaddrinfo()</span></code>、<code class="docutils literal notranslate"><span class="pre">getnameinfo()</span></code>。</p>
+<p>基于上述命名空间要求，这些操作默认以带 <code class="docutils literal notranslate"><span class="pre">zsock_</span></code> 前缀的函数形式提供，例如 <code class="xref c c-func docutils literal notranslate"><span class="pre">zsock_socket()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">zsock_close()</span></code>。如果定义了配置选项 <a class="reference internal" href="../../../../kconfig.html#CONFIG_POSIX_API" title="CONFIG_POSIX_API"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_POSIX_API</span></code></a>，所有函数还会以不带前缀的别名形式提供。其中包括 <code class="docutils literal notranslate"><span class="pre">close()</span></code> 和 <code class="docutils literal notranslate"><span class="pre">fcntl()</span></code> 等函数（它们可能与 libc 或其他库中的函数冲突，例如文件系统库）。</p>
+<p>上述设计要求带来的另一个结果是，Zephyr API 会尽可能积极地利用 POSIX API 的短读/短写特性（以尽量降低复杂度和开销）。POSIX 允许 <code class="docutils literal notranslate"><span class="pre">recv()</span></code> 和 <code class="docutils literal notranslate"><span class="pre">send()</span></code> 等调用实际处理（接收或发送）的数据少于用户请求的数据量（对于 <code class="docutils literal notranslate"><span class="pre">SOCK_STREAM</span></code> 类型的套接字）。例如，调用 <code class="docutils literal notranslate"><span class="pre">recv(sock,</span> <span class="pre">1000,</span> <span class="pre">0)</span></code> 可能返回 100，表示只读取了 100 字节（短读），应用程序需要重试调用以接收剩余的 900 字节。</p>
+<p>BSD 套接字 API 使用文件描述符表示套接字。文件描述符是从零开始连续分配的小整数，由套接字、文件、特殊设备（如 stdin/stdout）等共享。内部有一张表，将文件描述符映射到内部对象指针。即使未启用 POSIX 子系统的其余部分（文件系统、stdin/stdout），BSD 套接字 API 也会使用文件描述符表。</p>
+<p>Zephyr 支持多种类型的 BSD 套接字，下表汇总了可用的套接字类型：</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>地址族</p></th>
+<th class="head"><p>类型</p></th>
+<th class="head"><p>协议</p></th>
+<th class="head"><p>说明</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td rowspan="5"><p>AF_INET <br />
+AF_INET6</p></td>
+<td rowspan="2"><p>SOCK_DGRAM</p></td>
+<td><p>IPPROTO_UDP</p></td>
+<td><p>设置 <a class="reference internal" href="../../../../kconfig.html#CONFIG_NET_UDP" title="CONFIG_NET_UDP"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_UDP</span></code></a> 时启用。<br /> 可以发送和接收 UDP 数据报。</p></td>
+</tr>
+<tr class="row-odd"><td><p>IPPROTO_DTLS_1_x</p></td>
+<td><p>设置 <a class="reference internal" href="../../../../kconfig.html#CONFIG_NET_SOCKETS_ENABLE_DTLS" title="CONFIG_NET_SOCKETS_ENABLE_DTLS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_SOCKETS_ENABLE_DTLS</span></code></a> 时启用。<br /> 可以发送和接收 DTLS 数据报。</p></td>
+</tr>
+<tr class="row-even"><td rowspan="2"><p>SOCK_STREAM</p></td>
+<td><p>IPPROTO_TCP</p></td>
+<td><p>设置 <a class="reference internal" href="../../../../kconfig.html#CONFIG_NET_TCP" title="CONFIG_NET_TCP"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_TCP</span></code></a> 时启用。<br /> 可以发送和接收 TCP 数据流。</p></td>
+</tr>
+<tr class="row-odd"><td><p>IPPROTO_TLS_1_x</p></td>
+<td><p>设置 <a class="reference internal" href="../../../../kconfig.html#CONFIG_NET_SOCKETS_SOCKOPT_TLS" title="CONFIG_NET_SOCKETS_SOCKOPT_TLS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_SOCKETS_SOCKOPT_TLS</span></code></a> 时启用。<br /> 可以发送和接收 TLS 数据流。</p></td>
+</tr>
+<tr class="row-even"><td><p>SOCK_RAW</p></td>
+<td><p>IPPROTO_IP <br />
+&lt;proto&gt;</p></td>
+<td><p>设置 <a class="reference internal" href="../../../../kconfig.html#CONFIG_NET_SOCKETS_INET_RAW" title="CONFIG_NET_SOCKETS_INET_RAW"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_SOCKETS_INET_RAW</span></code></a> 时启用。<br /> 可以发送和接收 IPv4/IPv6 数据报。<br /> 数据包按指定的 L4 协议过滤。IPPROTO_IP 是通配协议，用于接收所有 IP 数据报。</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="2"><p>AF_PACKET</p></td>
+<td><p>SOCK_DGRAM</p></td>
+<td><p>ETH_P_ALL <br />
+&lt;proto&gt;</p></td>
+<td><p>设置 <a class="reference internal" href="../../../../kconfig.html#CONFIG_NET_SOCKETS_PACKET_DGRAM" title="CONFIG_NET_SOCKETS_PACKET_DGRAM"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_SOCKETS_PACKET_DGRAM</span></code></a> 时启用。<br /> 可以发送和接收不带 L2 报头的数据包。<br /> 数据包按指定的 L3 协议过滤。ETH_P_ALL 是通配协议，用于接收所有数据包。</p></td>
+</tr>
+<tr class="row-even"><td><p>SOCK_RAW</p></td>
+<td><p>ETH_P_ALL</p></td>
+<td><p>设置 <a class="reference internal" href="../../../../kconfig.html#CONFIG_NET_SOCKETS_PACKET" title="CONFIG_NET_SOCKETS_PACKET"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_SOCKETS_PACKET</span></code></a> 时启用。<br /> 可以发送和接收包含 L2 报头的数据包。</p></td>
+</tr>
+<tr class="row-odd"><td><p>AF_CAN</p></td>
+<td><p>SOCK_RAW</p></td>
+<td><p>CAN_RAW</p></td>
+<td><p>设置 <a class="reference internal" href="../../../../kconfig.html#CONFIG_NET_SOCKETS_CAN" title="CONFIG_NET_SOCKETS_CAN"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_SOCKETS_CAN</span></code></a> 时启用。<br /> 可以发送和接收 CAN 数据包。</p></td>
+</tr>
+</tbody>
+</table>
+<p>要了解如何创建基于 BSD 套接字的简单服务器或客户端应用程序，请参见 <a class="reference internal" href="../../../../samples/net/sockets/echo_server/README.html#sockets-echo-server" title="实现一个将收到的数据包发回给发送方的 UDP/TCP 服务器。">Echo server (advanced)</a> 和 <a class="reference internal" href="../../../../samples/net/sockets/echo_client/README.html#sockets-echo-client" title="实现一个发送 IP 数据包、等待数据被发回并进行验证的客户端。">Echo client (advanced)</a> 示例应用程序。</p>
+</section>
+<section id="ipv4-and-ipv6-socket-options">
+<span id="ip-socket-options"></span><h2><a class="toc-backref" href="#id4" role="doc-backlink">IPv4 和 IPv6 套接字选项</a><a class="headerlink" href="#ipv4-and-ipv6-socket-options" title="链接到此标题。"></a></h2>
+<p>Zephyr 通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">zsock_setsockopt()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">zsock_getsockopt()</span></code> 在 <code class="docutils literal notranslate"><span class="pre">NET_IPPROTO_IP</span></code> （IPv4）和 <code class="docutils literal notranslate"><span class="pre">NET_IPPROTO_IPV6</span></code> （IPv6）协议层级上支持 IP 层套接字选项。选项是否可用可能取决于 Kconfig 设置和套接字地址族。</p>
+<section id="ipv4-options">
+<h3><a class="toc-backref" href="#id5" role="doc-backlink">IPv4 选项</a><a class="headerlink" href="#ipv4-options" title="链接到此标题。"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">ipv4_socket_options</span></dt>
+</dl>
+
+</section>
+<section id="ipv6-options">
+<h3><a class="toc-backref" href="#id6" role="doc-backlink">IPv6 选项</a><a class="headerlink" href="#ipv6-options" title="链接到此标题。"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">ipv6_socket_options</span></dt>
+</dl>
+
+<p><code class="xref c c-macro docutils literal notranslate"><span class="pre">ZSOCK_IP_DONTFRAG</span></code> 和 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ZSOCK_IPV6_DONTFRAG</span></code> 选项由 QUIC 协议栈在 DPLPMTUD 探测期间内部使用（参见 <a class="reference internal" href="quic.html#quic-dplpmtud"><span class="std std-ref">路径 MTU 发现（DPLPMTUD）</span></a>）。</p>
+</section>
+</section>
+<section id="secure-sockets">
+<span id="secure-sockets-interface"></span><h2><a class="toc-backref" href="#id7" role="doc-backlink">安全套接字</a><a class="headerlink" href="#secure-sockets" title="链接到此标题。"></a></h2>
+<p>Zephyr 提供了标准 POSIX 套接字 API 的扩展，允许创建和配置使用 TLS 协议类型的套接字，以便进行安全通信。其实现所用的安全功能由 Mbed TLS 库提供。安全套接字实现允许通过标准套接字调用使用 TLS 和 DTLS 两种协议。支持的安全协议版本请参见 <code class="xref c c-enum docutils literal notranslate"><span class="pre">net_ip_protocol_secure</span></code> 类型。</p>
+<p>要启用安全套接字，请设置 <a class="reference internal" href="../../../../kconfig.html#CONFIG_NET_SOCKETS_SOCKOPT_TLS" title="CONFIG_NET_SOCKETS_SOCKOPT_TLS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_SOCKETS_SOCKOPT_TLS</span></code></a> 选项。要启用 DTLS 支持，请使用 <a class="reference internal" href="../../../../kconfig.html#CONFIG_NET_SOCKETS_ENABLE_DTLS" title="CONFIG_NET_SOCKETS_ENABLE_DTLS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_SOCKETS_ENABLE_DTLS</span></code></a> 选项。</p>
+<section id="tls-credentials-subsystem">
+<span id="sockets-tls-credentials-subsys"></span><h3><a class="toc-backref" href="#id8" role="doc-backlink">TLS 凭据子系统</a><a class="headerlink" href="#tls-credentials-subsystem" title="链接到此标题。"></a></h3>
+<p>TLS 凭据必须先在系统中注册，然后才能用于安全套接字。更多信息请参见 <code class="xref c c-func docutils literal notranslate"><span class="pre">tls_credential_add()</span></code>。</p>
+<p>当某个 TLS 凭据在系统中注册时，会为其分配一个 <code class="xref c c-type docutils literal notranslate"><span class="pre">sec_tag_t</span></code> 类型的数值，称为标签（tag）。之后在通过套接字选项配置安全套接字时，可以用这个值来引用该凭据。</p>
+<p>系统中可以注册以下类型的 TLS 凭据：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">TLS_CREDENTIAL_CA_CERTIFICATE</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TLS_CREDENTIAL_PUBLIC_CERTIFICATE</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TLS_CREDENTIAL_PRIVATE_KEY</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TLS_CREDENTIAL_PSK</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">TLS_CREDENTIAL_PSK_ID</span></code></p></li>
+</ul>
+<p>注册 CA 证书（由 <code class="docutils literal notranslate"><span class="pre">ca_certificate</span></code> 数组提供）的示例如下：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">tls_credential_add</span><span class="p">(</span><span class="n">CA_CERTIFICATE_TAG</span><span class="p">,</span><span class="w"> </span><span class="n">TLS_CREDENTIAL_CA_CERTIFICATE</span><span class="p">,</span>
+<span class="w">                         </span><span class="n">ca_certificate</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">ca_certificate</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>默认支持 DER 格式的证书。可以在 Mbed TLS 设置中启用 PEM 支持。</p>
+</section>
+<section id="secure-socket-creation">
+<h3><a class="toc-backref" href="#id9" role="doc-backlink">创建安全套接字</a><a class="headerlink" href="#secure-socket-creation" title="链接到此标题。"></a></h3>
+<p>可以通过指定安全协议类型来创建安全套接字，例如：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">sock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">socket</span><span class="p">(</span><span class="n">AF_INET</span><span class="p">,</span><span class="w"> </span><span class="n">SOCK_STREAM</span><span class="p">,</span><span class="w"> </span><span class="n">IPPROTO_TLS_1_2</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>创建安全套接字时指定的协议版本表示 TLS 会话所使用的最低 TLS 版本。</p>
+<p>创建之后，可以通过套接字选项对其进行配置。例如，可以设置 CA 证书和主机名：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">sec_tag_t</span><span class="w"> </span><span class="n">sec_tag_opt</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">CA_CERTIFICATE_TAG</span><span class="p">,</span>
+<span class="p">};</span>
+
+<span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">setsockopt</span><span class="p">(</span><span class="n">sock</span><span class="p">,</span><span class="w"> </span><span class="n">SOL_TLS</span><span class="p">,</span><span class="w"> </span><span class="n">TLS_SEC_TAG_LIST</span><span class="p">,</span>
+<span class="w">                 </span><span class="n">sec_tag_opt</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">sec_tag_opt</span><span class="p">));</span>
+</pre></div>
+</div>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">char</span><span class="w"> </span><span class="n">host</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"google.com"</span><span class="p">;</span>
+
+<span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">setsockopt</span><span class="p">(</span><span class="n">sock</span><span class="p">,</span><span class="w"> </span><span class="n">SOL_TLS</span><span class="p">,</span><span class="w"> </span><span class="n">TLS_HOSTNAME</span><span class="p">,</span><span class="w"> </span><span class="n">host</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">host</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>配置完成后，该套接字就可以像普通 TCP 套接字一样使用。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>由于 mbed TLS 内部的数据缓冲以及 <code class="docutils literal notranslate"><span class="pre">mbedtls_ssl_write()</span></code> 函数的要求，当非阻塞的 <code class="xref c c-func docutils literal notranslate"><span class="pre">zsock_send()</span></code> 返回 <code class="docutils literal notranslate"><span class="pre">EAGAIN</span></code> 时，后续的 <code class="xref c c-func docutils literal notranslate"><span class="pre">zsock_send()</span></code> 调用应包含与原调用相同的数据。</p>
+</div>
+<p>Zephyr 中有多个示例使用安全套接字进行通信。示例用法请参见 <a class="reference internal" href="../../../../samples/net/sockets/echo_server/README.html#sockets-echo-server" title="实现一个将收到的数据包发回给发送方的 UDP/TCP 服务器。"><span class="xref zephyr zephyr-code-sample">echo-server 示例应用程序</span></a> 或 <a class="reference internal" href="../../../../samples/net/sockets/http_get/README.html#sockets-http-get" title="使用普通 BSD 套接字实现一个 HTTP(S) 客户端。"><span class="xref zephyr zephyr-code-sample">HTTP GET 示例应用程序</span></a> 等。</p>
+</section>
+<section id="secure-sockets-options">
+<h3><a class="toc-backref" href="#id10" role="doc-backlink">安全套接字选项</a><a class="headerlink" href="#secure-sockets-options" title="链接到此标题。"></a></h3>
+<p>安全套接字提供以下套接字管理选项：</p>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">secure_sockets_options</span></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/sockets/http_client/README.html#sockets-http-client" title="实现一个发出多种 HTTP 请求的 HTTP(S) 客户端。">HTTP Client</a></span><span class="code-sample-description">实现一个发出多种 HTTP 请求的 HTTP(S) 客户端。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/sockets/http_get/README.html#sockets-http-get" title="使用普通 BSD 套接字实现一个 HTTP(S) 客户端。">HTTP GET using plain sockets</a></span><span class="code-sample-description">使用普通 BSD 套接字实现一个 HTTP(S) 客户端。</span></li>
+</ul>
+</div>
+</section>
+</section>
+<section id="socket-offloading">
+<h2><a class="toc-backref" href="#id11" role="doc-backlink">套接字卸载</a><a class="headerlink" href="#socket-offloading" title="链接到此标题。"></a></h2>
+<p>Zephyr 允许注册自定义的套接字实现（称为卸载套接字）。这使得提供外部 IP 协议栈并公开类似套接字 API 的设备能够无缝集成。</p>
+<p>可以通过 <a class="reference internal" href="../../../../kconfig.html#CONFIG_NET_SOCKETS_OFFLOAD" title="CONFIG_NET_SOCKETS_OFFLOAD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_SOCKETS_OFFLOAD</span></code></a> 选项启用套接字卸载。要注册新套接字实现的网络驱动应使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">NET_SOCKET_OFFLOAD_REGISTER</span></code> 宏。该宏接受以下参数：</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">socket_name</span></code></dt><dd><p>套接字实现的任意名称。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">prio</span></code></dt><dd><p>套接字实现的优先级。优先级越高，创建新套接字时越早处理该实现。数值越小表示优先级越高。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">_family</span></code></dt><dd><p>卸载套接字所实现的套接字地址族。<code class="docutils literal notranslate"><span class="pre">AF_UNSPEC</span></code> 表示任意地址族。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">_is_supported</span></code></dt><dd><p>一个过滤函数，用于检查卸载套接字实现是否支持特定的套接字地址族、类型和协议。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">_handler</span></code></dt><dd><p>一个与 <code class="xref c c-func docutils literal notranslate"><span class="pre">socket()</span></code> API 兼容的函数，用于创建卸载套接字。</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+<p>每个卸载套接字实现还应实现 <code class="xref c c-struct docutils literal notranslate"><span class="pre">socket_op_vtable</span></code> 结构体中规定的一组套接字 API。</p>
+<p>注册用于创建套接字的函数应使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">zvfs_reserve_fd()</span></code> 函数分配一个新的文件描述符。特定卸载套接字实现在创建时所需的其他操作，都应在分配文件描述符之后进行。最后一步，如果卸载套接字创建成功，应使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">zvfs_finalize_typed_fd()</span></code> 或 <code class="xref c c-func docutils literal notranslate"><span class="pre">zvfs_finalize_fd()</span></code> 函数完成文件描述符的设置。该完成函数可以为卸载套接字注册一个实现套接字 API 的 <code class="xref c c-struct docutils literal notranslate"><span class="pre">socket_op_vtable</span></code> 结构体，以及一个可选的套接字上下文数据指针。</p>
+<p>最后，在初始化卸载网络接口时，应使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">net_if_socket_offload_set()</span></code> 函数表明该接口是卸载接口。该函数会在网络接口上注册用于创建卸载套接字的函数（与 <code class="xref c c-macro docutils literal notranslate"><span class="pre">NET_SOCKET_OFFLOAD_REGISTER</span></code> 中提供的函数相同）。</p>
+<section id="offloaded-socket-creation">
+<h3><a class="toc-backref" href="#id12" role="doc-backlink">卸载套接字的创建</a><a class="headerlink" href="#offloaded-socket-creation" title="链接到此标题。"></a></h3>
+<p>当应用程序使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">socket()</span></code> 函数创建新套接字时，网络协议栈会遍历所有已注册的套接字实现（原生实现和卸载实现）。优先级较高的套接字实现会先被处理。对于每个已注册的套接字实现，先检查地址族，如果匹配（或该套接字注册为 <code class="docutils literal notranslate"><span class="pre">AF_UNSPEC</span></code>），则调用相应的 <code class="docutils literal notranslate"><span class="pre">_is_supported</span></code> 函数检查其余的套接字参数。第一个满足套接字要求的实现（即 <code class="docutils literal notranslate"><span class="pre">_is_supported</span></code> 返回 true）将通过其 <code class="docutils literal notranslate"><span class="pre">_handler</span></code> 函数创建新套接字。</p>
+<p>由上可见套接字优先级的重要性。如果多个套接字实现支持同一组套接字地址族/类型/协议，则由系统最先处理的实现创建套接字。因此，应为作为系统默认的实现赋予最高优先级。</p>
+<p>原生套接字实现的套接字优先级通过 Kconfig 配置。使用 <a class="reference internal" href="../../../../kconfig.html#CONFIG_NET_SOCKETS_TLS_PRIORITY" title="CONFIG_NET_SOCKETS_TLS_PRIORITY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_SOCKETS_TLS_PRIORITY</span></code></a> 设置原生 TLS 套接字的优先级，使用 <a class="reference internal" href="../../../../kconfig.html#CONFIG_NET_SOCKETS_PRIORITY_DEFAULT" title="CONFIG_NET_SOCKETS_PRIORITY_DEFAULT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_SOCKETS_PRIORITY_DEFAULT</span></code></a> 设置其余原生套接字的优先级。</p>
+</section>
+<section id="dealing-with-multiple-offloaded-interfaces">
+<h3><a class="toc-backref" href="#id13" role="doc-backlink">处理多个卸载接口</a><a class="headerlink" href="#dealing-with-multiple-offloaded-interfaces" title="链接到此标题。"></a></h3>
+<p>由于 <code class="xref c c-func docutils literal notranslate"><span class="pre">socket()</span></code> 函数无法指定套接字应使用哪个网络接口，当存在多个支持同类套接字的卸载套接字实现时，就无法选择特定的实现。当系统中同时存在原生套接字和卸载套接字时，也会出现同样的问题。</p>
+<p>为解决这一问题，引入了一种特殊的套接字实现（称为套接字分派器）。该模块的唯一作用是将套接字的创建推迟到对套接字执行第一个操作时。这样就可以使用 <code class="docutils literal notranslate"><span class="pre">SO_BINDTODEVICE</span></code> 套接字选项，将套接字绑定到特定的网络接口（从而绑定到特定的卸载套接字实现）。套接字分派器可通过 <a class="reference internal" href="../../../../kconfig.html#CONFIG_NET_SOCKETS_OFFLOAD_DISPATCHER" title="CONFIG_NET_SOCKETS_OFFLOAD_DISPATCHER"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_SOCKETS_OFFLOAD_DISPATCHER</span></code></a> Kconfig 选项启用。</p>
+<p>启用后，应用程序可以使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">setsockopt()</span></code> 函数指定要使用的网络接口：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* A "dispatcher" socket is created */</span>
+<span class="n">sock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">socket</span><span class="p">(</span><span class="n">AF_INET</span><span class="p">,</span><span class="w"> </span><span class="n">SOCK_DGRAM</span><span class="p">,</span><span class="w"> </span><span class="n">IPPROTO_UDP</span><span class="p">);</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">ifreq</span><span class="w"> </span><span class="n">ifreq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="p">.</span><span class="n">ifr_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"SimpleLink"</span>
+<span class="p">};</span>
+
+<span class="cm">/* The socket is "dispatched" to a particular network interface</span>
+<span class="cm"> * (offloaded or not).</span>
+<span class="cm"> */</span>
+<span class="n">setsockopt</span><span class="p">(</span><span class="n">sock</span><span class="p">,</span><span class="w"> </span><span class="n">SOL_SOCKET</span><span class="p">,</span><span class="w"> </span><span class="n">SO_BINDTODEVICE</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ifreq</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">ifreq</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>同样，如果原生套接字和卸载套接字都支持 TLS，可以使用 <code class="docutils literal notranslate"><span class="pre">TLS_NATIVE</span></code> 套接字选项指明应创建原生 TLS 套接字。然后可以将底层套接字绑定到特定的网络接口：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* A "dispatcher" socket is created */</span>
+<span class="n">sock</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">socket</span><span class="p">(</span><span class="n">AF_INET</span><span class="p">,</span><span class="w"> </span><span class="n">SOCK_STREAM</span><span class="p">,</span><span class="w"> </span><span class="n">IPPROTO_TLS_1_2</span><span class="p">);</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="n">tls_native</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+
+<span class="cm">/* The socket is "dispatched" to a native TLS socket implmeentation.</span>
+<span class="cm"> * The underlying socket is a "dispatcher" socket now.</span>
+<span class="cm"> */</span>
+<span class="n">setsockopt</span><span class="p">(</span><span class="n">sock</span><span class="p">,</span><span class="w"> </span><span class="n">SOL_TLS</span><span class="p">,</span><span class="w"> </span><span class="n">TLS_NATIVE</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">tls_native</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">tls_native</span><span class="p">));</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">ifreq</span><span class="w"> </span><span class="n">ifreq</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="p">.</span><span class="n">ifr_name</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"SimpleLink"</span>
+<span class="p">};</span>
+
+<span class="cm">/* The underlying socket is "dispatched" to a particular network interface</span>
+<span class="cm"> * (offloaded or not).</span>
+<span class="cm"> */</span>
+<span class="n">setsockopt</span><span class="p">(</span><span class="n">sock</span><span class="p">,</span><span class="w"> </span><span class="n">SOL_SOCKET</span><span class="p">,</span><span class="w"> </span><span class="n">SO_BINDTODEVICE</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ifreq</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">ifreq</span><span class="p">));</span>
+</pre></div>
+</div>
+<p>如果套接字上未使用 <code class="docutils literal notranslate"><span class="pre">SO_BINDTODEVICE</span></code> 套接字选项，则会在第一次调用套接字 API 时，根据默认优先级和过滤规则分派该套接字。</p>
+</section>
+</section>
+<section id="api-reference">
+<h2><a class="toc-backref" href="#id14" role="doc-backlink">API 参考</a><a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<section id="id2">
+<h3><a class="toc-backref" href="#id15" role="doc-backlink">BSD 套接字</a><a class="headerlink" href="#id2" title="链接到此标题。"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">bsd_sockets</span></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/sockets/echo_async/README.html#async-sockets-echo" title="使用 BSD 套接字和 poll() 实现一个异步 IPv4/IPv6 TCP 回显服务器">Asynchronous echo server using poll()</a></span><span class="code-sample-description">使用 BSD 套接字和 poll() 实现一个异步 IPv4/IPv6 TCP 回显服务器</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/sockets/echo_async_select/README.html#async-sockets-echo-select" title="使用 BSD 套接字和 select() 实现一个异步 IPv4/IPv6 TCP 回显服务器">Asynchronous echo server using select()</a></span><span class="code-sample-description">使用 BSD 套接字和 select() 实现一个异步 IPv4/IPv6 TCP 回显服务器</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/cloud/aws_iot_mqtt/README.html#aws-iot-mqtt" title="连接 AWS IoT Core 并使用 MQTT 发布消息。">AWS IoT Core MQTT</a></span><span class="code-sample-description">连接 AWS IoT Core 并使用 MQTT 发布消息。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/sockets/dumb_http_server/README.html#socket-dumb-http-server" title="使用 BSD 套接字实现一个简单、可移植的 HTTP 服务器。">Dumb HTTP server</a></span><span class="code-sample-description">使用 BSD 套接字实现一个简单、可移植的 HTTP 服务器。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/sockets/dumb_http_server_mt/README.html#socket-dumb-http-server-mt" title="使用 BSD 套接字实现一个支持并发连接的简单 HTTP 服务器。">Dumb HTTP server (multi-threaded)</a></span><span class="code-sample-description">使用 BSD 套接字实现一个支持并发连接的简单 HTTP 服务器。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/sockets/echo_client/README.html#sockets-echo-client" title="实现一个发送 IP 数据包、等待数据被发回并进行验证的客户端。">Echo client (advanced)</a></span><span class="code-sample-description">实现一个发送 IP 数据包、等待数据被发回并进行验证的客户端。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/sockets/echo_server/README.html#sockets-echo-server" title="实现一个将收到的数据包发回给发送方的 UDP/TCP 服务器。">Echo server (advanced)</a></span><span class="code-sample-description">实现一个将收到的数据包发回给发送方的 UDP/TCP 服务器。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/sockets/echo_service/README.html#sockets-service-echo" title="使用 BSD 套接字和套接字服务 API 实现一个简单的 IPv4/IPv6 TCP 回显服务器。">Echo server (service)</a></span><span class="code-sample-description">使用 BSD 套接字和套接字服务 API 实现一个简单的 IPv4/IPv6 TCP 回显服务器。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/sockets/echo/README.html#sockets-echo" title="使用 BSD 套接字实现一个简单的 IPv4/IPv6 TCP 回显服务器。">Echo server (simple)</a></span><span class="code-sample-description">使用 BSD 套接字实现一个简单的 IPv4/IPv6 TCP 回显服务器。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/sockets/http_client/README.html#sockets-http-client" title="实现一个发出多种 HTTP 请求的 HTTP(S) 客户端。">HTTP Client</a></span><span class="code-sample-description">实现一个发出多种 HTTP 请求的 HTTP(S) 客户端。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/sockets/http_get/README.html#sockets-http-get" title="使用普通 BSD 套接字实现一个 HTTP(S) 客户端。">HTTP GET using plain sockets</a></span><span class="code-sample-description">使用普通 BSD 套接字实现一个 HTTP(S) 客户端。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/sockets/big_http_download/README.html#sockets-big-http-download" title="使用 BSD 套接字从 Web 服务器下载大文件。">Large HTTP download</a></span><span class="code-sample-description">使用 BSD 套接字从 Web 服务器下载大文件。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/mdns_responder/README.html#mdns-responder" title="监听并响应 mDNS 查询。">mDNS responder</a></span><span class="code-sample-description">监听并响应 mDNS 查询。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/cloud/mqtt_azure/README.html#mqtt-azure" title="连接 Azure IoT Hub 并使用 MQTT 发布消息。">Microsoft Azure IoT Hub MQTT</a></span><span class="code-sample-description">连接 Azure IoT Hub 并使用 MQTT 发布消息。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/subsys/modbus/tcp_server/README.html#modbus-tcp-server" title="实现一个 Modbus TCP 服务器，提供用于控制 LED 的 Modbus 命令。">Modbus TCP server</a></span><span class="code-sample-description">实现一个 Modbus TCP 服务器，提供用于控制 LED 的 Modbus 命令。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/subsys/modbus/tcp_gateway/README.html#modbus-gateway" title="实现以太网 TCP-IP 网络与 Modbus 串行线路之间的网关。">Modbus TCP-to-serial gateway</a></span><span class="code-sample-description">实现以太网 TCP-IP 网络与 Modbus 串行线路之间的网关。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/sockets/net_mgmt/README.html#sockets-net-mgmt" title="使用网络管理套接字监听网络管理事件。">Network management socket</a></span><span class="code-sample-description">使用网络管理套接字监听网络管理事件。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/sockets/packet/README.html#packet-socket" title="在以太网上使用原始数据包套接字。">Packet socket</a></span><span class="code-sample-description">在以太网上使用原始数据包套接字。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/sockets/sntp_client/README.html#sntp-client" title="使用 SNTP 从主机获取当前时间。">SNTP client</a></span><span class="code-sample-description">使用 SNTP 从主机获取当前时间。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/sockets/sntp_server/README.html#sntp-server" title="为网络上的 SNTP 客户端提供当前时间。">SNTP server</a></span><span class="code-sample-description">为网络上的 SNTP 客户端提供当前时间。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/sockets/can/README.html#socket-can" title="使用 BSD 套接字 API 收发原始 CAN 帧。">SocketCAN</a></span><span class="code-sample-description">使用 BSD 套接字 API 收发原始 CAN 帧。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/sockets/socketpair/README.html#sockets-socketpair" title="使用套接字对实现线程间通信。">Socketpair</a></span><span class="code-sample-description">使用套接字对实现线程间通信。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/cloud/tagoio_http_post/README.html#tagoio-http-post" title="使用 HTTP 向 TagoIO IoT 云平台发送随机温度值。">TagoIO HTTP Post</a></span><span class="code-sample-description">使用 HTTP 向 TagoIO IoT 云平台发送随机温度值。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/sockets/txtime/README.html#so_txtime" title="使用 SO_TXTIME 套接字选项控制数据包的发送时间。">UDP sender using SO_TXTIME</a></span><span class="code-sample-description">使用 SO_TXTIME 套接字选项控制数据包的发送时间。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/subsys/video/tcpserversink/README.html#video-tcpserversink" title="捕获视频帧，并通过网络将其发送给 TCP 客户端。">Video TCP server sink</a></span><span class="code-sample-description">捕获视频帧，并通过网络将其发送给 TCP 客户端。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/sockets/websocket_client/README.html#sockets-websocket-client" title="实现一个连接到 Websocket 服务器的 Websocket 客户端。">WebSocket Client</a></span><span class="code-sample-description">实现一个连接到 Websocket 服务器的 Websocket 客户端。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/wireguard/README.html#wireguard-vpn" title="Implement a echo-server application that sends received packets back to the sender over Wireguard VPN connection.">Wireguard VPN</a></span><span class="code-sample-description">Implement a echo-server application that sends received packets back to
+the sender over Wireguard VPN connection.</span></li>
+</ul>
+</div>
+</section>
+<section id="tls-credentials">
+<h3><a class="toc-backref" href="#id16" role="doc-backlink">TLS 凭据</a><a class="headerlink" href="#tls-credentials" title="链接到此标题。"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">tls_credentials</span></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/cloud/aws_iot_mqtt/README.html#aws-iot-mqtt" title="连接 AWS IoT Core 并使用 MQTT 发布消息。">AWS IoT Core MQTT</a></span><span class="code-sample-description">连接 AWS IoT Core 并使用 MQTT 发布消息。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/sockets/dumb_http_server_mt/README.html#socket-dumb-http-server-mt" title="使用 BSD 套接字实现一个支持并发连接的简单 HTTP 服务器。">Dumb HTTP server (multi-threaded)</a></span><span class="code-sample-description">使用 BSD 套接字实现一个支持并发连接的简单 HTTP 服务器。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/sockets/echo_client/README.html#sockets-echo-client" title="实现一个发送 IP 数据包、等待数据被发回并进行验证的客户端。">Echo client (advanced)</a></span><span class="code-sample-description">实现一个发送 IP 数据包、等待数据被发回并进行验证的客户端。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/sockets/echo_server/README.html#sockets-echo-server" title="实现一个将收到的数据包发回给发送方的 UDP/TCP 服务器。">Echo server (advanced)</a></span><span class="code-sample-description">实现一个将收到的数据包发回给发送方的 UDP/TCP 服务器。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/sockets/http_client/README.html#sockets-http-client" title="实现一个发出多种 HTTP 请求的 HTTP(S) 客户端。">HTTP Client</a></span><span class="code-sample-description">实现一个发出多种 HTTP 请求的 HTTP(S) 客户端。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/sockets/http_get/README.html#sockets-http-get" title="使用普通 BSD 套接字实现一个 HTTP(S) 客户端。">HTTP GET using plain sockets</a></span><span class="code-sample-description">使用普通 BSD 套接字实现一个 HTTP(S) 客户端。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/sockets/http_server/README.html#sockets-http-server" title="实现一个演示多种资源类型的 HTTP(S) 服务器。">HTTP Server</a></span><span class="code-sample-description">实现一个演示多种资源类型的 HTTP(S) 服务器。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/sockets/big_http_download/README.html#sockets-big-http-download" title="使用 BSD 套接字从 Web 服务器下载大文件。">Large HTTP download</a></span><span class="code-sample-description">使用 BSD 套接字从 Web 服务器下载大文件。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/cloud/mqtt_azure/README.html#mqtt-azure" title="连接 Azure IoT Hub 并使用 MQTT 发布消息。">Microsoft Azure IoT Hub MQTT</a></span><span class="code-sample-description">连接 Azure IoT Hub 并使用 MQTT 发布消息。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/prometheus/README.html#prometheus" title="实现一个演示多种指标类型的 Prometheus 指标服务器。">Prometheus Sample</a></span><span class="code-sample-description">实现一个演示多种指标类型的 Prometheus 指标服务器。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/cloud/tagoio_http_post/README.html#tagoio-http-post" title="使用 HTTP 向 TagoIO IoT 云平台发送随机温度值。">TagoIO HTTP Post</a></span><span class="code-sample-description">使用 HTTP 向 TagoIO IoT 云平台发送随机温度值。</span></li>
+</ul>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 6月 01, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

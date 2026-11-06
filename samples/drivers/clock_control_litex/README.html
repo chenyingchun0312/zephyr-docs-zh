@@ -1,0 +1,539 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="使用 LiteX 时钟控制驱动生成多个时钟信号。" name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LiteX clock control driver &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/samples/drivers/clock_control_litex/README.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" />
+    <link rel="next" title="Microchip XEC（MEC15xx/MEC172x）时钟控制驱动示例应用程序" href="../clock_control_xec/README.html" />
+    <link rel="prev" title="Charger" href="../charger/README.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">示例与演示</a><ul class="current">
+<li class="toctree-l2"><a class="category-link reference internal" href="../../application_development/application_development.html">Application Development</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../arch/index.html">Architecture-dependent Samples</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../basic/basic.html">Basic</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../bluetooth/bluetooth.html">Bluetooth</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../boards/boards.html">Boards</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../cpp/cpp.html">C++</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../data_structures/data_structures.html">Data Structures</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../drivers.html">驱动</a><ul class="current">
+<li class="toctree-l3"><a class="category-link reference internal" href="../adc/index.html">ADC</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../audio/index.html">Audio</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../auxdisplay/README.html">Auxiliary display</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../auxdisplay_digits/README.html">Auxiliary digits display</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../biometrics/index.html">Biometrics</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../buzzer/index.html">Buzzer</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../can/index.html">Controller Area Network (CAN)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../charger/README.html">Charger</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">LiteX clock control driver</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#introduction">简介</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#requirements">要求</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#configuration">配置</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#driver-usage">驱动用法</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sample-usage">使用示例</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#building">构建</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#sample-output">示例输出</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#references">参考资料</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#see-also">See also</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../clock_control_xec/README.html">Microchip XEC（MEC15xx/MEC172x）时钟控制驱动示例应用程序</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../clock_monitor/index.html">时钟监视器</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../counter/index.html">计数器</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../crc/README.html">Cyclic Redundancy Check Drivers (CRC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../crypto/README.html">Crypto</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dac/README.html">Digital-to-Analog Converter (DAC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../dali/README.html">Digital Addressable Lighting Interface (DALI)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../display/README.html">Display</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../eeprom/README.html">EEPROM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../espi/README.html">Enhanced Serial Peripheral Interface (eSPI)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../ethernet/index.html">以太网</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../firmware/index.html">固件示例</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../flash_shell/README.html">Flash shell</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../fpga/index.html">FPGA</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../fuel_gauge/README.html">Fuel Gauge</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gnss/README.html">GNSS</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../gpio/index.html">通用 I/O（GPIO）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../haptics/README.html">触觉反馈</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../hash_bench/README.html">Hash HW benchmark</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../ht16k33/README.html">HT16K33 LED driver with keyscan</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../hwspinlock/README.html">HWSPINLOCK</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../i2c/README.html">Inter-Integrated Circuit（I2C）总线</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../i2s/README.html">I2S</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../interrupt_controller/index.html">中断控制器</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../ipm/README.html">处理器间邮箱（IPM）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../jesd216/README.html">JESD216 flash</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lcd_hd44780/README.html">HD44780 LCD controller</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../led/index.html">发光二极管（LED）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lin/index.html">局部互联网络（LIN）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../lora/index.html">LoRa</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../mbox/README.html">MBOX</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../mbox_data/README.html">MBOX Data</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../memc/README.html">Memory controller (MEMC) driver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../mfd_charger/README.html">Multi-Function Device (MFD) with Charger, Fuel Gauge, and Regulators</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../misc/README.html">其他</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../modem/index.html">调制解调器</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../mspi/index.html">多位 SPI 总线（MSPI）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../opamp/index.html">OPAMP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../otp/index.html">一次性可编程（OTP）存储器</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../peci/README.html">PECI interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../ps2/README.html">PS/2 interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../psi5/README.html">PSI5 interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../pulse_io/index.html">脉冲 IO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../pwm/index.html">PWM</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../rtc/README.html">Real-Time Clock (RTC)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sent/README.html">SENT interface</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../smbus/README.html">SMBus shell</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../soc_flash_nrf/README.html">nRF SoC Internal Storage</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../spi/index.html">SPI</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../spi_bitbang/README.html">SPI bitbang</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../spi_flash/README.html">JEDEC SPI-NOR flash</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../spi_flash_at45/README.html">AT45 DataFlash driver</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../stepper/index.html">步进电机</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../timeaware_gpio/README.html">Time-aware GPIO</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../uart/README.html">通用异步收发器（UART）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../virtualization/index.html">虚拟化</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../w1/README.html">1-Wire</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../watchdog/README.html">Watchdog</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../hello_world/README.html">Hello World</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../kernel/index.html">内核与调度器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules/index.html">外部模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../net/net.html">网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../philosophers/README.html">Dining Philosophers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../psa/index.html">PSA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../regulator/index.html">稳压器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sensor/sensor.html"><span class="xref std std-ref">传感器</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../shields/shields.html">扩展板（shield）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../subsys/subsys.html">子系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../synchronization/README.html">Basic Synchronization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sysbuild/sysbuild.html">Sysbuild</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tfm_integration/tfm_integration.html">TF-M 集成</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../userspace/index.html">用户空间</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sample_definition_and_criteria.html">示例的定义与标准</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">示例与演示</a> &raquo;</li>
+  
+     <li><a href="../drivers.html">驱动</a> &raquo;</li>
+  
+  <li>LiteX clock control driver</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="clock-control-litex">
+<h1>LiteX clock control driver<a class="headerlink" href="#clock-control-litex" title="链接到此标题。"></a></h1>
+<p>
+                <a href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0//samples\drivers\clock_control_litex\README.rst/.." class="btn btn-info fa fa-github"
+                    target="_blank" style="text-align: center;">
+                    Browse source code on GitHub
+                </a>
+                </p>
+<section id="introduction">
+<h2>简介<a class="headerlink" href="#introduction" title="链接到此标题。"></a></h2>
+<p>本示例概述 LiteX 时钟控制驱动的功能。该驱动使用混合模式时钟管理器（MMCM）模块生成最多 7 个具有指定相位、频率和占空比的时钟。</p>
+</section>
+<section id="requirements">
+<h2>要求<a class="headerlink" href="#requirements" title="链接到此标题。"></a></h2>
+<ul class="simple">
+<li><p>支持 LiteX 且带有 MMCM 模块的 FPGA 平台（例如 Digilent Arty A7 开发板）</p></li>
+<li><p>LiteX 中带有 VexRiscv 软核 CPU 和 Xilinx 7 系列 MMCM 接口（S7MMCM 模块）的 SoC 配置</p></li>
+<li><p>可选：将时钟输出信号引到输出引脚以便测试</p></li>
+</ul>
+</section>
+<section id="configuration">
+<h2>配置<a class="headerlink" href="#configuration" title="链接到此标题。"></a></h2>
+<p>驱动的基本配置（包括时钟输出的默认设置）保存在设备树的时钟控制节点中。</p>
+<div class="highlight-dts notranslate"><div class="highlight"><pre><span></span><span class="nl">clk0</span><span class="p">:</span><span class="w"> </span><span class="nf">clock-controller</span><span class="o">@</span><span class="mi">0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">	</span><span class="o">#</span><span class="n">clock-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">	</span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">	</span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"litex,clkout"</span><span class="p">;</span>
+<span class="w">	</span><span class="n">clock-output-names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"CLK_0"</span><span class="p">;</span>
+<span class="w">	</span><span class="n">litex</span><span class="p">,</span><span class="n">clock-frequency</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">11289600</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">	</span><span class="n">litex</span><span class="p">,</span><span class="n">clock-phase</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">	</span><span class="n">litex</span><span class="p">,</span><span class="n">clock-duty-num</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">	</span><span class="n">litex</span><span class="p">,</span><span class="n">clock-duty-den</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">	</span><span class="n">litex</span><span class="p">,</span><span class="n">clock-margin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">	</span><span class="n">litex</span><span class="p">,</span><span class="n">clock-margin-exp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">	</span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"okay"</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="highlight-dts notranslate"><div class="highlight"><pre><span></span><span class="nl">clk1</span><span class="p">:</span><span class="w"> </span><span class="nf">clock-controller</span><span class="o">@</span><span class="mi">1</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">	</span><span class="o">#</span><span class="n">clock-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">	</span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">	</span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"litex,clkout"</span><span class="p">;</span>
+<span class="w">	</span><span class="n">clock-output-names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"CLK_1"</span><span class="p">;</span>
+<span class="w">	</span><span class="n">litex</span><span class="p">,</span><span class="n">clock-frequency</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">22579200</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">	</span><span class="n">litex</span><span class="p">,</span><span class="n">clock-phase</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">	</span><span class="n">litex</span><span class="p">,</span><span class="n">clock-duty-num</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">	</span><span class="n">litex</span><span class="p">,</span><span class="n">clock-duty-den</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">	</span><span class="n">litex</span><span class="p">,</span><span class="n">clock-margin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">	</span><span class="n">litex</span><span class="p">,</span><span class="n">clock-margin-exp</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">	</span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"okay"</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="highlight-dts notranslate"><div class="highlight"><pre><span></span><span class="nl">clock0</span><span class="p">:</span><span class="w"> </span><span class="nf">clock</span><span class="o">@</span><span class="mi">e0004800</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">	</span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"litex,clk"</span><span class="p">;</span>
+<span class="w">	</span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0xe0004800</span><span class="w"> </span><span class="mh">0x4</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">	      </span><span class="o">&lt;</span><span class="mh">0xe0004804</span><span class="w"> </span><span class="mh">0x4</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">	      </span><span class="o">&lt;</span><span class="mh">0xe0004808</span><span class="w"> </span><span class="mh">0x4</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">	      </span><span class="o">&lt;</span><span class="mh">0xe000480c</span><span class="w"> </span><span class="mh">0x4</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">	      </span><span class="o">&lt;</span><span class="mh">0xe0004810</span><span class="w"> </span><span class="mh">0x4</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">	      </span><span class="o">&lt;</span><span class="mh">0xe0004814</span><span class="w"> </span><span class="mh">0x4</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">	      </span><span class="o">&lt;</span><span class="mh">0xe0004818</span><span class="w"> </span><span class="mh">0x4</span><span class="o">&gt;</span><span class="p">,</span>
+<span class="w">	      </span><span class="o">&lt;</span><span class="mh">0xe000481c</span><span class="w"> </span><span class="mh">0x4</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">	</span><span class="kr">reg</span><span class="o">-</span><span class="n">names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"drp_reset"</span><span class="p">,</span>
+<span class="w">		    </span><span class="s">"drp_locked"</span><span class="p">,</span>
+<span class="w">		    </span><span class="s">"drp_read"</span><span class="p">,</span>
+<span class="w">		    </span><span class="s">"drp_write"</span><span class="p">,</span>
+<span class="w">		    </span><span class="s">"drp_drdy"</span><span class="p">,</span>
+<span class="w">		    </span><span class="s">"drp_adr"</span><span class="p">,</span>
+<span class="w">		    </span><span class="s">"drp_dat_w"</span><span class="p">,</span>
+<span class="w">		    </span><span class="s">"drp_dat_r"</span><span class="p">;</span>
+<span class="w">	</span><span class="o">#</span><span class="n">clock-cells</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">	</span><span class="n">clocks</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">clk0</span><span class="w"> </span><span class="mi">0</span><span class="o">&gt;</span><span class="p">,</span><span class="w"> </span><span class="o">&lt;&amp;</span><span class="na">clk1</span><span class="w"> </span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">	</span><span class="n">clock-output-names</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"CLK_0"</span><span class="p">,</span><span class="w"> </span><span class="s">"CLK_1"</span><span class="p">;</span>
+<span class="w">	</span><span class="n">litex</span><span class="p">,</span><span class="n">lock-timeout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">10</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">	</span><span class="n">litex</span><span class="p">,</span><span class="n">drdy-timeout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">10</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">	</span><span class="n">litex</span><span class="p">,</span><span class="n">divclk-divide-min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">	</span><span class="n">litex</span><span class="p">,</span><span class="n">divclk-divide-max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">107</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">	</span><span class="n">litex</span><span class="p">,</span><span class="n">clkfbout-mult-min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">2</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">	</span><span class="n">litex</span><span class="p">,</span><span class="n">clkfbout-mult-max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">65</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">	</span><span class="n">litex</span><span class="p">,</span><span class="n">vco-freq-min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">600000000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">	</span><span class="n">litex</span><span class="p">,</span><span class="n">vco-freq-max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1200000000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">	</span><span class="n">litex</span><span class="p">,</span><span class="n">clkout-divide-min</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">1</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">	</span><span class="n">litex</span><span class="p">,</span><span class="n">clkout-divide-max</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">126</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">	</span><span class="n">litex</span><span class="p">,</span><span class="n">vco-margin</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mi">0</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">	</span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"okay"</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>此配置定义了 2 个时钟输出：<code class="docutils literal notranslate"><span class="pre">clk0</span></code> 和 <code class="docutils literal notranslate"><span class="pre">clk1</span></code>，默认频率为 100MHz，相位偏移 0 度，占空比 50%。定义 FPGA 特定配置的值（从 <code class="docutils literal notranslate"><span class="pre">litex,divclk-divide-min</span></code> 到 <code class="docutils literal notranslate"><span class="pre">litex,vco-margin</span></code> 的参数）时需要特别小心。</p>
+<p><strong>重要提示：</strong> <code class="docutils literal notranslate"><span class="pre">clk0</span></code> 和 <code class="docutils literal notranslate"><span class="pre">clk1</span></code> 节点中的 <code class="docutils literal notranslate"><span class="pre">reg</span></code> 属性表示时钟输出编号（<code class="docutils literal notranslate"><span class="pre">clkout_nr</span></code>）</p>
+</section>
+<section id="driver-usage">
+<h2>驱动用法<a class="headerlink" href="#driver-usage" title="链接到此标题。"></a></h2>
+<p>驱动通过 <a class="reference internal" href="../../../hardware/peripherals/clock_control.html#clock-control-api"><span class="std std-ref">时钟控制 API</span></a> 函数 <code class="docutils literal notranslate"><span class="pre">clock_control_on()</span></code> 和 LiteX 驱动专用的结构体（<code class="xref c c-struct docutils literal notranslate"><span class="pre">litex_clk_setup</span></code>）进行调用。</p>
+<div class="line-block">
+<div class="line">要修改时钟参数，需要将指向 <code class="xref c c-struct docutils literal notranslate"><span class="pre">litex_clk_setup</span></code> 结构体的指针强制转换为 <code class="xref c c-type docutils literal notranslate"><span class="pre">clock_control_subsys_t</span></code>，并将其用于 <code class="xref c c-func docutils literal notranslate"><span class="pre">clock_control_on()</span></code>。</div>
+<div class="line">这段代码会尝试将 <code class="docutils literal notranslate"><span class="pre">clk0</span></code> 设置为频率 50MHz、相位偏移 90 度、占空比 75%。</div>
+</div>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">device</span><span class="w"> </span><span class="o">*</span><span class="n">dev</span><span class="p">;</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">litex_clk_setup</span><span class="w"> </span><span class="n">setup</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">clkout_nr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">rate</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">50000000</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">duty</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">75</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">phase</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">90</span>
+<span class="p">};</span>
+<span class="n">dev</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DEVICE_DT_GET</span><span class="p">(</span><span class="n">MMCM</span><span class="p">);</span>
+<span class="n">clock_control_subsys_t</span><span class="w"> </span><span class="n">sub_system</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">clock_control_subsys_t</span><span class="p">)</span><span class="o">&amp;</span><span class="n">setup</span><span class="p">;</span>
+<span class="k">if</span><span class="w"> </span><span class="p">((</span><span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">clock_control_on</span><span class="p">(</span><span class="n">dev</span><span class="p">,</span><span class="w"> </span><span class="n">sub_system</span><span class="p">))</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">LOG_ERR</span><span class="p">(</span><span class="s">"Set CLKOUT%d param error!"</span><span class="p">,</span><span class="w"> </span><span class="n">setup</span><span class="p">.</span><span class="n">clkout_nr</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>时钟输出状态（频率、占空比和相位偏移）可以通过函数 <code class="docutils literal notranslate"><span class="pre">clock_control_get_status()</span></code> 获取，若只需查询时钟输出频率，可以使用 <code class="docutils literal notranslate"><span class="pre">clock_control_get_rate()</span></code></p>
+<p>两个获取函数的基本用法都与 <code class="docutils literal notranslate"><span class="pre">clock_control_on()</span></code> 类似。使用结构体 <code class="docutils literal notranslate"><span class="pre">litex_clk_setup</span></code> 设置要获取数据的时钟输出的 <code class="docutils literal notranslate"><span class="pre">clkout_nr</span></code>。</p>
+</section>
+<section id="sample-usage">
+<h2>使用示例<a class="headerlink" href="#sample-usage" title="链接到此标题。"></a></h2>
+<p>本示例提供了一种检查各种时钟输出设置的简单方法。用户可以从 4 种场景中选择一种：</p>
+<ul class="simple">
+<li><p>频率范围，</p></li>
+<li><p>占空比范围，</p></li>
+<li><p>相位范围，</p></li>
+<li><p>同时设置频率、占空比和相位，然后检查时钟状态和频率，</p></li>
+</ul>
+<p>通过将 <code class="docutils literal notranslate"><span class="pre">LITEX_CLK_TEST</span></code> 定义为以下值之一来选择场景：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">LITEX_TEST_FREQUENCY</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LITEX_TEST_DUTY</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LITEX_TEST_PHASE</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">LITEX_TEST_SINGLE</span></code></p></li>
+</ul>
+<p>代码在 <code class="docutils literal notranslate"><span class="pre">clkout_nr</span></code> 由 <code class="docutils literal notranslate"><span class="pre">LITEX_CLK_TEST_CLK1</span></code> 和 <code class="docutils literal notranslate"><span class="pre">LITEX_CLK_TEST_CLK2</span></code> 定义的 2 个时钟输出上运行。每种场景的测试由各自的宏定义控制。</p>
+</section>
+<section id="building">
+<h2>构建<a class="headerlink" href="#building" title="链接到此标题。"></a></h2>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west build -b litex_vexriscv zephyr/samples/drivers/clock_control
+</pre></div>
+</div>
+<p>驱动会向日志打印大量有用的调试信息。强烈建议启用日志及日志消息的同步处理，并将日志级别设置为 <code class="docutils literal notranslate"><span class="pre">Info</span></code>。</p>
+</section>
+<section id="sample-output">
+<h2>示例输出<a class="headerlink" href="#sample-output" title="链接到此标题。"></a></h2>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[00:00:00.200,000] &lt;inf&gt; CLK_CTRL_LITEX: CLKOUT0: set rate: 100000000 HZ
+[00:00:00.240,000] &lt;inf&gt; CLK_CTRL_LITEX: CLKOUT1: updated rate: 100000000 to 100000000 HZ
+[00:00:00.280,000] &lt;inf&gt; CLK_CTRL_LITEX: CLKOUT0: set duty: 50%
+[00:00:00.320,000] &lt;inf&gt; CLK_CTRL_LITEX: CLKOUT0: set phase: 0 deg
+[00:00:00.360,000] &lt;inf&gt; CLK_CTRL_LITEX: CLKOUT1: set rate: 100000000 HZ
+[00:00:00.400,000] &lt;inf&gt; CLK_CTRL_LITEX: CLKOUT1: set duty: 50%
+[00:00:00.440,000] &lt;inf&gt; CLK_CTRL_LITEX: CLKOUT1: set phase: 0 deg
+[00:00:00.440,000] &lt;inf&gt; CLK_CTRL_LITEX: LiteX Clock Control driver initialized
+*** Booting Zephyr OS build zephyr-v2.2.0-2810-g1ca5dda196c3  ***
+Clock Control Example! riscv32
+device name: clock0
+clock control device is 0x40013460, name is clock0
+Clock test
+Single test
+[00:00:00.510,000] &lt;inf&gt; CLK_CTRL_LITEX: CLKOUT0: set rate: 15000000 HZ
+[00:00:00.550,000] &lt;inf&gt; CLK_CTRL_LITEX: CLKOUT0: set phase: 90 deg
+[00:00:00.590,000] &lt;inf&gt; CLK_CTRL_LITEX: CLKOUT0: set duty: 25%
+[00:00:00.630,000] &lt;inf&gt; CLK_CTRL_LITEX: CLKOUT1: set rate: 15000000 HZ
+[00:00:00.670,000] &lt;inf&gt; CLK_CTRL_LITEX: CLKOUT1: set duty: 75%
+Getters test
+CLKOUT0: get_status: rate:15000000 phase:90 duty:25
+CLKOUT0: get_rate:15000000
+CLKOUT1: get_status: rate:15000000 phase:0 duty:75
+CLKOUT1: get_rate:15000000
+Clock test done returning: 0
+</pre></div>
+</div>
+</section>
+<section id="references">
+<h2>参考资料<a class="headerlink" href="#references" title="链接到此标题。"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../../boards/enjoydigital/litex_vexriscv/doc/index.html#litex_vexriscv">LiteX VexRiscv</a></p></li>
+</ul>
+</section>
+<section id="see-also">
+<h2>See also<a class="headerlink" href="#see-also" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">clock_control_interface</span></dt>
+</dl>
+
+</section>
+</section>
+<script type="application/ld+json">
+                {"@context": "http://schema.org", "@type": "SoftwareSourceCode", "name": "LiteX clock control driver", "description": "\u4f7f\u7528 LiteX \u65f6\u949f\u63a7\u5236\u9a71\u52a8\u751f\u6210\u591a\u4e2a\u65f6\u949f\u4fe1\u53f7\u3002", "codeSampleType": "full", "codeRepository": "https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0//samples\\drivers\\clock_control_litex\\README.rst"}
+                </script>
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 10月 21, 2025.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

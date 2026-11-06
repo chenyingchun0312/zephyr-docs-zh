@@ -1,0 +1,504 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>数据包管理 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/connectivity/networking/api/net_pkt.html" />
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../../search.html" />
+    <link rel="next" title="网络技术" href="net_tech.html" />
+    <link rel="prev" title="网络数据包管理" href="buf_mgmt.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html">
+            
+              <img src="../../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">服务</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">连接</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">网络</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../overview.html">概述</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../net-stack-architecture.html">网络协议栈架构</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../net_config_guide.html">网络配置指南</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../networking_with_host.html">与主机系统联网</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../network_monitoring.html">监视网络流量</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../network_tracing.html">网络跟踪</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../conformance/index.html">使用 TTCN-3 进行协议一致性测试</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="index.html">网络 API</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="apis.html">网络 API</a></li>
+<li class="toctree-l5 current"><a class="reference internal" href="buf_mgmt.html">网络数据包管理</a><ul class="current">
+<li class="toctree-l6 current"><a class="current reference internal" href="#">数据包管理</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="net_tech.html">网络技术</a></li>
+<li class="toctree-l5"><a class="reference internal" href="protocols.html">协议</a></li>
+<li class="toctree-l5"><a class="reference internal" href="quic.html">QUIC 传输接口</a></li>
+<li class="toctree-l5"><a class="reference internal" href="system_mgmt.html">网络系统管理</a></li>
+<li class="toctree-l5"><a class="reference internal" href="tsn.html">时间敏感网络</a></li>
+<li class="toctree-l5"><a class="reference internal" href="zperf.html">zperf：网络流量生成器</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../conn_mgr/index.html">连接管理器</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../dsa.html">分布式交换架构（DSA）</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../bluetooth/index.html">Bluetooth</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../usb/index.html">USB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../canbus/index.html">控制器局域网（CAN）总线协议</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lora_lorawan/index.html">LoRa 和 LoRaWAN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modbus/index.html">Modbus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modem/index.html">调制解调器模块</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../../index.html">连接</a> &raquo;</li>
+  
+     <li><a href="../index.html">网络</a> &raquo;</li>
+  
+     <li><a href="index.html">网络 API</a> &raquo;</li>
+  
+     <li><a href="buf_mgmt.html">网络数据包管理</a> &raquo;</li>
+  
+  <li>数据包管理</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="packet-management">
+<span id="net-pkt-interface"></span><h1>数据包管理<a class="headerlink" href="#packet-management" title="链接到此标题。"></a></h1>
+<nav class="contents local" id="id1">
+<ul class="simple">
+<li><p><a class="reference internal" href="#overview" id="id2">概述</a></p>
+<ul>
+<li><p><a class="reference internal" href="#architectural-notes" id="id3">架构说明</a></p></li>
+<li><p><a class="reference internal" href="#concurrency-and-thread-safety" id="id4">并发与线程安全</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#memory-management" id="id5">内存管理</a></p>
+<ul>
+<li><p><a class="reference internal" href="#allocation" id="id6">分配</a></p></li>
+<li><p><a class="reference internal" href="#buffer-allocation" id="id7">缓冲区分配</a></p></li>
+<li><p><a class="reference internal" href="#deallocation" id="id8">释放</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#operations" id="id9">操作</a></p>
+<ul>
+<li><p><a class="reference internal" href="#read-and-write-access" id="id10">读写访问</a></p></li>
+<li><p><a class="reference internal" href="#data-access" id="id11">数据访问</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#api-reference" id="id12">API 参考</a></p></li>
+</ul>
+</nav>
+<section id="overview">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">概述</a><a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>网络数据包是网络协议栈处理的主要数据。这类数据通过 net_pkt 结构体表示，该结构体提供了保存数据包、写入和读取数据包的手段，并包含核心层保存重要信息所需的元数据。本文档中将此类对象称为 net_pkt。</p>
+<p>该数据结构及其相关的全部 API 定义在 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/net/net_pkt.h">include/zephyr/net/net_pkt.h</a> 中。</p>
+<section id="architectural-notes">
+<h3><a class="toc-backref" href="#id3" role="doc-backlink">架构说明</a><a class="headerlink" href="#architectural-notes" title="链接到此标题。"></a></h3>
+<p>协议栈中有两条网络数据包流：用于发送路径的 <strong>TX</strong> 和用于接收路径的 <strong>RX</strong>。在这两条路径中，每个 net_pkt 都是从头到尾写入和读取的，更确切地说，是从报头到负载。</p>
+</section>
+<section id="concurrency-and-thread-safety">
+<h3><a class="toc-backref" href="#id4" role="doc-backlink">并发与线程安全</a><a class="headerlink" href="#concurrency-and-thread-safety" title="链接到此标题。"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">net_pkt</span></code> 结构体及其相关 API <strong>不是线程安全的</strong>。网络协议栈依赖严格的 <strong>独占所有权</strong> 模型。网络数据包被创建或接收后，在任一时刻都只归一个线程或执行上下文所有。</p>
+<p>并发主要通过以下几种模式进行管理：</p>
+<ul class="simple">
+<li><p><strong>通过 FIFO 转移所有权：</strong> <code class="docutils literal notranslate"><span class="pre">net_pkt</span></code> 最常见的生命周期是在相互隔离的执行上下文之间传递（例如从 RX 驱动线程传到 IP 协议栈）。数据包一旦入队，发送方就放弃其引用并失去访问权。</p></li>
+<li><p><strong>浅克隆（``net_pkt_shallow_clone``）：</strong> 如果某个数据包必须由一层保留（例如 TCP 为可能的重传而保留），同时又要由另一层处理，则使用 <code class="docutils literal notranslate"><span class="pre">net_pkt_shallow_clone()</span></code> 创建一个新的包装对象，指向相同的底层只读数据（数据缓冲区本身采用线程安全的引用计数）。</p></li>
+<li><p><strong>粗粒度协议锁：</strong> 当数据包被有意保存在内存队列中时，由更高层的子系统锁（例如连接互斥量）加以保护。</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">net_pkt</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">atomic_ref</span></code> 字段用于内存生命周期管理（防止释放后使用的情况），并不是用于并发修改的锁。</p>
+</section>
+</section>
+<section id="memory-management">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">内存管理</a><a class="headerlink" href="#memory-management" title="链接到此标题。"></a></h2>
+<section id="allocation">
+<h3><a class="toc-backref" href="#id6" role="doc-backlink">分配</a><a class="headerlink" href="#allocation" title="链接到此标题。"></a></h3>
+<p>所有 net_pkt 对象都来自一个预定义的 struct net_pkt 池。此类池通过以下方式定义</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">NET_PKT_SLAB_DEFINE</span><span class="p">(</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">count</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>不过请注意，很少需要直接使用它，因为核心层已经提供了两个池，一个用于 TX 路径，一个用于 RX 路径。</p>
+<p>可以通过以下方式分配一个原始 net_pkt：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">pkt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">net_pkt_alloc</span><span class="p">(</span><span class="n">timeout</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>然而，原始 net_pkt 本质上在没有缓冲区的情况下毫无用处，还需要各种元数据信息才有意义。它至少需要知道将通过哪个网络接口发送，或是从哪个网络接口接收的。由于这是一个非常常见的操作，因此提供了一个辅助函数：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">pkt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">net_pkt_alloc_on_iface</span><span class="p">(</span><span class="n">iface</span><span class="p">,</span><span class="w"> </span><span class="n">timeout</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>还有一个更完整的分配函数，可以一次性分配 net_pkt 及其缓冲区：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">pkt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">net_pkt_alloc_with_buffer</span><span class="p">(</span><span class="n">iface</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="p">,</span><span class="w"> </span><span class="n">family</span><span class="p">,</span><span class="w"> </span><span class="n">proto</span><span class="p">,</span><span class="w"> </span><span class="n">timeout</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>缓冲区的分配方式见下文。</p>
+</section>
+<section id="buffer-allocation">
+<h3><a class="toc-backref" href="#id7" role="doc-backlink">缓冲区分配</a><a class="headerlink" href="#buffer-allocation" title="链接到此标题。"></a></h3>
+<p>net_pkt 对象不定义自己的缓冲区，而是使用一个现有对象：<code class="xref c c-struct docutils literal notranslate"><span class="pre">net_buf</span></code>。（更多信息请参见 <a class="reference internal" href="../../../net_buf/index.html#net-buf-interface"><span class="std std-ref">网络缓冲区</span></a>。）不过，它在很大程度上隐藏了这种缓冲区的使用，因为 net_pkt 为缓冲区分配（以及后文将看到的缓冲区操作）引入了网络感知能力。</p>
+<p>要分配缓冲区，net_pkt 至少需要设置好网络接口。在分配缓冲区时即使数据包的地址族未知，这也能工作。此时可以这样做：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">net_pkt_alloc_buffer</span><span class="p">(</span><span class="n">pkt</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="p">,</span><span class="w"> </span><span class="n">proto</span><span class="p">,</span><span class="w"> </span><span class="n">timeout</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>如果协议未知，proto 可以为 0（不存在 IPPROTO_UNSPEC）。</p>
+<p>如前所述，可以通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">net_pkt_alloc_with_buffer()</span></code> 一次性分配 net_pkt 及其缓冲区。实际上这是使用最广泛的分配函数。</p>
+<p>缓冲区分配会根据数据包的网络接口、地址族和协议来判断能否分配所请求的大小。具体来说，分配器会通过网络接口得知 MTU，再根据地址族和协议确定报头空间（如果只指定了这两项）。如果总大小能容纳在 MTU 之内，则分配的空间为请求的大小，可能再加上报头空间。如果 MTU 空间不足，请求的大小会被缩减，使可能的报头空间与新的大小一起能容纳在 MTU 之内。</p>
+<p>例如，在 MTU 为 1500 字节的以太网网络接口上：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">pkt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">net_pkt_alloc_with_buffer</span><span class="p">(</span><span class="n">iface</span><span class="p">,</span><span class="w"> </span><span class="mi">800</span><span class="p">,</span><span class="w"> </span><span class="n">NET_AF_INET4</span><span class="p">,</span><span class="w"> </span><span class="n">IPPROTO_UDP</span><span class="p">,</span><span class="w"> </span><span class="n">K_FOREVER</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>将为新的 net_pkt 成功分配 800 + 20 + 8 字节的缓冲区，其中：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">pkt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">net_pkt_alloc_with_buffer</span><span class="p">(</span><span class="n">iface</span><span class="p">,</span><span class="w"> </span><span class="mi">1600</span><span class="p">,</span><span class="w"> </span><span class="n">NET_AF_INET4</span><span class="p">,</span><span class="w"> </span><span class="n">IPPROTO_UDP</span><span class="p">,</span><span class="w"> </span><span class="n">K_FOREVER</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>将成功分配 1500 字节，其中 20 + 8 字节（IPv4 + UDP 报头）不会用于负载。</p>
+<p>在接收端，当地址族和协议未知时：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">pkt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">net_pkt_rx_alloc_with_buffer</span><span class="p">(</span><span class="n">iface</span><span class="p">,</span><span class="w"> </span><span class="mi">800</span><span class="p">,</span><span class="w"> </span><span class="n">AF_UNSPEC</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">K_FOREVER</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>将分配 800 字节，且没有额外的报头空间。但如果是：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">pkt</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">net_pkt_rx_alloc_with_buffer</span><span class="p">(</span><span class="n">iface</span><span class="p">,</span><span class="w"> </span><span class="mi">1600</span><span class="p">,</span><span class="w"> </span><span class="n">AF_UNSPEC</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">K_FOREVER</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>将分配 1514 字节，即 MTU 加上以太网报头空间。</p>
+<p>可以调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">net_pkt_alloc_buffer()</span></code> 增加分配的缓冲区空间，因为它会考虑已有的缓冲区。如果 net_pkt 的地址族有效，它还会考虑报头空间以及 proto 参数。在这种情况下，新分配的缓冲区空间会追加到已有空间之后，而不是插入到前面。不过请注意，这种用例相当有限。通常，从一开始就应该知道需要请求多大的空间。</p>
+</section>
+<section id="deallocation">
+<h3><a class="toc-backref" href="#id8" role="doc-backlink">释放</a><a class="headerlink" href="#deallocation" title="链接到此标题。"></a></h3>
+<p>每个 net_pkt 都有引用计数。分配时引用计数设为 1。可以使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">net_pkt_ref()</span></code> 增加引用计数，使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">net_pkt_unref()</span></code> 减少引用计数。当计数降为零时，缓冲区也会被解除引用，net_pkt 会自动放回空闲的 net_pkt_slabs 中</p>
+<p>如果在 net_pkt 释放之后仍需要其缓冲区，则需要在最后一次调用 net_pkt_unref 之前，对整条 net_buf 链再增加一次引用。更多信息请参见 <a class="reference internal" href="../../../net_buf/index.html#net-buf-interface"><span class="std std-ref">网络缓冲区</span></a>。</p>
+</section>
+</section>
+<section id="operations">
+<h2><a class="toc-backref" href="#id9" role="doc-backlink">操作</a><a class="headerlink" href="#operations" title="链接到此标题。"></a></h2>
+<p>访问 net_pkt 缓冲区有两种方式，下面几节将分别说明：基本读/写访问和数据访问，推荐使用后者。</p>
+<section id="read-and-write-access">
+<h3><a class="toc-backref" href="#id10" role="doc-backlink">读写访问</a><a class="headerlink" href="#read-and-write-access" title="链接到此标题。"></a></h3>
+<p>如前所述，虽然 net_pkt 使用 net_buf 作为其缓冲区，但它提供了自己的 API 来访问缓冲区。实际上，一个网络数据包可能分散在一条 net_buf 对象链上，此时 net_buf 提供的函数就力不从心了。因此，net_pkt 提供了一组函数，隐藏了潜在的非连续访问所带来的全部复杂性。</p>
+<p>数据在缓冲区中的移动通过每个 net_pkt 内部维护的游标进行。所有读/写操作都会影响该游标。另请注意，读写函数对其长度参数要求严格：如果无法读/写指定的长度，操作就会失败。长度并不被视为上限，而是必须读取或写入的确切数据量。</p>
+<p>由于存在 TX 和 RX 两条路径，因此有两种访问模式：写入（write）和覆写（overwrite）。这听起来可能有点不寻常，但实际上很简单，而且提供了灵活性。</p>
+<p>在写入模式下，写入缓冲区的任何内容都会影响缓冲区中实际数据的长度。不要把缓冲区长度与缓冲区大小混淆，后者是任何模式都无法超过的上限。而在覆写模式下，写入的内容必须落在有效数据上，并且不会影响缓冲区长度。默认情况下，新分配的 net_pkt 处于写入模式，其游标指向缓冲区的起始位置。</p>
+<p>下面逐步介绍这些函数，以及它们在不同模式下的行为。</p>
+<p>刚分配好 500 字节缓冲区时，net_pkt 的长度为 0，即其缓冲区中没有有效数据。可以这样验证：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">net_pkt_get_len</span><span class="p">(</span><span class="n">pkt</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>现在写入 8 个字节：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">net_pkt_write</span><span class="p">(</span><span class="n">pkt</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="mi">8</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>缓冲区长度现在为 8 字节。还有多种辅助函数，用于写入一个字节或大端序的 uint16_t、uint32_t。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">net_pkt_write_u8</span><span class="p">(</span><span class="n">pkt</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">foo</span><span class="p">);</span>
+<span class="n">net_pkt_write_be16</span><span class="p">(</span><span class="n">pkt</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ba</span><span class="p">);</span>
+<span class="n">net_pkt_write_be32</span><span class="p">(</span><span class="n">pkt</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">bar</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>从逻辑上讲，net_pkt 的长度现在为 15。但如果此时尝试读取，将会失败，因为 net_pkt 中当前游标位置之后没有可读的内容。在写入模式下，可以通过重置 net_pkt 的游标来读取已经写入的内容。例如：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">net_pkt_cursor_init</span><span class="p">(</span><span class="n">pkt</span><span class="p">);</span>
+<span class="n">net_pkt_read</span><span class="p">(</span><span class="n">pkt</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="mi">15</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>这会将 pkt 的游标重置到缓冲区的起始位置，然后就可以读取实际存在的 15 个字节。之后游标又会指向缓冲区的末尾。</p>
+<p>要将一大片区域设置为同一个字节，可以使用提供的 memset 函数：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">net_pkt_memset</span><span class="p">(</span><span class="n">pkt</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>现在 net_pkt 的长度为 20 字节。</p>
+<p>可以通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">net_pkt_set_overwrite()</span></code> 函数切换模式，并且可以随时来回切换。net_pkt 会被设为覆写模式，并重置其游标：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">net_pkt_set_overwrite</span><span class="p">(</span><span class="n">pkt</span><span class="p">,</span><span class="w"> </span><span class="nb">true</span><span class="p">);</span>
+<span class="n">net_pkt_cursor_init</span><span class="p">(</span><span class="n">pkt</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>现在可以使用同样的操作函数，但它们仅限于缓冲区中已有的数据，即 20 字节。</p>
+<p>如果需要知道 net_pkt 中还有多少可用空间，可以调用：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">net_pkt_available_buffer</span><span class="p">(</span><span class="n">pkt</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>或者，如果需要考虑报头空间，可以调用：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">net_pkt_available_payload_buffer</span><span class="p">(</span><span class="n">pkt</span><span class="p">,</span><span class="w"> </span><span class="n">proto</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>如果要将游标放到某个已知位置，请使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">net_pkt_skip()</span></code> 函数。例如，要跳过 IP 报头，可以使用：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">net_pkt_cursor_init</span><span class="p">(</span><span class="n">pkt</span><span class="p">);</span>
+<span class="n">net_pkt_skip</span><span class="p">(</span><span class="n">pkt</span><span class="p">,</span><span class="w"> </span><span class="n">net_pkt_ip_header_len</span><span class="p">(</span><span class="n">pkt</span><span class="p">));</span>
+</pre></div>
+</div>
+</section>
+<section id="data-access">
+<h3><a class="toc-backref" href="#id11" role="doc-backlink">数据访问</a><a class="headerlink" href="#data-access" title="链接到此标题。"></a></h3>
+<p>虽然前面介绍的 API 相当简单，但它总是需要在 net_pkt 缓冲区与外部之间来回复制数据。在很多场合，以连续方式访问缓冲区中存储的信息更为合适，对于内嵌报头的网络数据包尤其如此。</p>
+<p>这些报头在大多数情况下都是一组已知的固定字节。因此，用一个结构体表示某种类型的报头会更加自然。此外，如果已知报头所占的空间位于缓冲区的连续区域中，那么将缓冲区中的实际位置直接强制转换为报头类型会高效得多。无论是读取还是写入这类报头的字段，直接访问都能节省内存。</p>
+<p>net_pkt 为此提供了一套专用 API，构建在前面介绍的 API 之上。它可以透明地处理连续访问和非连续访问。</p>
+<p>有两个宏用于定义数据访问描述符：当无法确定数据是否位于连续区域时使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">NET_PKT_DATA_ACCESS_DEFINE</span></code>，当能保证数据位于连续区域时使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">NET_PKT_DATA_ACCESS_CONTIGUOUS_DEFINE</span></code>。</p>
+<p>以 IP 和 UDP 为例。IPv4 和 IPv6 报头总是位于数据包的开头，并且足够小，可以放入 128 字节的 net_buf 中（这只是举例，也可以选择 64 字节）。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">NET_PKT_DATA_ACCESS_CONTIGUOUS_DEFINE</span><span class="p">(</span><span class="n">ipv4_access</span><span class="p">,</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">net_ipv4_hdr</span><span class="p">);</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">net_ipv4_hdr</span><span class="w"> </span><span class="o">*</span><span class="n">ipv4_hdr</span><span class="p">;</span>
+
+<span class="n">ipv4_hdr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">net_ipv4_hdr</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">net_pkt_get_data</span><span class="p">(</span><span class="n">pkt</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ipv4_access</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>对于 struct net_ipv4_hdr 也是如此。而 UDP 报头在 IPv6 等情况下很可能不在连续区域中，因此：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">NET_PKT_DATA_ACCESS_DEFINE</span><span class="p">(</span><span class="n">udp_access</span><span class="p">,</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">net_udp_hdr</span><span class="p">);</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">net_udp_hdr</span><span class="w"> </span><span class="o">*</span><span class="n">udp_hdr</span><span class="p">;</span>
+
+<span class="n">udp_hdr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">net_udp_hdr</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">net_pkt_get_data</span><span class="p">(</span><span class="n">pkt</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">udp_access</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>此时，net_pkt 的游标指向所请求数据的开头。在 RX 路径上，这些报头只会被读取而不会被修改，因此要继续处理，游标需要前进越过这些数据。有一个专门的函数用于此目的：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">net_pkt_acknowledge_data</span><span class="p">(</span><span class="n">pkt</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ipv4_access</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>然而，在 TX 路径上，报头字段已被修改。在这种情况下：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">net_pkt_set_data</span><span class="p">(</span><span class="n">pkt</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ipv4_access</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>如果数据位于连续区域，它会相应地前移游标；否则，它会写入数据并更新游标。注意，<code class="xref c c-func docutils literal notranslate"><span class="pre">net_pkt_set_data()</span></code> 也可以用于 RX 路径，但使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">net_pkt_acknowledge_data()</span></code> 会稍快一些，因为它完全不关心数据是否连续，只是直接通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">net_pkt_skip()</span></code> 前移游标。</p>
+</section>
+</section>
+<section id="api-reference">
+<h2><a class="toc-backref" href="#id12" role="doc-backlink">API 参考</a><a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">net_pkt</span></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/sockets/dumb_http_server/README.html#socket-dumb-http-server" title="使用 BSD 套接字实现一个简单、可移植的 HTTP 服务器。">Dumb HTTP server</a></span><span class="code-sample-description">使用 BSD 套接字实现一个简单、可移植的 HTTP 服务器。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/sockets/dumb_http_server_mt/README.html#socket-dumb-http-server-mt" title="使用 BSD 套接字实现一个支持并发连接的简单 HTTP 服务器。">Dumb HTTP server (multi-threaded)</a></span><span class="code-sample-description">使用 BSD 套接字实现一个支持并发连接的简单 HTTP 服务器。</span></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 4月 15, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,390 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pytest &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/develop/twister/harness/pytest.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" />
+    <link rel="next" title="Console" href="console.html" />
+    <link rel="prev" title="Gtest" href="gtest.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">使用 Zephyr 进行开发</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../getting_started/index.html">入门指南</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../beyond-GSG.html">入门指南之外</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../env_vars.html">环境变量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../application/index.html">应用程序开发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../debug/index.html">调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../api/index.html">API 状态与准则</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../languages/index.html">编程语言支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../optimizations/index.html">优化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../flash_debug/index.html">烧录与硬件调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules.html">模块（外部项目）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../west/index.html">West（Zephyr 的元工具）</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">测试运行器（Twister）</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../commandline.html">命令行选项</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../pytest.html">与 pytest 测试框架集成</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../twister_statuses.html">Twister 状态</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../twister_blackbox.html">Twister 黑盒测试</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#board-configuration">开发板配置</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#toolchain-selection">工具链选择</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#tests">测试</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html#harnesses">Harness</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="ctest.html">Ctest</a></li>
+<li class="toctree-l4"><a class="reference internal" href="gtest.html">Gtest</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">Pytest</a></li>
+<li class="toctree-l4"><a class="reference internal" href="console.html">Console</a></li>
+<li class="toctree-l4"><a class="reference internal" href="robot.html">Robot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="power.html">Power</a></li>
+<li class="toctree-l4"><a class="reference internal" href="display_capture.html">显示捕获</a></li>
+<li class="toctree-l4"><a class="reference internal" href="script.html">Script</a></li>
+<li class="toctree-l4"><a class="reference internal" href="bsim.html">Bsim</a></li>
+<li class="toctree-l4"><a class="reference internal" href="shell.html">Shell</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#sidecars">Sidecar</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#selecting-platform-scope">选择平台范围</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#running-in-integration-mode">以集成模式运行</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#running-tests-on-custom-emulator">在自定义模拟器上运行测试</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#running-tests-in-random-order">以随机顺序运行测试</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#running-tests-on-hardware">在硬件上运行测试</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#test-output-and-reports">测试输出与报告</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#live-run-monitoring">实时运行监控</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#twister-configuration-file">Twister 配置文件</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../test/index.html">测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sca/index.html">静态代码分析（SCA）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../toolchains/index.html">工具链</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tools/index.html">工具与 IDE</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">使用 Zephyr 进行开发</a> &raquo;</li>
+  
+     <li><a href="../index.html">测试运行器（Twister）</a> &raquo;</li>
+  
+  <li>Pytest</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="pytest">
+<span id="twister-pytest-harness"></span><h1>Pytest<a class="headerlink" href="#pytest" title="链接到此标题。"></a></h1>
+<p><a class="reference internal" href="../pytest.html#integration-with-pytest"><span class="std std-ref">pytest harness</span></a> 用于在 Zephyr 测试中执行 pytest 测试套件。以下选项适用于 pytest harness：</p>
+<dl id="pytest-root">
+<dt>pytest_root: &lt;pytest 测试路径列表&gt;（默认为 pytest）</dt><dd><p>指定测试场景开始运行时需要执行的 pytest 目录、文件或子测试列表。默认的 pytest 目录为 <code class="docutils literal notranslate"><span class="pre">pytest</span></code>。pytest 运行结束后，Twister 会根据 pytest 报告判断测试场景是通过还是失败。其中的环境变量和 Zephyr 模块目录变量会被展开（参见 <a class="reference internal" href="../index.html#twister-module-dir-vars"><span class="std std-ref">使用模块目录变量展开路径</span></a>）。下面给出了一组有效的 pytest 根路径示例：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">harness_config</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">pytest_root</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"pytest/test_shell_help.py"</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"../shell/pytest/test_shell.py"</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"/tmp/test_shell.py"</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"~/tmp/test_shell.py"</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"$ZEPHYR_BASE/samples/subsys/testsuite/pytest/shell/pytest/test_shell.py"</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"$ZEPHYR_HAL_NORDIC_MODULE_DIR/tests/pytest/test_hal.py"</span><span class="w">  </span><span class="c1"># path inside a module</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"pytest/test_shell_help.py::test_shell2_sample"</span><span class="w">  </span><span class="c1"># select pytest subtest</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"pytest/test_shell_help.py::test_shell2_sample[param_a]"</span><span class="w">  </span><span class="c1"># select pytest parametrized subtest</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<dl class="simple" id="pytest-args">
+<dt>pytest_args: &lt;参数列表&gt;（默认为空）</dt><dd><p>指定要传递给 <code class="docutils literal notranslate"><span class="pre">pytest</span></code> 的附加参数列表，例如：<code class="docutils literal notranslate"><span class="pre">pytest_args:</span> <span class="pre">[‘-k=test_method’,</span> <span class="pre">‘--log-level=DEBUG’]</span></code>。注意，可以多次传递 <code class="docutils literal notranslate"><span class="pre">--pytest-args</span></code>，从而向 pytest 传递多个参数。</p>
+</dd>
+</dl>
+<dl id="pytest-dut-scope">
+<dt>pytest_dut_scope: &lt;function|class|module|package|session&gt;（默认为 function）</dt><dd><blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">dut</span></code> 和 <code class="docutils literal notranslate"><span class="pre">shell</span></code> 这两个 pytest fixture 的共享范围。如果范围设为 <code class="docutils literal notranslate"><span class="pre">function</span></code>，则 Python 脚本中的每个测试用例都会启动一次 DUT；如果为 <code class="docutils literal notranslate"><span class="pre">session</span></code> 范围，则 DUT 只启动一次。</p>
+</div></blockquote>
+<p>下面是一个包含 pytest harness_config 选项的 yaml 文件示例。如果未指定 pytest_root，将使用默认的 pytest_root 名称 &quot;pytest&quot;。请参考 samples/subsys/testsuite/pytest/ 中的示例。</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">common</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">harness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pytest</span>
+<span class="nt">tests</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">pytest.example.directories</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">harness_config</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">pytest_root</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pytest_dir1</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$ENV_VAR/samples/test/pytest_dir2</span>
+<span class="w">  </span><span class="nt">pytest.example.files_and_subtests</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">harness_config</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">pytest_root</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pytest/test_file_1.py</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test_file_2.py::test_A</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test_file_2.py::test_B[param_a]</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<dl id="required-devices">
+<dt>required_devices: &lt;所需设备条目列表&gt;（默认为空）</dt><dd><p>为多 DUT 测试场景指定所需的额外 DUT。每个条目配置一台额外的设备，该设备会与主 DUT 一同被预留和烧录。空条目 <code class="docutils literal notranslate"><span class="pre">{}</span></code> 会预留第二台设备，其平台和应用程序与主 DUT 相同。</p>
+<p>多 DUT 测试支持硬件设备测试和 <code class="docutils literal notranslate"><span class="pre">native_sim</span></code> 仿真，不支持 QEMU。对于仿真目标，Twister 会自动创建所需的占位 DUT 条目，无需硬件映射。对于硬件测试，需要提供硬件映射文件（<code class="docutils literal notranslate"><span class="pre">--hardware-map</span></code>），并为每台所需设备提供一个匹配的条目。详情请参见 <a class="reference internal" href="../index.html#twister-multi-duts-testing"><span class="std std-ref">多 DUT 测试支持</span></a> 一节。</p>
+<p>每个条目支持以下可选字段：</p>
+<dl>
+<dt>platform: &lt;string&gt;（可选，默认为当前测试的平台）</dt><dd><p>该所需设备使用的平台。如果未指定，则使用与主 DUT 相同的平台。</p>
+</dd>
+<dt>application: &lt;string&gt;（可选，默认为当前测试的应用程序）</dt><dd><p>要烧录到该所需设备上的测试应用程序 ID。指定后，Twister 会单独构建该应用程序，并在烧录前将其构建目录分配给预留的 DUT。如果未指定，则使用与主 DUT 相同的应用程序。</p>
+<p>它使用与 <a class="reference internal" href="../index.html#required-applications"><span class="std std-ref">required_applications</span></a> 相同的机制。</p>
+</dd>
+<dt>path: &lt;string&gt;（可选）</dt><dd><p>Twister 搜索 <code class="docutils literal notranslate"><span class="pre">application</span></code> 所指定应用程序的目录路径。可以是绝对路径，也可以是相对于测试 YAML 文件所在目录的路径。其中的环境变量和 Zephyr 模块目录变量会被展开（参见 <a class="reference internal" href="../index.html#twister-module-dir-vars"><span class="std std-ref">使用模块目录变量展开路径</span></a>）。如果未指定，Twister 会在引用方测试 YAML 文件所在的目录中搜索。</p>
+</dd>
+<dt>fixture: &lt;fixture 名称列表&gt;（可选，默认为空）</dt><dd><p>预留设备上必须具备的 fixture 名称列表。详情请参见 <a class="reference internal" href="../index.html#twister-fixtures"><span class="std std-ref">Fixture</span></a>。</p>
+<p>fixture 支持使用 <code class="docutils literal notranslate"><span class="pre">name:param</span></code> 语法附加一个可选的参数后缀（例如 <code class="docutils literal notranslate"><span class="pre">io_adapter:channel_a</span></code>）。当主 DUT 的某个 fixture 带有参数时，Twister 会用该参数值来匹配所需设备：只有该 fixture 名称带有 <strong>相同参数</strong> 的设备才会被考虑。这样可以确保物理上相连的 DUT 对（例如两块连接在一起、并在硬件映射中以相同 fixture 参数注册的开发板）总是被一起预留，而不会与无关的开发板混用。</p>
+<p>成对配置的硬件映射条目示例：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">"01"</span>
+<span class="w">  </span><span class="nt">platform</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nrf52840dk/nrf52840</span>
+<span class="w">  </span><span class="nt">serial</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/dev/ttyACM0</span>
+<span class="w">  </span><span class="nt">fixtures</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">io_adapter:channel_a</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">"02"</span>
+<span class="w">  </span><span class="nt">platform</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nrf52840dk/nrf52840</span>
+<span class="w">  </span><span class="nt">serial</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/dev/ttyACM1</span>
+<span class="w">  </span><span class="nt">fixtures</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">io_adapter:channel_a</span>
+</pre></div>
+</div>
+<p>当主 DUT 和所需设备都设置了 <code class="docutils literal notranslate"><span class="pre">fixture:</span> <span class="pre">[io_adapter]</span></code> 时，Twister 只会选择共享同一 <code class="docutils literal notranslate"><span class="pre">channel_a</span></code> 参数的开发板，从而保证选中物理上配对的开发板。</p>
+</dd>
+</dl>
+<p>包含多个所需设备的配置示例：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">tests</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># Two DUTs, same platform and application</span>
+<span class="w">  </span><span class="nt">multidut.basic</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">harness_config</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">required_devices</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+<span class="w">  </span><span class="c1"># Second DUT fixed to a specific platform</span>
+<span class="w">  </span><span class="nt">multidut.fixed_platform</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">harness_config</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">required_devices</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">platform</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nrf52840dk/nrf52840</span>
+<span class="w">  </span><span class="c1"># Second DUT flashed with a different application</span>
+<span class="w">  </span><span class="nt">multidut.other_app</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">harness_config</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">required_devices</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">application</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">multidut.basic</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 8月 31, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

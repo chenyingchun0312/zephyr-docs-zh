@@ -1,0 +1,972 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>一致性测试的组成方式 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/connectivity/networking/conformance/architecture.html" />
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@12.1.0/dist/mermaid.esm.min.mjs";
+
+
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = "pre.mermaid {\n    /* Same as .mermaid-container > pre */\n    display: block;\n    width: 100%;\n}\n\npre.mermaid > svg {\n    /* Same as .mermaid-container > pre > svg */\n    height: auto;\n    width: 100%;\n    max-width: 100% !important;\n}";
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = ".mermaid-container {\n    position: relative;\n    display: flex;\n    flex-direction: row;\n    width: 100%;\n}\n\n.mermaid-container > pre {\n    display: block;\n    width: 100%;\n}\n\n.mermaid-container > pre > svg {\n    height: auto;\n    width: 100%;\n    max-width: 100% !important;\n}\n\n.mermaid-fullscreen-btn {\n    position: absolute;\n    width: 28px;\n    height: 28px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.3);\n    border-radius: 4px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    transition: all 0.2s;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);\n    font-size: 14px;\n    line-height: 1;\n    padding: 0;\n    color: #333;\n}\n\n.mermaid-fullscreen-btn:hover {\n    opacity: 100% !important;\n    background: rgba(255, 255, 255, 1);\n    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-btn.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.3);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-btn.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal {\n    display: none;\n    position: fixed !important;\n    top: 0 !important;\n    left: 0 !important;\n    width: 95vw;\n    height: 100vh;\n    background: rgba(255, 255, 255, 0.98);\n    z-index: 9999;\n    padding: 20px;\n    overflow: auto;\n}\n\n.mermaid-fullscreen-modal.dark-theme {\n    background: rgba(0, 0, 0, 0.98);\n}\n\n.mermaid-fullscreen-modal.active {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen {\n    position: relative;\n    width: 95vw;\n    height: 90vh;\n    max-width: 95vw;\n    max-height: 90vh;\n    background: white;\n    border-radius: 8px;\n    padding: 20px;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);\n    overflow: auto;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen.dark-theme {\n    background: #1a1a1a;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);\n}\n\n.mermaid-container-fullscreen pre.mermaid {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen .mermaid svg {\n    height: 100% !important;\n    width: 100% !important;\n    cursor: grab;\n}\n\n.mermaid-fullscreen-close {\n    position: fixed !important;\n    top: 20px !important;\n    right: 20px !important;\n    width: 40px;\n    height: 40px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.2);\n    border-radius: 50%;\n    cursor: pointer;\n    z-index: 10000;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);\n    transition: all 0.2s;\n    font-size: 24px;\n    line-height: 1;\n    color: #333;\n}\n\n.mermaid-fullscreen-close:hover {\n    background: white;\n    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-close.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.2);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-close.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal .mermaid-fullscreen-btn {\n    display: none !important;\n}";
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+let _lazyObserver = null;
+let _renderQueue = Promise.resolve();
+let closeModal = () => {};
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('active')) {
+        closeModal();
+    }
+});
+
+// Apply d3 zoom to each SVG. Idempotent: an SVG already wrapped is skipped,
+// so this is safe to call both for the initial batch and for diagrams that
+// render lazily once they become visible.
+const addZoomToSvgs = (svgs) => {
+    svgs.each(function() {
+        if (this.getAttribute('data-zoom-applied') === 'true') return;
+        var svg = d3.select(this);
+        svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+        var inner = svg.select("g");
+        var zoom = d3.zoom().on("zoom", function(event) {
+            inner.attr("transform", event.transform);
+        });
+        svg.call(zoom);
+        this.setAttribute('data-zoom-applied', 'true');
+    });
+};
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        // Disconnect any previous lazy rendering observer
+        if (_lazyObserver) {
+            _lazyObserver.disconnect();
+            _lazyObserver = null;
+        }
+
+        all_mermaids.forEach((el) => {
+            el.removeAttribute('data-mermaid-deferred');
+            el.removeAttribute('data-mermaid-render-failed');
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+
+        // Separate visible and hidden elements. Mermaid's layout engine measures
+        // text dimensions via the DOM, which fails for elements hidden by a parent
+        // (e.g., Reveal.js non-active slides, sphinx-design unopened tabs),
+        // producing broken SVGs. Render visible elements now, defer hidden ones.
+        const visible = [];
+        const hidden = [];
+        all_mermaids.forEach((el) => {
+            // offsetParent is null for display:none ancestors.
+            // getClientRects().length > 0 catches position:fixed elements
+            // (which also have null offsetParent but are still visible).
+            if (el.offsetParent !== null || el.getClientRects().length > 0) {
+                visible.push(el);
+            } else {
+                hidden.push(el);
+                el.setAttribute('data-mermaid-deferred', 'true');
+            }
+        });
+
+        if (visible.length > 0) {
+            try {
+                await mermaid.run({ nodes: visible });
+            } catch (e) {
+                console.error("Mermaid rendering failed:", e);
+            }
+        }
+
+        // Lazily render hidden elements when they become visible.
+        // Uses a promise chain (_renderQueue) to serialize rendering,
+        // since IntersectionObserver may report multiple entries at once
+        // and mermaid.run() is not safe to call concurrently.
+        if (hidden.length > 0) {
+            if (typeof IntersectionObserver === 'undefined') {
+                console.warn("IntersectionObserver not available; hidden mermaid diagrams will not render.");
+            } else {
+                _renderQueue = Promise.resolve();
+                _lazyObserver = new IntersectionObserver((entries) => {
+                    for (const entry of entries) {
+                        if (entry.isIntersecting && entry.target.getAttribute("data-processed") !== "true") {
+                            _lazyObserver.unobserve(entry.target);
+                            const el = entry.target;
+                            _renderQueue = _renderQueue.then(async () => {
+                                try {
+                                    await mermaid.run({ nodes: [el] });
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    // Apply zoom to the now-rendered diagram, matching
+                                    // the decoration visible diagrams receive.
+                                    if (false) {
+                                        addZoomToSvgs(d3.selectAll("").select(function() {
+                                            return this.querySelector("svg");
+                                        }));
+                                    }
+                                } catch (e) {
+                                    console.error("Mermaid deferred rendering failed:", e);
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    el.setAttribute('data-mermaid-render-failed', 'true');
+                                }
+                            });
+                        }
+                    }
+                });
+                hidden.forEach((el) => _lazyObserver.observe(el));
+            }
+        }
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    // Exclude deferred (hidden) and render-failed elements from completion checks
+    const mermaids_active = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])");
+    const mermaids_processed = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])[data-processed='true']");
+
+    if (false) {
+        const mermaids_to_add_zoom = 0 === -1 ? mermaids_active.length : 0;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("").select(function() {
+                return this.querySelector("svg");
+            });
+            // Wait until every active (visible) diagram has rendered. Deferred
+            // diagrams are excluded, so a fixed d3_node_count that counts a
+            // hidden diagram no longer loops forever waiting for its SVG.
+            if(mermaids_active.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            }
+            addZoomToSvgs(svgs);
+        }
+    } else if(mermaids_active.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if (!true) return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = "\u26f6";
+        fullscreenBtn.style.opacity = "50%";
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scrollX, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.display = 'block';
+
+                if (false) {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+
+
+const load = async () => {
+    initStyles();
+
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...{"startOnLoad": false},
+                ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...{"startOnLoad": false},
+    ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+    }
+);
+
+window.addEventListener("load", load);
+window.runMermaid = runMermaid;</script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../../search.html" />
+    <link rel="next" title="网络 API" href="../api/index.html" />
+    <link rel="prev" title="运行一致性测试套件" href="usage.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html">
+            
+              <img src="../../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">服务</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">连接</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">网络</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../overview.html">概述</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../net-stack-architecture.html">网络协议栈架构</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../net_config_guide.html">网络配置指南</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../networking_with_host.html">与主机系统联网</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../network_monitoring.html">监视网络流量</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../network_tracing.html">网络跟踪</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="index.html">使用 TTCN-3 进行协议一致性测试</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="usage.html">运行一致性测试套件</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">一致性测试的组成方式</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#the-pieces">各个组成部分</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#the-zephyr-side">Zephyr 侧</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#the-harness">测试框架</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#the-host-side">主机侧</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#the-test-network">测试网络</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#adding-a-suite">添加测试套件</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="index.html#how-it-fits-together">整体结构</a></li>
+<li class="toctree-l5"><a class="reference internal" href="index.html#the-suites">测试套件</a></li>
+<li class="toctree-l5"><a class="reference internal" href="index.html#known-gaps">已知的覆盖缺口</a></li>
+<li class="toctree-l5"><a class="reference internal" href="index.html#continuous-integration">持续集成</a></li>
+<li class="toctree-l5"><a class="reference internal" href="index.html#other-ttcn-3-suites">其他 TTCN-3 测试套件</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../api/index.html">网络 API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../conn_mgr/index.html">连接管理器</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../dsa.html">分布式交换架构（DSA）</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../bluetooth/index.html">Bluetooth</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../usb/index.html">USB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../canbus/index.html">控制器局域网（CAN）总线协议</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lora_lorawan/index.html">LoRa 和 LoRaWAN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modbus/index.html">Modbus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modem/index.html">调制解调器模块</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../../index.html">连接</a> &raquo;</li>
+  
+     <li><a href="../index.html">网络</a> &raquo;</li>
+  
+     <li><a href="index.html">使用 TTCN-3 进行协议一致性测试</a> &raquo;</li>
+  
+  <li>一致性测试的组成方式</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="how-the-conformance-tests-are-put-together">
+<span id="ttcn3-architecture"></span><h1>一致性测试的组成方式<a class="headerlink" href="#how-the-conformance-tests-are-put-together" title="链接到此标题。"></a></h1>
+<nav class="contents local" id="id1">
+<ul class="simple">
+<li><p><a class="reference internal" href="#the-pieces" id="id6">各个组成部分</a></p></li>
+<li><p><a class="reference internal" href="#the-zephyr-side" id="id7">Zephyr 侧</a></p>
+<ul>
+<li><p><a class="reference internal" href="#the-system-under-test" id="id8">被测系统</a></p></li>
+<li><p><a class="reference internal" href="#twister-integration" id="id9">Twister 集成</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#the-harness" id="id10">测试框架</a></p>
+<ul>
+<li><p><a class="reference internal" href="#holding-the-interface" id="id11">占用接口</a></p></li>
+<li><p><a class="reference internal" href="#suite-traits" id="id12">测试套件特性</a></p></li>
+<li><p><a class="reference internal" href="#building-and-running-the-suite" id="id13">构建和运行测试套件</a></p></li>
+<li><p><a class="reference internal" href="#turning-a-verdict-into-a-result" id="id14">将判定结果转换为测试结果</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#the-host-side" id="id15">主机侧</a></p>
+<ul>
+<li><p><a class="reference internal" href="#layout" id="id16">目录布局</a></p></li>
+<li><p><a class="reference internal" href="#how-a-suite-is-built" id="id17">测试套件的构建方式</a></p></li>
+<li><p><a class="reference internal" href="#the-shared-ttcn-3-layer" id="id18">共享的 TTCN-3 层</a></p></li>
+<li><p><a class="reference internal" href="#the-ethernet-test-port" id="id19">以太网测试端口</a></p></li>
+<li><p><a class="reference internal" href="#third-party-modules" id="id20">第三方模块</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#the-test-network" id="id21">测试网络</a></p></li>
+<li><p><a class="reference internal" href="#adding-a-suite" id="id22">添加测试套件</a></p>
+<ul>
+<li><p><a class="reference internal" href="#choosing-the-shape" id="id23">选择形式</a></p></li>
+<li><p><a class="reference internal" href="#id2" id="id24">主机侧</a></p></li>
+<li><p><a class="reference internal" href="#id3" id="id25">Zephyr 侧</a></p></li>
+<li><p><a class="reference internal" href="#recording-what-does-not-match" id="id26">记录不符合标准之处</a></p></li>
+<li><p><a class="reference internal" href="#trying-it-out" id="id27">试运行</a></p></li>
+</ul>
+</li>
+</ul>
+</nav>
+<p>整个系统由分布在两个仓库中的四个活动部件组成，它们只在线路上交汇：一个 Zephyr 应用程序、一个 Twister 和 pytest 测试框架、一个包装 Eclipse Titan 的 shell 脚本，以及 TTCN-3 测试套件本身。</p>
+<section id="the-pieces">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">各个组成部分</a><a class="headerlink" href="#the-pieces" title="链接到此标题。"></a></h2>
+<figure class="align-default" id="id4">
+digraph ttcn3_pieces {
+    rankdir=TB;
+    node [shape=box, style=filled, fillcolor=&quot;#e8e8e8&quot;, fontname=&quot;sans-serif&quot;];
+    edge [arrowsize=0.8];
+
+    twister [label=&quot;Twister&quot;, fillcolor=&quot;#cce5ff&quot;];
+    harness [label=&quot;pytest harness\n(ttcn3_runner.py)&quot;, fillcolor=&quot;#cce5ff&quot;];
+
+    subgraph cluster_zephyr {
+        label=&quot;zephyr&quot;;
+        style=dashed;
+        fontname=&quot;sans-serif&quot;;
+        sut [label=&quot;System under test\n(native_sim)&quot;];
+    }
+
+    subgraph cluster_nettools {
+        label=&quot;net-tools&quot;;
+        style=dashed;
+        fontname=&quot;sans-serif&quot;;
+        build [label=&quot;build.sh\n+ Eclipse Titan&quot;];
+        suite [label=&quot;TTCN-3 suite\nexecutable&quot;];
+    }
+
+    tap [label=&quot;zeth / zethL2\ntap interface&quot;, shape=ellipse, fillcolor=&quot;#ffe0b2&quot;];
+
+    twister -&gt; harness [label=&quot;harness: pytest&quot;];
+    harness -&gt; sut [label=&quot;start, read ready line&quot;];
+    harness -&gt; build [label=&quot;build&quot;];
+    build -&gt; suite;
+    harness -&gt; suite [label=&quot;run, read verdict&quot;];
+    sut -&gt; tap [dir=both, label=&quot;the protocol&quot;];
+    suite -&gt; tap [dir=both];
+}<figcaption>
+<p><span class="caption-text">谁构建什么，以及两部分在哪里交汇</span><a class="headerlink" href="#id4" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<dl class="simple">
+<dt>Twister</dt><dd><p>构建被测系统并启动它，然后针对它运行 pytest 测试框架。它提供测试标识符、平台限制以及整个过程 900 秒的时间预算。</p>
+</dd>
+<dt>pytest 测试框架</dt><dd><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/tests/net/conformance/ttcn3_runner.py">tests/net/conformance/ttcn3_runner.py</a>，所有测试共用。它判断测试套件能否运行，获取接口锁，构建测试套件，运行它并读取判定结果。</p>
+</dd>
+<dt>被测系统</dt><dd><p>一个启用了被测协议的普通 Zephyr 应用程序。测试的任何内容都不会编译进其中。</p>
+</dd>
+<dt>build.sh 和 Eclipse Titan</dt><dd><p>主机侧构建。Titan 将 TTCN-3 编译为 C++ 并生成 makefile；<code class="file docutils literal notranslate"><span class="pre">build.sh</span></code> 负责整理源文件，使 Titan 能够完成这些工作。</p>
+</dd>
+<dt>TTCN-3 测试套件可执行文件</dt><dd><p>测试本身，从外部驱动协议。</p>
+</dd>
+<dt>Tap 接口</dt><dd><p>两部分唯一共享的东西。Zephyr 镜像中没有控制通道、没有共享内存，也没有测试钩子。</p>
+</dd>
+</dl>
+</section>
+<section id="the-zephyr-side">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">Zephyr 侧</a><a class="headerlink" href="#the-zephyr-side" title="链接到此标题。"></a></h2>
+<section id="the-system-under-test">
+<h3><a class="toc-backref" href="#id8" role="doc-backlink">被测系统</a><a class="headerlink" href="#the-system-under-test" title="链接到此标题。"></a></h3>
+<p>每个应用程序都特意保持普通：启用协议，执行测试套件需要观察的、维持流量所需的操作，并打印一行有辨识度的就绪信息。这一行是应用程序与测试框架之间唯一的约定，测试框架据此在测试套件开始发送之前得知协议栈已就绪。</p>
+<p>一个测试套件目录包含：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>tests/net/conformance/&lt;suite&gt;/
+    CMakeLists.txt
+    prj.conf
+    README.rst
+    tests.yaml
+    src/main.c
+    pytest/pytest.ini
+    pytest/conftest.py
+    pytest/test_&lt;suite&gt;_conformance.py
+</pre></div>
+</div>
+</section>
+<section id="twister-integration">
+<h3><a class="toc-backref" href="#id9" role="doc-backlink">Twister 集成</a><a class="headerlink" href="#twister-integration" title="链接到此标题。"></a></h3>
+<p>每个 <code class="file docutils literal notranslate"><span class="pre">tests.yaml</span></code> 都共用同一段配置：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">common</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">harness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pytest</span>
+<span class="w">  </span><span class="nt">slow</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">900</span>
+<span class="w">  </span><span class="nt">platform_allow</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">native_sim</span>
+<span class="w">  </span><span class="nt">integration_platforms</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">native_sim</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">harness:</span> <span class="pre">pytest</span></code> 将运行交给测试框架，而不是从控制台输出中读取 ztest 摘要。<code class="docutils literal notranslate"><span class="pre">slow:</span> <span class="pre">true</span></code> 使这些测试套件不进入常规的 Twister 运行，因为完整运行一遍需要几十分钟。900 秒超时必须同时涵盖构建和运行测试套件。<code class="docutils literal notranslate"><span class="pre">native_sim</span></code> 是唯一的平台，因为正是 tap 驱动将被测系统接入一条真实的链路。</p>
+<p>测试本身只有三行：请求锁，等待就绪行，运行测试套件。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">test_mdns_conformance</span><span class="p">(</span><span class="n">network_lock</span><span class="p">,</span> <span class="n">dut</span><span class="p">,</span> <span class="n">suite_binary</span><span class="p">):</span>
+    <span class="n">dut</span><span class="o">.</span><span class="n">readlines_until</span><span class="p">(</span><span class="n">regex</span><span class="o">=</span><span class="s1">'mDNS responder ready'</span><span class="p">,</span> <span class="n">timeout</span><span class="o">=</span><span class="mf">30.0</span><span class="p">)</span>
+    <span class="n">run_suite</span><span class="p">(</span><span class="n">suite_binary</span><span class="p">,</span> <span class="n">SUITE</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">network_lock</span></code> 参数特意放在第一位，原因见下文。<code class="file docutils literal notranslate"><span class="pre">conftest.py</span></code> 在每个测试目录中都相同，只做一件事：将共享的运行器加入 <code class="docutils literal notranslate"><span class="pre">sys.path</span></code>，并重新导出锁 fixture。</p>
+</section>
+</section>
+<section id="the-harness">
+<span id="ttcn3-runner"></span><h2><a class="toc-backref" href="#id10" role="doc-backlink">测试框架</a><a class="headerlink" href="#the-harness" title="链接到此标题。"></a></h2>
+<figure class="align-default" id="id5">
+<pre  class="mermaid">
+        sequenceDiagram
+    participant T as Twister
+    participant H as Harness&lt;br/&gt;(ttcn3_runner.py)
+    participant Z as System under test
+    participant B as build.sh + Titan
+    participant S as TTCN-3 suite
+
+    T-&gt;&gt;H: start test (900 s budget)
+    H-&gt;&gt;H: flock(LOCK_EX) on the interface
+    Note over H,Z: the lock is taken before the DUT fixture,&lt;br/&gt;so nothing starts while another test runs
+    H-&gt;&gt;Z: start
+    Z--&gt;&gt;H: ready line (30 s)
+    H-&gt;&gt;B: build the suite (1800 s)
+    B--&gt;&gt;H: executable
+    H-&gt;&gt;S: run against the running application (600 s)
+    S--&gt;&gt;H: verdict statistics, overall verdict
+    H-&gt;&gt;H: release the lock
+    H--&gt;&gt;T: pass or fail
+    </pre><figcaption>
+<p><span class="caption-text">一个一致性测试从加锁到得出判定的过程</span><a class="headerlink" href="#id5" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<p>以下所有内容都位于 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/tests/net/conformance/ttcn3_runner.py">tests/net/conformance/ttcn3_runner.py</a> 中。</p>
+<section id="holding-the-interface">
+<h3><a class="toc-backref" href="#id11" role="doc-backlink">占用接口</a><a class="headerlink" href="#holding-the-interface" title="链接到此标题。"></a></h3>
+<p>Twister 在各自独立的 pytest 进程中运行每个测试，因此测试之间的互斥必须跨进程生效。测试框架在一个会话作用域的 fixture 中对锁文件获取排他的 <code class="docutils literal notranslate"><span class="pre">flock</span></code>。</p>
+<p>顺序与锁同样重要。该 fixture 在 <code class="docutils literal notranslate"><span class="pre">dut</span></code> fixture <em>之前</em> 被请求，因此当另一个一致性测试占用接口时，被测系统根本不会启动。两个应用程序同时在 <code class="docutils literal notranslate"><span class="pre">192.0.2.1</span></code> 上应答，会让两个测试套件都无所适从。</p>
+<p>锁文件名中包含有效用户 ID。特权测试套件以 root 身份运行，而 root 无法打开其他用户遗留在设置了粘滞位的临时目录中的锁文件。由于一次运行要么全部以特权运行，要么全部不以特权运行，按用户加锁仍然能排除所有可能发生冲突的情况。这也是不能同时启动特权运行和非特权运行的原因。</p>
+</section>
+<section id="suite-traits">
+<h3><a class="toc-backref" href="#id12" role="doc-backlink">测试套件特性</a><a class="headerlink" href="#suite-traits" title="链接到此标题。"></a></h3>
+<p>测试套件的三项特性从 <code class="file docutils literal notranslate"><span class="pre">suites/&lt;name&gt;/build.conf</span></code> 中读取：</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">MODE=parallel</span></code></dt><dd><p>测试用例会创建并行测试组件，因此测试套件通过 Titan 的主控制器运行，而不是作为单个可执行文件运行，并且必须安装 <code class="docutils literal notranslate"><span class="pre">expect</span></code>。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">PRIVILEGED=yes</span></code></dt><dd><p>测试套件会绑定特权端口或打开数据包套接字，因此必须以 root 身份运行。</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">L2=yes</span></code></dt><dd><p>测试套件在 IP 层以下工作，因此需要 <code class="docutils literal notranslate"><span class="pre">zethL2</span></code> 而不是 <code class="docutils literal notranslate"><span class="pre">zeth</span></code>。</p>
+</dd>
+</dl>
+<p><code class="file docutils literal notranslate"><span class="pre">build.sh</span></code> 也会把同一个文件作为 shell 片段引入（source），因此它以 shell 赋值语句的形式编写；测试框架只在其中匹配子字符串。</p>
+</section>
+<section id="building-and-running-the-suite">
+<h3><a class="toc-backref" href="#id13" role="doc-backlink">构建和运行测试套件</a><a class="headerlink" href="#building-and-running-the-suite" title="链接到此标题。"></a></h3>
+<p>构建通过 <code class="file docutils literal notranslate"><span class="pre">build.sh</span> <span class="pre">&lt;suite&gt;</span></code> 完成，时间预算为 1800 秒，产物为 <code class="file docutils literal notranslate"><span class="pre">suites/&lt;suite&gt;/build/&lt;suite&gt;</span></code>。</p>
+<p>运行时必须兼容 Titan 的两种不同安装方式。发行版软件包将其库放在 <code class="file docutils literal notranslate"><em><span class="pre">TTCN3_DIR</span></em><span class="pre">/lib/titan</span></code> 中，源码构建则放在 <code class="file docutils literal notranslate"><em><span class="pre">TTCN3_DIR</span></em><span class="pre">/lib</span></code> 中；测试框架选用实际存在的那个目录并将其添加到 <code class="docutils literal notranslate"><span class="pre">LD_LIBRARY_PATH</span></code> 开头，同时将 <code class="file docutils literal notranslate"><em><span class="pre">TTCN3_DIR</span></em><span class="pre">/bin</span></code> 添加到 <code class="docutils literal notranslate"><span class="pre">PATH</span></code> 开头。并行测试套件使用 <code class="docutils literal notranslate"><span class="pre">ttcn3_start</span></code> 启动，其他测试套件直接启动。</p>
+<p>测试套件在一个新的会话中启动，这样超时的测试套件可以连同它启动的所有进程一起被终止。如果遗留一个仍在运行的主控制器，它会在下一个测试中继续占用接口。</p>
+</section>
+<section id="turning-a-verdict-into-a-result">
+<h3><a class="toc-backref" href="#id14" role="doc-backlink">将判定结果转换为测试结果</a><a class="headerlink" href="#turning-a-verdict-into-a-result" title="链接到此标题。"></a></h3>
+<p>两个正则表达式匹配 Titan 在运行结束时打印的行，并断言三件事：确实打印了判定结果，至少运行了一个测试用例，以及总体判定为 <code class="docutils literal notranslate"><span class="pre">pass</span></code>。没有产生任何输出的测试套件，或者因所有用例都被过滤掉而什么都没运行的测试套件，都会失败，而不是悄悄通过。判定结果的含义参见 <a class="reference internal" href="usage.html#ttcn3-verdicts"><span class="std std-ref">解读结果</span></a>。</p>
+</section>
+</section>
+<section id="the-host-side">
+<h2><a class="toc-backref" href="#id15" role="doc-backlink">主机侧</a><a class="headerlink" href="#the-host-side" title="链接到此标题。"></a></h2>
+<p>以下所有内容都位于 <code class="docutils literal notranslate"><span class="pre">net-tools</span></code> 仓库的 <code class="file docutils literal notranslate"><span class="pre">ttcn3</span></code> 目录下。</p>
+<section id="layout">
+<h3><a class="toc-backref" href="#id16" role="doc-backlink">目录布局</a><a class="headerlink" href="#layout" title="链接到此标题。"></a></h3>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>ttcn3/
+    common/            shared TTCN-3 modules and the ethernet test port
+    modules/           third party modules, cloned, not in git
+    modules.txt        which modules, at which commit
+    fetch-modules.sh   clone or check out the pinned commits
+    build.sh           build one suite
+    suites/&lt;name&gt;/     the suite, its sources.txt and its .cfg
+</pre></div>
+</div>
+</section>
+<section id="how-a-suite-is-built">
+<h3><a class="toc-backref" href="#id17" role="doc-backlink">测试套件的构建方式</a><a class="headerlink" href="#how-a-suite-is-built" title="链接到此标题。"></a></h3>
+<p><code class="file docutils literal notranslate"><span class="pre">build.sh</span></code> 会清空测试套件的构建目录并以扁平方式重建，将所需的每个源文件以符号链接的形式并排放在同一个目录中。</p>
+<p>采用扁平结构并非为了整洁，而是一种变通方法。Titan 生成的 makefile 使用 <code class="docutils literal notranslate"><span class="pre">sed</span></code> 以目标词干为模式构建依赖规则，一旦某个源文件通过包含斜杠的路径引用，该规则就会失效。因此每个源文件都必须能够仅凭文件名访问。</p>
+<p>链接顺序为：测试套件自己的源文件，然后是 <code class="file docutils literal notranslate"><span class="pre">common</span></code>，然后是 <code class="file docutils literal notranslate"><span class="pre">common/sources.txt</span></code> 中列出的模块源文件，最后是测试套件自己的 <code class="file docutils literal notranslate"><span class="pre">sources.txt</span></code> 中列出的源文件。随后 <code class="docutils literal notranslate"><span class="pre">ttcn3_makefilegen</span></code> 生成 makefile（单一模式的测试套件带 <code class="docutils literal notranslate"><span class="pre">-s</span></code>，并行测试套件不带），再由 <code class="docutils literal notranslate"><span class="pre">make</span></code> 构建。</p>
+</section>
+<section id="the-shared-ttcn-3-layer">
+<h3><a class="toc-backref" href="#id18" role="doc-backlink">共享的 TTCN-3 层</a><a class="headerlink" href="#the-shared-ttcn-3-layer" title="链接到此标题。"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">Zephyr_SUT</span></code> 包含所有测试套件共用的模块参数。测试套件从不在自身中写入地址或超时，而是从这里获取，这样只需编辑一个配置文件就能将运行转移到另一条链路上。</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>参数</p></th>
+<th class="head"><p>默认值</p></th>
+<th class="head"><p>含义</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tsp_sut_ipv4</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">192.0.2.1</span></code></p></td>
+<td><p>Zephyr 的应答地址</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tsp_sut_ipv6</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">2001:db8::1</span></code></p></td>
+<td><p>Zephyr 的应答地址（IPv6）</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tsp_tester_ipv4</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">192.0.2.2</span></code></p></td>
+<td><p>测试套件的应答地址</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tsp_tester_ipv6</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">2001:db8::2</span></code></p></td>
+<td><p>测试套件的应答地址（IPv6）</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tsp_tester_interface</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">zeth</span></code></p></td>
+<td><p>链路本地组播需要</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tsp_sut_hostname</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">zephyr</span></code></p></td>
+<td><p>响应器拥有的名称</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tsp_response_timeout</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">5.0</span></code></p></td>
+<td><p>应答允许的最长时间</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">tsp_silence_timeout</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">2.0</span></code></p></td>
+<td><p>监视静默的时长</p></td>
+</tr>
+</tbody>
+</table>
+<p><code class="docutils literal notranslate"><span class="pre">Zephyr_Transport</span></code> 提供 <code class="docutils literal notranslate"><span class="pre">Zephyr_Tester</span></code> 组件，它带有一个 <code class="docutils literal notranslate"><span class="pre">IPL4asp</span></code> 端口以及用于监听、打开、发送、带保护定时器接收和断言没有任何数据到达的辅助函数。基于套接字的测试套件会扩展该组件，而不是自行打开套接字。</p>
+<p><code class="docutils literal notranslate"><span class="pre">ARP_Types</span></code> 是手工编写的，放在 <code class="file docutils literal notranslate"><span class="pre">common</span></code> 中而不是 <code class="docutils literal notranslate"><span class="pre">arp</span></code> 测试套件中，因为任何在 IP 层以下工作的测试套件，都必须在一条没有其他设备会应答的链路上自己应答地址解析。Titan 项目没有发布 ARP 模块。</p>
+</section>
+<section id="the-ethernet-test-port">
+<h3><a class="toc-backref" href="#id19" role="doc-backlink">以太网测试端口</a><a class="headerlink" href="#the-ethernet-test-port" title="链接到此标题。"></a></h3>
+<p>Titan 发布了一个原始链路层测试端口 <code class="docutils literal notranslate"><span class="pre">LANL2asp</span></code>，但这里没有使用它。它使用 libpcap 捕获，并以零读取超时打开句柄，在 Linux 上这意味着“一直等到捕获块被填满”。在测试链路这样安静的链路上，帧永远到达不了测试，而且没有参数可以改变这一行为。</p>
+<p><code class="file docutils literal notranslate"><span class="pre">common/Ethernet_PT.cc</span></code> 改为读取数据包套接字，每个帧一到达就向上交付。它接受三个测试端口参数：必需的 <code class="docutils literal notranslate"><span class="pre">interface</span></code>；<code class="docutils literal notranslate"><span class="pre">source_address</span></code>，默认为接口自身的地址；以及 <code class="docutils literal notranslate"><span class="pre">ethertype</span></code>，设置后只向上交付该类型的帧。</p>
+</section>
+<section id="third-party-modules">
+<h3><a class="toc-backref" href="#id20" role="doc-backlink">第三方模块</a><a class="headerlink" href="#third-party-modules" title="链接到此标题。"></a></h3>
+<p>测试套件基于 Titan 项目发布的协议模块和测试端口构建，而不是自行定义消息格式。共使用了十一个仓库，每个仓库都在 <code class="file docutils literal notranslate"><span class="pre">modules.txt</span></code> 中固定到某个提交，并由 <code class="file docutils literal notranslate"><span class="pre">fetch-modules.sh</span></code> 按需克隆。这些仓库不会被纳入本仓库（vendor），克隆的副本也被 git 忽略，因此今天能通过的测试套件明天仍然能构建。更改固定的提交只需修改一行并重新运行。</p>
+<p>上游模块采用 EPL-2.0 许可证，而这里编写的所有内容均采用 Apache-2.0。两者都是 OSI 认可的许可证，这正是 Zephyr 对那些永远不会成为 Zephyr 镜像一部分的工具的要求，参见 <a class="reference internal" href="../../../../contribute/external.html#external-contributions"><span class="std std-ref">贡献外部组件</span></a>。</p>
+</section>
+</section>
+<section id="the-test-network">
+<span id="ttcn3-test-network"></span><h2><a class="toc-backref" href="#id21" role="doc-backlink">测试网络</a><a class="headerlink" href="#the-test-network" title="链接到此标题。"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">zeth</span></code> 是一个两端都有地址的普通 tap 接口，使用它的测试套件只是链路上的另一台主机。<code class="docutils literal notranslate"><span class="pre">zethL2</span></code> 完全没有地址，并且主机被配置为不在其上应答，这样应答地址解析的只有 Zephyr。如何创建这些接口参见 <a class="reference internal" href="usage.html#ttcn3-interfaces"><span class="std std-ref">设置网络接口</span></a>。</p>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p><code class="docutils literal notranslate"><span class="pre">zethL2</span></code> 这个名称写在三个必须保持一致的地方，而没有任何机制检查它们是否一致：</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/tests/net/conformance/ttcn3_runner.py">tests/net/conformance/ttcn3_runner.py</a> 中的 <code class="docutils literal notranslate"><span class="pre">L2_INTERFACE</span></code>，它决定测试运行之前必须存在哪个接口</p></li>
+<li><p>每个使用 <code class="docutils literal notranslate"><span class="pre">zethL2</span></code> 的测试的 <code class="file docutils literal notranslate"><span class="pre">boards/native_sim.overlay</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">host-interface</span></code>，它决定被测系统出现在哪个接口上</p></li>
+<li><p>每个使用 <code class="docutils literal notranslate"><span class="pre">zethL2</span></code> 的测试套件配置文件中的 <code class="docutils literal notranslate"><span class="pre">system.pt.interface</span></code>，它决定测试套件在哪里监听</p></li>
+</ul>
+<p>不一致时的表现是测试套件收不到任何帧并超时，而不是报错。</p>
+</div>
+</section>
+<section id="adding-a-suite">
+<span id="ttcn3-adding-a-suite"></span><h2><a class="toc-backref" href="#id22" role="doc-backlink">添加测试套件</a><a class="headerlink" href="#adding-a-suite" title="链接到此标题。"></a></h2>
+<p>一个测试套件由两部分组成，分别位于两个仓库中；在动手之前需要先做一个决定。</p>
+<section id="choosing-the-shape">
+<h3><a class="toc-backref" href="#id23" role="doc-backlink">选择形式</a><a class="headerlink" href="#choosing-the-shape" title="链接到此标题。"></a></h3>
+<p><strong>套接字还是原始帧。</strong> 能够通过 UDP 或 TCP 表达测试意图的测试套件会扩展 <code class="docutils literal notranslate"><span class="pre">Zephyr_Tester</span></code>，使用 <code class="docutils literal notranslate"><span class="pre">IPL4asp</span></code> 端口，在 <code class="docutils literal notranslate"><span class="pre">zeth</span></code> 上运行，并且不需要特权。必须亲自查看或发送帧的测试套件使用 <code class="docutils literal notranslate"><span class="pre">Ethernet_Port</span></code>，在 <code class="docutils literal notranslate"><span class="pre">zethL2</span></code> 上运行，必须以 root 身份运行，并且必须自己应答地址解析，因为该链路上没有其他设备会应答。请优先使用套接字；原始帧方式需要额外一个接口，还要输入密码。</p>
+<p><strong>单一模式还是并行模式。</strong> 除非测试用例会创建并行测试组件，否则使用单一模式。并行模式需要 Titan 的主控制器并依赖 <code class="docutils literal notranslate"><span class="pre">expect</span></code>，还会使测试套件更难手动运行。</p>
+</section>
+<section id="id2">
+<h3><a class="toc-backref" href="#id24" role="doc-backlink">主机侧</a><a class="headerlink" href="#id2" title="链接到此标题。"></a></h3>
+<p>创建 <code class="file docutils literal notranslate"><span class="pre">suites/&lt;name&gt;</span></code>，其中包含 TTCN-3 源文件、列出测试套件所需模块源文件的 <code class="file docutils literal notranslate"><span class="pre">sources.txt</span></code>，以及包含模块参数和待执行测试用例列表的 <code class="file docutils literal notranslate"><span class="pre">&lt;name&gt;.cfg</span></code>。只运行第三方模块中测试用例的测试套件不需要自己的源文件，<code class="docutils literal notranslate"><span class="pre">coap</span></code> 就是一个完整的例子。</p>
+<p>从 <code class="docutils literal notranslate"><span class="pre">Zephyr_SUT</span></code> 获取地址和超时。将任何新的上游模块添加到 <code class="file docutils literal notranslate"><span class="pre">modules.txt</span></code> 中并固定提交。如果测试套件是并行的、需要特权或在 IP 层以下工作，请添加 <code class="file docutils literal notranslate"><span class="pre">build.conf</span></code>。</p>
+</section>
+<section id="id3">
+<h3><a class="toc-backref" href="#id25" role="doc-backlink">Zephyr 侧</a><a class="headerlink" href="#id3" title="链接到此标题。"></a></h3>
+<p>按上面所示的布局在 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/tests/net/conformance">tests/net/conformance</a> 下创建应用程序。<code class="file docutils literal notranslate"><span class="pre">src/main.c</span></code> 启用协议，产生测试套件需要观察的流量，并打印一行有辨识度的就绪信息。<code class="file docutils literal notranslate"><span class="pre">tests.yaml</span></code> 复制公共配置段，并将测试命名为 <code class="docutils literal notranslate"><span class="pre">net.conformance.&lt;name&gt;</span></code>。</p>
+<p>三个 pytest 文件中，<code class="file docutils literal notranslate"><span class="pre">pytest.ini</span></code> 和 <code class="file docutils literal notranslate"><span class="pre">conftest.py</span></code> 原样复制；<code class="file docutils literal notranslate"><span class="pre">test_&lt;name&gt;_conformance.py</span></code> 只有测试套件名称和所等待的就绪行不同。</p>
+</section>
+<section id="recording-what-does-not-match">
+<h3><a class="toc-backref" href="#id26" role="doc-backlink">记录不符合标准之处</a><a class="headerlink" href="#recording-what-does-not-match" title="链接到此标题。"></a></h3>
+<p>如果测试套件断言的行为与标准不符，请在做出该断言的地方加以说明，从而将偏差记录下来，而不是悄无声息地固化下来。完全没有测试套件覆盖的部分应写入 <a class="reference internal" href="index.html#ttcn3-known-gaps"><span class="std std-ref">已知的覆盖缺口</span></a>；新增测试套件时也正好可以在 <a class="reference internal" href="index.html#ttcn3-suites"><span class="std std-ref">测试套件</span></a> 中添加一行。</p>
+</section>
+<section id="trying-it-out">
+<h3><a class="toc-backref" href="#id27" role="doc-backlink">试运行</a><a class="headerlink" href="#trying-it-out" title="链接到此标题。"></a></h3>
+<p>先按 <a class="reference internal" href="usage.html#ttcn3-running-by-hand"><span class="std std-ref">手动运行测试套件</span></a> 所述手动运行这两部分，等测试套件通过后再通过 Twister 运行。首次构建会较慢；另外请记住，缺少前提条件时测试会被跳过而不是失败，因此一个看似瞬间通过的测试套件很可能根本没有运行。</p>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 8月 20, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

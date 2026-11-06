@@ -1,0 +1,342 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GNSS（全球导航卫星系统） &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/hardware/peripherals/gnss.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="外设传感器接口（PSI5）" href="psi5.html" />
+    <link rel="prev" title="读取与解码（Read and Decode）" href="sensor/read_and_decode.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">硬件支持</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../arch/index.html">架构相关指南</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../barriers/index.html">屏障 API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cache/index.html">缓存</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../emulator/index.html">Zephyr 的设备仿真器/模拟器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../emulator/bus_emulators.html">外部总线及总线所连外设的仿真器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../firmware/index.html">固件</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">外设</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="analog.html">模拟</a></li>
+<li class="toctree-l3"><a class="reference internal" href="audio/index.html">音频</a></li>
+<li class="toctree-l3"><a class="reference internal" href="communication.html">通信</a></li>
+<li class="toctree-l3"><a class="reference internal" href="display.html">显示</a></li>
+<li class="toctree-l3"><a class="reference internal" href="gpio_input.html">GPIO 与输入</a></li>
+<li class="toctree-l3"><a class="reference internal" href="memory_storage.html">存储器与存储</a></li>
+<li class="toctree-l3"><a class="reference internal" href="power.html">电源</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="sensors.html">传感器</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="sensor/index.html">传感器</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">GNSS（全球导航卫星系统）</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#overview">概述</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#subsystem-support">子系统支持</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#power-management">电源管理</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#configuration-options">配置选项</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#navigation-reference">导航参考</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#gnss-api-reference">GNSS API 参考</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="psi5.html">外设传感器接口（PSI5）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="sent.html">单边沿半字节传输（SENT）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="biometrics.html">生物识别</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="motion_actuation.html">运动与执行</a></li>
+<li class="toctree-l3"><a class="reference internal" href="system_diagnostics.html">系统与诊断</a></li>
+<li class="toctree-l3"><a class="reference internal" href="timing.html">定时</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../pinctrl/index.html">引脚控制</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../porting/index.html">移植</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../virtualization/index.html">虚拟化</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">硬件支持</a> &raquo;</li>
+  
+     <li><a href="index.html">外设</a> &raquo;</li>
+  
+     <li><a href="sensors.html">传感器</a> &raquo;</li>
+  
+  <li>GNSS（全球导航卫星系统）</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="gnss-global-navigation-satellite-system">
+<span id="gnss-api"></span><h1>GNSS（全球导航卫星系统）<a class="headerlink" href="#gnss-global-navigation-satellite-system" title="链接到此标题。"></a></h1>
+<section id="overview">
+<h2>概述<a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>GNSS 是一个统称，涵盖用于导航的各类卫星系统，例如 GPS（全球定位系统）。GNSS 服务通常通过 GNSS 调制解调器访问，这类调制解调器接收并处理 GNSS 信号以确定自身位置，更确切地说是其天线的位置。它们通常还提供精确的时间同步机制，一般称为 PPS（秒脉冲，Pulse-Per-Second）。</p>
+</section>
+<section id="subsystem-support">
+<h2>子系统支持<a class="headerlink" href="#subsystem-support" title="链接到此标题。"></a></h2>
+<p>GNSS 子系统基于 <a class="reference internal" href="../../services/connectivity/modem/index.html#modem"><span class="std std-ref">调制解调器模块</span></a>。GNSS 子系统涵盖从向调制解调器收发命令，到解析、生成和处理 NMEA0183 消息的全部工作。</p>
+<p>要为其他基于 NMEA0183 的 GNSS 调制解调器添加支持，基本上只需为该调制解调器实现电源管理和配置即可。</p>
+<p>也可以为使用常见的 UART 上 NMEA0183 以外的协议和/或总线的 GNSS 调制解调器添加支持，但驱动开发者需要多做一些工作。</p>
+</section>
+<section id="power-management">
+<h2>电源管理<a class="headerlink" href="#power-management" title="链接到此标题。"></a></h2>
+<p>除非另行配置，GNSS 接收器通常一上电就开始捕获和跟踪 GNSS 信号。为了节省功耗，应用程序可以切断 GNSS 接收器的电源，或者让内部 GNSS 引擎停止主动捕获和跟踪信号。后一种方式会停止位置计算，但接收器保持供电且功耗降低，与主机应用程序之间的通信链路仍然可用，可用于其他操作或恢复 GNSS 引擎。</p>
+<p>在 GNSS 子系统中，可以通过调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">gnss_stop()</span></code> API 实现这一点。这与 Zephyr 的设备电源管理（挂起/恢复）不同：接收器保持供电并能与主机应用程序通信，只是停止了 GNSS 跟踪。</p>
+<p>可以使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">gnss_start()</span></code> 恢复 GNSS 跟踪。应用程序可以指定 <code class="xref c c-enum docutils literal notranslate"><span class="pre">gnss_start_mode</span></code>，它会影响首次定位时间。热启动会保留导航数据，使接收器能够快速重新捕获信号；温启动和冷启动则分别丢弃部分或全部导航数据，因而捕获时间更长。</p>
+<p>GNSS 设备驱动必须保证，从挂起或断电状态恢复时，GNSS 调制解调器会开始跟踪，而不需要应用程序显式调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">gnss_start()</span></code>。在这种情况下，大多数接收器最终会执行冷启动，原因只是它们在断电期间丢失了跟踪数据；但如果调制解调器保留了足够的状态，驱动也可以尝试温启动或热启动，以更快完成定位。要求是上电后自动恢复跟踪；清除导航数据只是调制解调器断电带来的副作用，而不是从挂起状态恢复时有意为之的一部分。</p>
+</section>
+<section id="configuration-options">
+<h2>配置选项<a class="headerlink" href="#configuration-options" title="链接到此标题。"></a></h2>
+<p>相关配置选项：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_GNSS" title="CONFIG_GNSS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_GNSS</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_GNSS_SATELLITES" title="CONFIG_GNSS_SATELLITES"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_GNSS_SATELLITES</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_GNSS_DUMP_TO_LOG" title="CONFIG_GNSS_DUMP_TO_LOG"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_GNSS_DUMP_TO_LOG</span></code></a></p></li>
+</ul>
+</section>
+<section id="navigation-reference">
+<h2>导航参考<a class="headerlink" href="#navigation-reference" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">navigation</span></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/drivers/gnss/README.html#gnss" title="连接 GNSS 设备以获取时间、导航数据和卫星信息。">GNSS</a></span><span class="code-sample-description">连接 GNSS 设备以获取时间、导航数据和卫星信息。</span></li>
+</ul>
+</div>
+</section>
+<section id="gnss-api-reference">
+<h2>GNSS API 参考<a class="headerlink" href="#gnss-api-reference" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">gnss_interface</span></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/drivers/gnss/README.html#gnss" title="连接 GNSS 设备以获取时间、导航数据和卫星信息。">GNSS</a></span><span class="code-sample-description">连接 GNSS 设备以获取时间、导航数据和卫星信息。</span></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 9月 03, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,937 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>架构移植指南 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/hardware/porting/arch.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="SoC 移植指南" href="soc_porting.html" />
+    <link rel="prev" title="移植" href="index.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">硬件支持</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../arch/index.html">架构相关指南</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../barriers/index.html">屏障 API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cache/index.html">缓存</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../emulator/index.html">Zephyr 的设备仿真器/模拟器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../emulator/bus_emulators.html">外部总线及总线所连外设的仿真器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../firmware/index.html">固件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../peripherals/index.html">外设</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pinctrl/index.html">引脚控制</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">移植</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">架构移植指南</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#early-boot-sequence">早期启动序列</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#early-boot-sequence-hooks">早期启动序列钩子</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#interrupt-and-exception-handling">中断和异常处理</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#thread-context-switching">线程上下文切换</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#thread-creation-and-termination">线程创建和终止</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#thread-local-storage">线程本地存储</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#device-drivers">设备驱动</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#interrupt-controllers">中断控制器</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#system-clock">系统时钟</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#console-over-serial-line">串口控制台</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#utility-libraries">工具库</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cpu-idling-power-management">CPU 空闲/电源管理</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fault-management">故障管理</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#toolchain-and-linking">工具链和链接</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#memory-management-and-memory-mapping">内存管理和内存映射</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#stack-objects">栈对象</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#no-memory-protection">无内存保护</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#hw-based-stack-overflow-detection">基于硬件的栈溢出检测</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#cpu-based-stack-overflow-detection">基于 CPU 的栈溢出检测</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#guard-based-stack-overflow-detection">基于保护区域的栈溢出检测</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#user-mode-enabled">启用用户模式</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#non-power-of-two-memory-region-requirements">非 2 的幂内存区域要求</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#power-of-two-memory-region-requirements">2 的幂内存区域要求</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#user-mode-threads">用户模式线程</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#gdb-stub">GDB Stub</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api-reference">API 参考</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#timing">计时</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#threads">线程</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#power-management">电源管理</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#symmetric-multi-processing">对称多处理</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#interrupts">中断</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#userspace">用户空间</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#memory-management">内存管理</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#miscellaneous-architecture-apis">其他架构 API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#gdb-stub-apis">GDB Stub 相关 API</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="soc_porting.html">SoC 移植指南</a></li>
+<li class="toctree-l3"><a class="reference internal" href="board_porting.html">开发板移植指南</a></li>
+<li class="toctree-l3"><a class="reference internal" href="shields.html">扩展板（shield）</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../virtualization/index.html">虚拟化</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">硬件支持</a> &raquo;</li>
+  
+     <li><a href="index.html">移植</a> &raquo;</li>
+  
+  <li>架构移植指南</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="architecture-porting-guide">
+<span id="id1"></span><h1>架构移植指南<a class="headerlink" href="#architecture-porting-guide" title="链接到此标题。"></a></h1>
+<p>要让 Zephyr 运行在目前尚不支持的 <abbr title="instruction set architecture">ISA</abbr> 或 <abbr title="Application Binary Interface">ABI</abbr> 上，就需要进行架构移植。</p>
+<p>以下是 Zephyr 支持的 ISA 和 ABI 的一些示例：</p>
+<ul class="simple">
+<li><p>采用 System V ABI 的 x86_32 ISA</p></li>
+<li><p>采用 Thumb2 指令集和 ARM 嵌入式 ABI（aeabi）的 ARMv7-M ISA</p></li>
+<li><p>ARCv2 ISA</p></li>
+</ul>
+<p>有关 Kconfig 配置的信息，请参阅 <a class="reference internal" href="../../build/kconfig/setting.html#setting-configuration-values"><span class="std std-ref">设置 Kconfig 配置值</span></a>。架构使用与开发板类似的 Kconfig 配置方案。</p>
+<p>架构移植可以分为若干部分，大部分是必需的，少数是可选的：</p>
+<ul class="simple">
+<li><p><strong>早期启动序列</strong>：CPU 退出复位时，每种架构都有各自必须执行的步骤（必需）。</p></li>
+<li><p><strong>中断和异常处理</strong>：每种架构都以特定的方式处理异步事件和非请求事件（必需）。</p></li>
+<li><p><strong>线程上下文切换</strong>：Zephyr 的上下文切换依赖于 ABI，而每种 ISA 需要保存的寄存器集合各不相同（必需）。</p></li>
+<li><p><strong>线程创建和终止</strong>：线程的初始栈帧与 ABI 和架构相关，线程中止可能也是如此（必需）。</p></li>
+<li><p><strong>设备驱动</strong>：系统时钟定时器和中断控制器通常与架构紧密相关（部分必需，部分可选）。</p></li>
+<li><p><strong>工具库</strong>：出于性能考虑，一些常用的内核 API 依赖于特定于架构的实现（必需）。</p></li>
+<li><p><strong>CPU 空闲/电源管理</strong>：大多数架构都实现了让 CPU 进入睡眠的指令（部分可选，但很可能非常需要）。</p></li>
+<li><p><strong>故障管理</strong>：用于实现特定于架构的调试辅助，以及处理线程中的致命错误（部分可选）。</p></li>
+<li><p><strong>链接器脚本和工具链</strong>：构建系统和链接镜像时很可能需要特定于架构的细节（必需）。</p></li>
+<li><p><strong>内存管理和内存映射</strong>：关于支持内存管理和内存映射的特定于架构的细节。</p></li>
+<li><p><strong>栈对象</strong>：关于栈对象相关内存保护硬件的特定于架构的细节。</p></li>
+<li><p><strong>用户模式线程</strong>：用于支持用户模式下的线程。</p></li>
+<li><p><strong>GDB Stub</strong>：用于支持 GDB stub，以实现远程调试。</p></li>
+</ul>
+<section id="early-boot-sequence">
+<h2>早期启动序列<a class="headerlink" href="#early-boot-sequence" title="链接到此标题。"></a></h2>
+<p>早期启动序列的目标是将系统从复位后的状态带到能够运行 C 代码的状态，从而可以执行通用的内核初始化序列。大多数情况下只需要很少的步骤，但有些架构需要做更多的工作。</p>
+<p>所有架构的通用步骤：</p>
+<ul class="simple">
+<li><p>设置初始栈。</p></li>
+<li><p>如果运行的是 <abbr title="eXecute-In-Place">XIP</abbr> 内核，则将已初始化的数据从 ROM 复制到 RAM。</p></li>
+<li><p>如果没有使用 ELF 加载器，则将 BSS 段清零。</p></li>
+<li><p>跳转到早期内核初始化函数 <code class="code docutils literal notranslate"><span class="pre">z_cstart()</span></code></p>
+<ul>
+<li><p><code class="code docutils literal notranslate"><span class="pre">z_cstart()</span></code> 负责从启动时运行的伪上下文切换到 main 线程。</p></li>
+</ul>
+</li>
+</ul>
+<p>必须执行的特定于架构的步骤示例：</p>
+<ul class="simple">
+<li><p>在 x86_32 上，如果以实模式获得控制权，则切换到 32 位保护模式。</p></li>
+<li><p>在 x86_32 上设置段寄存器，以应对引导加载程序将其留在未知或损坏状态的情况。</p></li>
+<li><p>在 Cortex-M3/4 上初始化开发板特定的看门狗。</p></li>
+<li><p>在 Cortex-M 上将栈从 MSP 切换到 PSP。</p></li>
+<li><p>在 Cortex-M 上采用不同于调用 z_swap() 的方式，以避免竞态条件。</p></li>
+<li><p>在 ARCv2 上设置 FIRQ 和常规 IRQ 处理。</p></li>
+</ul>
+<section id="early-boot-sequence-hooks">
+<h3>早期启动序列钩子<a class="headerlink" href="#early-boot-sequence-hooks" title="链接到此标题。"></a></h3>
+<p>Zephyr 提供了若干钩子（见 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/platform/hooks.h">include/zephyr/platform/hooks.h</a>），允许在启动过程的特定时刻执行 SoC 或开发板特定的代码。</p>
+<p>大部分钩子由内核在与架构无关的代码中调用。但有些钩子必须在早期启动序列中调用；由于该序列是在特定于架构的代码中实现的，这些钩子的调用也必须在那里完成。下面粗略概述了早期启动序列，以及特定于架构的代码应在何时调用这些钩子：</p>
+<ol class="arabic">
+<li><p>执行从一个特定于架构的入口点开始，其名称与 <a class="reference internal" href="../../kconfig.html#CONFIG_KERNEL_ENTRY" title="CONFIG_KERNEL_ENTRY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_KERNEL_ENTRY</span></code></a> 一致。</p></li>
+<li><p>立即重新初始化特定于架构的状态（如果启用了 <a class="reference internal" href="../../kconfig.html#CONFIG_INIT_ARCH_HW_AT_BOOT" title="CONFIG_INIT_ARCH_HW_AT_BOOT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_INIT_ARCH_HW_AT_BOOT</span></code></a>）。</p></li>
+<li><p>调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">soc_early_reset_hook()</span></code>。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>调用此钩子之前无需设置有效的栈。不过，该钩子可以在返回前覆盖栈指针。特定于架构的代码不得假定栈指针寄存器的值在调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">soc_early_reset_hook()</span></code> 前后保持不变。</p>
+<p>在具有多个栈指针的架构上，通常有一个可直接访问的 <em>“主”</em> 栈指针，以及一个或多个 <em>“辅助”</em> 栈指针寄存器。<code class="xref c c-func docutils literal notranslate"><span class="pre">soc_early_reset_hook()</span></code> 的实现可以覆盖 <em>“主”</em> 栈指针，但 <strong>不得</strong> 读取或修改任何 <em>“辅助”</em> 栈指针的值。（这样特定于架构的代码就可以在调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">soc_early_reset_hook()</span></code> 之前按需设置任何 <em>“辅助”</em> 栈指针。）</p>
+<p>例如，ARM Cortex-A 架构定义了多种执行模式，每种模式都有自己的栈指针寄存器 <code class="samp docutils literal notranslate"><span class="pre">sp_</span><em><span class="pre">mode</span></em></code>。处理器在模式 <code class="samp docutils literal notranslate"><em><span class="pre">X</span></em></code> 下执行时，涉及通用寄存器 <code class="docutils literal notranslate"><span class="pre">sp</span></code> 的操作作用于 <code class="samp docutils literal notranslate"><span class="pre">sp_</span><em><span class="pre">X</span></em></code>。在该架构上，假设调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">soc_early_reset_hook()</span></code> 时处理器正在模式 <code class="samp docutils literal notranslate"><em><span class="pre">M</span></em></code> 下执行，则该钩子可以覆盖 <code class="samp docutils literal notranslate"><span class="pre">sp_</span><em><span class="pre">M</span></em></code>（通过 <code class="docutils literal notranslate"><span class="pre">sp</span></code> 访问），但 <strong>不得</strong> 读取或覆盖任何其他 <code class="samp docutils literal notranslate"><span class="pre">sp_</span><em><span class="pre">mode</span></em></code>（其中 <code class="samp docutils literal notranslate"><em><span class="pre">mode</span></em> <span class="pre">!=</span> <em><span class="pre">M</span></em></code>）。</p>
+<p><code class="xref c c-func docutils literal notranslate"><span class="pre">soc_early_reset_hook()</span></code> 的实现可以不把执行权交还给特定于架构的代码，此时它们会“接管”系统。这类钩子不受上述规则约束，可以读取或覆盖任何栈指针。不过，提供这样的实现时，早期启动序列的其余部分显然就不会执行了。</p>
+</div>
+</li>
+<li><p>为早期启动序列的后续步骤设置初始栈。</p></li>
+<li><p>执行特定于架构的“<em>从挂起到 RAM 恢复</em>”逻辑</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>详情请参阅 <a class="reference internal" href="../../kconfig.html#CONFIG_PM_S2RAM" title="CONFIG_PM_S2RAM"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PM_S2RAM</span></code></a> 以及特定于架构的实现，但请注意，如果该逻辑判定正在从挂起到 RAM 状态退出，早期启动序列的其余部分将不会执行。</p>
+</div>
+</li>
+<li><p>调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">soc_reset_hook()</span></code>。</p></li>
+<li><p><em>在此执行特定于架构的操作（汇编）……</em></p></li>
+<li><p>调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">z_prep_c()</span></code>。这个特定于架构的函数用 C 实现。</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">z_prep_c()</span></code> 立即调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">soc_prep_hook()</span></code>。</p></li>
+<li><p><em>在此执行特定于架构的操作（C）……</em></p></li>
+<li><p>调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">z_cstart()</span></code>。开始执行与架构无关的代码。</p></li>
+</ol>
+</section>
+</section>
+<section id="interrupt-and-exception-handling">
+<h2>中断和异常处理<a class="headerlink" href="#interrupt-and-exception-handling" title="链接到此标题。"></a></h2>
+<p>每种架构对中断和异常处理的定义各不相同。</p>
+<p>当设备想要通知处理器有一些工作需要代为处理时，它会触发一个中断。当线程执行了软件自身顺序流程无法处理的操作时，会触发一个异常。中断和异常都会把控制权交给一个处理程序。对于中断，该处理程序称为 <abbr title="Interrupt Service Routine">ISR</abbr>。处理程序完成异常或中断所要求的工作。对于中断，这些工作是设备特定的。对于异常，则取决于具体的异常，但大多数情况下由内核本身负责提供处理程序。</p>
+<p>除了处理程序本身执行的工作外，内核还必须执行一些工作。例如：</p>
+<ul class="simple">
+<li><p>在把控制权交给处理程序之前：</p>
+<ul>
+<li><p>保存当前正在执行的上下文。</p></li>
+<li><p>可能需要退出省电模式，包括唤醒设备。</p></li>
+<li><p>如果正在退出无节拍（tickless）空闲模式，则更新内核运行时间。</p></li>
+</ul>
+</li>
+<li><p>从处理程序重新获得控制权之后：</p>
+<ul>
+<li><p>决定是否执行上下文切换。</p></li>
+<li><p>执行上下文切换时，恢复要切换进来的上下文。</p></li>
+</ul>
+</li>
+</ul>
+<p>这些工作在各种架构上概念相同，但细节完全不同：</p>
+<ul class="simple">
+<li><p>需要保存和恢复的寄存器。</p></li>
+<li><p>执行这些工作的处理器指令。</p></li>
+<li><p>异常的编号。</p></li>
+<li><p>等等。</p></li>
+</ul>
+<p>因此需要一个特定于架构的实现，称为中断/异常桩（stub）。</p>
+<p>另一个问题是，内核将 ISR 的签名定义为：</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="p">(</span><span class="o">*</span><span class="n">isr</span><span class="p">)(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">parameter</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>各种架构在向 ISR 传递参数方面没有一致的或原生的方式。因此，处理该参数常用的方法有两种。</p>
+<ul class="simple">
+<li><p>利用某种架构定义的机制，在桩中强制设置参数值。这在基于 X86 的架构中很常见。</p></li>
+<li><p>通过一个单独的表插入和跟踪 ISR 的参数，这要求架构在运行时判断正在执行的是哪个中断。为真实中断向量表的所有条目安装一个通用的中断处理程序分发器，再由它从单独的表中取出设备的 ISR 和参数。ARC 和 ARM 架构通过 <a class="reference internal" href="../../kconfig.html#CONFIG_GEN_ISR_TABLES" title="CONFIG_GEN_ISR_TABLES"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_GEN_ISR_TABLES</span></code></a> 实现普遍采用这种方法。桩的示例可以参考 x86 中的 <code class="code docutils literal notranslate"><span class="pre">_interrupt_enter()</span></code>、ARM 中的 <code class="code docutils literal notranslate"><span class="pre">_isr_wrapper()</span></code>，或 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/arch/arc/core/isr_wrapper.S">arch/arc/core/isr_wrapper.S</a> 中对 ARC 完整实现的说明。</p></li>
+</ul>
+<p>每种架构还必须实现中断控制原语：</p>
+<ul class="simple">
+<li><p>锁定中断：<code class="xref c c-macro docutils literal notranslate"><span class="pre">irq_lock()</span></code>、<code class="xref c c-macro docutils literal notranslate"><span class="pre">irq_unlock()</span></code>。</p></li>
+<li><p>注册中断：<code class="xref c c-macro docutils literal notranslate"><span class="pre">IRQ_CONNECT()</span></code>。</p></li>
+<li><p>在可能的情况下设置优先级：<code class="xref c c-func docutils literal notranslate"><span class="pre">irq_priority_set()</span></code>。</p></li>
+<li><p>启用/禁用中断：<code class="xref c c-macro docutils literal notranslate"><span class="pre">irq_enable()</span></code>、<code class="xref c c-macro docutils literal notranslate"><span class="pre">irq_disable()</span></code>。</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p><code class="xref c c-macro docutils literal notranslate"><span class="pre">IRQ_CONNECT</span></code> 是一个宏，它利用汇编器和/或链接器脚本技巧在构建时连接中断，从而节省启动时间和代码段大小。</p>
+</div>
+<p>向量表应为每个可能发生的中断和异常包含一个处理程序。处理程序可以简单到只是一个自旋循环。不过我们强烈建议处理程序至少打印一些调试信息。当遇到属于故障的异常（例如除零或非法内存访问），或遇到非预期的中断（伪中断，<em class="dfn">spurious interrupt</em>）时，这些信息有助于找出问题所在。示例请参阅 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/arch/arm/core/cortex_m/fault.c">arch/arm/core/cortex_m/fault.c</a> 中的 ARM 实现。</p>
+</section>
+<section id="thread-context-switching">
+<h2>线程上下文切换<a class="headerlink" href="#thread-context-switching" title="链接到此标题。"></a></h2>
+<p>多线程是内核存在的根本目的。Zephyr 支持两种线程：可抢占线程和协作式线程。决定下一个调度哪个线程的规则由内核处理。但上下文切换本身的方法要由架构移植来实现。</p>
+<p>Zephyr 为上下文切换提供了两种互斥的接口。首选接口是 <code class="code docutils literal notranslate"><span class="pre">arch_switch</span></code>，在启用 <a class="reference internal" href="../../kconfig.html#CONFIG_USE_SWITCH" title="CONFIG_USE_SWITCH"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USE_SWITCH</span></code></a> 时选用。另一种接口是 <code class="code docutils literal notranslate"><span class="pre">arch_swap</span></code>，在禁用 <a class="reference internal" href="../../kconfig.html#CONFIG_USE_SWITCH" title="CONFIG_USE_SWITCH"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USE_SWITCH</span></code></a> 时选用。移植到新架构时，只需实现其中之一；但对于 SMP 平台，必须实现 <code class="code docutils literal notranslate"><span class="pre">arch_switch</span></code>。</p>
+<p>上下文切换可能在以下几种情况下发生：</p>
+<ul class="simple">
+<li><p>线程执行阻塞操作时，例如获取当前不可用的信号量。</p></li>
+<li><p>可抢占线程通过释放某个对象，解除了阻塞在该对象上的更高优先级线程的阻塞时。</p></li>
+<li><p>中断解除了一个比当前执行线程优先级更高的线程的阻塞，且当前执行线程是可抢占线程时。</p></li>
+<li><p>线程运行结束时。</p></li>
+<li><p>线程引发致命异常并被从运行线程中移除时。例如，访问了非法内存。</p></li>
+</ul>
+<p>因此，上下文切换必须能够处理所有这些情况。</p>
+<p>上下文切换有两种类型：协作式（<em class="dfn">cooperative</em>）和抢占式（<em class="dfn">preemptive</em>）。</p>
+<ul class="simple">
+<li><p>当一个线程主动把控制权交给另一个线程时，就会发生 <em>协作式</em> 上下文切换。这有两种情况：</p>
+<ul>
+<li><p>线程显式让出（yield）时。</p></li>
+<li><p>线程尝试获取一个当前不可用的对象，并愿意等待该对象变为可用时。</p></li>
+</ul>
+</li>
+<li><p>当 ISR 或线程执行的某个操作调度了一个比当前运行线程优先级更高的线程，且当前运行线程是可抢占线程时，就会发生 <em>抢占式</em> 上下文切换。此类操作的一个例子是释放更高优先级线程正在等待的对象。</p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>当正在运行的是协作式线程时，控制权永远不会被夺走。</p>
+</div>
+<p>协作式上下文切换总是由线程调用内核内部例程 <code class="code docutils literal notranslate"><span class="pre">z_swap</span></code>（或其变体之一）来完成。该例程再相应地调用 <code class="code docutils literal notranslate"><span class="pre">arch_switch</span></code> 或 <code class="code docutils literal notranslate"><span class="pre">arch_swap</span></code>。调用它们时，不会再检查是否要进行上下文切换，上下文切换必定发生。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>在 32 位 x86 上，<code class="code docutils literal notranslate"><span class="pre">arch_swap</span></code> 足够通用、架构也足够灵活，因此可以在退出中断时调用它来触发上下文切换。但这不应被视为惯例，因为 ARM Cortex-M 和 ARCv2 移植都没有这样做。</p>
+</div>
+<p>由于 <code class="code docutils literal notranslate"><span class="pre">z_swap</span></code> 是协作式的，ABI 规定的调用者保存寄存器已经在栈上了。无需将它们保存到 k_thread 结构中。</p>
+<p>上下文切换也可以以抢占方式执行。这发生在退出 ISR 时，位于内核的中断退出桩中：</p>
+<ul class="simple">
+<li><p>x86 上调用处理程序之后的 <code class="code docutils literal notranslate"><span class="pre">_interrupt_enter</span></code>。</p></li>
+<li><p>ARM 上的 <code class="code docutils literal notranslate"><span class="pre">z_arm_exc_exit</span></code> 和 <code class="code docutils literal notranslate"><span class="pre">z_arm_int_exit</span></code>。</p></li>
+<li><p>ARCv2 上的 <code class="code docutils literal notranslate"><span class="pre">_firq_exit</span></code> 和 <code class="code docutils literal notranslate"><span class="pre">_rirq_exit</span></code>。</p></li>
+</ul>
+<p>决定是否执行上下文切换的逻辑很简单，并且只在退出非嵌套中断时执行：</p>
+<p>启用 <a class="reference internal" href="../../kconfig.html#CONFIG_USE_SWITCH" title="CONFIG_USE_SWITCH"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USE_SWITCH</span></code></a> 时……</p>
+<ul class="simple">
+<li><p>中断退出代码应调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">z_get_next_switch_handle()</span></code>，并返回到由所返回的 switch 句柄标识的线程上下文</p></li>
+</ul>
+<p>未启用 <a class="reference internal" href="../../kconfig.html#CONFIG_USE_SWITCH" title="CONFIG_USE_SWITCH"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USE_SWITCH</span></code></a> 时……</p>
+<ul class="simple">
+<li><p>中断退出代码应从就绪队列中取出缓存的线程，并且：</p>
+<ul>
+<li><p>如果缓存的线程不是当前线程，则执行上下文切换。</p></li>
+<li><p>否则不执行。</p></li>
+</ul>
+</li>
+</ul>
+<p>这很简单，但至关重要：如果实现不正确，内核将无法按预期工作，并会出现各种离奇的崩溃，主要原因是栈损坏。</p>
+</section>
+<section id="thread-creation-and-termination">
+<h2>线程创建和终止<a class="headerlink" href="#thread-creation-and-termination" title="链接到此标题。"></a></h2>
+<p>要启动一个新线程，必须构造一个栈帧，使上下文切换能够像弹出一个已被切换出去的线程的栈帧那样弹出它。这应在一个特定于架构的内部例程 <code class="code docutils literal notranslate"><span class="pre">_new_thread</span></code> 中实现。</p>
+<p>线程入口点也不能被直接调用，即不应将其设置为新线程的 <abbr title="program counter">PC</abbr>。而是必须用 <code class="code docutils literal notranslate"><span class="pre">_thread_entry</span></code> 包装。这意味着栈帧中的 PC 应设置为 <code class="code docutils literal notranslate"><span class="pre">_thread_entry</span></code>，线程入口点则作为第一个参数传给 <code class="code docutils literal notranslate"><span class="pre">_thread_entry</span></code>。具体细节取决于 ABI。</p>
+<p>是否需要特定于架构的线程终止实现取决于具体架构。存在一个通用实现，但它未必适用于某个特定架构。</p>
+<p>已遇到过的一个需要特定于架构的线程终止实现的原因是：线程因正常退出而中止，与因异常而中止，处理方式可能不同。ARM Cortex-M 就是如此：如果线程触发了致命异常，CPU 必须退出处理程序模式；而如果线程从其入口函数正常退出，则不需要。</p>
+<p>这意味着需要实现特定于架构的 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_abort()</span></code> 版本，并根据架构需要设置 Kconfig 选项 <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARCH_HAS_THREAD_ABORT</span></code>（例如参见 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/arch/arm/core/cortex_m/Kconfig">arch/arm/core/cortex_m/Kconfig</a>）。</p>
+</section>
+<section id="thread-local-storage">
+<h2>线程本地存储<a class="headerlink" href="#thread-local-storage" title="链接到此标题。"></a></h2>
+<p>要在新架构上启用线程本地存储：</p>
+<ol class="arabic simple">
+<li><p>实现 <code class="xref c c-func docutils literal notranslate"><span class="pre">arch_tls_stack_setup()</span></code>，在栈中设置 TLS 存储区。存储区需要如何组织，请参阅工具链文档。可以使用以下辅助函数：</p>
+<ul class="simple">
+<li><p>函数 <code class="xref c c-func docutils literal notranslate"><span class="pre">z_tls_data_size()</span></code> 返回线程本地变量所需的大小（不包括工具链和架构所需的任何额外数据）。</p></li>
+<li><p>函数 <code class="xref c c-func docutils literal notranslate"><span class="pre">z_tls_copy()</span></code> 为线程本地变量准备 TLS 存储区。它只复制变量本身，不处理特定于架构和/或工具链的数据。</p></li>
+</ul>
+</li>
+<li><p>在上下文切换中，取出新线程 <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">k_thread</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">tls</span></code> 字段，放入合适的寄存器（或其他某个变量）中，以便访问 TLS 存储区。应使用哪些寄存器，请参阅工具链和架构文档。</p></li>
+<li><p>在 Kconfig 中，向与新架构相关的 Kconfig 添加 <code class="docutils literal notranslate"><span class="pre">select</span> <span class="pre">ARCH_HAS_THREAD_LOCAL_STORAGE</span></code>。</p></li>
+<li><p>运行 <code class="docutils literal notranslate"><span class="pre">tests/kernel/threads/tls</span></code>，确保新代码能够正常工作。</p></li>
+</ol>
+</section>
+<section id="device-drivers">
+<h2>设备驱动<a class="headerlink" href="#device-drivers" title="链接到此标题。"></a></h2>
+<p>内核运行所需的硬件设备很少。理论上，唯一必需的设备是中断控制器，因为内核可以在没有系统时钟的情况下运行。但实际上，要运行健全性检查测试套件中的大部分（甚至全部）测试，还需要系统时钟。由于这两者通常与架构紧密相关，它们属于架构移植的一部分。</p>
+<section id="interrupt-controllers">
+<h3>中断控制器<a class="headerlink" href="#interrupt-controllers" title="链接到此标题。"></a></h3>
+<p>不同架构的中断控制器和中断概念可能存在很大差异。</p>
+<p>例如，x86 有 <abbr title="Interrupt Descriptor Table">IDT</abbr> 的概念以及不同的中断控制器。中断在 IDT 中的位置决定了它的优先级。</p>
+<p>另一方面，ARM Cortex-M 将 <abbr title="Nested Vectored Interrupt Controller">NVIC</abbr> 作为架构定义的一部分。不需要在 NVIC 向量表之外再设一张类似 IDT 的表。IRQ 在表中的位置与其优先级无关：优先级可以按条目编程设置。</p>
+<p>ARCv2 的中断单元也是架构定义的一部分，与 NVIC 有些类似。不过，ARC 将异常号与中断号定义为一一对应（即异常 1 就是 IRQ1，设备 IRQ 从 16 开始），而 ARM 中 IRQ0 等同于异常 16（奇怪的是，异常 1 可以视为 IRQ-15）。</p>
+<p>所有这些差异意味着，在中断控制器方面，不同架构之间几乎无法共享任何内容。</p>
+</section>
+<section id="system-clock">
+<h3>系统时钟<a class="headerlink" href="#system-clock" title="链接到此标题。"></a></h3>
+<p>x86 的架构定义中包含 APIC 定时器和 HPET。ARM Cortex-M 有 SYSTICK 异常。ARCv2 则有 timer0/1 设备。</p>
+<p>内核超时在系统时钟定时器驱动的中断处理程序上下文中处理。</p>
+</section>
+<section id="console-over-serial-line">
+<h3>串口控制台<a class="headerlink" href="#console-over-serial-line" title="链接到此标题。"></a></h3>
+<p>还有一种设备几乎是架构移植的必备设备，因为它对调试非常有用。那就是一个简单的、轮询方式的、只输出的串口驱动，用于发送控制台（<code class="code docutils literal notranslate"><span class="pre">printk</span></code>、<code class="code docutils literal notranslate"><span class="pre">printf</span></code>）输出。</p>
+<p>它并非必需，也可以改用 RAM 控制台（<a class="reference internal" href="../../kconfig.html#CONFIG_RAM_CONSOLE" title="CONFIG_RAM_CONSOLE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_RAM_CONSOLE</span></code></a>），将所有输出发送到一个可由调试器读取的环形缓冲区中。</p>
+</section>
+</section>
+<section id="utility-libraries">
+<h2>工具库<a class="headerlink" href="#utility-libraries" title="链接到此标题。"></a></h2>
+<p>内核依赖于若干函数，在现代处理器上，这些函数可以只用很少的指令或以无锁方式实现。因此，它们应作为架构移植的一部分来实现。</p>
+<ul class="simple">
+<li><p>原子操作。</p>
+<ul>
+<li><p>如果给定架构存在相应指令，则通过 Kconfig 选项 <a class="reference internal" href="../../kconfig.html#CONFIG_ATOMIC_OPERATIONS_ARCH" title="CONFIG_ATOMIC_OPERATIONS_ARCH"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ATOMIC_OPERATIONS_ARCH</span></code></a> 配置该实现。</p></li>
+<li><p>如果给定架构不存在相应指令，则有一个通用版本，它在非原子操作两侧包裹 <code class="xref c c-func docutils literal notranslate"><span class="pre">irq_lock()</span></code> 或 <code class="xref c c-func docutils literal notranslate"><span class="pre">irq_unlock()</span></code>。该版本通过 Kconfig 选项 <a class="reference internal" href="../../kconfig.html#CONFIG_ATOMIC_OPERATIONS_C" title="CONFIG_ATOMIC_OPERATIONS_C"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ATOMIC_OPERATIONS_C</span></code></a> 配置。</p></li>
+</ul>
+</li>
+<li><p>查找最低置位位和查找最高置位位。</p>
+<ul>
+<li><p>如果给定架构不存在相应指令，总是可以将这些函数实现为通用 C 函数。</p></li>
+</ul>
+</li>
+</ul>
+<p>可以使用编译器内建函数来实现它们，但要注意确保其使用了所需的编译器屏障。</p>
+</section>
+<section id="cpu-idling-power-management">
+<h2>CPU 空闲/电源管理<a class="headerlink" href="#cpu-idling-power-management" title="链接到此标题。"></a></h2>
+<p>内核通过两个函数提供 CPU 电源管理支持：<code class="xref c c-func docutils literal notranslate"><span class="pre">arch_cpu_idle()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">arch_cpu_atomic_idle()</span></code>。</p>
+<p><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_cpu_idle()</span></code> 可以简单到在中断解锁的情况下调用该架构的省电指令，例如 x86 上的 <code class="code docutils literal notranslate"><span class="pre">hlt</span></code>、ARM 上的 <code class="code docutils literal notranslate"><span class="pre">wfi</span></code> 或 <code class="code docutils literal notranslate"><span class="pre">wfe</span></code>、ARC 上的 <code class="code docutils literal notranslate"><span class="pre">sleep</span></code>。该函数可以在一个循环中调用，所在上下文不在乎进入睡眠之前是否会被中断打断。正确使用该函数的场景基本上有两种：</p>
+<ul class="simple">
+<li><p>在单线程系统中，在唯一的线程里使用，且该线程在初始化之后不再执行实际工作，即在应用程序运行期间一直处于什么也不做的循环中。</p></li>
+<li><p>在空闲线程中。</p></li>
+</ul>
+<p>另一方面，<code class="xref c c-func docutils literal notranslate"><span class="pre">arch_cpu_atomic_idle()</span></code> 必须能够以原子方式重新启用中断并执行省电指令。因此，它可以用在实际的应用程序代码中，同样是在单线程系统中。</p>
+<p>通常，让 CPU 空闲应交由空闲线程处理，但在一些非常特殊的场景下，应用程序也可以使用这些 API。</p>
+<p>给定架构必须同时提供这两个函数。不过，如果愿意，其实现可以只是以下步骤：</p>
+<ol class="arabic simple">
+<li><p>解锁中断</p></li>
+<li><p>NOP</p></li>
+</ol>
+<p>不过，强烈建议提供真正的实现。</p>
+</section>
+<section id="fault-management">
+<h2>故障管理<a class="headerlink" href="#fault-management" title="链接到此标题。"></a></h2>
+<p>发生未处理的 CPU 异常时，架构代码必须调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">z_fatal_error()</span></code>。该函数会转储与架构无关的信息，并通过调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_sys_fatal_error()</span></code> 来决定下一步的处理策略。可以覆盖该函数以实现应用程序特定的策略，例如锁定中断并永远自旋（默认实现），甚至关闭系统电源（如果支持）。</p>
+</section>
+<section id="toolchain-and-linking">
+<h2>工具链和链接<a class="headerlink" href="#toolchain-and-linking" title="链接到此标题。"></a></h2>
+<p>必须在构建系统中添加工具链支持。</p>
+<p>需要在 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/toolchain/gcc.h">include/zephyr/toolchain/gcc.h</a> 中添加一些特定于架构的定义。可参考该文件中针对当前已支持架构的现有内容。</p>
+<p>每种架构还需要自己的链接器脚本，即使大部分段可以从其他架构的链接器脚本中派生而来。有些段可能是新架构特有的，例如 ARM 上的 SCB 段和 x86 上的 IDT 段。</p>
+</section>
+<section id="memory-management-and-memory-mapping">
+<h2>内存管理和内存映射<a class="headerlink" href="#memory-management-and-memory-mapping" title="链接到此标题。"></a></h2>
+<p>如果目标平台启用了分页，并要求驱动对其 I/O 区域进行内存映射，则需要启用 <a class="reference internal" href="../../kconfig.html#CONFIG_MMU" title="CONFIG_MMU"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MMU</span></code></a>，并实现以下 API：</p>
+<ul class="simple">
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_mem_map()</span></code></p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_mem_unmap()</span></code></p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_page_phys_get()</span></code></p></li>
+</ul>
+</section>
+<section id="stack-objects">
+<h2>栈对象<a class="headerlink" href="#stack-objects" title="链接到此标题。"></a></h2>
+<p>内存保护硬件的存在会影响栈对象的创建方式。所有架构移植都必须指定栈指针所需的对齐方式，这由 CPU 和 ABI 的要求共同决定。它在架构头文件中通过 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ARCH_STACK_PTR_ALIGN</span></code> 定义，通常是 4、8 或 16 字节这样的较小值。</p>
+<p>线程栈有两种类型：</p>
+<ul class="simple">
+<li><p>“内核”栈：使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_KERNEL_STACK_DEFINE()</span></code> 及相关 API 定义，可以承载运行在监管者模式下的内核线程，也可用作中断/异常处理的栈。它们的对齐要求宽松得多，占用的保留数据也更少。不会为特权提升栈预留内存。</p></li>
+<li><p>“线程”栈：通常占用更多内存，但能够承载运行在用户模式下的线程，也能满足内核栈的所有用例。</p></li>
+</ul>
+<p>如果未启用 <a class="reference internal" href="../../kconfig.html#CONFIG_USERSPACE" title="CONFIG_USERSPACE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USERSPACE</span></code></a>，“线程”栈和“内核”栈是等价的。</p>
+<p>可以在架构层定义额外的宏，用于指定栈对象基址的对齐方式、栈对象内部不用作线程栈缓冲区的保留数据，以及如何向上取整栈大小以支持用户模式线程。如果没有这些定义，则采用以下默认值：</p>
+<ul class="simple">
+<li><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">ARCH_KERNEL_STACK_RESERVED</span></code>：默认无保留空间</p></li>
+<li><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">ARCH_THREAD_STACK_RESERVED</span></code>：默认无保留空间</p></li>
+<li><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">ARCH_KERNEL_STACK_OBJ_ALIGN</span></code>：默认按 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ARCH_STACK_PTR_ALIGN</span></code> 对齐</p></li>
+<li><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">ARCH_THREAD_STACK_OBJ_ALIGN</span></code>：默认按 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ARCH_STACK_PTR_ALIGN</span></code> 对齐</p></li>
+<li><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">ARCH_THREAD_STACK_SIZE_ALIGN</span></code>：默认向上取整到 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ARCH_STACK_PTR_ALIGN</span></code></p></li>
+</ul>
+<p>所有栈创建宏都基于这些宏定义。</p>
+<p>所有栈对象都具有如下布局，根据配置不同，某些区域的大小可能为零。它始终由两个主要部分组成：开头的保留内存，以及其后的栈缓冲区本身。某些区域的边界只能在运行时、在其关联线程对象的上下文中确定。其他区域则完全可以在构建时计算出来。</p>
+<p>某些架构可能需要在运行时从栈缓冲区中划出保留内存，而不是在构建时无条件地预留，或者需要补充现有的保留区域（ARM FPU 就是如此）。这类划出的区域总是记录在 <code class="docutils literal notranslate"><span class="pre">thread.stack_info.start</span></code> 中。由 <code class="docutils literal notranslate"><span class="pre">thread.stack_info.start</span></code> 和 <code class="docutils literal notranslate"><span class="pre">thread.stack_info.size</span></code> 指定的区域总是可以被用户模式线程完全访问。<code class="docutils literal notranslate"><span class="pre">thread.stack_info.delta</span></code> 表示一个偏移量，可用于从栈对象的最末端计算初始栈指针，其中已考虑了 TLS 存储和 ASLR 随机偏移。</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>+---------------------+ &lt;- thread.stack_obj
+| Reserved Memory     | } K_(THREAD|KERNEL)_STACK_RESERVED
++---------------------+
+| Carved-out memory   |
+|.....................| &lt;- thread.stack_info.start
+| Unused stack buffer |
+|                     |
+|.....................| &lt;- thread's current stack pointer
+| Used stack buffer   |
+|                     |
+|.....................| &lt;- Initial stack pointer. Computable
+| ASLR Random offset  |      with thread.stack_info.delta
++---------------------| &lt;- thread.userspace_local_data
+| Thread-local data   |
++---------------------+ &lt;- thread.stack_info.start + thread.stack_info.size
+</pre></div>
+</div>
+<p>目前，Zephyr 不支持向上增长的栈。</p>
+<section id="no-memory-protection">
+<h3>无内存保护<a class="headerlink" href="#no-memory-protection" title="链接到此标题。"></a></h3>
+<p>如果未使用内存保护，则默认值就足够了。</p>
+</section>
+<section id="hw-based-stack-overflow-detection">
+<h3>基于硬件的栈溢出检测<a class="headerlink" href="#hw-based-stack-overflow-detection" title="链接到此标题。"></a></h3>
+<p>此选项利用硬件特性，在监管者模式下的线程发生栈溢出时产生致命错误。这对调试很有用，但出于以下几个原因，发生这种情况后无法可靠地对系统状态作出任何断言：</p>
+<ul class="simple">
+<li><p>发生溢出时，内核可能正处于临界区内，从而使重要的全局数据结构处于损坏状态。</p></li>
+<li><p>对于使用保护内存区域实现栈保护的系统，在硬件检测到这种情况之前，有可能越过保护区域并破坏相邻的数据结构。</p></li>
+</ul>
+<p>要启用 <a class="reference internal" href="../../kconfig.html#CONFIG_HW_STACK_PROTECTION" title="CONFIG_HW_STACK_PROTECTION"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HW_STACK_PROTECTION</span></code></a> 特性，系统必须提供某种基于硬件的栈溢出保护，并启用 <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARCH_HAS_STACK_PROTECTION</span></code> 选项。</p>
+<p>支持两种形式的基于硬件的栈溢出检测：为此专门设计的 CPU 特性，或紧挨在栈缓冲区之前的特殊只读保护区域。</p>
+<p><a class="reference internal" href="../../kconfig.html#CONFIG_HW_STACK_PROTECTION" title="CONFIG_HW_STACK_PROTECTION"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HW_STACK_PROTECTION</span></code></a> 只能捕获监管者线程的栈溢出。捕获用户线程的栈溢出并不需要它；<a class="reference internal" href="../../kconfig.html#CONFIG_USERSPACE" title="CONFIG_USERSPACE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USERSPACE</span></code></a> 与之相互独立。</p>
+<p>此特性只检测监管者模式下的栈溢出，包括处理系统调用时的栈溢出。它不能保证内核未被破坏。监管者模式下的任何栈溢出都应被视为致命错误，无法对整个系统的完整性作出任何断言。</p>
+<p>用户模式下的栈溢出（从内核的角度看）是可恢复的，不需要特殊配置；<a class="reference internal" href="../../kconfig.html#CONFIG_HW_STACK_PROTECTION" title="CONFIG_HW_STACK_PROTECTION"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HW_STACK_PROTECTION</span></code></a> 只适用于捕获 CPU 处于监管者模式时的溢出。</p>
+<section id="cpu-based-stack-overflow-detection">
+<h4>基于 CPU 的栈溢出检测<a class="headerlink" href="#cpu-based-stack-overflow-detection" title="链接到此标题。"></a></h4>
+<p>如果通过特殊的 CPU 寄存器（例如 ARM 的 SPLIM）检测监管者模式下的栈溢出，则默认值就足够了。</p>
+</section>
+<section id="guard-based-stack-overflow-detection">
+<h4>基于保护区域的栈溢出检测<a class="headerlink" href="#guard-based-stack-overflow-detection" title="链接到此标题。"></a></h4>
+<p>通过紧挨在栈缓冲区之前、写入时会产生异常的特殊内存保护区域来检测监管者模式下的栈溢出。保留内存将用作该保护区域。</p>
+<p><code class="xref c c-macro docutils literal notranslate"><span class="pre">ARCH_KERNEL_STACK_RESERVED</span></code> 应定义为内存保护区域的最小大小。在大多数 ARM CPU 上为 32 字节。还应将 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ARCH_KERNEL_STACK_OBJ_ALIGN</span></code> 设置为该区域所需的对齐方式。</p>
+<p>基于 MMU 的系统不应为保护区域保留 RAM，而应在每个栈映射到地址空间时，直接在其下方留出一个不存在的虚拟页。栈对象仍需按页粒度正确对齐并确定大小。</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>+-----------------------------+ &lt;- thread.stack_obj
+| Guard reserved memory       | } K_KERNEL_STACK_RESERVED
++-----------------------------+
+| Guard carve-out             |
+|.............................| &lt;- thread.stack_info.start
+| Stack buffer                |
+.                             .
+</pre></div>
+</div>
+<p>为内核栈划出保护区域的情况并不常见，应尽可能避免。通常在以下两种情况下才需要：</p>
+<ul class="simple">
+<li><p>同一个栈可能被改作承载用户线程，此时不需要保护区域，也不应无条件地预留它。当特权提升栈不在栈对象内部时就是这种情况。</p></li>
+<li><p>所需的保护区域大小可变，取决于上下文。例如，某些 ARM CPU 在异常期间采用惰性浮点压栈，可能会在不写入任何内容的情况下将栈指针减去一个很大的值，从而完全越过最小尺寸的保护区域并破坏相邻内存。与其无条件地预留更大的保护区域，不如在线程使用浮点时再划出额外的内存。</p></li>
+</ul>
+</section>
+</section>
+<section id="user-mode-enabled">
+<h3>启用用户模式<a class="headerlink" href="#user-mode-enabled" title="链接到此标题。"></a></h3>
+<p>启用用户模式会带来两项新要求：</p>
+<ul class="simple">
+<li><p>必须分配一个大小固定、由 <a class="reference internal" href="../../kconfig.html#CONFIG_PRIVILEGED_STACK_SIZE" title="CONFIG_PRIVILEGED_STACK_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PRIVILEGED_STACK_SIZE</span></code></a> 指定、用户线程无法访问的独立特权模式栈。内核在处理系统调用时将其用作栈。如果实现了栈保护，则必须能够在其前面放置一个栈保护区域，必要时还要支持划出区域。</p></li>
+<li><p>内存保护硬件必须能够设置一个恰好覆盖线程栈缓冲区的区域，该区域记录在 <code class="docutils literal notranslate"><span class="pre">thread.stack_info</span></code> 中。这意味着 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ARCH_THREAD_STACK_SIZE_ADJUST()</span></code> 需要将请求的栈大小向上取整，使某个区域能够覆盖它；同时 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ARCH_THREAD_STACK_OBJ_ALIGN()</span></code> 也要按照内存保护硬件的粒度来指定。</p></li>
+</ul>
+<p>如果内存保护硬件要求所有内存区域的大小都是 2 的幂并按自身大小对齐，情况会更加复杂。这在较旧的 MPU 上很常见，由 <a class="reference internal" href="../../kconfig.html#CONFIG_MPU_REQUIRES_POWER_OF_TWO_ALIGNMENT" title="CONFIG_MPU_REQUIRES_POWER_OF_TWO_ALIGNMENT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MPU_REQUIRES_POWER_OF_TWO_ALIGNMENT</span></code></a> 表示。</p>
+<p><code class="docutils literal notranslate"><span class="pre">thread.stack_info</span></code> 始终记录栈对象中用户可访问的部分，使用其中存储的范围设置一个允许用户访问的内存保护区域，必须总是正确的。</p>
+<section id="non-power-of-two-memory-region-requirements">
+<h4>非 2 的幂内存区域要求<a class="headerlink" href="#non-power-of-two-memory-region-requirements" title="链接到此标题。"></a></h4>
+<p>在没有 2 的幂区域要求的系统上，由 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_THREAD_STACK_RESERVED</span></code> 定义的线程栈保留内存区可以用来容纳特权模式栈。其布局可能如下：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>+------------------------------+ &lt;- thread.stack_obj
+| Other platform data          |
++------------------------------+
+| Guard region (if enabled)    |
++------------------------------+
+| Guard carve-out (if needed)  |
+|..............................|
+| Privilege elevation stack    |
++------------------------------| &lt;- thread.stack_obj +
+| Stack buffer                 |      K_THREAD_STACK_RESERVED =
+.                              .      thread.stack_info.start
+</pre></div>
+</div>
+<p>创建线程时，保护区域以及任何划出的区域（如果需要）将被配置为只读区域。</p>
+<ul class="simple">
+<li><p>如果线程是监管者线程，特权提升区域只是额外的栈内存。溢出最终会撞上保护区域。</p></li>
+<li><p>如果线程运行在用户模式下，将配置一个内存保护区域，允许用户线程访问栈缓冲区，但不能访问其前后的任何内容。用户模式下的溢出会撞上用户线程无权访问的特权提升栈。处理系统调用时的溢出会撞上保护区域。</p></li>
+</ul>
+<p>在 MMU 系统上不应有物理保护区域；特权模式栈将映射到内核内存中，栈缓冲区映射到内存的用户部分，二者下方都有不存在的虚拟保护页，用于捕获运行时的栈溢出。</p>
+<p>其他平台数据也可以存放在保护区域之前，但如果这些数据可以存放在 <code class="docutils literal notranslate"><span class="pre">thread.arch</span></code> 中的某处，则强烈不建议这样做。</p>
+<p>需要定义 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ARCH_THREAD_STACK_RESERVED</span></code>，以表示包含平台数据、特权提升栈和保护区域的保留区域的大小。其大小必须合适，以便能在其后紧接着放置一个授予用户模式访问栈缓冲区权限的 MPU 区域。</p>
+</section>
+<section id="power-of-two-memory-region-requirements">
+<h4>2 的幂内存区域要求<a class="headerlink" href="#power-of-two-memory-region-requirements" title="链接到此标题。"></a></h4>
+<p>线程栈对象的大小和对齐必须是同一个 2 的幂，且不含任何保留内存，以便在内存中高效排列。因此，线程栈中的任何保护区域都必须完全从栈缓冲区中划出，特权提升栈也必须在其他地方分配。</p>
+<p><code class="xref c c-macro docutils literal notranslate"><span class="pre">ARCH_THREAD_STACK_SIZE_ADJUST()</span></code> 和 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ARCH_THREAD_STACK_OBJ_ALIGN()</span></code> 都应定义为 <code class="xref c c-macro docutils literal notranslate"><span class="pre">Z_POW2_CEIL()</span></code>。<code class="xref c c-macro docutils literal notranslate"><span class="pre">K_THREAD_STACK_RESERVED</span></code> 必须为 0。</p>
+<p>对于特权栈，必须启用 <a class="reference internal" href="../../kconfig.html#CONFIG_GEN_PRIV_STACKS" title="CONFIG_GEN_PRIV_STACKS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_GEN_PRIV_STACKS</span></code></a>。对于系统中的每个线程栈，都会生成一个对应的、用于处理系统调用的固定大小内核栈。运行时可以使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">z_priv_stack_find()</span></code> 根据线程栈地址快速查找特权栈的地址。这些栈的布局与其他仅供内核使用的栈相同。</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>+-----------------------------+ &lt;- z_priv_stack_find(thread.stack_obj)
+| Reserved memory             | } K_KERNEL_STACK_RESERVED
++-----------------------------+
+| Guard carve-out (if needed) |
+|.............................|
+| Privilege elevation stack   |
+|                             |
++-----------------------------+ &lt;- z_priv_stack_find(thread.stack_obj) +
+                                     K_KERNEL_STACK_RESERVED +
+                                     CONFIG_PRIVILEGED_STACK_SIZE
+
++-----------------------------+ &lt;- thread.stack_obj
+| MPU guard carve-out         |
+| (supervisor mode only)      |
+|.............................| &lt;- thread.stack_info.start
+| Stack buffer                |
+.                             .
+</pre></div>
+</div>
+<p>线程栈对象中划出的保护区域只在线程运行于监管者模式时使用。如果线程降级到用户模式，就不再有保护区域，整个对象都用作栈缓冲区，关联的用户模式线程拥有完全访问权限，<code class="docutils literal notranslate"><span class="pre">thread.stack_info</span></code> 也会相应更新。</p>
+</section>
+</section>
+</section>
+<section id="user-mode-threads">
+<h2>用户模式线程<a class="headerlink" href="#user-mode-threads" title="链接到此标题。"></a></h2>
+<p>要支持用户模式线程，需要实现若干内核到架构的 API，并且系统必须启用 <code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARCH_HAS_USERSPACE</span></code> 选项。更多详细信息请参阅以下各函数的文档：</p>
+<ul class="simple">
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_buffer_validate()</span></code>：测试当前线程是否对特定内存区域具有访问权限</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_user_mode_enter()</span></code>：不可逆地将监管者线程降级为用户模式权限。必须清除栈。</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_syscall_oops()</span></code>：在无法验证系统调用参数时产生内核 oops，并使该 oops 看起来是在用户线程中调用系统调用的位置产生的</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_syscall_invoke0()</span></code> 到 <code class="xref c c-func docutils literal notranslate"><span class="pre">arch_syscall_invoke6()</span></code>：以相应数量的参数调用系统调用，所有参数都必须在特权提升期间通过寄存器传递。</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_is_user_context()</span></code>：如果 CPU 当前运行在用户模式下，则返回非零值</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_mem_domain_max_partitions_get()</span></code>：表示一个内存域的最大区域数。MMU 系统没有数量限制，MPU 系统则对此有约束。</p></li>
+</ul>
+<p>某些架构在调用内存域 API 时，可能需要更新软件内存管理结构，或修改另一个 CPU 上的硬件寄存器。若是如此，架构必须 select <a class="reference internal" href="../../kconfig.html#CONFIG_ARCH_MEM_DOMAIN_SYNCHRONOUS_API" title="CONFIG_ARCH_MEM_DOMAIN_SYNCHRONOUS_API"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARCH_MEM_DOMAIN_SYNCHRONOUS_API</span></code></a>，并且必须实现一些额外的 API。这在 MMU 系统上很常见，在 MPU 系统上则不常见：</p>
+<ul class="simple">
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_mem_domain_thread_add()</span></code></p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_mem_domain_thread_remove()</span></code></p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_mem_domain_partition_add()</span></code></p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_mem_domain_partition_remove()</span></code></p></li>
+</ul>
+<p>详情请参阅这些 API 的 Doxygen 文档。</p>
+<p>除了实现这些 API 之外，还有其他一些工作：</p>
+<ul class="simple">
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">_new_thread()</span></code> 需要以用户模式创建带有 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_USER</span></code> 的线程</p></li>
+<li><p>上下文切换时，应通过对内存管理硬件进行相应的配置修改，将被换出线程的栈内存标记为用户模式不可访问。被换入线程的栈内存则应相应地标记为可访问。这样可以确保线程无法干扰其他线程的栈。</p></li>
+<li><p>上下文切换时，系统需要在换入线程和换出线程的内存域之间切换。</p></li>
+<li><p>线程栈区域必须包含一个内核栈区域。该区域在任何时候都应对用户线程不可访问。进行系统调用时会使用此栈。它对所有线程应为固定大小，并且必须足够大，以便处理任何系统调用。</p></li>
+<li><p>需要建立一个软件中断或某种特权提升机制。这与 _arch_syscall_invoke 宏的实现方式密切相关。进行系统调用时，需要在 _k_syscall_table 中查找相应的处理函数。错误的系统调用 ID 应跳转到 <code class="xref c c-enum docutils literal notranslate"><span class="pre">K_SYSCALL_BAD</span></code> 处理程序。系统调用完成后，必须注意不要将任何寄存器状态泄漏回用户模式。</p></li>
+</ul>
+</section>
+<section id="gdb-stub">
+<h2>GDB Stub<a class="headerlink" href="#gdb-stub" title="链接到此标题。"></a></h2>
+<p>要在新架构上启用用于远程调试的 GDB stub：</p>
+<ol class="arabic simple">
+<li><p>在相应的架构包含目录下新建 <code class="docutils literal notranslate"><span class="pre">gdbstub.h</span></code> 头文件（<code class="file docutils literal notranslate"><span class="pre">include/zephyr/arch/&lt;arch&gt;/gdbstub.h</span></code>）。</p>
+<ul class="simple">
+<li><p>新建一个结构体 <code class="docutils literal notranslate"><span class="pre">struct</span> <span class="pre">gdb_ctx</span></code> 作为 GDB 上下文。</p>
+<ul>
+<li><p>必须定义一个名为 <code class="docutils literal notranslate"><span class="pre">exception</span></code>、类型为 <code class="docutils literal notranslate"><span class="pre">unsigned</span> <span class="pre">int</span></code> 的成员，用于存储 GDB 异常原因。进入 <code class="xref c c-func docutils literal notranslate"><span class="pre">z_gdb_main_loop()</span></code> 之前需要设置该值。</p></li>
+<li><p>架构可以根据 GDB stub 正常工作的需要定义任意数量的成员。</p></li>
+<li><p>需要将指向该结构体的指针传给 <code class="xref c c-func docutils literal notranslate"><span class="pre">z_gdb_main_loop()</span></code>，该指针会在那里再传给其他 GDB stub 函数。</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>进入和退出 GDB stub 主循环的函数。</p>
+<ul class="simple">
+<li><p>如果架构依赖中断来处理断点，则需要实现中断服务例程（ISR），作为 GDB stub 主循环的入口点。</p></li>
+<li><p>这些函数需要保存和恢复上下文，使代码可以像没有遇到断点一样继续执行。</p></li>
+<li><p>这些函数需要在保存执行上下文后调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">z_gdb_main_loop()</span></code>，进入 GDB stub 主循环以接收来自 GDB 的命令。</p></li>
+<li><p>调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">z_gdb_main_loop()</span></code> 之前，必须设置 <code class="xref c c-member docutils literal notranslate"><span class="pre">gdb_ctx.exception</span></code> 以指明异常原因。</p></li>
+</ul>
+</li>
+<li><p>实现支持 GDB stub 功能所需的函数：</p>
+<ul class="simple">
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_gdb_init()</span></code></p>
+<ul>
+<li><p>此函数需要初始化支持 GDB stub 功能所需的部分，例如设置 GDB 上下文和连接调试中断。</p></li>
+<li><p>此函数必须通过特定于架构的方法（例如触发调试中断）停止代码执行。这样 GDB 就可以在启动期间连接。</p></li>
+</ul>
+</li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_gdb_continue()</span></code></p>
+<ul>
+<li><p>当 GDB 发送 <code class="docutils literal notranslate"><span class="pre">c</span></code> 或 <code class="docutils literal notranslate"><span class="pre">continue</span></code> 命令以继续执行代码时，调用此函数。</p></li>
+</ul>
+</li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_gdb_step()</span></code></p>
+<ul>
+<li><p>当 GDB 发送 <code class="docutils literal notranslate"><span class="pre">si</span></code> 或 <code class="docutils literal notranslate"><span class="pre">stepi</span></code> 命令，要求执行一条机器指令后再返回 GDB 提示符时，调用此函数。</p></li>
+</ul>
+</li>
+<li><p>硬件寄存器读/写函数：</p>
+<ul>
+<li><p>由于 GDB stub 运行在目标上，对硬件寄存器的操作需要先进行缓存，以免影响 GDB stub 的执行。可以把它想象成上下文切换，执行上下文切换到了 GDB stub。因此需要保存上下文切换前正在运行线程的寄存器值。对寄存器值的操作只能在这份缓存副本上进行。切换回之前运行的线程之前，再把更新后的值写入硬件寄存器。</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_gdb_reg_readall()</span></code></p>
+<ul>
+<li><p>此函数收集将出现在 <code class="docutils literal notranslate"><span class="pre">g</span></code>/<code class="docutils literal notranslate"><span class="pre">G</span></code> 数据包中、要发回 GDB 的所有硬件寄存器值。G 数据包的格式与架构相关。具体要求请查阅 GDB。</p></li>
+<li><p>注意，对于大多数架构，必须返回一个有效的 G 数据包并发送给 GDB。如果向 GDB 发送了长度不正确的数据包，GDB 将中止调试会话。</p></li>
+</ul>
+</li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_gdb_reg_writeall()</span></code></p>
+<ul>
+<li><p>此函数接收 GDB 发送的 G 数据包，并用其中的值填充硬件寄存器。</p></li>
+</ul>
+</li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_gdb_reg_readone()</span></code></p>
+<ul>
+<li><p>此函数读取一个硬件寄存器的值，并将结果发送给 GDB。</p></li>
+</ul>
+</li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_gdb_reg_writeone()</span></code></p>
+<ul>
+<li><p>此函数写入从 GDB 接收到的一个硬件寄存器的值。</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>断点：</p>
+<ul>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">arch_gdb_add_breakpoint()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">arch_gdb_remove_breakpoint()</span></code></p></li>
+<li><p>GDB 可能会选择使用软件断点，即修改断点位置的内存，将其中的指令替换为软件断点指令或陷阱指令。执行到断点后，GDB 会再恢复原来的内存内容。GDB 默认支持这种方式，通常无需在架构代码中处理软件断点（断点类型为 <code class="docutils literal notranslate"><span class="pre">0</span></code>）。</p></li>
+<li><p>如果代码位于运行时无法修改的 ROM 或 Flash 中，则需要硬件断点（类型 <code class="docutils literal notranslate"><span class="pre">1</span></code>）。如何启用硬件断点，请查阅该架构的数据手册。</p></li>
+<li><p>如果架构不支持硬件断点，则无需在架构代码中实现这些函数。GDB 将改用软件断点。</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>对于某些内存区域不可访问的架构，需要定义一个名为 <code class="xref c c-var docutils literal notranslate"><span class="pre">gdb_mem_region_array</span></code>、类型为 <code class="xref c c-struct docutils literal notranslate"><span class="pre">gdb_mem_region</span></code> 的数组，用于指定可访问的区域。对于数组中的每一项：</p>
+<ul class="simple">
+<li><p><code class="xref c c-member docutils literal notranslate"><span class="pre">gdb_mem_region.start</span></code> 指定内存区域的起始地址。</p></li>
+<li><p><code class="xref c c-member docutils literal notranslate"><span class="pre">gdb_mem_region.end</span></code> 指定内存区域的结束地址。</p></li>
+<li><p><code class="xref c c-member docutils literal notranslate"><span class="pre">gdb_mem_region.attributes</span></code> 指定内存区域的权限。</p>
+<ul>
+<li><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">GDB_MEM_REGION_RO</span></code>：区域只读。</p></li>
+<li><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">GDB_MEM_REGION_RW</span></code>：区域可读写。</p></li>
+</ul>
+</li>
+<li><p><code class="xref c c-member docutils literal notranslate"><span class="pre">gdb_mem_region.alignment</span></code> 指定内存区域的读/写对齐要求。如果没有对齐要求，可以逐字节读写，则使用 <code class="docutils literal notranslate"><span class="pre">0</span></code>。</p></li>
+</ul>
+</li>
+</ol>
+</section>
+<section id="api-reference">
+<h2>API 参考<a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<section id="timing">
+<h3>计时<a class="headerlink" href="#timing" title="链接到此标题。"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">arch-timing</span></dt>
+</dl>
+
+</section>
+<section id="threads">
+<h3>线程<a class="headerlink" href="#threads" title="链接到此标题。"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">arch-threads</span></dt>
+</dl>
+
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">arch-tls</span></dt>
+</dl>
+
+</section>
+<section id="power-management">
+<h3>电源管理<a class="headerlink" href="#power-management" title="链接到此标题。"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">arch-pm</span></dt>
+</dl>
+
+</section>
+<section id="symmetric-multi-processing">
+<h3>对称多处理<a class="headerlink" href="#symmetric-multi-processing" title="链接到此标题。"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">arch-smp</span></dt>
+</dl>
+
+</section>
+<section id="interrupts">
+<h3>中断<a class="headerlink" href="#interrupts" title="链接到此标题。"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">arch-irq</span></dt>
+</dl>
+
+</section>
+<section id="userspace">
+<h3>用户空间<a class="headerlink" href="#userspace" title="链接到此标题。"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">arch-userspace</span></dt>
+</dl>
+
+</section>
+<section id="memory-management">
+<h3>内存管理<a class="headerlink" href="#memory-management" title="链接到此标题。"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">arch-mmu</span></dt>
+</dl>
+
+</section>
+<section id="miscellaneous-architecture-apis">
+<h3>其他架构 API<a class="headerlink" href="#miscellaneous-architecture-apis" title="链接到此标题。"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">arch-misc</span></dt>
+</dl>
+
+</section>
+<section id="gdb-stub-apis">
+<h3>GDB Stub 相关 API<a class="headerlink" href="#gdb-stub-apis" title="链接到此标题。"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">arch-gdbstub</span></dt>
+</dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 7月 12, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

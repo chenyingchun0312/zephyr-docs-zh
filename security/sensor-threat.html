@@ -1,0 +1,460 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>传感器设备威胁模型 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/security/sensor-threat.html" />
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../_static/translations.js?v=540d3cec"></script>
+      <script src="../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../genindex.html" />
+    <link rel="search" title="搜索" href="../search.html" />
+    <link rel="next" title="加固工具" href="hardening-tool.html" />
+    <link rel="prev" title="安全编码" href="secure-coding.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html">
+            
+              <img src="../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../project/index.html">项目与治理</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">信息安全</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="security-overview.html">Zephyr 信息安全概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="reporting.html">信息安全漏洞报告</a></li>
+<li class="toctree-l2"><a class="reference internal" href="secure-coding.html">安全编码</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">传感器设备威胁模型</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#assets">资产</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#communication">通信</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#other-considerations">其他注意事项</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#threats">威胁</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#notes">注释</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="hardening-tool.html">加固工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="control-flow-integrity.html">控制流完整性</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vulnerabilities.html">漏洞</a></li>
+<li class="toctree-l2"><a class="reference internal" href="standards/index.html">信息安全标准与 Zephyr</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="index.html">信息安全</a> &raquo;</li>
+  
+  <li>传感器设备威胁模型</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="sensor-device-threat-model">
+<span id="sensor-threat"></span><h1>传感器设备威胁模型<a class="headerlink" href="#sensor-device-threat-model" title="链接到此标题。"></a></h1>
+<p>本文档描述了一种物联网传感器设备的威胁模型。明确阐述威胁模型有助于指导开发工作，也可以用来帮助确定这些工作的优先级。</p>
+<p>该设备包含某种类型的传感器（例如温度传感器，或管道中的压力传感器），传感器将数据发送到运行微控制器的 SoC。该微控制器连接到云服务，并将传感器数据转发给该服务。云服务也可以向设备发送配置数据以及软件更新镜像。总体框图如图 1 所示：</p>
+<figure class="align-default" id="id26">
+<img alt="../_images/sensor-model.svg" src="../_images/sensor-model.svg" />
+<figcaption>
+<p><span class="caption-text">图 1. 传感器总体框图</span><a class="headerlink" href="#id26" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<p>在该传感器设备中，传感器通过 SPI 总线与 SoC 相连，SoC 具有一个网络接口，用于与云服务通信。这些接口的具体细节可能以意想不到的方式影响威胁模型，因此需要考虑各种变体（例如，使用通过某种总线连接的独立网络接口 SoC）。</p>
+<p>该模型还重点关注通过 MQTT-over-TLS 协议进行的通信，因为该协议似乎应用广泛 <a class="footnote-reference brackets" href="#id23" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>1<span class="fn-bracket">]</span></a>。</p>
+<section id="assets">
+<h2>资产<a class="headerlink" href="#assets" title="链接到此标题。"></a></h2>
+<p>威胁模型需要考虑的一个方面是设备运行所涉及的资产。以下列表列举了该模型中包含的资产：</p>
+<ol class="arabic">
+<li><p><strong>引导加载程序</strong>。这是存放在设备内 Flash 中的一个小型代码/数据镜像，是最先运行的代码。为了建立信任根，该镜像必须是不可修改的。该模型假定 SoC 提供了一种保护 Flash 某个区域、使其以后不能再被写入的机制，并且在生产早期将该镜像编程写入设备后就会启用这种保护 <a class="reference internal" href="#th-imboot" id="id2"><span>[th-imboot]</span></a>。</p></li>
+<li><p><strong>应用程序固件镜像</strong>。该资产由微控制器运行的其余固件组成。之所以要区分出来，是因为随着信息安全漏洞被发现，这部分镜像需要定期更新。对该镜像更新的要求如下：</p>
+<ol class="loweralpha simple">
+<li><p>该镜像只能被替换为经过授权的镜像 <a class="reference internal" href="#th-authrepl" id="id3"><span>[th-authrepl]</span></a>。</p></li>
+<li><p>当有经过授权的替换镜像可用时，应及时进行更新 <a class="reference internal" href="#th-timely-update" id="id4"><span>[th-timely-update]</span></a>。</p></li>
+<li><p>镜像更新应是原子的，即在运行镜像时，Flash 中要么完整地包含更新镜像，要么完整地包含旧镜像 <a class="reference internal" href="#th-atomic-update" id="id5"><span>[th-atomic-update]</span></a>。</p></li>
+</ol>
+</li>
+<li><p><strong>根证书列表</strong>。为了认证云服务（服务器），物联网设备必须拥有一份允许为服务器证书签名的根证书列表。对于基于云提供商的服务，该列表通常由服务提供商提供。由于根证书可能过期，也可能被吊销，因此该列表需要定期更新 <a class="reference internal" href="#th-root-certs" id="id6"><span>[th-root-certs]</span></a>、<a class="reference internal" href="#th-root-check" id="id7"><span>[th-root-check]</span></a>。</p></li>
+<li><p><strong>客户端机密</strong>。为了向服务认证客户端，客户端必须拥有某种机密。这通常是一个私钥，一般是 RSA 密钥或 EC 私钥。与服务器建立通信时，设备会将该机密用于 TLS 建立过程，或用于对通信中使用的消息进行签名。</p>
+<p>该机密通常由服务提供商或在其他地方运行的软件生成，并且必须被安全地安装到设备上。策略可能要求定期更换该机密，这就需要一种更新客户端机密的方法。通常，服务会允许同时存在两到三个有效密钥，以便在仍使用旧密钥的同时进行更新。</p>
+<p>这些机密必须受到保护以防被读取，并且只应让尽可能少的代码访问它们。<a class="reference internal" href="#th-secret-storage" id="id8"><span>[th-secret-storage]</span></a></p>
+</li>
+<li><p><strong>当前日期/时间</strong>。TLS 证书验证需要知道当前的日期和时间，以确定当前时间是否在证书的有效期内。此外，基于令牌的客户端认证通常要求客户端对一条包含令牌有效时间窗口的消息进行签名。证书验证要求设备的日期和时间误差在一天左右以内。令牌生成通常要求时间误差在 5-10 分钟以内。</p>
+<p>可以通过查询外部时间服务器来近似获得安全的时间。安全 NTP 可能超出了物联网设备的能力范围。时间不正确的主要风险是拒绝服务（设备拒绝有效的证书）以及生成时间无效的令牌。攻击者有可能诱使设备生成在未来才有效的令牌，但攻击者还必须伪造服务器的证书才能截获这些令牌。<a class="reference internal" href="#th-time" id="id9"><span>[th-time]</span></a></p>
+</li>
+<li><p><strong>传感器数据</strong>。从传感器接收并交付给服务的数据，在交付时不得被修改或篡改。</p></li>
+<li><p><strong>设备配置</strong>。设备需要保存各种配置数据，例如要连接的服务的主机名、时间服务器的地址、向服务发送传感器数据的频率和参数，以及其他数据。随着配置的变化，这些配置数据需要定期更新。只应允许经过授权的各方进行更新。<a class="reference internal" href="#th-conf" id="id10"><span>[th-conf]</span></a></p></li>
+<li><p><strong>日志</strong>。为了协助分析信息安全问题，设备应记录与信息安全相关的事件的信息。物联网设备的存储空间通常有限，因此需要仔细选择要记录的日志。也可以将这些日志事件发送到云服务，存储在资源更充足的环境中。应记录的事件类型包括：</p>
+<ol class="loweralpha simple">
+<li><p><strong>固件镜像更新</strong>。系统应记录新镜像的下载，以及镜像何时更新成功。</p></li>
+<li><p><strong>客户端机密更改</strong>。应记录客户端机密的更改和新增。</p></li>
+<li><p><strong>设备配置的更改</strong>。</p></li>
+</ol>
+<p><a class="reference internal" href="#th-logs" id="id11"><span>[th-logs]</span></a></p>
+</li>
+</ol>
+</section>
+<section id="communication">
+<h2>通信<a class="headerlink" href="#communication" title="链接到此标题。"></a></h2>
+<p>除了资产之外，威胁模型还考虑系统各实体之间传递数据或资产的位置。</p>
+<ol class="arabic">
+<li><p><strong>Flash 内容</strong>。Flash 器件包含若干区域。Flash 的内容可以由 SoC 的 CPU 以编程方式修改。</p>
+<ol class="loweralpha">
+<li><p><strong>引导加载程序</strong>。如“资产”一节所述，引导加载程序是 Flash 器件中的一个小区域，包含最先运行的代码。该区域应在设备生命周期的早期写入，然后将 Flash 器件配置为永久禁止修改该区域。该配置还应防止通过外部接口（例如 JTAG 或 SWD 调试器）进行修改。</p>
+<p>引导加载程序负责验证应用程序镜像的签名，并在需要更新时用更新镜像更新应用程序镜像。</p>
+<p>引导加载程序在安装更新镜像之前应验证其签名。</p>
+<p>引导加载程序应只接受版本号比当前镜像更新的更新镜像。</p>
+</li>
+<li><p><strong>应用程序镜像</strong>。应用程序镜像包含设备正常运行期间执行的代码。在运行该镜像之前，引导加载程序应验证镜像的数字签名，以避免运行被篡改过的镜像。Flash/系统应配置为：引导加载程序运行完成后，CPU 将无法写入应用程序镜像。</p></li>
+<li><p><strong>更新镜像</strong>。这是 Flash 中用于存放新版本应用程序镜像的区域。该镜像将在正常运行期间由应用程序下载并存储。完成后，应用程序可以触发重启，再由引导加载程序安装新镜像。</p></li>
+<li><p><strong>机密存储区</strong>。Flash 中的一个区域将用于存储客户端机密。该区域由应用程序镜像中的一部分代码读写。应对应用程序进行配置，使不需要访问该区域的代码既不能读取也不能写入该区域，同时要考虑到在大部分应用程序代码中可能发现的漏洞利用。机密内容一旦泄露，攻击者就能冒充该设备。</p>
+<p>初始机密应在一个与设备正常运行相分离的预配（provisioning）过程中写入设备。之后的更新可以根据通过与服务之间的安全信道接收到的指令来进行。</p>
+</li>
+<li><p><strong>配置存储区</strong>。应有一个用于存储其他配置信息的区域。在资源受限的设备上，允许将其与机密存储区存放在同一区域中，但这会增加能访问机密存储区的代码，因此也就增加了必须仔细审查的代码。</p></li>
+<li><p><strong>日志存储区</strong>。设备可以有一个用于写入日志事件的 Flash 区域。</p></li>
+</ol>
+</li>
+<li><p><strong>传感器/执行器接口</strong>。在本设计中，传感器或执行器通过某种总线（例如 SPI）与 SoC 通信。硬件设计应使攻击者难以截获该总线上的通信。所需的技术取决于传感器数据的敏感性和用途，可以从将传感器安装在与 MCU 相同的 PCB 上，到用环氧树脂灌封整个设备。</p></li>
+<li><p><strong>与云服务的通信</strong>。设备与云服务之间的通信将通过公共互联网进行。因此，应假定攻击者可以任意截获该信道，例如返回伪造的 DNS 结果，或尝试对与云服务的通信发起中间人攻击。</p>
+<p>设备与云服务之间的所有通信都应使用 TLS <a class="reference internal" href="#th-all-tls" id="id12"><span>[th-all-tls]</span></a>。TLS 协议栈应配置为只使用普遍认为安全的密码套件 <a class="footnote-reference brackets" href="#id24" id="id13" role="doc-noteref"><span class="fn-bracket">[</span>2<span class="fn-bracket">]</span></a>，并具备前向保密性。通信应通过以下方式加以保护：</p>
+<ol class="loweralpha simple">
+<li><p><strong>密码套件选择</strong>。设备应只允许使用公认安全的密码套件进行通信 <a class="reference internal" href="#th-tls-ciphers" id="id14"><span>[th-tls-ciphers]</span></a>。</p></li>
+<li><p><strong>服务器证书验证</strong>。应验证服务器出示的证书 <a class="reference internal" href="#th-root-check" id="id15"><span>[th-root-check]</span></a>。</p>
+<ol class="lowerroman simple">
+<li><p><strong>命名</strong>。证书应注明云服务服务器所提供的主机和服务。<span class="target" id="index-8"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc6125.html"><strong>RFC 6125</strong></a> 描述了这方面的最佳实践。只要服务能够使用符合要求的证书，设备可以对证书提出比该 RFC 所述更严格的要求。</p></li>
+<li><p><strong>路径验证</strong>。设备应验证证书链具有一条从设备内所含的根证书到服务所出示证书的有效签名路径。<span class="target" id="index-9"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc4158.html"><strong>RFC 4158</strong></a> 对此做了总体描述。只要所用的服务器证书符合限制，设备可以要求使用更受限的路径。</p></li>
+<li><p><strong>有效期</strong>。应根据设备所能获得的最准确的当前时间，检查所有出示证书的有效期。</p></li>
+</ol>
+</li>
+<li><p><strong>客户端认证</strong>。客户端应使用只有该特定设备知道的机密向服务认证自身。有几种可选方式，所用的技术通常由所使用的特定服务提供商规定 <a class="reference internal" href="#th-tls-client-auth" id="id16"><span>[th-tls-client-auth]</span></a>。</p>
+<ol class="lowerroman simple">
+<li><p><strong>TLS 客户端证书</strong>。TLS 协议允许客户端出示证书，并证明自己知道该证书所对应的机密。这些证书通常保存在服务提供商处。这些证书可以是自签名的，也可以由 CA 签名。由于服务提供商维护着一份有效证书列表（将证书映射到设备身份），由 CA 为这些证书签名并不会增加额外的信息安全，但可能有助于管理这些证书。</p></li>
+<li><p><strong>基于令牌的认证</strong>。客户端也可以使用 MQTT CONNECT 报文的 <em>password</em> 字段来认证自身。但是，机密本身不得在该报文中传输，而应使用基于令牌的协议，例如 <span class="target" id="index-10"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc7519.html"><strong>RFC 7519</strong></a> 的 JSON Web Token（JWT）。这些令牌的有效期通常很短（例如 1 小时），以防止被截获后被重复使用。在设备验证服务器身份之前，不得发送令牌。</p></li>
+</ol>
+</li>
+<li><p><strong>随机数/熵源</strong>。加密通信需要生成安全的伪随机数。设备应使用现代的、公认的密码学随机位生成器来生成这些随机数。设备应使用在 SoC 内以硬件实现的非确定性随机位生成器（真 RBG），或使用由 SoC 内熵源提供种子的确定性随机位生成器（伪 RBG）。有关经过批准的 RBG 的信息，请参见 NIST SP 800-90A；有关测试设备熵源的信息，请参见 NIST SP 800-90B <a class="reference internal" href="#th-entropy" id="id17"><span>[th-entropy]</span></a>。</p></li>
+</ol>
+</li>
+<li><p><strong>与时间服务的通信</strong>。理想情况下，设备应包含维护安全时间的硬件。但是，目前使用的大多数 SoC 都不支持这一点，因此需要查询外部时间服务。<span class="target" id="index-11"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc4330.html"><strong>RFC 4330</strong></a> 及其引用的 RFC 描述了简单网络时间协议（SNTP），可用于从网络时间服务器查询当前时间。</p></li>
+<li><p><strong>设备生命周期</strong>。物联网设备的生命周期从生产一直延续到设备的销毁和处置。该生命周期中影响信息安全的环节包括初始预配、正常运行、重新预配和销毁。</p>
+<ol class="loweralpha simple">
+<li><p><strong>初始预配</strong>。在初始预配阶段，需要编程写入引导加载程序、初始应用程序镜像、设备机密和初始配置数据 <a class="reference internal" href="#th-initial-provision" id="id18"><span>[th-initial-provision]</span></a>。此外，还应启用引导加载程序的 Flash 保护。在这些信息中，只有设备机密需要每台设备各不相同。该机密应被安全地保管，并在编程写入设备后，在设备以外的所有位置将其销毁 <a class="reference internal" href="#th-initial-secret" id="id19"><span>[th-initial-secret]</span></a>。</p></li>
+<li><p><strong>正常运行</strong>。正常运行包括本文档其余部分所描述的行为。</p></li>
+<li><p><strong>重新预配</strong>。有时需要对设备重新预配，例如将其用于其他应用。一种方法是保留相同的设备机密，替换配置数据以及与该设备关联的云服务数据。也可以编程写入新的设备机密，但这样做时必须以安全的方式进行，并在新机密编程写入设备后在外部将其销毁 <a class="reference internal" href="#th-reprovision" id="id20"><span>[th-reprovision]</span></a>。</p></li>
+<li><p><strong>销毁</strong>。为了防止设备机密被用来冒充设备，在设备退役时，应使该设备的机密失效 <a class="reference internal" href="#th-destruction" id="id21"><span>[th-destruction]</span></a>。可行的方法包括：</p>
+<ol class="lowerroman simple">
+<li><p>从硬件上销毁设备。</p></li>
+<li><p>安全地擦除包含机密的 Flash 区域 <a class="footnote-reference brackets" href="#id25" id="id22" role="doc-noteref"><span class="fn-bracket">[</span>3<span class="fn-bracket">]</span></a>。</p></li>
+<li><p>从服务中移除设备身份和证书。</p></li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</section>
+<section id="other-considerations">
+<h2>其他注意事项<a class="headerlink" href="#other-considerations" title="链接到此标题。"></a></h2>
+<p>除上述内容外，联网设备通常还需要一种配置方法，使其能够连接到所处的网络环境。实现方法有很多种，重要的是这些配置方法不能绕过上述信息安全要求。</p>
+</section>
+<section id="threats">
+<h2>威胁<a class="headerlink" href="#threats" title="链接到此标题。"></a></h2>
+<div role="list" class="citation-list">
+<div class="citation" id="th-imboot" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id2">th-imboot</a><span class="fn-bracket">]</span></span>
+<p>必须使用不可修改的引导加载程序启动。</p>
+</div>
+<div class="citation" id="th-authrepl" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id3">th-authrepl</a><span class="fn-bracket">]</span></span>
+<p>应用程序镜像只能被替换为经过授权的镜像。</p>
+</div>
+<div class="citation" id="th-timely-update" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id4">th-timely-update</a><span class="fn-bracket">]</span></span>
+<p>应用程序更新应及时进行。</p>
+</div>
+<div class="citation" id="th-atomic-update" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id5">th-atomic-update</a><span class="fn-bracket">]</span></span>
+<p>应用程序更新应是原子的。</p>
+</div>
+<div class="citation" id="th-root-certs" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id6">th-root-certs</a><span class="fn-bracket">]</span></span>
+<p>TLS 必须有一份受信任的根证书列表。</p>
+</div>
+<div class="citation" id="th-root-check" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span>th-root-check<span class="fn-bracket">]</span></span>
+<span class="backrefs">(<a role="doc-backlink" href="#id7">1</a>,<a role="doc-backlink" href="#id15">2</a>)</span>
+<p>TLS 必须验证来自服务器的根证书是有效的。</p>
+</div>
+<div class="citation" id="th-secret-storage" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id8">th-secret-storage</a><span class="fn-bracket">]</span></span>
+<p>必须有一种安全存储客户端机密的机制。只应让尽可能少的代码访问这些机密。</p>
+</div>
+<div class="citation" id="th-time" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id9">th-time</a><span class="fn-bracket">]</span></span>
+<p>系统必须对当前日期/时间有较为准确的认知。</p>
+</div>
+<div class="citation" id="th-conf" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id10">th-conf</a><span class="fn-bracket">]</span></span>
+<p>系统必须接收并保存配置数据。</p>
+</div>
+<div class="citation" id="th-logs" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id11">th-logs</a><span class="fn-bracket">]</span></span>
+<p>系统必须记录与信息安全相关的事件，并将其存储在本地或发送到服务。</p>
+</div>
+<div class="citation" id="th-all-tls" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id12">th-all-tls</a><span class="fn-bracket">]</span></span>
+<p>与云服务的所有通信都应使用 TLS。</p>
+</div>
+<div class="citation" id="th-tls-ciphers" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id14">th-tls-ciphers</a><span class="fn-bracket">]</span></span>
+<p>TLS 应配置为只允许公认的密码套件（并具备前向保密性）。</p>
+</div>
+<div class="citation" id="th-tls-client-auth" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id16">th-tls-client-auth</a><span class="fn-bracket">]</span></span>
+<p>设备应使用所述方法之一向云提供商认证自身。</p>
+</div>
+<div class="citation" id="th-entropy" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id17">th-entropy</a><span class="fn-bracket">]</span></span>
+<p>TLS 层应使用现代的、公认的密码学随机位生成器，并由 SoC 内的熵源提供种子。</p>
+</div>
+<div class="citation" id="th-initial-provision" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id18">th-initial-provision</a><span class="fn-bracket">]</span></span>
+<p>设备应在部署前载入每台设备各自独有的机密。</p>
+</div>
+<div class="citation" id="th-initial-secret" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id19">th-initial-secret</a><span class="fn-bracket">]</span></span>
+<p>初始机密应被安全地保管，并在设备完成预配后立即在所有外部位置将其销毁。</p>
+</div>
+<div class="citation" id="th-reprovision" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id20">th-reprovision</a><span class="fn-bracket">]</span></span>
+<p>重新预配设备应以安全的方式进行。</p>
+</div>
+<div class="citation" id="th-destruction" role="doc-biblioentry">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id21">th-destruction</a><span class="fn-bracket">]</span></span>
+<p>设备退役时，应使设备机密失效。</p>
+</div>
+</div>
+</section>
+<section id="notes">
+<h2>注释<a class="headerlink" href="#notes" title="链接到此标题。"></a></h2>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id23" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">1</a><span class="fn-bracket">]</span></span>
+<p>参见 <a class="reference external" href="https://www.slideshare.net/kartben/iot-developer-survey-2018">https://www.slideshare.net/kartben/iot-developer-survey-2018</a>。截至撰写本文时，三大云物联网服务提供商 AWS IoT、Google Cloud IoT 和 Microsoft Azure IoT 都提供 MQTT over TLS。一些反馈表明，有人在各种网络上遇到了 UDP 协议和路由方面的困难。</p>
+</aside>
+<aside class="footnote brackets" id="id24" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id13">2</a><span class="fn-bracket">]</span></span>
+<p>随着新的漏洞利用被发现，被视为安全的标准可能会改变。<a class="reference external" href="https://www.ssllabs.com/">https://www.ssllabs.com/</a> 等组织提供了关于目前应如何配置 TLS 才能确保安全的信息。</p>
+</aside>
+<aside class="footnote brackets" id="id25" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id22">3</a><span class="fn-bracket">]</span></span>
+<p>请注意，仅仅擦除该 Flash 区域可能是不够的。</p>
+</aside>
+</aside>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 11月 25, 2025.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

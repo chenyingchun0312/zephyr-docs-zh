@@ -1,0 +1,570 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>zperf：网络流量生成器 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/connectivity/networking/api/zperf.html" />
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../../search.html" />
+    <link rel="next" title="连接管理器" href="../conn_mgr/index.html" />
+    <link rel="prev" title="精确时间协议（PTP）" href="ptp.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html">
+            
+              <img src="../../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">服务</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">连接</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">网络</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../overview.html">概述</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../net-stack-architecture.html">网络协议栈架构</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../net_config_guide.html">网络配置指南</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../networking_with_host.html">与主机系统联网</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../network_monitoring.html">监视网络流量</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../network_tracing.html">网络跟踪</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../conformance/index.html">使用 TTCN-3 进行协议一致性测试</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="index.html">网络 API</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="apis.html">网络 API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="buf_mgmt.html">网络数据包管理</a></li>
+<li class="toctree-l5"><a class="reference internal" href="net_tech.html">网络技术</a></li>
+<li class="toctree-l5"><a class="reference internal" href="protocols.html">协议</a></li>
+<li class="toctree-l5"><a class="reference internal" href="quic.html">QUIC 传输接口</a></li>
+<li class="toctree-l5"><a class="reference internal" href="system_mgmt.html">网络系统管理</a></li>
+<li class="toctree-l5"><a class="reference internal" href="tsn.html">时间敏感网络</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">zperf：网络流量生成器</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#overview">概述</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#sample-usage">示例用法</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#iperf3">iperf3</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#session-management">会话管理</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#custom-data-upload">自定义数据上传</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#raw-tx-mode">原始 TX 模式</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../conn_mgr/index.html">连接管理器</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../dsa.html">分布式交换架构（DSA）</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../bluetooth/index.html">Bluetooth</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../usb/index.html">USB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../canbus/index.html">控制器局域网（CAN）总线协议</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lora_lorawan/index.html">LoRa 和 LoRaWAN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modbus/index.html">Modbus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modem/index.html">调制解调器模块</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../../index.html">连接</a> &raquo;</li>
+  
+     <li><a href="../index.html">网络</a> &raquo;</li>
+  
+     <li><a href="index.html">网络 API</a> &raquo;</li>
+  
+  <li>zperf：网络流量生成器</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="zperf-network-traffic-generator">
+<span id="zperf"></span><h1>zperf：网络流量生成器<a class="headerlink" href="#zperf-network-traffic-generator" title="链接到此标题。"></a></h1>
+<nav class="contents local" id="id1">
+<ul class="simple">
+<li><p><a class="reference internal" href="#overview" id="id2">概述</a></p></li>
+<li><p><a class="reference internal" href="#sample-usage" id="id3">示例用法</a></p></li>
+<li><p><a class="reference internal" href="#iperf3" id="id4">iperf3</a></p></li>
+<li><p><a class="reference internal" href="#session-management" id="id5">会话管理</a></p></li>
+<li><p><a class="reference internal" href="#custom-data-upload" id="id6">自定义数据上传</a></p></li>
+<li><p><a class="reference internal" href="#raw-tx-mode" id="id7">原始 TX 模式</a></p></li>
+</ul>
+</nav>
+<section id="overview">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">概述</a><a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>zperf 是一个 shell 工具，可以在 Zephyr 中生成网络流量。该工具可用于评估网络带宽。</p>
+<p>zperf 与 iPerf 2.0.10 及更新版本兼容。如需兼容更早的版本，请启用 <a class="reference internal" href="../../../../kconfig.html#CONFIG_NET_ZPERF_LEGACY_HEADER_COMPAT" title="CONFIG_NET_ZPERF_LEGACY_HEADER_COMPAT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_ZPERF_LEGACY_HEADER_COMPAT</span></code></a>。另外，zperf 也可以使用 iperf3 协议，参见 <a class="reference internal" href="#zperf-iperf3"><span class="std std-ref">iperf3</span></a>。一次构建只能使用两者之一。</p>
+<p>任何应用程序都可以启用 zperf，Zephyr 中也提供了一个专门的示例。详细信息请参见 <a class="reference internal" href="../../../../samples/net/zperf/README.html#zperf" title="使用 zperf shell 工具评估网络带宽。"><span class="xref zephyr zephyr-code-sample">zperf 示例应用程序</span></a>。</p>
+</section>
+<section id="sample-usage">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">示例用法</a><a class="headerlink" href="#sample-usage" title="链接到此标题。"></a></h2>
+<p>如果 Zephyr 作为客户端，则 iPerf 必须以服务器模式运行。例如，进行 UDP 测试时必须使用以下命令行：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>iperf<span class="w"> </span>-s<span class="w"> </span>-l<span class="w"> </span>1K<span class="w"> </span>-u<span class="w"> </span>-V<span class="w"> </span>-B<span class="w"> </span><span class="m">2001</span>:db8::2
+</pre></div>
+</div>
+<p>进行 TCP 测试时，命令行如下：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>iperf<span class="w"> </span>-s<span class="w"> </span>-l<span class="w"> </span>1K<span class="w"> </span>-V<span class="w"> </span>-B<span class="w"> </span><span class="m">2001</span>:db8::2
+</pre></div>
+</div>
+<p>在 Zephyr 控制台中，可以按如下方式执行 zperf：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">zperf udp upload 2001:db8::2 5001 10 1K 1M</span>
+</pre></div>
+</div>
+<p>UDP 速率为 <code class="docutils literal notranslate"><span class="pre">0</span></code> 时会以尽可能快的速度发送，与 <code class="docutils literal notranslate"><span class="pre">iperf</span> <span class="pre">-b</span> <span class="pre">0</span></code> 相同。</p>
+<p>对于 TCP，zperf 命令如下：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">zperf tcp upload 2001:db8::2 5001 10 1K 1M</span>
+</pre></div>
+</div>
+<p>如果在配置文件中指定了 Zephyr 和主机的 IP 地址，可以按如下方式启动 zperf：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">zperf udp upload2 v6 10 1K 1M</span>
+</pre></div>
+</div>
+<p>如果要测试 TCP，则如下：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">zperf tcp upload2 v6 10 1K 1M</span>
+</pre></div>
+</div>
+<p>如果 Zephyr 作为服务器，对于 UDP，按如下方式设置下载模式：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">zperf udp download 5001</span>
+</pre></div>
+</div>
+<p>对于 TCP，则如下：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">zperf tcp download 5001</span>
+</pre></div>
+</div>
+<p>在主机端，如果测试 UDP，必须使用以下命令行运行 iPerf：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>iperf<span class="w"> </span>-l<span class="w"> </span>1K<span class="w"> </span>-u<span class="w"> </span>-V<span class="w"> </span>-c<span class="w"> </span><span class="m">2001</span>:db8::1<span class="w"> </span>-p<span class="w"> </span><span class="m">5001</span>
+</pre></div>
+</div>
+<p>如果测试 TCP，则使用：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>iperf<span class="w"> </span>-l<span class="w"> </span>1K<span class="w"> </span>-V<span class="w"> </span>-c<span class="w"> </span><span class="m">2001</span>:db8::1<span class="w"> </span>-p<span class="w"> </span><span class="m">5001</span>
+</pre></div>
+</div>
+<p>如果 Zephyr 无法有序地接收所有数据包，可以使用 -b 选项限制 iPerf 的输出。</p>
+</section>
+<section id="iperf3">
+<span id="zperf-iperf3"></span><h2><a class="toc-backref" href="#id4" role="doc-backlink">iperf3</a><a class="headerlink" href="#iperf3" title="链接到此标题。"></a></h2>
+<p>启用 <a class="reference internal" href="../../../../kconfig.html#CONFIG_NET_ZPERF_IPERF3" title="CONFIG_NET_ZPERF_IPERF3"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_ZPERF_IPERF3</span></code></a> 后，zperf 与 iperf3 而不是 iPerf 2 互通。该支持处于实验阶段。zperf API 和 shell 命令保持不变，默认端口变为 iperf3 的默认端口 5201。</p>
+<p>当 Zephyr 作为服务器时，启用要接受的协议：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">zperf tcp download</span>
+<span class="go">zperf udp download</span>
+</pre></div>
+</div>
+<p>iperf3 客户端为每次测试选择 TCP 或 UDP，两者使用同一个端口，并且无论哪种情况都有一个 TCP 控制连接。因此这两条命令共享监听端口：每条命令启用各自的协议，请求未启用协议的测试会被拒绝。在主机上：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>iperf3<span class="w"> </span>-c<span class="w"> </span><span class="m">2001</span>:db8::1
+<span class="gp">$ </span>iperf3<span class="w"> </span>-c<span class="w"> </span><span class="m">2001</span>:db8::1<span class="w"> </span>-u<span class="w"> </span>-b<span class="w"> </span>10M
+</pre></div>
+</div>
+<p>当 Zephyr 作为客户端时，在主机上运行 <code class="docutils literal notranslate"><span class="pre">iperf3</span> <span class="pre">-s</span></code>，并在 Zephyr 控制台中执行：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">zperf tcp upload 2001:db8::2 5201 10 1K</span>
+<span class="go">zperf udp upload 2001:db8::2 5201 10 1K 10M</span>
+</pre></div>
+</div>
+<p>一次测试在单个流上运行。反向（<code class="docutils literal notranslate"><span class="pre">-R</span></code>）、双向（<code class="docutils literal notranslate"><span class="pre">--bidir</span></code>）和并行（<code class="docutils literal notranslate"><span class="pre">-P</span></code>）测试，以及省略测试开头（<code class="docutils literal notranslate"><span class="pre">-O</span></code>）都会被拒绝，并给出 iperf3 在服务器未实现某选项时打印的消息。同一时间只运行一个测试，第二个客户端会被告知服务器忙。多播和 <a class="reference internal" href="../../../../kconfig.html#CONFIG_ZPERF_SESSION_PER_THREAD" title="CONFIG_ZPERF_SESSION_PER_THREAD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZPERF_SESSION_PER_THREAD</span></code></a> 是 iPerf 2 的功能。</p>
+<p>与 iPerf 2 比较时需要注意以下几点：</p>
+<ul class="simple">
+<li><p>iperf3 服务器会一直统计 TCP 数据，直到客户端在控制连接上结束测试，而结束消息可能先于最后一部分数据到达，因此服务器报告的数据量可能略少于客户端发送的数据量。iPerf 2 服务器则统计到连接关闭为止。</p></li>
+<li><p>对于 UDP，在服务器收到的最后一个数据报之后丢失的数据报，在 zperf 上传报告中会计为丢失，这与 iPerf 2 相同。iperf3 本身则不计入这些数据报。</p></li>
+<li><p>iperf3 不报告乱序情况，因此上传报告中不会有乱序数据包。</p></li>
+<li><p>服务器只读取每个 UDP 数据报的报头，依靠 <code class="docutils literal notranslate"><span class="pre">ZSOCK_MSG_TRUNC</span></code> 获知其完整长度。如果套接字卸载驱动忽略该标志，服务器统计的字节数就会偏少。</p></li>
+<li><p>每次测试在两端各占用一个控制连接和一个数据流，并且每次测试结束后，已关闭的连接还会在 TIME_WAIT 状态停留一段时间。请像示例的 <code class="docutils literal notranslate"><span class="pre">overlay-iperf3.conf</span></code> 那样，在 <a class="reference internal" href="../../../../kconfig.html#CONFIG_NET_MAX_CONTEXTS" title="CONFIG_NET_MAX_CONTEXTS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_MAX_CONTEXTS</span></code></a> 和 <a class="reference internal" href="../../../../kconfig.html#CONFIG_NET_MAX_CONN" title="CONFIG_NET_MAX_CONN"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_MAX_CONN</span></code></a> 中为它们留出余量。</p></li>
+</ul>
+</section>
+<section id="session-management">
+<h2><a class="toc-backref" href="#id5" role="doc-backlink">会话管理</a><a class="headerlink" href="#session-management" title="链接到此标题。"></a></h2>
+<p>如果设置了 <a class="reference internal" href="../../../../kconfig.html#CONFIG_ZPERF_SESSION_PER_THREAD" title="CONFIG_ZPERF_SESSION_PER_THREAD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZPERF_SESSION_PER_THREAD</span></code></a> 选项，用户在启动上传时提供 <code class="docutils literal notranslate"><span class="pre">-a</span></code> 选项，即可同时进行多个上传会话。每个会话都有自己的工作队列来运行测试。测试结束后也可以查看会话的测试结果。可以使用 <code class="docutils literal notranslate"><span class="pre">-w</span></code> 选项启动会话，此时工作线程会等待开始信号，使所有线程能够同时启动。这可以避免由于 zperf shell 的优先级低于已启动的会话线程而无法运行的情况。如果只有一个上传会话，则不太需要 <code class="docutils literal notranslate"><span class="pre">-w</span></code>。</p>
+<p>以下 zperf shell 命令可用于会话管理：</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>zperf shell 命令</p></th>
+<th class="head"><p>说明</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">jobs</span></code></p></td>
+<td><p>显示当前活动的或已完成的会话</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">jobs</span> <span class="pre">all</span></code></p></td>
+<td><p>显示已完成会话的统计信息</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">jobs</span> <span class="pre">clear</span></code></p></td>
+<td><p>清除已完成会话的统计信息</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">jobs</span> <span class="pre">start</span></code></p></td>
+<td><p>启动所有正在等待的会话</p></td>
+</tr>
+</tbody>
+</table>
+<p>示例：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>zperf<span class="w"> </span>udp<span class="w"> </span>upload<span class="w"> </span>-a<span class="w"> </span>-t<span class="w"> </span><span class="m">5</span><span class="w"> </span><span class="m">192</span>.0.2.2<span class="w"> </span><span class="m">5001</span><span class="w"> </span><span class="m">10</span><span class="w"> </span>1K<span class="w"> </span>1M
+<span class="go">Remote port is 5001</span>
+<span class="go">Connecting to 192.0.2.2</span>
+<span class="go">Duration:       10.00 s</span>
+<span class="go">Packet size:    1000 bytes</span>
+<span class="go">Rate:           1000 kbps</span>
+<span class="go">Starting...</span>
+<span class="go">Rate:           1.00 Mbps</span>
+<span class="go">Packet duration 7 ms</span>
+
+<span class="gp">uart:~$ </span>zperf<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>all
+<span class="go">No sessions sessions found</span>
+<span class="gp">uart:~$ </span>zperf<span class="w"> </span><span class="nb">jobs</span>
+<span class="go">           Thread    Remaining</span>
+<span class="go">Id  Proto  Priority  time (sec)</span>
+<span class="go">[1] UDP    5            4</span>
+
+<span class="go">Active sessions have not yet finished</span>
+<span class="go">-</span>
+<span class="go">Upload completed!</span>
+<span class="go">Statistics:             server  (client)</span>
+<span class="go">Duration:               30.01 s (30.01 s)</span>
+<span class="go">Num packets:            3799    (3799)</span>
+<span class="go">Num packets out order:  0</span>
+<span class="go">Num packets lost:       0</span>
+<span class="go">Jitter:                 63 us</span>
+<span class="go">Rate:                   1.01 Mbps       (1.01 Mbps)</span>
+<span class="go">Thread priority:        5</span>
+<span class="go">Protocol:               UDP</span>
+<span class="go">Session id:             1</span>
+
+<span class="gp">uart:~$ </span>zperf<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>all
+<span class="go">-</span>
+<span class="go">Upload completed!</span>
+<span class="go">Statistics:             server  (client)</span>
+<span class="go">Duration:               30.01 s (30.01 s)</span>
+<span class="go">Num packets:            3799    (3799)</span>
+<span class="go">Num packets out order:  0</span>
+<span class="go">Num packets lost:       0</span>
+<span class="go">Jitter:                 63 us</span>
+<span class="go">Rate:                   1.01 Mbps       (1.01 Mbps)</span>
+<span class="go">Thread priority:        5</span>
+<span class="go">Protocol:               UDP</span>
+<span class="go">Session id:             1</span>
+<span class="go">Total 1 sessions done</span>
+
+<span class="gp">uart:~$ </span>zperf<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>clear
+<span class="go">Cleared data from 1 sessions</span>
+
+<span class="gp">uart:~$ </span>zperf<span class="w"> </span><span class="nb">jobs</span>
+<span class="go">No active upload sessions</span>
+<span class="go">No finished sessions found</span>
+</pre></div>
+</div>
+<p>可以像这样使用 <code class="docutils literal notranslate"><span class="pre">-w</span></code> 选项延迟作业的启动。</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>zperf<span class="w"> </span>tcp<span class="w"> </span>upload<span class="w"> </span>-a<span class="w"> </span>-t<span class="w"> </span><span class="m">6</span><span class="w"> </span>-w<span class="w"> </span><span class="m">192</span>.0.2.2<span class="w"> </span><span class="m">5001</span><span class="w"> </span><span class="m">10</span><span class="w"> </span>1K
+<span class="go">Remote port is 5001</span>
+<span class="go">Connecting to 192.0.2.2</span>
+<span class="go">Duration:       10.00 s</span>
+<span class="go">Packet size:    1000 bytes</span>
+<span class="go">Rate:           10 kbps</span>
+<span class="go">Waiting "zperf jobs start" command.</span>
+<span class="go">[01:06:51.392,288] &lt;inf&gt; net_zperf: [0] TCP waiting for start</span>
+
+<span class="gp">uart:~$ </span>zperf<span class="w"> </span>udp<span class="w"> </span>upload<span class="w"> </span>-a<span class="w"> </span>-t<span class="w"> </span><span class="m">6</span><span class="w"> </span>-w<span class="w"> </span><span class="m">192</span>.0.2.2<span class="w"> </span><span class="m">5001</span><span class="w"> </span><span class="m">10</span><span class="w"> </span>1K<span class="w"> </span>10M
+<span class="go">Remote port is 5001</span>
+<span class="go">Connecting to 192.0.2.2</span>
+<span class="go">Duration:       10.00 s</span>
+<span class="go">Packet size:    1000 bytes</span>
+<span class="go">Rate:           10000 kbps</span>
+<span class="go">Waiting "zperf jobs start" command.</span>
+<span class="go">Rate:           10.00 Mbps</span>
+<span class="go">Packet duration 781 us</span>
+<span class="go">[01:06:58.064,552] &lt;inf&gt; net_zperf: [0] UDP waiting for start</span>
+
+<span class="gp">uart:~$ </span>zperf<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>start
+<span class="go">-</span>
+<span class="go">Upload completed!</span>
+<span class="go">-</span>
+<span class="go">Upload completed!</span>
+
+<span class="gp"># </span>Note<span class="w"> </span>that<span class="w"> </span>the<span class="w"> </span>output<span class="w"> </span>may<span class="w"> </span>be<span class="w"> </span>garbled<span class="w"> </span>as<span class="w"> </span>two<span class="w"> </span>threads<span class="w"> </span>printed
+<span class="gp"># </span>output<span class="w"> </span>at<span class="w"> </span>the<span class="w"> </span>same<span class="w"> </span>time.<span class="w"> </span>Just<span class="w"> </span>print<span class="w"> </span>out<span class="w"> </span>the<span class="w"> </span>fresh<span class="w"> </span>listing
+<span class="gp"># </span>like<span class="w"> </span>this.
+
+<span class="gp">uart:~$ </span>zperf<span class="w"> </span><span class="nb">jobs</span><span class="w"> </span>all
+<span class="go">-</span>
+<span class="go">Upload completed!</span>
+<span class="go">Statistics:             server  (client)</span>
+<span class="go">Duration:               9.99 s  (10.00 s)</span>
+<span class="go">Num packets:            11429   (11429)</span>
+<span class="go">Num packets out order:  0</span>
+<span class="go">Num packets lost:       0</span>
+<span class="go">Jitter:                 164 us</span>
+<span class="go">Rate:                   9.14 Mbps       (9.14 Mbps)</span>
+<span class="go">Thread priority:        6</span>
+<span class="go">Protocol:               UDP</span>
+<span class="go">Session id:             0</span>
+<span class="go">-</span>
+<span class="go">Upload completed!</span>
+<span class="go">Duration:               10.00 s</span>
+<span class="go">Num packets:            15487</span>
+<span class="go">Num errors:             0 (retry or fail)</span>
+<span class="go">Rate:                   12.38 Mbps</span>
+<span class="go">Thread priority:        6</span>
+<span class="go">Protocol:               TCP</span>
+<span class="go">Session id:             0</span>
+<span class="go">Total 2 sessions done</span>
+</pre></div>
+</div>
+</section>
+<section id="custom-data-upload">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">自定义数据上传</a><a class="headerlink" href="#custom-data-upload" title="链接到此标题。"></a></h2>
+<p>通过 <code class="xref c c-member docutils literal notranslate"><span class="pre">zperf_upload_params.data_loader</span></code> 设置自定义数据源，zperf 可以对数据上传进行更高级的性能分析。这样可以生成自定义的数据包内容，而不是发送只由 <code class="docutils literal notranslate"><span class="pre">z</span></code> 字符组成的固定数据包。一个示例用例是测定从外部 Flash 存储芯片上传数据的最大吞吐量。</p>
+</section>
+<section id="raw-tx-mode">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">原始 TX 模式</a><a class="headerlink" href="#raw-tx-mode" title="链接到此标题。"></a></h2>
+<p>zperf 支持原始数据包发送模式，用于测试自定义 L2 帧或厂商特定的协议。该模式绕过 UDP/TCP，直接使用数据包套接字发送原始数据包。</p>
+<p>要启用原始 TX 模式，请设置以下 Kconfig 选项：</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span>CONFIG_NET_SOCKETS_PACKET=y
+CONFIG_NET_ZPERF_RAW_TX=y
+</pre></div>
+</div>
+<p>最大报头大小可通过 <a class="reference internal" href="../../../../kconfig.html#CONFIG_NET_ZPERF_RAW_TX_MAX_HDR_SIZE" title="CONFIG_NET_ZPERF_RAW_TX_MAX_HDR_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_NET_ZPERF_RAW_TX_MAX_HDR_SIZE</span></code></a> 配置（默认：64 字节）。</p>
+<p>使用原始 TX 模式之前，必须在网络接口上启用 TX 注入模式：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>net<span class="w"> </span>iface<span class="w"> </span>txinjection<span class="w"> </span><span class="m">1</span><span class="w"> </span>on
+</pre></div>
+</div>
+<p>原始 TX 上传命令的语法为：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">zperf raw upload [-a] &lt;if_index&gt; &lt;header_hex&gt; [&lt;duration_sec&gt;] [&lt;packet_size&gt;] [&lt;rate_kbps&gt;]</span>
+</pre></div>
+</div>
+<p>其中：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-a</span></code>：可选的异步模式标志</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">if_index</span></code>：网络接口索引（例如 1）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">header_hex</span></code>：用户提供的报头，以十六进制字符串表示（厂商元数据 + 帧头）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">duration_sec</span></code>：测试持续时间，单位为秒（默认：1）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">packet_size</span></code>：包含报头在内的数据包总大小（默认：256）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">rate_kbps</span></code>：目标速率，单位为 Kbps，支持 K/M 后缀（默认：10）。<code class="docutils literal notranslate"><span class="pre">0</span></code> 表示以尽可能快的速度发送。</p></li>
+</ul>
+<p>发送带厂商元数据的原始 802.11 帧的示例：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>zperf<span class="w"> </span>raw<span class="w"> </span>upload<span class="w"> </span><span class="m">1</span><span class="w"> </span>12345678000400030000000088000000ffffffffffa06960e35215a06960e3521500000000aaaa030000000800<span class="w"> </span><span class="m">10</span><span class="w"> </span><span class="m">1024</span><span class="w"> </span>50M
+</pre></div>
+</div>
+<p>该十六进制报头字符串包含：</p>
+<ul class="simple">
+<li><p>厂商元数据（本例中为前 12 个字节）</p></li>
+<li><p>带 LLC/SNAP 的 802.11 QoS 数据帧头</p></li>
+</ul>
+<p>负载（用 <code class="docutils literal notranslate"><span class="pre">z</span></code> 字符填充）会自动追加，使数据包达到指定的大小。</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 9月 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

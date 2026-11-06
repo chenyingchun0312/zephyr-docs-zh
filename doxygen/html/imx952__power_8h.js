@@ -1,0 +1,25 @@
+var imx952__power_8h =
+[
+    [ "IMX952_NUM_MIX_SLICE", "group__imx952__power__domains.html#ga5d9625e864121e82e7d87cc1f8b9c13f", null ],
+    [ "IMX952_PD_A55C0", "group__imx952__power__domains.html#ga8ee90b8928e7e64218c3e23e70511196", null ],
+    [ "IMX952_PD_A55C1", "group__imx952__power__domains.html#gad80e363b3b47fa5ace41b822adac9f0f", null ],
+    [ "IMX952_PD_A55C2", "group__imx952__power__domains.html#ga1d5bddbc3572302bb02f399b587c627f", null ],
+    [ "IMX952_PD_A55C3", "group__imx952__power__domains.html#gae1f7f2e3a82b1303d7a1618c08cccfac", null ],
+    [ "IMX952_PD_A55P", "group__imx952__power__domains.html#ga93494b335e5e04da23562dd761c527e5", null ],
+    [ "IMX952_PD_ANA", "group__imx952__power__domains.html#ga619e535321d78b4673b3d75b6a6eabc9", null ],
+    [ "IMX952_PD_AON", "group__imx952__power__domains.html#ga39eb7b17cd2d75f9dd5389cfe046ee88", null ],
+    [ "IMX952_PD_BBSM", "group__imx952__power__domains.html#ga2dc16076c0c135b4b9b47775d36d2d59", null ],
+    [ "IMX952_PD_CAMERA", "group__imx952__power__domains.html#gabd36ed3b0a37bdbfaffb3297b81a5376", null ],
+    [ "IMX952_PD_CCMSRCGPC", "group__imx952__power__domains.html#ga786258ae435f51f07024a776f29f8d7b", null ],
+    [ "IMX952_PD_DDR", "group__imx952__power__domains.html#ga7f2f4cdd4c50d5f7a302cc5213917228", null ],
+    [ "IMX952_PD_DISPLAY", "group__imx952__power__domains.html#ga7f834f86e948737624fd92f389bce6af", null ],
+    [ "IMX952_PD_GPU", "group__imx952__power__domains.html#gab6a63f2c0b270591fe47e1ac7fc20dfd", null ],
+    [ "IMX952_PD_HSIO_TOP", "group__imx952__power__domains.html#ga7ad60973e1deff63776b4aafe1f41c70", null ],
+    [ "IMX952_PD_HSIO_WAON", "group__imx952__power__domains.html#ga3ca1417fe6cfd397538d99c1c7487bf8", null ],
+    [ "IMX952_PD_M7", "group__imx952__power__domains.html#gab3cd24dd2ee9e8c53484b75723d1708e", null ],
+    [ "IMX952_PD_NETC", "group__imx952__power__domains.html#gae952e18ba9705dcf1b6236da8d799944", null ],
+    [ "IMX952_PD_NOC", "group__imx952__power__domains.html#gaeb8e91004d08f68eacd56c688133a1cf", null ],
+    [ "IMX952_PD_NPU", "group__imx952__power__domains.html#ga15002babf2edb32c6fd9a59fb15cfcb1", null ],
+    [ "IMX952_PD_VPU", "group__imx952__power__domains.html#ga1d8d9b7357b28a609c5c398f04ab0d17", null ],
+    [ "IMX952_PD_WAKEUP", "group__imx952__power__domains.html#gac4b193eaea6286c428d7f723ab9de916", null ]
+];

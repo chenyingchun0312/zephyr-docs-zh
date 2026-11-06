@@ -1,0 +1,708 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>在 Chromebook 上进行 Zephyr 音频 DSP 开发 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/boards/intel/adsp/doc/chromebooks_adsp.html" />
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../../search.html" />
+    <link rel="next" title="Intel ADSP CAVS 2.5" href="intel_adsp_cavs25.html" />
+    <link rel="prev" title="Intel ADSP cAVS 和 ACE" href="intel_adsp_generic.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html">
+            
+              <img src="../../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">支持的开发板和扩展板</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../../01space/index.html">01space</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../96boards/index.html">96Boards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../aconno/index.html">Aconno</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../acrn/index.html">ACRN 项目</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../actinius/index.html">Actinius</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../adafruit/index.html">Adafruit Industries LLC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../adi/index.html">Analog Devices, Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../aesc/index.html">Aesc Silicon</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../aithinker/index.html">Ai-Thinker Co.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../alientek/index.html">Alientek</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../alif/index.html">Alif Semiconductor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ambiq/index.html">Ambiq</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../amd/index.html">Advanced Micro Devices (AMD), Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../andestech/index.html">Andes Technology（晶心科技）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../antmicro/index.html">Antmicro</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../arduino/index.html">Arduino</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../arm/index.html">ARM Ltd.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../armfly/index.html">Armfly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../aspeed/index.html">ASPEED Technology Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../atmarktechno/index.html">Atmark Techno</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../atmel/index.html">Atmel Corporation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../barth/index.html">Barth Elektronik GmbH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../bbc/index.html">BBC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../bcdevices/index.html">Blue Clover Devices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../beagle/index.html">BeagleBoard.org Foundation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../bflb/index.html">Bouffalo Lab Intelligent Technology (Nanjing) Co., Ltd.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../blackberry/index.html">BlackBerry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../bliiot/index.html">BLIIoT Technology Co., Ltd.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../blues/index.html">Blues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../brcm/index.html">Broadcom Corporation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../bytesatwork/index.html">bytesatwork</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../canmodule/index.html">CAN-Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cdac/index.html">C-DAC (Centre for Development of Advanced Computing)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cdns/index.html">Cadence Design Systems Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../circuitdojo/index.html">Circuit Dojo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cirrus/index.html">Cirrus Logic, Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contextualelectronics/index.html">Contextual Electronics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../coredevices/index.html">Core Devices LLC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../croxel/index.html">Croxel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ct/index.html">CTHINGS.CO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cypress/index.html">Cypress</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cytron/index.html">Cytron</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../dfrobot/index.html">DFRobot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../dh/index.html">DH electronics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../digilent/index.html">Digilent, Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../doiting/index.html">Doctors of Intelligence &amp; Technology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../dptechnics/index.html">DPTechnics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../dragino/index.html">Dragino</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ebyte/index.html">Chengdu Ebyte Electronic Technology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../efinix/index.html">Efinix, Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../egis/index.html">Egis Technology Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../elan/index.html">Elan Microelectronics Corp.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../electronut/index.html">Electronut Labs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../element14/index.html">Element 14</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../embedsky/index.html">Guangdong Embedsky Technology Co., Ltd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../emtrion/index.html">emtrion GmbH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ene/index.html">ENE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../enjoydigital/index.html">EnjoyDigital</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../espressif/index.html">Espressif</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../eurovibes/index.html">Eurovibes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ezurio/index.html">Ezurio</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../fanke/index.html">Fanke</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../firefly/index.html">Firefly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../flysky/index.html">FlySky</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../fobe/index.html">FoBE Studio</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../framework/index.html">Framework Computer Inc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../franzininho/index.html">Franzininho</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../fysetc/index.html">FYSETC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gaisler/index.html">Gaisler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gardena/index.html">GARDENA GmbH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gd/index.html">GigaDevice Semiconductor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../google/index.html">Google, Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../hardkernel/index.html">HardKernel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../heimann/index.html">Heimann Sensor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../heltec/index.html">Heltec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../holyiot/index.html">Shenzhen Holyiot Technology Co.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../iar/index.html">IAR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../infineon/index.html">Infineon Technologies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../innblue/index.html">innblue</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">Intel Corporation</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../adl/doc/index.html">Alder Lake N</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">Intel ADSP</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="intel_adsp_generic.html">Intel ADSP cAVS 和 ACE</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">在 Chromebook 上进行 Zephyr 音频 DSP 开发</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#initial-tgl-chromebook-setup">TGL Chromebook 初始设置</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#enable-developer-mode">启用开发者模式</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#make-a-recovery-drive">制作恢复盘</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#make-the-root-filesystem-writable">使根文件系统可写</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#enable-chromeos-ssh">启用 ChromeOS SSH</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#install-crouton">安装 Crouton</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#building-and-installing-a-custom-kernel">构建并安装自定义内核</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#pack-and-install-chromeos-kernel-image">打包并安装 ChromeOS 内核镜像</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#wifi-firmware-fixup">修复 Wifi 固件</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#build-and-run-a-zephyr-application">构建并运行 Zephyr 应用程序</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#build-rimage-signing-tool">构建 rimage 签名工具</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#copy-integration-scripting-to-chromebook">将集成脚本复制到 Chromebook</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#build-and-sign-zephyr-app">构建 Zephyr 应用程序并签名</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#run-it">运行！</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#misc-references">其他参考资料</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="intel_adsp_cavs25.html">Intel ADSP CAVS 2.5</a></li>
+<li class="toctree-l4"><a class="reference internal" href="intel_adsp_ace15_mtpm.html">Intel ADSP ACE 1.5</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../btl/doc/index.html">Bartlett Lake P CRB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ehl/doc/index.html">Elkhart Lake CRB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ish/doc/index.html">Intel 集成传感器中枢（ISH）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../niosv_g/doc/index.html">INTEL FPGA niosv_g</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../niosv_m/doc/index.html">INTEL FPGA niosv_m</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../nvl/doc/index.html">Nova Lake RVP</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../ptl/doc/index.html">Panther Lake H CRB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../rpl/doc/index.html">Raptor Lake CRB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../socfpga/agilex5_socdk/doc/index.html">Agilex™ 5 SoC FPGA Development Kit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../socfpga/agilex_socdk/doc/index.html">Agilex SoC Development Kit</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../socfpga_std/cyclonev_socdk/doc/index.html">Intel® Cyclone® V SoC 开发套件</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../wcl/doc/index.html">Wildcat Lake CRB</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ite/index.html">ITE Tech. Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../jhoinrch/index.html">Jhoinrch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../jlc/index.html">Shenzhen JLC Technology Group Co., Ltd.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../kaga-fei/index.html">KAGA-FEI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../khadas/index.html">Khadas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../kincony/index.html">Kincony</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../kosagi/index.html">Kosagi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../kws/index.html">KWS Computersysteme Gmbh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../lilygo/index.html">Lilygo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../longan/index.html">Longan Labs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../lowrisc/index.html">lowRISC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../luatos/index.html">Luatos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../luckfox/index.html">Shenzhen Luckfox Technology Co., Ltd.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../m5stack/index.html">M5Stack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../madmachine/index.html">Mad Machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../makerbase/index.html">Makerbase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../makerdiary/index.html">Maker Diary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../makerfabs/index.html">Makerfabs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../mediatek/index.html">MediaTek Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../microchip/index.html">Microchip Technology Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../mikroe/index.html">MikroElektronika d.o.o.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../muselab/index.html">Muselab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../mxchip/index.html">MXCHIP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../native/index.html">POSIX/Native 开发板</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../nordic/index.html">Nordic Semiconductor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../norik/index.html">Norik Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../nucode/index.html">NUCODE Co., Ltd.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../nuvoton/index.html">Nuvoton Technology Corporation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../nxp/index.html">NXP Semiconductors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../oct/index.html">Octavo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../olimex/index.html">OLIMEX Ltd.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../openhwgroup/index.html">OpenHW Group</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../openisa/index.html">OpenISA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../others/index.html">其他及未知厂商</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../panasonic/index.html">Panasonic Corporation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../particle/index.html">Particle Industries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../pcbcupid/index.html">PCB Cupid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../peregrine/index.html">Peregrine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../phytec/index.html">PHYTEC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../pimoroni/index.html">Pimoroni Ltd.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../pine64/index.html">Pine64</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../pjrc/index.html">PJRC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../qcom/index.html">Qualcomm Technologies, Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../qemu/index.html">QEMU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../qorvo/index.html">Qorvo, Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../quicklogic/index.html">QuickLogic Corp.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../radxa/index.html">Radxa</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../rakwireless/index.html">RAKwireless</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../raspberrypi/index.html">Raspberry Pi Foundation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../raytac/index.html">Raytac Corporation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../realtek/index.html">Realtek</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../renesas/index.html">Renesas Electronics Corporation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../renode/index.html">Renode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../retronix/index.html">Retronix Technology Inc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ronoth/index.html">Ronoth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ruiside/index.html">Ruiside</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ruuvi/index.html">Ruuvi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../sc/index.html">Space Cubics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../seagate/index.html">Seagate Technology PLC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../seco/index.html">SECO SpA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../seeed/index.html">Seeed Technology Co., Ltd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../segger/index.html">SEGGER Microcontroller GmbH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../sensry/index.html">Sensry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../shakti/index.html">SHAKTI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../shields/index.html">扩展板（shield）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../sifive/index.html">SiFive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../sifli/index.html">SiFli Technologies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../silabs/index.html">Silicon Labs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../sipeed/index.html">Sipeed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../snps/index.html">Synopsys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../solderedelectronics/index.html">Soldered Electronics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../sparkfun/index.html">SparkFun Electronics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../st/index.html">STMicroelectronics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../starfive/index.html">StarFive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../steelseries/index.html">SteelSeries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../syna/index.html">Synaptics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../t3gemstone/index.html">T3 Gemstone</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tdk/index.html">TDK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../technexion/index.html">TECHNEXION</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../telink/index.html">Telink Semiconductor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../thirdreality/index.html">Third Reality, Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ti/index.html">Texas Instruments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../toradex/index.html">Toradex</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../trenz/index.html">Trenz Electronic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tuya/index.html">Tuya</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../u-blox/index.html">u-blox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../udoo/index.html">UDOO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../uiap/index.html">Umeta &amp; Ikki Automotive Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../up-bridge-the-gap/index.html">UP Bridge the Gap.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../variscite/index.html">Variscite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../vcc-gnd/index.html">VCC-GND</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../vicharak/index.html">Vicharak</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../viewe/index.html">VIEWE Display Co., Ltd.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../vngiotlab/index.html">VNG Corporation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../waiken-smart/index.html">Dongguan Waiken-Smart Technology Co., Ltd.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../waveshare/index.html">Waveshare Electronics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../wch/index.html">WCH - 南京沁恒微电子股份有限公司（Nanjing Qinheng Microelectronics Co.）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../we/index.html">Würth Elektronik</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../weact/index.html">WeAct Studio</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../wemos/index.html">Wemos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../witte/index.html">Witte</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../wiznet/index.html">WIZnet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../xen/index.html">Xen Hypervisor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../xunlong/index.html">深圳市迅龙软件有限公司（Shenzhen Xunlong Software Co., Limited）</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../../index.html">支持的开发板和扩展板</a> &raquo;</li>
+  
+     <li><a href="../../index.html">Intel Corporation</a> &raquo;</li>
+  
+     <li><a href="index.html">Intel ADSP</a> &raquo;</li>
+  
+  <li>在 Chromebook 上进行 Zephyr 音频 DSP 开发</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="zephyr-audio-dsp-development-on-chromebooks">
+<span id="id1"></span><h1>在 Chromebook 上进行 Zephyr 音频 DSP 开发<a class="headerlink" href="#zephyr-audio-dsp-development-on-chromebooks" title="链接到此标题。"></a></h1>
+<p>Intel Chromebook 上的音频 DSP 配置为使用 SOF &quot;Community&quot; 密钥进行固件签名，因此可以接受用户任意开发的固件，例如 Zephyr 应用程序（SOF 就是其中之一），包括 Zephyr 示例和测试套件。</p>
+<section id="initial-tgl-chromebook-setup">
+<h2>TGL Chromebook 初始设置<a class="headerlink" href="#initial-tgl-chromebook-setup" title="链接到此标题。"></a></h2>
+<p>（这些说明是专门针对代号为 &quot;delbin&quot; 的 Asus Flip CX5 设备编写的，但应该也基本适用于任何较新的 Intel 设备。）</p>
+<p>打开设备电源并连接到无线网络。设备很可能会要求下载固件更新（我的设备就是这样）。请先等更新完成，以确保有两个可用的操作系统镜像。</p>
+<section id="enable-developer-mode">
+<h3>启用开发者模式<a class="headerlink" href="#enable-developer-mode" title="链接到此标题。"></a></h3>
+<p>关闭设备电源（通过右下角菜单，或按住侧面的电源键）</p>
+<p>按住 Esc + Refresh（&quot;3&quot; 上方带圆圈箭头的 &quot;reload&quot; 键），再按电源键进入恢复模式。注意：在恢复模式下触摸屏和触控板都不能使用，请用方向键导航。</p>
+<p>选择 &quot;Advanced Options&quot;，然后选择 &quot;Enable Developer Mode&quot; 并确认。在引导加载程序界面中选择 &quot;Boot from Internal Storage&quot;。从此以后，每次开机都会看到这个界面，提示启动未经验证。</p>
+<p>等待设备完成必要的数据擦除。我的设备大约需要 15 分钟才能完整写入有状态分区。重启后，再次选择 &quot;Boot from Internal Storage&quot;，并（重新）使用 Google 账号完成设置。</p>
+</section>
+<section id="make-a-recovery-drive">
+<h3>制作恢复盘<a class="headerlink" href="#make-a-recovery-drive" title="链接到此标题。"></a></h3>
+<p>你迟早会把设备弄坏，届时就需要一个恢复 U 盘。请从 Google Web Store 安装 Chromebook Recovery Utility 并制作一个。</p>
+<p>实际上，在任何装有 Chrome 的机器（和任何操作系统）上都可以制作恢复盘，但在 Chromebook 上最方便，因为它知道自己的设备 ID（例如 Asus Tiger Lake 开发板为 &quot;DELBIN-XHVI D4B-H4D-G4G-Q9A-A9P&quot;）。注意，执行恢复时不会影响开发者模式或固件设置，但 <strong>会清除根文件系统以及你在 /usr/local 中所做的自定义修改</strong>。因此，对于你正在折腾的设备，请规划一种能容忍数据丢失的策略！</p>
+</section>
+<section id="make-the-root-filesystem-writable">
+<h3>使根文件系统可写<a class="headerlink" href="#make-the-root-filesystem-writable" title="链接到此标题。"></a></h3>
+<p>出于安全考虑，ChromeOS 会对只读根文件系统的所有访问进行签名和加密验证（使用 Linux 的 dm-verity 功能）。改动 rootfs（例如为自定义内核安装模块）需要关闭 dm-verity 层：</p>
+<p>首先按 Ctrl-Alt-T 打开终端。然后在 &quot;crosh&gt; &quot; 提示符下执行 &quot;shell&quot; 命令，获得以 &quot;chronos&quot; 用户身份运行的 shell。最后（在开发者模式下）只需执行 &quot;sudo su -&quot; 即可获得 root 提示符。</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">crosh&gt; shell</span>
+<span class="gp">chronos@localhost / $ </span>sudo<span class="w"> </span>su<span class="w"> </span>-
+<span class="go">localhost ~ #</span>
+</pre></div>
+</div>
+<p>现在需要关闭引导加载程序中的签名验证（因为显然我们会破坏现有的签名）。注意，签名验证由 ROM 引导加载程序而不是操作系统完成，此设置是给该代码的一条指令（仅在开发者模式下有效）：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cros# crossystem dev_boot_signed_only=0</span>
+</pre></div>
+</div>
+<p>(<em>Note: for clarity, commands in this document entered at the ChromeOS
+core shell will be prefixed with a hostname of cros.</em>)</p>
+<p>接下来禁用验证步骤：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cros# /usr/share/vboot/bin/make_dev_ssd.sh --remove_rootfs_verification</span>
+</pre></div>
+</div>
+<p><strong>此命令会失败</strong>，并报错提示你正在更改整个运行系统的设置，同时建议改用 &quot;--partitions X&quot; 参数，只修改当前使用的分区。运行修改后的命令，然后重启。</p>
+<p>重启后你会发现，Chromebook 启动时挂载为根的是原始存储设备（例如 /dev/nvme0n1p5），而不是 verity 设备 &quot;dm-0&quot;，并且 rootfs 可读写。</p>
+<p>注意：该命令实际所做的是修改已安装内核镜像的命令行（它会在 /mnt/stateful_partition/cros_sign_backups 中保存备份），使其指定 &quot;root=&lt;guid&gt;&quot; 而不是 &quot;root=dm-0&quot;。不过它似乎保留了其他 verity 配置，只是不再尝试挂载由此产生的（现已无效的！）分区。</p>
+<p>补充说明：细心的读者会注意到，我们很可能会丢弃这个内核，其实也可以直接编辑新内核的命令行，而不必先烧录并重启到这个修改过的内核。但对我来说，同时处理这么多事情太复杂了。</p>
+</section>
+<section id="enable-chromeos-ssh">
+<h3>启用 ChromeOS SSH<a class="headerlink" href="#enable-chromeos-ssh" title="链接到此标题。"></a></h3>
+<p>以可写分区启动后，可以用以下命令开启内置的 ssh 服务器：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cros# /usr/libexec/debugd/helpers/dev_features_ssh</span>
+</pre></div>
+</div>
+<p>默认情况下，&quot;chronos&quot; 用户和 root 账户都没有密码，因此除非你想手动输入 ssh 密钥，否则最好为首次登录设置一个密码（当然要在运行 ssh-copy-id 之前）：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cros# passwd</span>
+</pre></div>
+</div>
+<p>现在通过 ssh 登录 Chromebook，并像在任何 Linux 系统上一样，将你的密钥添加到 <code class="docutils literal notranslate"><span class="pre">.ssh/authorized_keys</span></code>。</p>
+</section>
+</section>
+<section id="install-crouton">
+<h2>安装 Crouton<a class="headerlink" href="#install-crouton" title="链接到此标题。"></a></h2>
+<p>Zephyr 集成工具需要完整的 Linux 环境，无法在 ChromeOS 的精简发行版上运行，因此需要安装一个 Linux 环境（personality）。<strong>不要</strong> 费心从 ChromeOS 开发者设置中安装 &quot;Linux Development Environment&quot;（Crostini）。该环境运行在虚拟机中，而我们的工具需要访问在真实硬件上运行的真实内核。请改为安装 Crouton（<a class="reference external" href="https://github.com/dnschneid/crouton">https://github.com/dnschneid/crouton</a>），这是一个由社区维护、基于 chroot 的环境，保留了对真实硬件 sysfs 和 /dev 文件系统的访问。这些说明安装的是 &quot;cli-extra&quot; 软件包列表；如果你希望直接在设备屏幕上工作，也有支持 X11 的列表可用。详见项目页面等。</p>
+<p>在 root shell 中下载安装程序并运行（注意：/usr/local 是唯一一个没有 noexec 的可写文件系统，必须将二进制文件放在那里才能运行！）：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cros# mkdir -p /usr/local/bin</span>
+<span class="go">cros# curl -L https://github.com/dnschneid/crouton/raw/master/installer/crouton \</span>
+<span class="go">              &gt; /usr/local/bin/crouton</span>
+<span class="go">cros# chmod 755 /usr/local/bin/crouton</span>
+<span class="go">cros# crouton -r focal -t cli-extra</span>
+</pre></div>
+</div>
+<p>启动 Crouton chroot 环境：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cros# startcli</span>
+</pre></div>
+</div>
+<p>现在你输入的命令都在 Ubuntu 环境中执行。在 Crouton 上启用入站 ssh，但要使用 22 以外的端口（22 已被 ChromeOS 原生 ssh 服务器占用）。这里使用 222（容易记，而且不是 /etc/services 中的已注册端口）：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">crouton# apt install iptables openssh-server</span>
+<span class="go">crouton# echo "Port 222" &gt;&gt; /etc/ssh/sshd_config</span>
+<span class="go">crouton# mkdir /run/sshd</span>
+<span class="go">crouton# iptables -I INPUT -p tcp --dport 222 -j ACCEPT</span>
+<span class="go">crouton# /usr/sbin/sshd</span>
+</pre></div>
+</div>
+<p>(<em>As above: note that we have introduced a hostname of &quot;crouton&quot; to
+refer to the separate Linux personality.</em>)</p>
+<p>注意：每次重新启动 chroot 时都需要运行 mkdir、iptables 和 sshd 命令。为方便起见，可以将它们放在 /etc/rc.local 中。Crouton 不运行 systemd（因为它无法运行，它并不掌管整个系统！），所以 openssh-server 等 Ubuntu 服务不知道如何自行启动。</p>
+</section>
+<section id="building-and-installing-a-custom-kernel">
+<h2>构建并安装自定义内核<a class="headerlink" href="#building-and-installing-a-custom-kernel" title="链接到此标题。"></a></h2>
+<p>在构建主机上获取一份 ChromeOS 内核源码树。出厂设备使用的是 5.4 内核，但 5.10 源码树在我这里也能用，而且它似乎一直在向后移植上游驱动，因此其主要硬件支持都相当新（大约落后主线 5-6 周）。为简单起见，这里将其放在主目录中：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">dev$ cd $HOME</span>
+<span class="go">dev$ git clone https://chromium.googlesource.com/chromiumos/third_party/kernel</span>
+<span class="go">dev$ cd kernel</span>
+<span class="go">dev$ git switch chromeos-5.10</span>
+</pre></div>
+</div>
+<p>(<em>Once again, we are typing into a different shell.  We introduce the
+hostname &quot;dev&quot; here to represent the development machine on which you
+are building kernels and Zephyr apps. It is possible to do this on the
+chromebook directly, but not advisable.  Remember the discussion above
+about requiring a drive wipe on system recovery!</em>)</p>
+<p>注意：你可能已经在某处有一个 Linux 源码树。如果有，将其添加为远程仓库并只获取增量会快得多，因为 ChromeOS 紧密跟踪上游。</p>
+<p>现在需要一个 .config 文件。Chromebook 内核附带已编译的 &quot;configs&quot; 模块，可以在运行中的内核里提供该文件。只需加载该模块并读取文件即可。</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">dev$ cd /path/to/kernel</span>
+<span class="go">dev$ ssh root@cros modprobe configs</span>
+<span class="go">dev$ ssh root@cros zcat /proc/config.gz &gt; .config</span>
+</pre></div>
+</div>
+<p>你需要将一些自定义配置变量设置为与 ChromeOS 默认值不同的值（可以直接编辑 .config，也可以使用 menuconfig 等）：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CONFIG_HUGETLBFS=y</span></code> - Zephyr 加载工具需要此选项</p></li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">CONFIG_EXTRA_FIRMWARE_DIR=n</span></code> - 该选项指向 Google 构建环境中的</dt><dd><p>一个构建目录，而我们并没有这个环境。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">CONFIG_SECURITY_LOADPIN=n</span></code> - 该选项会锁定模块，使其</dt><dd><p>只能从一个文件系统加载。对自定义内核来说，这是个恼人的限制。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">CONFIG_MODVERSIONS=n</span></code> - 允许从修改过的</dt><dd><p>&quot;dirty&quot; 构建树中构建并安装模块。</p>
+</dd>
+</dl>
+</li>
+</ul>
+<p>现在像构建其他内核一样构建你的内核：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">dev$ make olddefconfig     # Or otherwise update .config</span>
+<span class="go">dev$ make bzImage modules  # Probably want -j&lt;whatever&gt; for parallel build</span>
+</pre></div>
+</div>
+<p>模块可以直接复制到设备上（现已可写的）rootfs 中。注意，该文件系统空间非常有限（它本来就是只读的），因此必须使用 INSTALL_MOD_STRIP=1，而且你可能需要定期删除旧内核的模块以腾出空间：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">dev$ make INSTALL_MOD_PATH=mods INSTALL_MOD_STRIP=1 modules_install</span>
+<span class="go">dev$ (cd mods/lib/modules; tar cf - .) | ssh root@cros '(cd /lib/modules; tar xfv -)'</span>
+</pre></div>
+</div>
+<section id="pack-and-install-chromeos-kernel-image">
+<h3>打包并安装 ChromeOS 内核镜像<a class="headerlink" href="#pack-and-install-chromeos-kernel-image" title="链接到此标题。"></a></h3>
+<p>内核 bzImage 文件本身需要签名并打包成 ChromeOS vboot 包，然后直接写入内核分区。好在 Debian/Ubuntu 软件仓库中已经提供了完成这些工作的工具：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>sudo<span class="w"> </span>apt<span class="w"> </span>install<span class="w"> </span>vboot-utils<span class="w"> </span>vboot-kernel-utils
+</pre></div>
+</div>
+<p>找到设备上当前的内核分区。可以将（引导加载程序传入的）&quot;kernel_guid&quot; 命令行参数与启动盘的分区表进行比较来确定，例如：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">dev$ KPART=`ssh root@cros 'fdisk -l -o UUID,Device /dev/nvme0n1 | \</span>
+<span class="go">                           grep -i $(sed "s/.*kern_guid=//" /proc/cmdline \</span>
+<span class="go">                                     | sed "s/ .*//") \</span>
+<span class="go">                           | sed "s/.* //"'`</span>
+<span class="go">dev$ echo $KPART</span>
+<span class="go">/dev/nvme0n1p4</span>
+</pre></div>
+</div>
+<p>将该镜像中的命令行提取到本地文件中：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">dev$ ssh root@cros vbutil_kernel --verify /dev/$KPART | tail -1 &gt; cmdline.txt</span>
+</pre></div>
+</div>
+<p>现在可以使用 vboot 工具打包新的内核镜像。这些参数大多是固定的样板内容。之所以需要密钥，是因为启动需要有效的签名，尽管按当前配置并不会用到它。注意作为 &quot;bootloader&quot; 传入的那个不能为空的虚拟文件，它是早期需要 EFI 桩（stub）的 ROM 版本遗留下来的。</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">dev$ echo dummy &gt; dummy.efi</span>
+<span class="go">dev$ vbutil_kernel --pack kernel.img --config cmdline.txt \</span>
+<span class="go">       --vmlinuz arch/x86_64/boot/bzImage \</span>
+<span class="go">       --keyblock /usr/share/vboot/devkeys/kernel.keyblock \</span>
+<span class="go">       --signprivate /usr/share/vboot/devkeys/kernel_data_key.vbprivk \</span>
+<span class="go">       --version 1 --bootloader dummy.efi --arch x86_64</span>
+</pre></div>
+</div>
+<p>如有需要，可以用 &quot;vbutil_kernel --verify&quot; 验证该镜像。</p>
+<p>现在只需将文件复制到设备上并写入分区：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>scp<span class="w"> </span>kernel.img<span class="w"> </span>root@cros:/tmp
+<span class="gp">$ </span>ssh<span class="w"> </span>root@cros<span class="w"> </span>dd<span class="w"> </span><span class="k">if</span><span class="o">=</span>/tmp/kernel.img<span class="w"> </span><span class="nv">of</span><span class="o">=</span>/dev/nvme0n1p4
+</pre></div>
+</div>
+<p>然后重启，如果一切顺利，你就会运行在新内核上。</p>
+</section>
+<section id="wifi-firmware-fixup">
+<h3>修复 Wifi 固件<a class="headerlink" href="#wifi-firmware-fixup" title="链接到此标题。"></a></h3>
+<p>在 Tiger Lake Chromebook 上，/lib/firmware 目录相对于当前的 5.10 内核有些过时。iwlwifi 驱动会请求一个不存在的固件文件，导致设备没有网络。问题很简单，但如果不解决，后果很严重。看来只需将旧版本链接到新名称就足够了。（更好的做法可能是从最新的 kernel.org 检出中的 /lib/firmware 复制正确的版本。）：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">cros# cd /lib/firmware</span>
+<span class="go">cros# ln -s iwlwifi-QuZ-a0-hr-b0-62.ucode iwlwifi-QuZ-a0-hr-b0-64.ucode</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="build-and-run-a-zephyr-application">
+<h2>构建并运行 Zephyr 应用程序<a class="headerlink" href="#build-and-run-a-zephyr-application" title="链接到此标题。"></a></h2>
+<p>最后，新内核启动后，就可以运行 Zephyr 代码了。</p>
+<section id="build-rimage-signing-tool">
+<h3>构建 rimage 签名工具<a class="headerlink" href="#build-rimage-signing-tool" title="链接到此标题。"></a></h3>
+<p>首先下载并构建一份 Sound Open Firmware 的 &quot;rimage&quot; 工具（为清晰起见，这些说明将其放在主目录中，但放在任何位置都可以）：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">dev$ cd $HOME</span>
+<span class="go">dev$ git clone https://github.com/thesofproject/rimage</span>
+<span class="go">dev$ git submodule init</span>
+<span class="go">dev$ git submodule update</span>
+<span class="go">dev$ cd tools/rimage/</span>
+<span class="go">dev$ cmake .</span>
+<span class="go">dev$ make</span>
+</pre></div>
+</div>
+</section>
+<section id="copy-integration-scripting-to-chromebook">
+<h3>将集成脚本复制到 Chromebook<a class="headerlink" href="#copy-integration-scripting-to-chromebook" title="链接到此标题。"></a></h3>
+<p>设备上需要一个 python 脚本，在上文安装的 Crouton 环境中运行。复制这些脚本：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">dev$ scp soc/intel/intel_adsp/tools/cavstool.py user@crouton:</span>
+</pre></div>
+</div>
+<p>然后在 Crouton 环境中启动该服务：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">crouton$ sudo ./cavstool.py user@crouton:</span>
+</pre></div>
+</div>
+</section>
+<section id="build-and-sign-zephyr-app">
+<h3>构建 Zephyr 应用程序并签名<a class="headerlink" href="#build-and-sign-zephyr-app" title="链接到此标题。"></a></h3>
+<p>在该平台上，Zephyr 应用程序按常规方式构建，并通过 &quot;west flash&quot; 加上几个额外参数进行签名。注意，Tiger Lake DSP 使用的密钥是 SOF 的 &quot;3k&quot; 密钥，而不是旧硬件使用的原始密钥。输出产物是一个 &quot;zephyr.ri&quot; 文件，需要复制到设备上。</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">dev$ west build -b intel_adsp/cavs25 samples/hello_world</span>
+<span class="go">dev$ west sign --tool-data=~/rimage/config -t ~/rimage/rimage -- \</span>
+<span class="go">            -k $ZEPHYR_BASE/boards/intel/adsp/support/otc_private_key_3k.pem</span>
+</pre></div>
+</div>
+</section>
+<section id="run-it">
+<h3>运行！<a class="headerlink" href="#run-it" title="链接到此标题。"></a></h3>
+<p>加载脚本以签名后的 rimage 文件作为参数。脚本报告成功后，应用程序会立即开始运行，其控制台输出（位于 SOF 共享内存跟踪缓冲区中）可以由日志脚本读取。</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">dev$ west flash --remote-host crouton</span>
+<span class="go">Hello World! intel_adsp</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="misc-references">
+<h2>其他参考资料<a class="headerlink" href="#misc-references" title="链接到此标题。"></a></h2>
+<p>这些说明所依据的上游文档：</p>
+<p>此页面是关于启动过程的最佳参考资料：</p>
+<p><a class="reference external" href="https://www.chromium.org/chromium-os/developer-library/reference/device/disk-format">https://www.chromium.org/chromium-os/developer-library/reference/device/disk-format</a></p>
+<p>这个也很好，侧重于启动 ChromeOS 以外的系统：</p>
+<p><a class="reference external" href="https://www.chromium.org/chromium-os/developer-library/reference/development/developer-information-for-chrome-os-devices/custom-firmware/">https://www.chromium.org/chromium-os/developer-library/reference/development/developer-information-for-chrome-os-devices/custom-firmware/</a></p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 7月 13, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

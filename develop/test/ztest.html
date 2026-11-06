@@ -1,0 +1,1024 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>测试框架 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/develop/test/ztest.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="基准测试框架" href="benchmark.html" />
+    <link rel="prev" title="测试" href="index.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">使用 Zephyr 进行开发</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/index.html">入门指南</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beyond-GSG.html">入门指南之外</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../env_vars.html">环境变量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../application/index.html">应用程序开发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../debug/index.html">调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/index.html">API 状态与准则</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../languages/index.html">编程语言支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../optimizations/index.html">优化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../flash_debug/index.html">烧录与硬件调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html">模块（外部项目）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../west/index.html">West（Zephyr 的元工具）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../twister/index.html">测试运行器（Twister）</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">测试</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">测试框架</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#quick-start-integration-testing">快速入门：集成测试</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#listing-tests">列出测试</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#skipping-tests">跳过测试</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#quick-start-unit-testing">快速入门：单元测试</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#the-unit-testing-board"><code class="docutils literal notranslate"><span class="pre">unit_testing</span></code> 开发板</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#difference-from-native-sim-and-other-boards">与 <code class="docutils literal notranslate"><span class="pre">native_sim</span></code> 及其他开发板的区别</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#cmakelists-txt">CMakeLists.txt</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#tests-yaml">tests.yaml</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#prj-conf">prj.conf</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#creating-a-test-suite">创建测试套件</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#adding-tests-to-a-suite">向套件中添加测试</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#test-fixtures">测试 fixture</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#advanced-features">高级功能</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#value-parameterized-tests">值参数化测试</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#declaring-a-parameterized-test-body">声明参数化测试主体</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#declaring-parameter-values">声明参数值</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#instantiating-a-parameterized-test">实例化参数化测试</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#retrieving-the-current-parameter">获取当前参数</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#test-result-expectations">测试结果预期</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#test-rules">测试规则</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#a-custom-test-main">自定义 <code class="docutils literal notranslate"><span class="pre">test_main</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#best-practices-for-declaring-the-test-suite">声明测试套件的最佳实践</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#stress-test-framework">压力测试框架</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#configuration">配置</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#api-reference">API 参考</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#running-tests">运行测试</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#assertions">断言</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#expectations">期望</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#assumptions">假设</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#ztress">Ztress</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#mocking-via-fff">通过 FFF 进行 mock</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#customizing-test-output">自定义测试输出</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#shuffling-test-sequence">打乱测试顺序</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#repeating-tests">重复测试</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#test-selection">选择测试</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#fff-extensions">FFF 扩展</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="benchmark.html">基准测试框架</a></li>
+<li class="toctree-l3"><a class="reference internal" href="coverage.html">生成覆盖率报告</a></li>
+<li class="toctree-l3"><a class="reference internal" href="bsim.html">BabbleSim</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ci_test_plan.html">CI 测试计划选择器（test_plan_v2）</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../sca/index.html">静态代码分析（SCA）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../toolchains/index.html">工具链</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tools/index.html">工具与 IDE</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">使用 Zephyr 进行开发</a> &raquo;</li>
+  
+     <li><a href="index.html">测试</a> &raquo;</li>
+  
+  <li>测试框架</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="test-framework">
+<span id="id1"></span><h1>测试框架<a class="headerlink" href="#test-framework" title="链接到此标题。"></a></h1>
+<p>Zephyr 测试框架（Ztest）提供了一个简单的测试框架，供开发期间使用。它提供基本的断言宏和通用的测试结构。</p>
+<p>该框架有两种使用方式：作为集成测试的通用框架，或者用于对特定模块进行单元测试。</p>
+<nav class="contents local" id="id2">
+<ul class="simple">
+<li><p><a class="reference internal" href="#quick-start-integration-testing" id="id9">快速入门：集成测试</a></p></li>
+<li><p><a class="reference internal" href="#quick-start-unit-testing" id="id10">快速入门：单元测试</a></p></li>
+<li><p><a class="reference internal" href="#creating-a-test-suite" id="id11">创建测试套件</a></p></li>
+<li><p><a class="reference internal" href="#adding-tests-to-a-suite" id="id12">向套件中添加测试</a></p></li>
+<li><p><a class="reference internal" href="#advanced-features" id="id13">高级功能</a></p></li>
+<li><p><a class="reference internal" href="#best-practices-for-declaring-the-test-suite" id="id14">声明测试套件的最佳实践</a></p></li>
+<li><p><a class="reference internal" href="#stress-test-framework" id="id15">压力测试框架</a></p></li>
+<li><p><a class="reference internal" href="#api-reference" id="id16">API 参考</a></p></li>
+<li><p><a class="reference internal" href="#customizing-test-output" id="id17">自定义测试输出</a></p></li>
+<li><p><a class="reference internal" href="#shuffling-test-sequence" id="id18">打乱测试顺序</a></p></li>
+<li><p><a class="reference internal" href="#repeating-tests" id="id19">重复测试</a></p></li>
+<li><p><a class="reference internal" href="#test-selection" id="id20">选择测试</a></p></li>
+<li><p><a class="reference internal" href="#fff-extensions" id="id21">FFF 扩展</a></p></li>
+</ul>
+</nav>
+<section id="quick-start-integration-testing">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">快速入门：集成测试</a><a class="headerlink" href="#quick-start-integration-testing" title="链接到此标题。"></a></h2>
+<p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/samples/subsys/testsuite/integration">samples/subsys/testsuite/integration</a> 中提供了一个可以直接运行的简单基础示例。要为 <strong>foo</strong> 的 <strong>bar</strong> 组件编写测试应用程序，应将该示例目录复制到 <code class="docutils literal notranslate"><span class="pre">tests/foo/bar</span></code>，并在其中根据测试应用程序的用途修改文件。</p>
+<p>要构建并执行测试应用程序中定义的所有适用的测试场景，请使用 <a class="reference internal" href="../twister/index.html#twister-script"><span class="std std-ref">Twister</span></a> 工具，例如：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">west twister -T tests/foo/bar/</span>
+</pre></div>
+</div>
+<p>要只选择其中一个测试场景，请使用 <code class="docutils literal notranslate"><span class="pre">--scenario</span></code> 命令运行 Twister：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">west twister --scenario tests/foo/bar/your.test.scenario.name</span>
+</pre></div>
+</div>
+<p>在上面的命令行中，<code class="docutils literal notranslate"><span class="pre">tests/foo/bar</span></code> 是测试应用程序的路径，<code class="docutils literal notranslate"><span class="pre">your.test.scenario.name</span></code> 引用 <code class="file docutils literal notranslate"><span class="pre">tests.yaml</span></code> 文件中定义的一个测试场景，类似于样板测试套件示例中的 <code class="docutils literal notranslate"><span class="pre">sample.testing.ztest</span></code>。</p>
+<p>有关 Twister 如何处理 Ztest 应用程序的更多细节，请参见 <a class="reference internal" href="../twister/index.html#twister-test-project-diagram"><span class="std std-ref">Twister 测试项目示意图</span></a>。</p>
+<p>该示例包含以下文件：</p>
+<div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text">CMakeLists.txt</span><a class="headerlink" href="#id5" title="链接到此段代码"></a></div>
+<div class="highlight-CMake notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="c"># SPDX-License-Identifier: Apache-2.0</span>
+<span class="linenos">2</span>
+<span class="linenos">3</span><span class="nf">cmake_minimum_required(</span><span class="no">VERSION</span><span class="w"> </span><span class="m">3.28.0</span><span class="nf">)</span>
+<span class="linenos">4</span><span class="nf">find_package(</span><span class="nb">Zephyr</span><span class="w"> </span><span class="no">REQUIRED</span><span class="w"> </span><span class="no">HINTS</span><span class="w"> </span><span class="o">$ENV{</span><span class="nt">ZEPHYR_BASE</span><span class="o">}</span><span class="nf">)</span>
+<span class="linenos">5</span><span class="nf">project(</span><span class="nb">integration</span><span class="nf">)</span>
+<span class="linenos">6</span>
+<span class="linenos">7</span><span class="nf">FILE(</span><span class="no">GLOB</span><span class="w"> </span><span class="nb">app_sources</span><span class="w"> </span><span class="na">src/</span><span class="p">*.</span><span class="nb">c</span><span class="nf">)</span>
+<span class="linenos">8</span><span class="nf">target_sources(</span><span class="nb">app</span><span class="w"> </span><span class="no">PRIVATE</span><span class="w"> </span><span class="o">${</span><span class="nt">app_sources</span><span class="o">}</span><span class="nf">)</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id6">
+<div class="code-block-caption"><span class="caption-text">tests.yaml</span><a class="headerlink" href="#id6" title="链接到此段代码"></a></div>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span><span class="nt">tests</span><span class="p">:</span>
+<span class="linenos">2</span><span class="w">  </span><span class="c1"># section.subsection</span>
+<span class="linenos">3</span><span class="w">  </span><span class="nt">sample.testing.ztest</span><span class="p">:</span>
+<span class="linenos">4</span><span class="w">    </span><span class="nt">build_only</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="linenos">5</span><span class="w">    </span><span class="nt">platform_allow</span><span class="p">:</span>
+<span class="linenos">6</span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">native_sim</span>
+<span class="linenos">7</span><span class="w">    </span><span class="nt">integration_platforms</span><span class="p">:</span>
+<span class="linenos">8</span><span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">native_sim</span>
+<span class="linenos">9</span><span class="w">    </span><span class="nt">tags</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test_framework</span>
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id7">
+<div class="code-block-caption"><span class="caption-text">prj.conf</span><a class="headerlink" href="#id7" title="链接到此段代码"></a></div>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span><span class="linenos">1</span>CONFIG_ZTEST=y
+</pre></div>
+</div>
+</div>
+<div class="literal-block-wrapper docutils container" id="id8">
+<div class="code-block-caption"><span class="caption-text">src/main.c</span><a class="headerlink" href="#id8" title="链接到此段代码"></a></div>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="linenos"> 1</span><span class="cm">/*</span>
+<span class="linenos"> 2</span><span class="cm"> * Copyright (c) 2016 Intel Corporation</span>
+<span class="linenos"> 3</span><span class="cm"> *</span>
+<span class="linenos"> 4</span><span class="cm"> * SPDX-License-Identifier: Apache-2.0</span>
+<span class="linenos"> 5</span><span class="cm"> */</span>
+<span class="linenos"> 6</span>
+<span class="linenos"> 7</span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/ztest.h&gt;</span>
+<span class="linenos"> 8</span>
+<span class="linenos"> 9</span>
+<span class="linenos">10</span><span class="n">ZTEST_SUITE</span><span class="p">(</span><span class="n">framework_tests</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+<span class="linenos">11</span>
+<span class="linenos">12</span><span class="cm">/**</span>
+<span class="linenos">13</span><span class="cm"> * @brief Test Asserts</span>
+<span class="linenos">14</span><span class="cm"> *</span>
+<span class="linenos">15</span><span class="cm"> * This test verifies various assert macros provided by ztest.</span>
+<span class="linenos">16</span><span class="cm"> *</span>
+<span class="linenos">17</span><span class="cm"> */</span>
+<span class="linenos">18</span><span class="n">ZTEST</span><span class="p">(</span><span class="n">framework_tests</span><span class="p">,</span><span class="w"> </span><span class="n">test_assert</span><span class="p">)</span>
+<span class="linenos">19</span><span class="p">{</span>
+<span class="linenos">20</span><span class="w">	</span><span class="n">zassert_true</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s">"1 was false"</span><span class="p">);</span>
+<span class="linenos">21</span><span class="w">	</span><span class="n">zassert_false</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s">"0 was true"</span><span class="p">);</span>
+<span class="linenos">22</span><span class="w">	</span><span class="n">zassert_is_null</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="s">"NULL was not NULL"</span><span class="p">);</span>
+<span class="linenos">23</span><span class="w">	</span><span class="n">zassert_not_null</span><span class="p">(</span><span class="s">"foo"</span><span class="p">,</span><span class="w"> </span><span class="s">"</span><span class="se">\"</span><span class="s">foo</span><span class="se">\"</span><span class="s"> was NULL"</span><span class="p">);</span>
+<span class="linenos">24</span><span class="w">	</span><span class="n">zassert_equal</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s">"1 was not equal to 1"</span><span class="p">);</span>
+<span class="linenos">25</span><span class="w">	</span><span class="n">zassert_equal_ptr</span><span class="p">(</span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="s">"NULL was not equal to NULL"</span><span class="p">);</span>
+<span class="linenos">26</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+<p>一个测试应用程序可以由多个测试套件组成，这些测试套件可以测试功能，也可以测试 API。实现测试用例的函数应遵循以下准则：</p>
+<ul class="simple">
+<li><p>测试用例函数名应以 <strong>test_</strong> 为前缀</p></li>
+<li><p>测试用例应使用 doxygen 编写文档</p></li>
+<li><p>测试用例函数名在被测部分或组件中应当唯一</p></li>
+</ul>
+<p>例如：</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cm">/**</span>
+<span class="cm"> * @brief Test Asserts</span>
+<span class="cm"> *</span>
+<span class="cm"> * This test case verifies the zassert_true macro.</span>
+<span class="cm"> */</span>
+<span class="n">ZTEST</span><span class="p">(</span><span class="n">my_suite</span><span class="p">,</span><span class="w"> </span><span class="n">test_assert</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">        </span><span class="n">zassert_true</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s">"1 was false"</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<section id="listing-tests">
+<h3>列出测试<a class="headerlink" href="#listing-tests" title="链接到此标题。"></a></h3>
+<p>Zephyr 代码树中的测试（测试应用程序）由许多测试场景组成，这些场景作为某个项目的一部分运行，测试相似的功能，例如某个 API 或某项特性。<code class="docutils literal notranslate"><span class="pre">twister</span></code> 脚本可以解析所有测试应用程序或其中一部分的测试场景、套件和用例，并生成细粒度的报告，即测试用例是通过还是失败，或者是被阻塞还是被跳过。</p>
+<p>Twister 会解析源文件以查找测试用例名称，因此可以列出所有测试用例。例如，要列出所有内核测试用例，可以运行：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">west twister --list-tests -T tests/kernel</span>
+</pre></div>
+</div>
+</section>
+<section id="skipping-tests">
+<h3>跳过测试<a class="headerlink" href="#skipping-tests" title="链接到此标题。"></a></h3>
+<p>特殊测试或架构特定的测试无法在所有平台和架构上运行，但我们仍然希望将它们计入并报告为已跳过。由于测试清单和测试列表是从代码中提取的，在测试套件内部添加条件判断并不理想。对于在特定平台或特性下需要跳过的测试，需要使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">ztest_test_skip()</span></code> 或 <code class="xref c c-macro docutils literal notranslate"><span class="pre">Z_TEST_SKIP_IFDEF</span></code> 显式报告跳过。如果测试运行了，就需要报告通过或失败。例如：</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cp">#ifdef CONFIG_TEST1</span>
+<span class="n">ZTEST</span><span class="p">(</span><span class="n">common</span><span class="p">,</span><span class="w"> </span><span class="n">test_test1</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">     </span><span class="n">zassert_true</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="s">"true"</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="cp">#else</span>
+<span class="n">ZTEST</span><span class="p">(</span><span class="n">common</span><span class="p">,</span><span class="w"> </span><span class="n">test_test1</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">     </span><span class="n">ztest_test_skip</span><span class="p">();</span>
+<span class="p">}</span>
+<span class="cp">#endif</span>
+
+<span class="n">ZTEST</span><span class="p">(</span><span class="n">common</span><span class="p">,</span><span class="w"> </span><span class="n">test_test2</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">     </span><span class="n">Z_TEST_SKIP_IFDEF</span><span class="p">(</span><span class="n">CONFIG_BUGxxxxx</span><span class="p">);</span>
+<span class="w">     </span><span class="n">zassert_equal</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">ZTEST_SUITE</span><span class="p">(</span><span class="n">common</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="quick-start-unit-testing">
+<span id="ztest-unit-testing"></span><h2><a class="toc-backref" href="#id2" role="doc-backlink">快速入门：单元测试</a><a class="headerlink" href="#quick-start-unit-testing" title="链接到此标题。"></a></h2>
+<p>Ztest 可用于单元测试。这意味着在测试单个函数时，无需引入整个 Zephyr OS，而是可以将测试工作集中在相关的特定模块上。由于只需编译该模块，并直接调用被测函数，测试速度会更快。</p>
+<p>要设置单元测试，需要在包含单元测试源文件的目录中添加 CMakeLists.txt、tests.yaml 和 prj.conf。该目录生成的二进制文件使用 -DBOARD=unit_testing 构建。调用 twister 时，脚本 zephyr/scripts/pylib/twister/twisterlib/testplan.py 会过滤掉所有未设置 type: unit 的 tests.yaml。使用 BOARD=unit_testing 构建固件时，只会执行单元测试。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>单元测试作为 <strong>原生</strong> 应用程序在主机上运行，因此受到与 <a class="reference internal" href="../../boards/native/doc/arch_soc.html#posix-arch"><span class="std std-ref">POSIX 架构</span></a> 文档中所述类似的 <a class="reference internal" href="../../boards/native/doc/arch_soc.html#posix-arch-limitations"><span class="std std-ref">限制</span></a>。因此，只支持在 Linux 上运行单元测试。要在 Windows 或 macOS 上运行单元测试，需要使用运行 Linux 客户机的容器或虚拟机，并遵循与 <a class="reference internal" href="../../boards/native/doc/arch_soc.html#posix-arch-deps"><span class="std std-ref">POSIX 架构依赖</span></a> 相同的说明。</p>
+</div>
+<section id="the-unit-testing-board">
+<span id="unit-testing-board"></span><h3><code class="docutils literal notranslate"><span class="pre">unit_testing</span></code> 开发板<a class="headerlink" href="#the-unit-testing-board" title="链接到此标题。"></a></h3>
+<p>单元测试针对特殊的 <code class="docutils literal notranslate"><span class="pre">unit_testing</span></code> 开发板（<a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/subsys/testsuite/boards/unit_testing">subsys/testsuite/boards/unit_testing</a>）构建。它既不是真实的硬件，也不是仿真目标，而是一块 <code class="docutils literal notranslate"><span class="pre">arch:</span> <span class="pre">unit</span></code> 的伪开发板，使用主机工具链生成普通的原生可执行文件。通过 <code class="docutils literal notranslate"><span class="pre">-DBOARD=unit_testing</span></code> 选择它（对于标记为 <code class="docutils literal notranslate"><span class="pre">type:</span> <span class="pre">unit</span></code> 的场景，Twister 会自动这样做）时，只会构建和链接你添加到 <code class="docutils literal notranslate"><span class="pre">testbinary</span></code> 目标中的源文件以及 Ztest 单元测试 harness。</p>
+<p>关键在于，<strong>完全不会构建 Zephyr 内核和操作系统</strong>。没有启动流程、没有调度器、没有由设备树驱动的设备初始化，也没有驱动模型。被测函数会被编译到测试二进制文件中并被直接调用。被测模块所依赖的任何内核 API 或其他依赖都必须由测试自身提供，通常以桩函数或 <a class="reference internal" href="#mocking-fff"><span class="std std-ref">mock</span></a> 的形式提供。</p>
+<section id="difference-from-native-sim-and-other-boards">
+<span id="unit-testing-vs-native-sim"></span><h4>与 <code class="docutils literal notranslate"><span class="pre">native_sim</span></code> 及其他开发板的区别<a class="headerlink" href="#difference-from-native-sim-and-other-boards" title="链接到此标题。"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">unit_testing</span></code> 开发板很容易与 <a class="reference internal" href="../../boards/native/native_sim/doc/index.html#native_sim">Native simulator - native_sim</a> 混淆，因为二者都在主机上运行。但它们有本质区别：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../boards/native/native_sim/doc/index.html#native_sim">Native simulator - native_sim</a> 会将 <strong>完整的 Zephyr OS</strong>（内核、设备树、Kconfig、驱动和子系统）构建为一个主机二进制文件，它的启动和运行方式与真实硬件上的 Zephyr 镜像完全相同，只是针对主机而不是目标 SoC 编译。可以用它在主机上运行完整的应用程序和集成测试。针对这些开发板的测试 <strong>不</strong> 设置 <code class="docutils literal notranslate"><span class="pre">type:</span> <span class="pre">unit</span></code>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">unit_testing</span></code> 则 <strong>不会</strong> 构建上述任何内容。它只链接被测代码和 Ztest，其余一切都使用桩函数或 mock 替代，并直接调用被测函数。这使得构建和运行都很快，并能将注意力集中在单个模块上，代价是必须为每个依赖提供桩函数。这些测试必须设置 <code class="docutils literal notranslate"><span class="pre">type:</span> <span class="pre">unit</span></code>（参见 <a class="reference internal" href="#tests-yaml-unit"><span class="std std-ref">下文</span></a>）。</p></li>
+</ul>
+<p>简而言之，要在运行中的 Zephyr 系统环境下测试代码，请使用 <code class="docutils literal notranslate"><span class="pre">native_sim</span></code>；要在不引入内核的情况下测试单独的模块，请使用 <code class="docutils literal notranslate"><span class="pre">unit_testing</span></code>。</p>
+</section>
+</section>
+<section id="cmakelists-txt">
+<h3>CMakeLists.txt<a class="headerlink" href="#cmakelists-txt" title="链接到此标题。"></a></h3>
+<p>要声明某个源码目录中的单元测试，需要将相关源文件添加到 CMake <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/cmake/modules/unittest.cmake">unittest</a> 组件提供的 <code class="docutils literal notranslate"><span class="pre">testbinary</span></code> 目标中。下面是一个最小示例：</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nf">cmake_minimum_required(</span><span class="no">VERSION</span><span class="w"> </span><span class="m">3.28.0</span><span class="nf">)</span>
+
+<span class="nf">project(</span><span class="nb">app</span><span class="nf">)</span>
+<span class="nf">find_package(</span><span class="nb">Zephyr</span><span class="w"> </span><span class="no">COMPONENTS</span><span class="w"> </span><span class="nb">unittest</span><span class="w"> </span><span class="no">REQUIRED</span><span class="w"> </span><span class="no">HINTS</span><span class="w"> </span><span class="o">$ENV{</span><span class="nt">ZEPHYR_BASE</span><span class="o">}</span><span class="nf">)</span>
+<span class="nf">target_sources(</span><span class="nb">testbinary</span><span class="w"> </span><span class="no">PRIVATE</span><span class="w"> </span><span class="nb">main.c</span><span class="nf">)</span>
+</pre></div>
+</div>
+<p>由于不会包含大多数代码所依赖的基本内核数据结构，你必须在测试中提供函数桩。Ztest 提供了一些用于模拟函数的辅助工具，如下所示。</p>
+<p>在单元测试中，mock 对象可以模拟复杂真实对象的行为，用于通过验证是否发生了与某个对象的交互（如有需要，还可以断言交互的顺序）来判定测试是失败还是通过。</p>
+</section>
+<section id="tests-yaml">
+<span id="tests-yaml-unit"></span><h3>tests.yaml<a class="headerlink" href="#tests-yaml" title="链接到此标题。"></a></h3>
+<p>必须在 tests.yaml 中将键 &quot;type&quot; 的值设为 &quot;unit&quot;</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">tests</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">testscenario.testsuite</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">tags</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">your_tag</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unit</span>
+</pre></div>
+</div>
+</section>
+<section id="prj-conf">
+<h3>prj.conf<a class="headerlink" href="#prj-conf" title="链接到此标题。"></a></h3>
+<p>对于单元测试，该文件通常只包含</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span>CONFIG_ZTEST=y
+</pre></div>
+</div>
+<p>如果单元测试需要额外的库（例如 math-lib），需要通过 CMakeLists.txt 或在 tests.yaml 中添加：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">tests</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">testscenario.testsuite</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">tags</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">your_tag</span>
+<span class="w">      </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unit</span>
+<span class="w">      </span><span class="nt">extra_args</span><span class="p">:</span>
+<span class="w">         </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">EXTRA_LDFLAGS="-lm"</span>
+</pre></div>
+</div>
+<p>单元测试的示例位于 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/tests/unit/">tests/unit/</a> 目录中。</p>
+</section>
+</section>
+<section id="creating-a-test-suite">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">创建测试套件</a><a class="headerlink" href="#creating-a-test-suite" title="链接到此标题。"></a></h2>
+<p>使用 Ztest 创建测试套件非常简单，只需调用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTEST_SUITE</span></code>。该宏接受以下参数：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">suite_name</span></code> - 套件的名称。该名称在单个二进制文件中必须唯一。</p></li>
+<li><p><code class="xref c c-type docutils literal notranslate"><span class="pre">ztest_suite_predicate_t</span></code> - 可选的谓词函数，用于选择测试何时运行。谓词会得到一个指针，指向通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">ztest_run_all()</span></code> 传入的全局状态，并应返回一个布尔值，决定是否运行该套件。</p></li>
+<li><p><code class="xref c c-type docutils literal notranslate"><span class="pre">ztest_suite_setup_t</span></code> - 可选的 setup 函数，返回一个测试 fixture。每次运行测试套件时会调用并执行一次。</p></li>
+<li><p><code class="xref c c-type docutils literal notranslate"><span class="pre">ztest_suite_before_t</span></code> - 可选的 before 函数，会在该套件中每个测试之前运行。</p></li>
+<li><p><code class="xref c c-type docutils literal notranslate"><span class="pre">ztest_suite_after_t</span></code> - 可选的 after 函数，会在该套件中每个测试之后运行。</p></li>
+<li><p><code class="xref c c-type docutils literal notranslate"><span class="pre">ztest_suite_teardown_t</span></code> - 可选的 teardown 函数，会在套件中所有测试结束后运行。</p></li>
+</ul>
+<p>下面是一个使用谓词的测试套件示例：</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/ztest.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"test_state.h"</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="nf">predicate</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">global_state</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">     </span><span class="k">return</span><span class="w"> </span><span class="p">((</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">test_state</span><span class="o">*</span><span class="p">)</span><span class="n">global_state</span><span class="p">)</span><span class="o">-&gt;</span><span class="n">x</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">5</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">ZTEST_SUITE</span><span class="p">(</span><span class="n">alternating_suite</span><span class="p">,</span><span class="w"> </span><span class="n">predicate</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="adding-tests-to-a-suite">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">向套件中添加测试</a><a class="headerlink" href="#adding-tests-to-a-suite" title="链接到此标题。"></a></h2>
+<p>有 5 个宏可用于向套件中添加测试，分别是：</p>
+<ul class="simple">
+<li><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTEST</span></code> <code class="docutils literal notranslate"><span class="pre">(suite_name,</span> <span class="pre">test_name)</span></code> - 可用于向由 <code class="docutils literal notranslate"><span class="pre">suite_name</span></code> 指定的套件中添加名为 <code class="docutils literal notranslate"><span class="pre">test_name</span></code> 的测试。</p></li>
+<li><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTEST_P</span></code> <code class="docutils literal notranslate"><span class="pre">(suite_name,</span> <span class="pre">test_name)</span></code> - 向给定套件中添加一个值参数化测试。测试主体会针对每个注册的参数值各执行一次。在主体内部，调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">ztest_get_current_param()</span></code> 或使用带类型的辅助宏 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTEST_GET_PARAM</span></code> 获取当前值。套件 fixture（<code class="docutils literal notranslate"><span class="pre">data</span></code> 参数）与参数相互独立，永远不会被覆盖。完整的 API 请参见 <a class="reference internal" href="#id3">Value-parameterized tests</a>。</p></li>
+<li><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTEST_USER</span></code> <code class="docutils literal notranslate"><span class="pre">(suite_name,</span> <span class="pre">test_name)</span></code> - 行为与 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTEST</span></code> 相同，只是在启用 <a class="reference internal" href="../../kconfig.html#CONFIG_USERSPACE" title="CONFIG_USERSPACE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USERSPACE</span></code></a> 时，测试会在用户空间线程中运行。</p></li>
+<li><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTEST_F</span></code> <code class="docutils literal notranslate"><span class="pre">(suite_name,</span> <span class="pre">test_name)</span></code> - 行为与 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTEST</span></code> 相同，只是测试函数中已经包含一个名为 <code class="docutils literal notranslate"><span class="pre">fixture</span></code>、类型为 <code class="docutils literal notranslate"><span class="pre">&lt;suite_name&gt;_fixture</span></code> 的变量。</p></li>
+<li><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTEST_USER_F</span></code> <code class="docutils literal notranslate"><span class="pre">(suite_name,</span> <span class="pre">test_name)</span></code> - 将 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTEST_F</span></code> 的 fixture 功能与测试的用户空间线程结合起来。</p></li>
+</ul>
+<section id="test-fixtures">
+<h3>测试 fixture<a class="headerlink" href="#test-fixtures" title="链接到此标题。"></a></h3>
+<p>测试 fixture 可用于简化重复的测试设置操作。很多情况下，同一套件中的测试需要先进行一些初始设置，然后在每个测试之间进行某种形式的重置。这可以通过以下方式使用 fixture 实现：</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/ztest.h&gt;</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">my_suite_fixture</span><span class="w"> </span><span class="p">{</span>
+<span class="w">     </span><span class="kt">size_t</span><span class="w"> </span><span class="n">max_size</span><span class="p">;</span>
+<span class="w">     </span><span class="kt">size_t</span><span class="w"> </span><span class="n">size</span><span class="p">;</span>
+<span class="w">     </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">buff</span><span class="p">[</span><span class="mi">1</span><span class="p">];</span>
+<span class="p">};</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="nf">my_suite_setup</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">     </span><span class="cm">/* Allocate the fixture with 256 byte buffer */</span>
+<span class="w">     </span><span class="k">struct</span><span class="w"> </span><span class="nc">my_suite_fixture</span><span class="w"> </span><span class="o">*</span><span class="n">fixture</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">malloc</span><span class="p">(</span><span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">my_suite_fixture</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="mi">255</span><span class="p">);</span>
+
+<span class="w">     </span><span class="n">zassume_not_null</span><span class="p">(</span><span class="n">fixture</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+<span class="w">     </span><span class="n">fixture</span><span class="o">-&gt;</span><span class="n">max_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">256</span><span class="p">;</span>
+
+<span class="w">     </span><span class="k">return</span><span class="w"> </span><span class="n">fixture</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">my_suite_before</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">f</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">     </span><span class="k">struct</span><span class="w"> </span><span class="nc">my_suite_fixture</span><span class="w"> </span><span class="o">*</span><span class="n">fixture</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">my_suite_fixture</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">f</span><span class="p">;</span>
+<span class="w">     </span><span class="n">memset</span><span class="p">(</span><span class="n">fixture</span><span class="o">-&gt;</span><span class="n">buff</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">fixture</span><span class="o">-&gt;</span><span class="n">max_size</span><span class="p">);</span>
+<span class="w">     </span><span class="n">fixture</span><span class="o">-&gt;</span><span class="n">size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">my_suite_teardown</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">f</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">     </span><span class="n">free</span><span class="p">(</span><span class="n">f</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">ZTEST_SUITE</span><span class="p">(</span><span class="n">my_suite</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="n">my_suite_setup</span><span class="p">,</span><span class="w"> </span><span class="n">my_suite_before</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="n">my_suite_teardown</span><span class="p">);</span>
+
+<span class="n">ZTEST_F</span><span class="p">(</span><span class="n">my_suite</span><span class="p">,</span><span class="w"> </span><span class="n">test_feature_x</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">     </span><span class="n">zassert_equal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">fixture</span><span class="o">-&gt;</span><span class="n">size</span><span class="p">);</span>
+<span class="w">     </span><span class="n">zassert_equal</span><span class="p">(</span><span class="mi">256</span><span class="p">,</span><span class="w"> </span><span class="n">fixture</span><span class="o">-&gt;</span><span class="n">max_size</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>在用户空间线程中（例如执行 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTEST_USER</span></code> 或 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTEST_USER_F</span></code> 期间）使用测试 fixture 分配的内存时，需要将该内存声明为用户空间可访问。这是因为 fixture 内存由内核空间拥有并初始化。Ztest 框架提供了 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTEST_DMEM</span></code> 和 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTEST_BMEM</span></code> 宏，用于这类用户空间/内核空间共享内存。</p>
+</section>
+</section>
+<section id="advanced-features">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">高级功能</a><a class="headerlink" href="#advanced-features" title="链接到此标题。"></a></h2>
+<section id="value-parameterized-tests">
+<span id="id3"></span><h3>值参数化测试<a class="headerlink" href="#value-parameterized-tests" title="链接到此标题。"></a></h3>
+<p>值参数化测试允许同一个测试主体针对所提供列表中的每个值各执行一次，类似于 GoogleTest 的 <code class="docutils literal notranslate"><span class="pre">TEST_P</span></code> / <code class="docutils literal notranslate"><span class="pre">INSTANTIATE_TEST_SUITE_P</span></code> 模式。fixture 与参数完全独立：套件 <code class="docutils literal notranslate"><span class="pre">setup()</span></code> 的返回值总是作为 <code class="docutils literal notranslate"><span class="pre">data</span></code> 传入，永远不会被参数值覆盖。</p>
+<section id="declaring-a-parameterized-test-body">
+<h4>声明参数化测试主体<a class="headerlink" href="#declaring-a-parameterized-test-body" title="链接到此标题。"></a></h4>
+<p>按照与 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTEST</span></code> 相同的方式使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTEST_P</span></code>。在主体内部，<code class="docutils literal notranslate"><span class="pre">data</span></code> 指针携带套件 fixture（与 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTEST_F</span></code> 相同）。当前参数值通过以下运行时访问函数获取：</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/ztest.h&gt;</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">my_suite_fixture</span><span class="w"> </span><span class="p">{</span>
+<span class="w">     </span><span class="kt">int</span><span class="w"> </span><span class="n">initial_value</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="nf">my_suite_setup</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">     </span><span class="k">static</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">my_suite_fixture</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">.</span><span class="n">initial_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">42</span><span class="w"> </span><span class="p">};</span>
+<span class="w">     </span><span class="k">return</span><span class="w"> </span><span class="o">&amp;</span><span class="n">f</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">ZTEST_SUITE</span><span class="p">(</span><span class="n">my_suite</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="n">my_suite_setup</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+
+<span class="n">ZTEST_P</span><span class="p">(</span><span class="n">my_suite</span><span class="p">,</span><span class="w"> </span><span class="n">test_multiply</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">     </span><span class="k">struct</span><span class="w"> </span><span class="nc">my_suite_fixture</span><span class="w"> </span><span class="o">*</span><span class="n">f</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">my_suite_fixture</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">data</span><span class="p">;</span>
+<span class="w">     </span><span class="kt">int</span><span class="w"> </span><span class="n">factor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ZTEST_GET_PARAM</span><span class="p">(</span><span class="kt">int</span><span class="p">);</span>
+
+<span class="w">     </span><span class="cm">/* fixture is always intact, regardless of parameter */</span>
+<span class="w">     </span><span class="n">zassert_equal</span><span class="p">(</span><span class="n">f</span><span class="o">-&gt;</span><span class="n">initial_value</span><span class="p">,</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span><span class="w"> </span><span class="s">"fixture corrupted"</span><span class="p">);</span>
+<span class="w">     </span><span class="n">zassert_true</span><span class="p">(</span><span class="n">f</span><span class="o">-&gt;</span><span class="n">initial_value</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">factor</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="s">"product must be positive"</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="declaring-parameter-values">
+<h4>声明参数值<a class="headerlink" href="#declaring-parameter-values" title="链接到此标题。"></a></h4>
+<p>使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTEST_DEFINE_PARAM_VALUES</span></code> 从字面值创建静态值集合：</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="n">ZTEST_DEFINE_PARAM_VALUES</span><span class="p">(</span><span class="n">small_factors</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>对于已存储在数组中的值，使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTEST_DEFINE_PARAM_VALUES_ARRAY</span></code>：</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">big_factors</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">100</span><span class="p">,</span><span class="w"> </span><span class="mi">1000</span><span class="w"> </span><span class="p">};</span>
+<span class="n">ZTEST_DEFINE_PARAM_VALUES_ARRAY</span><span class="p">(</span><span class="n">big_factor_vals</span><span class="p">,</span><span class="w"> </span><span class="n">big_factors</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>对于数值范围，使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTEST_DEFINE_PARAM_RANGE</span></code>，其语义与 GoogleTest 的 <code class="docutils literal notranslate"><span class="pre">testing::Range(begin,</span> <span class="pre">end</span> <span class="pre">[,</span> <span class="pre">step])</span></code> 一致。取值为 <code class="docutils literal notranslate"><span class="pre">{begin,</span> <span class="pre">begin+step,</span> <span class="pre">...}</span></code>，一直到 <code class="docutils literal notranslate"><span class="pre">end</span></code> 为止，但 <strong>不</strong> 包括该值。由于不分配底层数组，大范围也不会产生任何 RAM 开销：</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cm">/* {0, 2, 4, 6, 8} — 5 values, step is supplied explicitly */</span>
+<span class="n">ZTEST_DEFINE_PARAM_RANGE</span><span class="p">(</span><span class="n">even_vals</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">);</span>
+
+<span class="cm">/* {1, 2, 3, 4, 5} — step=1 is the common case */</span>
+<span class="n">ZTEST_DEFINE_PARAM_RANGE</span><span class="p">(</span><span class="n">one_to_five</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">6</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p><code class="docutils literal notranslate"><span class="pre">ZTEST_DEFINE_PARAM_RANGE</span></code> 要求 <code class="docutils literal notranslate"><span class="pre">end</span> <span class="pre">&gt;</span> <span class="pre">begin</span></code> 且 <code class="docutils literal notranslate"><span class="pre">step</span> <span class="pre">&gt;</span> <span class="pre">0</span></code>，这两个条件都通过 <code class="xref c c-macro docutils literal notranslate"><span class="pre">BUILD_ASSERT</span></code> 在编译时强制检查。</p>
+</div>
+<p>对于必须 <strong>在运行时计算</strong> 的值（例如随机数、硬件传感器读数或由自定义算法生成的值），使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTEST_DEFINE_PARAM_GENERATOR</span></code> 或 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTEST_DEFINE_PARAM_GENERATOR_WITH_SETUP</span></code>。二者都接受一个用户提供的生成器回调，其签名为 <code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">gen(size_t</span> <span class="pre">index,</span> <span class="pre">void</span> <span class="pre">*out)</span></code>，每次调用写出一个值。与范围一样，不会分配底层数组。</p>
+<p><code class="docutils literal notranslate"><span class="pre">_WITH_SETUP</span></code> 变体还会在分派循环之前调用 <strong>一次</strong> <code class="docutils literal notranslate"><span class="pre">void</span> <span class="pre">setup(void)</span></code> 钩子。这里适合为 PRNG 设置种子、重置有状态的计数器，或打开生成器所需的任何资源：</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/random/random.h&gt;</span>
+
+<span class="cm">/* Seed the RNG before the first iteration so failures are reproducible. */</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">seed_rng</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">     </span><span class="n">sys_rand_seed</span><span class="p">(</span><span class="n">MY_FUZZ_SEED</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">rand_u32_gen</span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">idx</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">out</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">     </span><span class="n">ARG_UNUSED</span><span class="p">(</span><span class="n">idx</span><span class="p">);</span>
+<span class="w">     </span><span class="o">*</span><span class="p">(</span><span class="kt">uint32_t</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">out</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sys_rand32_get</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="n">ZTEST_DEFINE_PARAM_GENERATOR_WITH_SETUP</span><span class="p">(</span><span class="n">fuzz_vals</span><span class="p">,</span><span class="w"> </span><span class="kt">uint32_t</span><span class="p">,</span><span class="w"> </span><span class="n">MY_FUZZ_ITERATIONS</span><span class="p">,</span>
+<span class="w">                                        </span><span class="n">seed_rng</span><span class="p">,</span><span class="w"> </span><span class="n">rand_u32_gen</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>如果不需要 setup，请使用更简单的形式：</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">deterministic_gen</span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">idx</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">out</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">     </span><span class="cm">/* Deterministic but computed at runtime (e.g. based on hardware ID). */</span>
+<span class="w">     </span><span class="o">*</span><span class="p">(</span><span class="kt">uint32_t</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">out</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">get_device_seed</span><span class="p">()</span><span class="w"> </span><span class="o">^</span><span class="w"> </span><span class="p">(</span><span class="kt">uint32_t</span><span class="p">)</span><span class="n">idx</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="n">ZTEST_DEFINE_PARAM_GENERATOR</span><span class="p">(</span><span class="n">hw_vals</span><span class="p">,</span><span class="w"> </span><span class="kt">uint32_t</span><span class="p">,</span><span class="w"> </span><span class="mi">16U</span><span class="p">,</span><span class="w"> </span><span class="n">deterministic_gen</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>两个生成器宏的 <code class="docutils literal notranslate"><span class="pre">count_</span></code> 参数都必须是常量表达式（数字字面量、<code class="docutils literal notranslate"><span class="pre">#define</span></code> 或 <code class="docutils literal notranslate"><span class="pre">MY_FUZZ_ITERATIONS</span></code> 这样的 Kconfig 符号）。不支持真正动态的数量。</p>
+</div>
+<p>结构体类型的参数用法相同：</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">point</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="p">;</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">y</span><span class="p">;</span><span class="w"> </span><span class="p">};</span>
+
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">point</span><span class="w"> </span><span class="n">corners</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">0</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">},</span><span class="w"> </span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">}</span><span class="w"> </span><span class="p">};</span>
+<span class="n">ZTEST_DEFINE_PARAM_VALUES_ARRAY</span><span class="p">(</span><span class="n">corner_vals</span><span class="p">,</span><span class="w"> </span><span class="n">corners</span><span class="p">);</span>
+
+<span class="n">ZTEST_P</span><span class="p">(</span><span class="n">my_suite</span><span class="p">,</span><span class="w"> </span><span class="n">test_in_unit_square</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">     </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">point</span><span class="w"> </span><span class="o">*</span><span class="n">p</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ZTEST_GET_PARAM_PTR</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">point</span><span class="p">);</span>
+<span class="w">     </span><span class="n">zassert_true</span><span class="p">(</span><span class="n">p</span><span class="o">-&gt;</span><span class="n">x</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">x</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">1</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">y</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="mi">0</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">y</span><span class="w"> </span><span class="o">&lt;=</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span>
+<span class="w">                 </span><span class="s">"point (%d, %d) outside unit square"</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">x</span><span class="p">,</span><span class="w"> </span><span class="n">p</span><span class="o">-&gt;</span><span class="n">y</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="instantiating-a-parameterized-test">
+<h4>实例化参数化测试<a class="headerlink" href="#instantiating-a-parameterized-test" title="链接到此标题。"></a></h4>
+<p><code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTEST_INSTANTIATE_TEST_SUITE_P</span></code> 将一个值集合绑定到一个测试主体上。每次调用都会创建一个单独命名的实例化；同一个测试主体可以使用不同的值集合多次实例化：</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="n">ZTEST_INSTANTIATE_TEST_SUITE_P</span><span class="p">(</span><span class="n">small</span><span class="p">,</span><span class="w"> </span><span class="n">my_suite</span><span class="p">,</span><span class="w"> </span><span class="n">test_multiply</span><span class="p">,</span><span class="w"> </span><span class="n">small_factors</span><span class="p">);</span>
+<span class="n">ZTEST_INSTANTIATE_TEST_SUITE_P</span><span class="p">(</span><span class="n">big</span><span class="p">,</span><span class="w">   </span><span class="n">my_suite</span><span class="p">,</span><span class="w"> </span><span class="n">test_multiply</span><span class="p">,</span><span class="w"> </span><span class="n">big_factor_vals</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>第一个参数（<code class="docutils literal notranslate"><span class="pre">small</span></code> / <code class="docutils literal notranslate"><span class="pre">big</span></code>）是编译单元内任意的唯一标识符；它会记录在测试元数据中，但不影响 Twister 报告的测试命名。</p>
+</section>
+<section id="retrieving-the-current-parameter">
+<h4>获取当前参数<a class="headerlink" href="#retrieving-the-current-parameter" title="链接到此标题。"></a></h4>
+<p>在 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTEST_P</span></code> 主体内部可以使用以下辅助函数：</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 40.0%" />
+<col style="width: 60.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>辅助函数</p></th>
+<th class="head"><p>说明</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ztest_has_current_param()</span></code></p></td>
+<td><p>在参数化调用内部调用时返回 <code class="docutils literal notranslate"><span class="pre">true</span></code>。</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ztest_get_current_param()</span></code></p></td>
+<td><p>返回指向当前值的 <code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">void</span> <span class="pre">*</span></code> 指针。</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ZTEST_GET_PARAM_PTR(type)</span></code></p></td>
+<td><p>返回指向当前值的 <code class="docutils literal notranslate"><span class="pre">const</span> <span class="pre">type</span> <span class="pre">*</span></code> 指针。</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ZTEST_GET_PARAM(type)</span></code></p></td>
+<td><p>解引用并以 <code class="docutils literal notranslate"><span class="pre">type</span></code> 类型返回当前值。</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ztest_get_current_param_index()</span></code></p></td>
+<td><p>返回当前值在其所属集合中从零开始的索引。</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ztest_get_current_param_size()</span></code></p></td>
+<td><p>返回单个参数元素的大小（以字节为单位）。</p></td>
+</tr>
+</tbody>
+</table>
+<p>在非参数化测试（<code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTEST</span></code>、<code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTEST_F</span></code>）中，<code class="docutils literal notranslate"><span class="pre">ztest_has_current_param()</span></code> 总是返回 <code class="docutils literal notranslate"><span class="pre">false</span></code>，<code class="docutils literal notranslate"><span class="pre">ztest_get_current_param()</span></code> 总是返回 <code class="docutils literal notranslate"><span class="pre">NULL</span></code>。</p>
+</section>
+</section>
+<section id="test-result-expectations">
+<h3>测试结果预期<a class="headerlink" href="#test-result-expectations" title="链接到此标题。"></a></h3>
+<p>有些测试本来就是要失败的。如果由于代码本身的性质，预计测试会失败或被跳过，可以对测试进行相应的标注。例如：</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/ztest.h&gt;</span>
+
+<span class="n">ZTEST_SUITE</span><span class="p">(</span><span class="n">my_suite</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+
+<span class="n">ZTEST_EXPECT_FAIL</span><span class="p">(</span><span class="n">my_suite</span><span class="p">,</span><span class="w"> </span><span class="n">test_fail</span><span class="p">);</span>
+<span class="n">ZTEST</span><span class="p">(</span><span class="n">my_suite</span><span class="p">,</span><span class="w"> </span><span class="n">test_fail</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="cm">/** This will fail the test */</span>
+<span class="w">  </span><span class="n">zassert_true</span><span class="p">(</span><span class="nb">false</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">ZTEST_EXPECT_SKIP</span><span class="p">(</span><span class="n">my_suite</span><span class="p">,</span><span class="w"> </span><span class="n">test_skip</span><span class="p">);</span>
+<span class="n">ZTEST</span><span class="p">(</span><span class="n">my_suite</span><span class="p">,</span><span class="w"> </span><span class="n">test_skip</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">  </span><span class="cm">/** This will skip the test */</span>
+<span class="w">  </span><span class="n">zassume_true</span><span class="p">(</span><span class="nb">false</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>在本例中，上述测试本应分别被标记为失败和跳过。但由于设置了预期，Ztest 会将二者都标记为通过。</p>
+</section>
+<section id="test-rules">
+<h3>测试规则<a class="headerlink" href="#test-rules" title="链接到此标题。"></a></h3>
+<p>测试规则可以为每个测试和每个套件运行相同的逻辑。很多情况下，你可能希望为二进制文件中的每个测试重置某些状态（无论当前运行的是哪个套件），例如重置 mock、重置仿真器、刷新 UART 等：</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/fff.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/ztest.h&gt;</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"test_mocks.h"</span>
+
+<span class="n">DEFINE_FFF_GLOBALS</span><span class="p">;</span>
+
+<span class="n">DEFINE_FAKE_VOID_FUN</span><span class="p">(</span><span class="n">my_weak_func</span><span class="p">);</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">fff_reset_rule_before</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">ztest_unit_test</span><span class="w"> </span><span class="o">*</span><span class="n">test</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">fixture</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">     </span><span class="n">ARG_UNUSED</span><span class="p">(</span><span class="n">test</span><span class="p">);</span>
+<span class="w">     </span><span class="n">ARG_UNUSED</span><span class="p">(</span><span class="n">fixture</span><span class="p">);</span>
+
+<span class="w">     </span><span class="n">RESET_FAKE</span><span class="p">(</span><span class="n">my_weak_func</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">ZTEST_RULE</span><span class="p">(</span><span class="n">fff_reset_rule</span><span class="p">,</span><span class="w"> </span><span class="n">fff_reset_rule_before</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="a-custom-test-main">
+<h3>自定义 <code class="docutils literal notranslate"><span class="pre">test_main</span></code><a class="headerlink" href="#a-custom-test-main" title="链接到此标题。"></a></h3>
+<p>虽然 Ztest 框架提供了默认的 <code class="xref c c-func docutils literal notranslate"><span class="pre">test_main()</span></code> 函数，但有些应用程序可能希望提供自定义行为。当测试依赖于某种全局状态，而该状态无法复现，或者不重新启动进程就很难复现时，尤其如此。例如，上电时序就是这样一种状态。假设某块开发板的上电时序包含多个步骤，就可以编写一个使用 <code class="docutils literal notranslate"><span class="pre">predicate</span></code> 控制其运行时机的测试套件。这种情况下，<code class="xref c c-func docutils literal notranslate"><span class="pre">test_main()</span></code> 函数可以写成如下形式：</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/ztest.h&gt;</span>
+
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">"my_test.h"</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">test_main</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">     </span><span class="k">struct</span><span class="w"> </span><span class="nc">power_sequence_state</span><span class="w"> </span><span class="n">state</span><span class="p">;</span>
+
+<span class="w">     </span><span class="cm">/* Only suites that use a predicate checking for phase == PWR_PHASE_0 will run. */</span>
+<span class="w">     </span><span class="n">state</span><span class="p">.</span><span class="n">phase</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PWR_PHASE_0</span><span class="p">;</span>
+<span class="w">     </span><span class="n">ztest_run_all</span><span class="p">(</span><span class="o">&amp;</span><span class="n">state</span><span class="p">,</span><span class="w"> </span><span class="nb">false</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+
+<span class="w">     </span><span class="cm">/* Only suites that use a predicate checking for phase == PWR_PHASE_1 will run. */</span>
+<span class="w">     </span><span class="n">state</span><span class="p">.</span><span class="n">phase</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PWR_PHASE_1</span><span class="p">;</span>
+<span class="w">     </span><span class="n">ztest_run_all</span><span class="p">(</span><span class="o">&amp;</span><span class="n">state</span><span class="p">,</span><span class="w"> </span><span class="nb">false</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+
+<span class="w">     </span><span class="cm">/* Only suites that use a predicate checking for phase == PWR_PHASE_2 will run. */</span>
+<span class="w">     </span><span class="n">state</span><span class="p">.</span><span class="n">phase</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">PWR_PHASE_2</span><span class="p">;</span>
+<span class="w">     </span><span class="n">ztest_run_all</span><span class="p">(</span><span class="o">&amp;</span><span class="n">state</span><span class="p">,</span><span class="w"> </span><span class="nb">false</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+
+<span class="w">     </span><span class="cm">/* Check that all the suites in this binary ran at least once. */</span>
+<span class="w">     </span><span class="n">ztest_verify_all_test_suites_ran</span><span class="p">();</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p><code class="xref c c-func docutils literal notranslate"><span class="pre">ztest_run_all()</span></code> 的签名为 <code class="docutils literal notranslate"><span class="pre">ztest_run_all(const</span> <span class="pre">void</span> <span class="pre">*state,</span> <span class="pre">bool</span> <span class="pre">shuffle,</span> <span class="pre">int</span> <span class="pre">suite_iter,</span> <span class="pre">int</span> <span class="pre">case_iter)</span></code>：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">state</span></code> - 指向传给每个套件 <code class="docutils literal notranslate"><span class="pre">predicate</span></code> 的全局状态的指针。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">shuffle</span></code> - 为 <code class="docutils literal notranslate"><span class="pre">true</span></code> 时，随机打乱套件和测试的运行顺序（需要 <a class="reference internal" href="../../kconfig.html#CONFIG_ZTEST_SHUFFLE" title="CONFIG_ZTEST_SHUFFLE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZTEST_SHUFFLE</span></code></a>）；为 <code class="docutils literal notranslate"><span class="pre">false</span></code> 时保持默认的字母数字顺序。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">suite_iter</span></code> - 每个测试套件重复执行的次数。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">case_iter</span></code> - 每个测试用例重复执行的次数。</p></li>
+</ul>
+<p>在上面的示例中，每次调用都会按顺序运行一次匹配的套件，且不打乱顺序。</p>
+</section>
+</section>
+<section id="best-practices-for-declaring-the-test-suite">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">声明测试套件的最佳实践</a><a class="headerlink" href="#best-practices-for-declaring-the-test-suite" title="链接到此标题。"></a></h2>
+<p><em>twister</em> 和其他验证工具需要获取 Zephyr <em>ztest</em> 测试镜像所提供的测试用例列表。</p>
+<div class="admonition-rationale admonition">
+<p class="admonition-title">理由</p>
+<p>这一切都是为了可追溯性。只有一个信号量测试应用程序是不够的，我们还需要证明所有 API 和功能都有对应的测试点，并能追溯到 API 的文档和功能需求。</p>
+<p>其思路是让测试报告显示每个测试用例的结果：通过、失败、被阻塞或被跳过。只报告高层的测试应用程序过于笼统，尤其是在测试做了太多事情时。</p>
+</div>
+<p>其他问题：</p>
+<ul>
+<li><p>为什么不先用 CPP 预扫描再解析？或者在构建后扫描 ELF 文件？</p>
+<p>如果 C 预处理或构建因任何问题而失败，我们将无法得知其中的子用例。</p>
+</li>
+<li><p>为什么不在 YAML 测试配置中声明它们？</p>
+<p>单独的测试用例描述文件比直接把信息保存在测试源文件中更难维护。修改时只需更新一个文件，可以避免重复。</p>
+</li>
+</ul>
+</section>
+<section id="stress-test-framework">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">压力测试框架</a><a class="headerlink" href="#stress-test-framework" title="链接到此标题。"></a></h2>
+<p>Zephyr 压力测试框架（Ztress）提供了一个在多个优先级上下文中执行用户函数的环境。可用于验证代码能否经受住抢占。该框架会跟踪每个上下文的执行次数和被抢占次数。执行可以有多种完成条件，例如超时、执行次数或被抢占次数。</p>
+<p>该框架通过创建所请求数量的线程（每个线程的优先级不同），并可选地启动一个定时器来建立环境。对于每个上下文，会调用一个用户函数（每个上下文各不相同），然后该上下文休眠随机数量的系统节拍。框架会跟踪 CPU 负载并调整休眠时长，以达到更高的 CPU 负载。为了提高发生抢占的概率，系统时钟频率应相对较高。QEMU x86 上默认的 100 Hz 太低，建议将其提高到 100 kHz。</p>
+<p>压力测试环境使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTRESS_EXECUTE</span></code> 设置和执行，该宏接受可变数量的参数。每个参数是一个上下文，由 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTRESS_TIMER</span></code> 或 <code class="xref c c-macro docutils literal notranslate"><span class="pre">ZTRESS_THREAD</span></code> 宏指定。上下文按优先级从高到低的顺序指定。每个上下文通过提供最少执行次数和最少被抢占次数来指定完成条件。当所有条件都满足且执行完成时，会打印一份执行报告，然后该宏返回。注意，测试执行期间会定期打印进度报告。</p>
+<p>通过指定测试超时（<code class="xref c c-func docutils literal notranslate"><span class="pre">ztress_set_timeout()</span></code>）或显式中止（<code class="xref c c-func docutils literal notranslate"><span class="pre">ztress_abort()</span></code>），可以提前结束执行。</p>
+<p>用户函数的参数包含一个执行计数器，以及一个表示是否为最后一次执行的标志。</p>
+<p>下面的示例演示了如何设置并运行 3 个上下文（其中一个是 k_timer 中断处理程序上下文）。完成条件设为每个上下文至少执行 10000 次，且最低优先级上下文至少被抢占 1000 次。此外还配置了超时：如果这些条件未满足，则在 10 秒后结束。每个上下文的最后一个参数是初始休眠时间，它会在整个测试过程中不断调整，以达到最高的 CPU 负载。</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="n">ztress_set_timeout</span><span class="p">(</span><span class="n">K_MSEC</span><span class="p">(</span><span class="mi">10000</span><span class="p">));</span>
+<span class="n">ZTRESS_EXECUTE</span><span class="p">(</span><span class="n">ZTRESS_TIMER</span><span class="p">(</span><span class="n">foo_0</span><span class="p">,</span><span class="w"> </span><span class="n">user_data_0</span><span class="p">,</span><span class="w"> </span><span class="mi">10000</span><span class="p">,</span><span class="w"> </span><span class="n">Z_TIMEOUT_TICKS</span><span class="p">(</span><span class="mi">20</span><span class="p">)),</span>
+<span class="w">               </span><span class="n">ZTRESS_THREAD</span><span class="p">(</span><span class="n">foo_1</span><span class="p">,</span><span class="w"> </span><span class="n">user_data_1</span><span class="p">,</span><span class="w"> </span><span class="mi">10000</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">Z_TIMEOUT_TICKS</span><span class="p">(</span><span class="mi">20</span><span class="p">)),</span>
+<span class="w">               </span><span class="n">ZTRESS_THREAD</span><span class="p">(</span><span class="n">foo_2</span><span class="p">,</span><span class="w"> </span><span class="n">user_data_2</span><span class="p">,</span><span class="w"> </span><span class="mi">10000</span><span class="p">,</span><span class="w"> </span><span class="mi">1000</span><span class="p">,</span><span class="w"> </span><span class="n">Z_TIMEOUT_TICKS</span><span class="p">(</span><span class="mi">20</span><span class="p">)));</span>
+</pre></div>
+</div>
+<section id="configuration">
+<h3>配置<a class="headerlink" href="#configuration" title="链接到此标题。"></a></h3>
+<p>Ztress 的静态配置包括：</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZTRESS_MAX_THREADS" title="CONFIG_ZTRESS_MAX_THREADS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZTRESS_MAX_THREADS</span></code></a> - 支持的线程数。</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZTRESS_STACK_SIZE" title="CONFIG_ZTRESS_STACK_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZTRESS_STACK_SIZE</span></code></a> - 所创建线程的栈大小。</p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_ZTRESS_REPORT_PROGRESS_MS" title="CONFIG_ZTRESS_REPORT_PROGRESS_MS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZTRESS_REPORT_PROGRESS_MS</span></code></a> - 测试进度报告的间隔。</p></li>
+</ul>
+</div></blockquote>
+</section>
+</section>
+<section id="api-reference">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">API 参考</a><a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<section id="running-tests">
+<h3>运行测试<a class="headerlink" href="#running-tests" title="链接到此标题。"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">ztest_test</span></dt>
+</dl>
+
+</section>
+<section id="assertions">
+<h3>断言<a class="headerlink" href="#assertions" title="链接到此标题。"></a></h3>
+<p>如果相关断言失败，这些宏会立即使测试失败。断言失败时，会打印当前的文件、行号和函数，以及失败原因和可选的消息。如果配置 <a class="reference internal" href="../../kconfig.html#CONFIG_ZTEST_ASSERT_VERBOSE" title="CONFIG_ZTEST_ASSERT_VERBOSE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZTEST_ASSERT_VERBOSE</span></code></a> 为 0，断言只会打印文件和行号，从而减小测试二进制文件的大小。</p>
+<p><code class="docutils literal notranslate"><span class="pre">zassert_equal(buf-&gt;ref,</span> <span class="pre">2,</span> <span class="pre">&quot;Invalid</span> <span class="pre">refcount&quot;)</span></code> 失败时的输出示例：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Assertion failed at main.c:62: test_get_single_buffer: Invalid refcount (buf-&gt;ref not equal to 2)
+Aborted at unit test function
+</pre></div>
+</div>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">ztest_assert</span></dt>
+</dl>
+
+</section>
+<section id="expectations">
+<h3>期望<a class="headerlink" href="#expectations" title="链接到此标题。"></a></h3>
+<p>如果相关期望不满足，这些宏会继续执行测试，并在测试执行结束时使测试失败。期望不满足时，会打印当前的文件、行号和函数，以及失败原因和可选的消息，但会继续执行测试。如果配置 <a class="reference internal" href="../../kconfig.html#CONFIG_ZTEST_ASSERT_VERBOSE" title="CONFIG_ZTEST_ASSERT_VERBOSE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZTEST_ASSERT_VERBOSE</span></code></a> 为 0，期望只会打印文件和行号，从而减小测试二进制文件的大小。</p>
+<p>例如，如果以下期望不满足：</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="n">zexpect_equal</span><span class="p">(</span><span class="n">buf</span><span class="o">-&gt;</span><span class="n">ref</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="s">"Invalid refcount"</span><span class="p">);</span>
+<span class="n">zexpect_equal</span><span class="p">(</span><span class="n">buf</span><span class="o">-&gt;</span><span class="n">ref</span><span class="p">,</span><span class="w"> </span><span class="mi">1337</span><span class="p">,</span><span class="w"> </span><span class="s">"Invalid refcount"</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>输出大致如下：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>START - test_get_single_buffer
+    Expectation failed at main.c:62: test_get_single_buffer: Invalid refcount (buf-&gt;ref not equal to 2)
+    Expectation failed at main.c:63: test_get_single_buffer: Invalid refcount (buf-&gt;ref not equal to 1337)
+ FAIL - test_get_single_buffer in 0.0 seconds
+</pre></div>
+</div>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">ztest_expect</span></dt>
+</dl>
+
+</section>
+<section id="assumptions">
+<h3>假设<a class="headerlink" href="#assumptions" title="链接到此标题。"></a></h3>
+<p>如果相关假设不成立，这些宏会立即跳过该测试或套件。假设不成立时，会打印当前的文件、行号和函数，以及失败原因和可选的消息。如果配置 <a class="reference internal" href="../../kconfig.html#CONFIG_ZTEST_ASSERT_VERBOSE" title="CONFIG_ZTEST_ASSERT_VERBOSE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZTEST_ASSERT_VERBOSE</span></code></a> 为 0，假设只会打印文件和行号，从而减小测试二进制文件的大小。</p>
+<p><code class="docutils literal notranslate"><span class="pre">zassume_equal(buf-&gt;ref,</span> <span class="pre">2,</span> <span class="pre">&quot;Invalid</span> <span class="pre">refcount&quot;)</span></code> 失败时的输出示例：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>START - test_get_single_buffer
+    Assumption failed at main.c:62: test_get_single_buffer: Invalid refcount (buf-&gt;ref not equal to 2)
+ SKIP - test_get_single_buffer in 0.0 seconds
+</pre></div>
+</div>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">ztest_assume</span></dt>
+</dl>
+
+</section>
+<section id="ztress">
+<h3>Ztress<a class="headerlink" href="#ztress" title="链接到此标题。"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">ztest_ztress</span></dt>
+</dl>
+
+</section>
+<section id="mocking-via-fff">
+<span id="mocking-fff"></span><h3>通过 FFF 进行 mock<a class="headerlink" href="#mocking-via-fff" title="链接到此标题。"></a></h3>
+<p>Zephyr 集成了 FFF 用于 mock。相关文档请参见 <a class="reference external" href="https://github.com/meekrosoft/fff">FFF</a>。要使用它，请包含相应的头文件：</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/fff.h&gt;</span>
+</pre></div>
+</div>
+<p>Zephyr 提供了多个基于 FFF 的伪驱动，既可用作桩，也可用作 mock。伪驱动实例通过 <a class="reference internal" href="../../build/dts/index.html#devicetree"><span class="std std-ref">设备树</span></a> 和 <a class="reference internal" href="../../build/kconfig/index.html#kconfig"><span class="std std-ref">配置系统（Kconfig）</span></a> 配置。更多信息请参见以下设备树绑定：</p>
+<ul class="simple">
+<li><p><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,fake-can</span></code></p></li>
+<li><p><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,fake-comp</span></code></p></li>
+<li><p><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,fake-eeprom</span></code></p></li>
+<li><p><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,fake-leds</span></code></p></li>
+<li><p><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,fake-pwm</span></code></p></li>
+<li><p><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,fake-regulator</span></code></p></li>
+<li><p><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,fake-rtc</span></code></p></li>
+<li><p><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,fake-stepper-ctrl</span></code></p></li>
+<li><p><code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,fake-stepper-driver</span></code></p></li>
+</ul>
+<p>Zephyr 还为 FFF 定义了扩展，用于简化伪函数的声明。参见 <a class="reference internal" href="#fff-extensions"><span class="std std-ref">FFF 扩展</span></a>。</p>
+</section>
+</section>
+<section id="customizing-test-output">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">自定义测试输出</a><a class="headerlink" href="#customizing-test-output" title="链接到此标题。"></a></h2>
+<p>将 <a class="reference internal" href="../../kconfig.html#CONFIG_ZTEST_TC_UTIL_USER_OVERRIDE" title="CONFIG_ZTEST_TC_UTIL_USER_OVERRIDE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZTEST_TC_UTIL_USER_OVERRIDE</span></code></a> 设为 &quot;y&quot;，并添加一个包含覆盖定义的 <code class="file docutils literal notranslate"><span class="pre">tc_util_user_override.h</span></code> 文件，即可启用自定义。</p>
+<p>在项目的 <code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> 中添加 <code class="docutils literal notranslate"><span class="pre">zephyr_include_directories(my_folder)</span></code> 这一行，使 Zephyr 在构建时能够找到你的头文件。</p>
+<p>可以覆盖哪些宏和/或定义，请参见 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/subsys/testsuite/include/zephyr/tc_util.h">subsys/testsuite/include/zephyr/tc_util.h</a> 文件。这些宏和定义会被如下代码块包围：</p>
+<div class="highlight-C notranslate"><div class="highlight"><pre><span></span><span class="cp">#ifndef SOMETHING</span>
+<span class="cp">#define SOMETHING &lt;default implementation&gt;</span>
+<span class="cp">#endif </span><span class="cm">/* SOMETHING */</span>
+</pre></div>
+</div>
+</section>
+<section id="shuffling-test-sequence">
+<span id="ztest-shuffle"></span><h2><a class="toc-backref" href="#id2" role="doc-backlink">打乱测试顺序</a><a class="headerlink" href="#shuffling-test-sequence" title="链接到此标题。"></a></h2>
+<p>默认情况下，测试会排序并按字母数字顺序运行。测试用例可能依赖于这一顺序。启用 <a class="reference internal" href="../../kconfig.html#CONFIG_ZTEST_SHUFFLE" title="CONFIG_ZTEST_SHUFFLE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZTEST_SHUFFLE</span></code></a> 可以随机打乱顺序。测试输出会显示失败测试所用的种子。对于 native simulator 构建，可以通过 <code class="docutils literal notranslate"><span class="pre">--seed</span></code> 将种子作为参数传给 twister。</p>
+</section>
+<section id="repeating-tests">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">重复测试</a><a class="headerlink" href="#repeating-tests" title="链接到此标题。"></a></h2>
+<p>默认情况下，测试只执行一次。测试用例和测试套件可以多次执行。启用 <a class="reference internal" href="../../kconfig.html#CONFIG_ZTEST_REPEAT" title="CONFIG_ZTEST_REPEAT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZTEST_REPEAT</span></code></a> 可以多次执行测试。默认的重复倍数为 3，即每个测试套件执行 3 次，每个测试用例也执行 3 次。可以通过 Kconfig 选项 <a class="reference internal" href="../../kconfig.html#CONFIG_ZTEST_SUITE_REPEAT_COUNT" title="CONFIG_ZTEST_SUITE_REPEAT_COUNT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZTEST_SUITE_REPEAT_COUNT</span></code></a> 和 <a class="reference internal" href="../../kconfig.html#CONFIG_ZTEST_TEST_REPEAT_COUNT" title="CONFIG_ZTEST_TEST_REPEAT_COUNT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZTEST_TEST_REPEAT_COUNT</span></code></a> 更改该倍数。</p>
+</section>
+<section id="test-selection">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">选择测试</a><a class="headerlink" href="#test-selection" title="链接到此标题。"></a></h2>
+<p>对于为 native simulator 构建的测试，可以使用命令行参数列出或选择要运行的测试。test 参数接受以逗号分隔的 <code class="docutils literal notranslate"><span class="pre">suite::test</span></code> 列表。可以用 <code class="docutils literal notranslate"><span class="pre">*</span></code> 代替测试名称，以运行某个套件中的所有测试。</p>
+<p>例如</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>$<span class="w"> </span>zephyr.exe<span class="w"> </span>-list
+$<span class="w"> </span>zephyr.exe<span class="w"> </span>-test<span class="o">=</span><span class="s2">"fixture_tests::test_fixture_pointer,framework_tests::test_assert_mem_equal"</span>
+$<span class="w"> </span>zephyr.exe<span class="w"> </span>-test<span class="o">=</span><span class="s2">"framework_tests::*"</span>
+</pre></div>
+</div>
+</section>
+<section id="fff-extensions">
+<span id="id4"></span><h2><a class="toc-backref" href="#id2" role="doc-backlink">FFF 扩展</a><a class="headerlink" href="#fff-extensions" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">fff_extensions</span></dt>
+</dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 8月 04, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

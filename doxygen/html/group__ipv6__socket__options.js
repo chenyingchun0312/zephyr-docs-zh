@@ -1,0 +1,27 @@
+var group__ipv6__socket__options =
+[
+    [ "ZSOCK_IPV6_ADD_MEMBERSHIP", "group__ipv6__socket__options.html#gae438698778cfe58c28c7928f9b227f30", null ],
+    [ "ZSOCK_IPV6_ADDR_PREFERENCES", "group__ipv6__socket__options.html#ga6fd9aed65cb7a1a7eface8455501212b", null ],
+    [ "ZSOCK_IPV6_DONTFRAG", "group__ipv6__socket__options.html#ga44b16e54bc2922153e9a07d628cf1cba", null ],
+    [ "ZSOCK_IPV6_DROP_MEMBERSHIP", "group__ipv6__socket__options.html#ga1d70e019e1341a3d54dfd7a819cb7071", null ],
+    [ "ZSOCK_IPV6_HOPLIMIT", "group__ipv6__socket__options.html#ga92c73652d38a41b8acea0a69362f3e0d", null ],
+    [ "ZSOCK_IPV6_JOIN_GROUP", "group__ipv6__socket__options.html#gab524aa153b4a7005f988d7bb167bacab", null ],
+    [ "ZSOCK_IPV6_LEAVE_GROUP", "group__ipv6__socket__options.html#ga1b2fc808d5b602e658d88d66f1f1d1d1", null ],
+    [ "ZSOCK_IPV6_MTU", "group__ipv6__socket__options.html#gac37821fc6bd4b484ff36a00dea505245", null ],
+    [ "ZSOCK_IPV6_MULTICAST_HOPS", "group__ipv6__socket__options.html#ga78bda8f2e2c0e0fc3cf9788c42d8b6f8", null ],
+    [ "ZSOCK_IPV6_MULTICAST_IF", "group__ipv6__socket__options.html#ga4f15d7b5032536896c0785f16830329d", null ],
+    [ "ZSOCK_IPV6_MULTICAST_LOOP", "group__ipv6__socket__options.html#ga6fc007f21de54e12697a21712ca095c3", null ],
+    [ "ZSOCK_IPV6_PKTINFO", "group__ipv6__socket__options.html#ga24b054ba13a54ae2064aea31f52d7ed0", null ],
+    [ "ZSOCK_IPV6_PREFER_SRC_CGA", "group__ipv6__socket__options.html#gaa3b4dd46e7b1fdeaae6db4a692c7f57a", null ],
+    [ "ZSOCK_IPV6_PREFER_SRC_COA", "group__ipv6__socket__options.html#ga60f0a56613fdf6532dd2549273f6e6a2", null ],
+    [ "ZSOCK_IPV6_PREFER_SRC_HOME", "group__ipv6__socket__options.html#gac9afff595eac9ca47c0e14da20531d6b", null ],
+    [ "ZSOCK_IPV6_PREFER_SRC_NONCGA", "group__ipv6__socket__options.html#gaa10785a8136550462a895621b2866d0f", null ],
+    [ "ZSOCK_IPV6_PREFER_SRC_PUBLIC", "group__ipv6__socket__options.html#ga3acbfad85a26f4a71b51e570369122a4", null ],
+    [ "ZSOCK_IPV6_PREFER_SRC_PUBTMP_DEFAULT", "group__ipv6__socket__options.html#ga2ecb5f065f2f8806ff7ee680ce3b8bee", null ],
+    [ "ZSOCK_IPV6_PREFER_SRC_TMP", "group__ipv6__socket__options.html#ga061badf1fcadf353667f10a64b77bcb5", null ],
+    [ "ZSOCK_IPV6_RECVHOPLIMIT", "group__ipv6__socket__options.html#gad0c689068bc6bff4369a1ea9b36d09a9", null ],
+    [ "ZSOCK_IPV6_RECVPKTINFO", "group__ipv6__socket__options.html#gab399d0b2da77aa4331490bb312aa2fb0", null ],
+    [ "ZSOCK_IPV6_TCLASS", "group__ipv6__socket__options.html#gabe60a1f3a16e4b0a4b2c997f91497c62", null ],
+    [ "ZSOCK_IPV6_UNICAST_HOPS", "group__ipv6__socket__options.html#ga6b3364d4ea2e4c34f1de975e6f66961b", null ],
+    [ "ZSOCK_IPV6_V6ONLY", "group__ipv6__socket__options.html#ga004e5f8352ae9c6d8096919e44fdd874", null ]
+];

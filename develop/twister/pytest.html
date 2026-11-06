@@ -1,0 +1,726 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>与 pytest 测试框架集成 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/develop/twister/pytest.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="Twister 状态" href="twister_statuses.html" />
+    <link rel="prev" title="命令行选项" href="commandline.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">使用 Zephyr 进行开发</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/index.html">入门指南</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beyond-GSG.html">入门指南之外</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../env_vars.html">环境变量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../application/index.html">应用程序开发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../debug/index.html">调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/index.html">API 状态与准则</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../languages/index.html">编程语言支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../optimizations/index.html">优化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../flash_debug/index.html">烧录与硬件调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html">模块（外部项目）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../west/index.html">West（Zephyr 的元工具）</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">测试运行器（Twister）</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="commandline.html">命令行选项</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">与 pytest 测试框架集成</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#introduction">简介</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#integration-with-twister">与 twister 集成</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#how-to-create-a-pytest-test">如何创建 pytest 测试</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#passing-extra-arguments">传递额外参数</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#fixtures">Fixture</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#dut">dut</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#shell">shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#mcumgr">mcumgr</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#unlaunched-dut">unlaunched_dut</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#fixtures-for-multi-dut-scenarios">多 DUT 场景的 fixture</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#unlaunched-duts">unlaunched_duts</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#duts">duts</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#shells">shells</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#classes">类</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#deviceadapter">DeviceAdapter</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#twister_harness.DeviceAdapter"><code class="docutils literal notranslate"><span class="pre">DeviceAdapter</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#shell-class">Shell</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#twister_harness.Shell"><code class="docutils literal notranslate"><span class="pre">Shell</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#examples-of-pytest-tests-in-the-zephyr-project">Zephyr 项目中的 pytest 测试示例</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#faq">常见问题</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#how-to-flash-run-application-only-once-per-pytest-session">如何在每个 pytest 会话中只烧录/运行一次应用程序？</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#how-to-run-only-one-particular-test-from-a-python-file">如何只运行 Python 文件中的某个特定测试？</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#how-to-get-information-about-used-device-type-in-test">如何在测试中获取所使用的设备类型信息？</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#how-to-rerun-locally-pytest-tests-without-rebuilding-application-by-twister">如何在本地重新运行 pytest 测试，而不让 Twister 重新构建应用程序？</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#is-this-possible-to-run-pytest-tests-in-parallel">能否并行运行 pytest 测试？</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#limitations">限制</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="twister_statuses.html">Twister 状态</a></li>
+<li class="toctree-l3"><a class="reference internal" href="twister_blackbox.html">Twister 黑盒测试</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#board-configuration">开发板配置</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#toolchain-selection">工具链选择</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#tests">测试</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#harnesses">Harness</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#sidecars">Sidecar</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#selecting-platform-scope">选择平台范围</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#running-in-integration-mode">以集成模式运行</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#running-tests-on-custom-emulator">在自定义模拟器上运行测试</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#running-tests-in-random-order">以随机顺序运行测试</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#running-tests-on-hardware">在硬件上运行测试</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#test-output-and-reports">测试输出与报告</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#live-run-monitoring">实时运行监控</a></li>
+<li class="toctree-l3"><a class="reference internal" href="index.html#twister-configuration-file">Twister 配置文件</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../test/index.html">测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sca/index.html">静态代码分析（SCA）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../toolchains/index.html">工具链</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tools/index.html">工具与 IDE</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">使用 Zephyr 进行开发</a> &raquo;</li>
+  
+     <li><a href="index.html">测试运行器（Twister）</a> &raquo;</li>
+  
+  <li>与 pytest 测试框架集成</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="integration-with-pytest-test-framework">
+<span id="integration-with-pytest"></span><h1>与 pytest 测试框架集成<a class="headerlink" href="#integration-with-pytest-test-framework" title="链接到此标题。"></a></h1>
+<p><em>请注意，twister 与 pytest 的集成仍在开发中，pytest 尚未支持所有平台类型。如果你发现集成方面的问题或有改进想法，请告诉我们，并提交 GitHub issue/enhancement。</em></p>
+<section id="introduction">
+<h2>简介<a class="headerlink" href="#introduction" title="链接到此标题。"></a></h2>
+<p>Pytest 是一个 Python 框架，它 <em>“让编写小巧、可读的测试变得简单，并且可以扩展以支持应用程序和库的复杂功能测试”</em>（<a class="reference external" href="https://docs.pytest.org/en/7.3.x/">https://docs.pytest.org/en/7.3.x/</a>）。Python 以丰富的免费库和便于编写脚本而著称。此外，pytest 采用了插件和 fixture 的概念，增强了可扩展性和可复用性。为了在 pytest 与 twister 之间实现集成，引入了 pytest 插件 <code class="docutils literal notranslate"><span class="pre">pytest-twister-harness</span></code>，使 Zephyr 社区能够在以 twister 作为主框架的同时使用 pytest 的功能。</p>
+</section>
+<section id="integration-with-twister">
+<h2>与 twister 集成<a class="headerlink" href="#integration-with-twister" title="链接到此标题。"></a></h2>
+<p>默认情况下，无需任何操作即可在 twister 中启用 pytest 支持。该插件作为 Zephyr 代码树的一部分进行开发。为了无需安装即可使用，twister 首先会把该插件的路径添加到 <code class="docutils literal notranslate"><span class="pre">PYTHONPATH</span></code> 中，然后在调用 pytest 时在命令中追加 <code class="docutils literal notranslate"><span class="pre">-p</span> <span class="pre">twister_harness.plugin</span></code> 参数。如果希望使用已安装版本的插件，必须在调用 twister 时添加 <code class="docutils literal notranslate"><span class="pre">--allow-installed-plugin</span></code> 标志。</p>
+<p>基于 pytest 的测试套件与其他 twister 测试的发现方式相同，即通过是否存在 tests.yaml 文件来判断。该文件中的关键字 <code class="docutils literal notranslate"><span class="pre">harness</span></code> 告诉 twister 如何处理给定的测试。对于 <code class="docutils literal notranslate"><span class="pre">harness:</span> <span class="pre">pytest</span></code>，twister 的大部分工作流程（测试套件发现、并行化、构建和报告）与其他 harness 相同，区别在于执行步骤。下图给出了该集成的简化概览。</p>
+<figure class="align-center align-default">
+<img alt="../../_images/twister_and_pytest.svg" src="../../_images/twister_and_pytest.svg" />
+</figure>
+<p>如果使用 <code class="docutils literal notranslate"><span class="pre">harness:</span> <span class="pre">pytest</span></code>，twister 会以子进程方式调用 pytest，将测试执行委托给它。所需的参数（例如构建目录、要使用的设备等）通过 YAML 配置文件传递。pytest 执行完毕后，twister 会查找 pytest 报告（results.xml），并据此设置测试结果。</p>
+</section>
+<section id="how-to-create-a-pytest-test">
+<h2>如何创建 pytest 测试<a class="headerlink" href="#how-to-create-a-pytest-test" title="链接到此标题。"></a></h2>
+<p>一个包含 pytest 测试、应用程序源代码和 Twister 配置 .yaml 文件的示例目录结构如下：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>test_foo/
+├─── pytest/
+│    └─── test_foo.py
+├─── src/
+│    └─── main.c
+├─── CMakeList.txt
+├─── prj.conf
+└─── testcase.yaml
+</pre></div>
+</div>
+<p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/samples/subsys/testsuite/pytest/shell/pytest/test_shell.py">samples/subsys/testsuite/pytest/shell/pytest/test_shell.py</a> 中给出了一个 pytest 测试示例。Twister 根据 <code class="docutils literal notranslate"><span class="pre">testcase.yaml</span></code> 文件中提供的配置从 <code class="docutils literal notranslate"><span class="pre">src</span></code> 构建应用程序；如果该 .yaml 文件包含 <code class="docutils literal notranslate"><span class="pre">harness:</span> <span class="pre">pytest</span></code> 条目，Twister 就会在单独的子进程中调用 pytest。示例配置文件如下：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">tests</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">some.foo.test</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">harness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pytest</span>
+<span class="w">      </span><span class="nt">tags</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">foo</span>
+</pre></div>
+</div>
+<p>默认情况下，pytest 会在与二进制源码目录相邻的 <code class="docutils literal notranslate"><span class="pre">pytest</span></code> 目录中查找测试。可以在 .yaml 文件的 <code class="docutils literal notranslate"><span class="pre">harness_config</span></code> 部分中使用关键字 <code class="docutils literal notranslate"><span class="pre">pytest_root</span></code> 指向其他文件、目录或子测试（详见 <a class="reference internal" href="harness/pytest.html#pytest-root"><span class="std std-ref">此处</span></a>）。</p>
+<p>Pytest 会按照其默认的 <a class="reference external" href="https://docs.pytest.org/en/7.1.x/explanation/goodpractices.html#conventions-for-python-test-discovery">发现规则</a> 扫描给定位置以查找测试。</p>
+<section id="passing-extra-arguments">
+<h3>传递额外参数<a class="headerlink" href="#passing-extra-arguments" title="链接到此标题。"></a></h3>
+<p>有两种方式可以向被调用的 pytest 子进程传递额外参数：</p>
+<ol class="arabic">
+<li><p>在 .yaml 文件中，使用位于 <code class="docutils literal notranslate"><span class="pre">harness_config</span></code> 部分的 <code class="docutils literal notranslate"><span class="pre">pytest_args</span></code>，详见 <a class="reference internal" href="harness/pytest.html#pytest-args"><span class="std std-ref">此处</span></a>。</p></li>
+<li><p>通过 Twister 命令行接口的 <code class="docutils literal notranslate"><span class="pre">--pytest-args</span></code> 参数。当需要从测试套件中选择特定测试用例时，这种方式尤其有用。例如，可以使用以下命令：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>west<span class="w"> </span>twister<span class="w"> </span>--platform<span class="w"> </span>native_sim<span class="w"> </span>-T<span class="w"> </span>samples/subsys/testsuite/pytest/shell<span class="w"> </span><span class="se">\</span>
+-s<span class="w"> </span>samples/subsys/testsuite/pytest/shell/sample.pytest.shell<span class="w"> </span><span class="se">\</span>
+--pytest-args<span class="o">=</span><span class="s1">'-k test_shell_print_version'</span>
+</pre></div>
+</div>
+<p>命令行参数会扩展 .yaml 文件中的参数。如果两处都有相同的参数，则以命令行中的为准。</p>
+</li>
+</ol>
+</section>
+</section>
+<section id="fixtures">
+<h2>Fixture<a class="headerlink" href="#fixtures" title="链接到此标题。"></a></h2>
+<section id="dut">
+<h3>dut<a class="headerlink" href="#dut" title="链接到此标题。"></a></h3>
+<p>提供对 <a class="reference internal" href="#deviceadapter">DeviceAdapter</a> 类型对象的访问，该对象表示被测设备（DUT）。该 fixture 是 pytest harness 插件的核心，启动 DUT（初始化日志、烧录设备、连接串口等）时需要用到它。该 fixture 会产出一个按所请求类型（<code class="docutils literal notranslate"><span class="pre">native</span></code>、<code class="docutils literal notranslate"><span class="pre">qemu</span></code>、<code class="docutils literal notranslate"><span class="pre">hardware</span></code> 等）准备好的设备。所有类型的设备共享同一套 API，因此可以编写与设备类型无关的测试。该 fixture 的作用范围由 <code class="docutils literal notranslate"><span class="pre">harness_config</span></code> 部分中的关键字 <code class="docutils literal notranslate"><span class="pre">pytest_dut_scope</span></code> 决定（详见 <a class="reference internal" href="harness/pytest.html#pytest-dut-scope"><span class="std std-ref">此处</span></a>）。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">twister_harness</span><span class="w"> </span><span class="kn">import</span> <span class="n">DeviceAdapter</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_sample</span><span class="p">(</span><span class="n">dut</span><span class="p">:</span> <span class="n">DeviceAdapter</span><span class="p">):</span>
+   <span class="n">dut</span><span class="o">.</span><span class="n">readlines_until</span><span class="p">(</span><span class="n">regex</span><span class="o">=</span><span class="s1">'Hello world'</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="shell">
+<h3>shell<a class="headerlink" href="#shell" title="链接到此标题。"></a></h3>
+<p>提供一个 <a class="reference internal" href="#shell-class">Shell</a> 类对象，其方法用于与 shell 应用程序交互。它会调用 <code class="docutils literal notranslate"><span class="pre">wait_for_promt</span></code> 方法，确保在 DUT 就绪之前不会开始执行场景。shell fixture 会调用 <code class="docutils literal notranslate"><span class="pre">dut</span></code> fixture，因此可以访问后者的所有方法。<code class="docutils literal notranslate"><span class="pre">shell</span></code> fixture 增加了针对 shell 交互优化的方法，在测试中可以代替 <code class="docutils literal notranslate"><span class="pre">dut</span></code> 使用。该 fixture 的作用范围由 <code class="docutils literal notranslate"><span class="pre">harness_config</span></code> 部分中的关键字 <code class="docutils literal notranslate"><span class="pre">pytest_dut_scope</span></code> 决定（详见 <a class="reference internal" href="harness/pytest.html#pytest-dut-scope"><span class="std std-ref">此处</span></a>）。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">twister_harness</span><span class="w"> </span><span class="kn">import</span> <span class="n">Shell</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_shell</span><span class="p">(</span><span class="n">shell</span><span class="p">:</span> <span class="n">Shell</span><span class="p">):</span>
+   <span class="n">shell</span><span class="o">.</span><span class="n">exec_command</span><span class="p">(</span><span class="s1">'help'</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="mcumgr">
+<h3>mcumgr<a class="headerlink" href="#mcumgr" title="链接到此标题。"></a></h3>
+<p>一个示例 fixture，封装了用于管理远程设备的 <code class="docutils literal notranslate"><span class="pre">mcumgr</span></code> 命令行工具。有关 MCUmgr 的更多信息请参阅 <a class="reference internal" href="../../services/device_mgmt/mcumgr.html#mcu-mgr"><span class="std std-ref">MCUmgr</span></a>。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>该 fixture 要求系统 PATH 中可以找到 <code class="docutils literal notranslate"><span class="pre">mcumgr</span></code></p>
+</div>
+<p>该 fixture 只封装了 MCUmgr 的部分功能。例如，下面是一个使用 <code class="docutils literal notranslate"><span class="pre">mcumgr</span></code> fixture 的测试</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">twister_harness</span><span class="w"> </span><span class="kn">import</span> <span class="n">DeviceAdapter</span><span class="p">,</span> <span class="n">Shell</span><span class="p">,</span> <span class="n">McuMgr</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_upgrade</span><span class="p">(</span><span class="n">dut</span><span class="p">:</span> <span class="n">DeviceAdapter</span><span class="p">,</span> <span class="n">shell</span><span class="p">:</span> <span class="n">Shell</span><span class="p">,</span> <span class="n">mcumgr</span><span class="p">:</span> <span class="n">McuMgr</span><span class="p">):</span>
+   <span class="c1"># free the serial port for mcumgr</span>
+   <span class="n">dut</span><span class="o">.</span><span class="n">disconnect</span><span class="p">()</span>
+   <span class="c1"># upload the signed image</span>
+   <span class="n">mcumgr</span><span class="o">.</span><span class="n">image_upload</span><span class="p">(</span><span class="s1">'path/to/zephyr.signed.bin'</span><span class="p">)</span>
+   <span class="c1"># obtain the hash of uploaded image from the device</span>
+   <span class="n">second_hash</span> <span class="o">=</span> <span class="n">mcumgr</span><span class="o">.</span><span class="n">get_hash_to_test</span><span class="p">()</span>
+   <span class="c1"># test a new upgrade image</span>
+   <span class="n">mcumgr</span><span class="o">.</span><span class="n">image_test</span><span class="p">(</span><span class="n">second_hash</span><span class="p">)</span>
+   <span class="c1"># reset the device remotely</span>
+   <span class="n">mcumgr</span><span class="o">.</span><span class="n">reset_device</span><span class="p">()</span>
+   <span class="c1"># continue test scenario, check version etc.</span>
+</pre></div>
+</div>
+</section>
+<section id="unlaunched-dut">
+<h3>unlaunched_dut<a class="headerlink" href="#unlaunched-dut" title="链接到此标题。"></a></h3>
+<p>与 <code class="docutils literal notranslate"><span class="pre">dut</span></code> fixture 类似，但不会初始化设备。适用于需要更精细地控制构建过程的场合。此时由测试负责初始化设备。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">twister_harness</span><span class="w"> </span><span class="kn">import</span> <span class="n">DeviceAdapter</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_sample</span><span class="p">(</span><span class="n">unlaunched_dut</span><span class="p">:</span> <span class="n">DeviceAdapter</span><span class="p">):</span>
+   <span class="n">unlaunched_dut</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
+   <span class="n">unlaunched_dut</span><span class="o">.</span><span class="n">readlines_until</span><span class="p">(</span><span class="n">regex</span><span class="o">=</span><span class="s1">'Hello world'</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="fixtures-for-multi-dut-scenarios">
+<h2>多 DUT 场景的 fixture<a class="headerlink" href="#fixtures-for-multi-dut-scenarios" title="链接到此标题。"></a></h2>
+<p>多 DUT fixture 与单 DUT fixture（<code class="docutils literal notranslate"><span class="pre">unlaunched_dut</span></code>、<code class="docutils literal notranslate"><span class="pre">dut</span></code>、<code class="docutils literal notranslate"><span class="pre">shell</span></code>）一一对应，但操作的是设备列表。它们同时适用于硬件和 <code class="docutils literal notranslate"><span class="pre">native_sim</span></code> 目标，不支持 QEMU。它们要求 <code class="docutils literal notranslate"><span class="pre">twister_pytest_config.yaml</span></code> 中存在 <code class="docutils literal notranslate"><span class="pre">duts</span></code> 条目。Twister 会自动生成该文件（对于仿真目标，会创建占位 DUT 条目，因此无需硬件映射），然后调用 pytest。在不使用 Twister 的情况下手动重新运行 pytest 时（参见常见问题），会复用同一个配置文件。配置详情请参见 Twister 文档中的 <a class="reference internal" href="index.html#twister-multi-duts-testing"><span class="std std-ref">多 DUT 测试支持</span></a> 一节。</p>
+<section id="unlaunched-duts">
+<h3>unlaunched_duts<a class="headerlink" href="#unlaunched-duts" title="链接到此标题。"></a></h3>
+<p>与 <code class="docutils literal notranslate"><span class="pre">unlaunched_dut</span></code> 类似，但返回一个 <a class="reference internal" href="#deviceadapter">DeviceAdapter</a> 对象列表，每个预留的 DUT 对应一个对象，其日志文件已初始化，但设备尚未启动。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">twister_harness</span><span class="w"> </span><span class="kn">import</span> <span class="n">DeviceAdapter</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_sample</span><span class="p">(</span><span class="n">unlaunched_duts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">DeviceAdapter</span><span class="p">]):</span>
+   <span class="k">for</span> <span class="n">dut</span> <span class="ow">in</span> <span class="n">unlaunched_duts</span><span class="p">:</span>
+      <span class="n">dut</span><span class="o">.</span><span class="n">launch</span><span class="p">()</span>
+   <span class="n">unlaunched_duts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">readlines_until</span><span class="p">(</span><span class="n">regex</span><span class="o">=</span><span class="s1">'Hello world'</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="duts">
+<h3>duts<a class="headerlink" href="#duts" title="链接到此标题。"></a></h3>
+<p>与 <code class="docutils literal notranslate"><span class="pre">dut</span></code> 类似，但返回一个已启动的 <a class="reference internal" href="#deviceadapter">DeviceAdapter</a> 对象列表。所有设备会并发烧录，以缩短准备时间。如果需要依次烧录，请在 <code class="docutils literal notranslate"><span class="pre">conftest.py</span></code> 中覆盖该 fixture。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">twister_harness</span><span class="w"> </span><span class="kn">import</span> <span class="n">DeviceAdapter</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_sample</span><span class="p">(</span><span class="n">duts</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">DeviceAdapter</span><span class="p">]):</span>
+   <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">duts</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span>
+   <span class="n">duts</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">readlines_until</span><span class="p">(</span><span class="n">regex</span><span class="o">=</span><span class="s1">'Hello world'</span><span class="p">)</span>
+   <span class="n">duts</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">readlines_until</span><span class="p">(</span><span class="n">regex</span><span class="o">=</span><span class="s1">'Hello world'</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="shells">
+<h3>shells<a class="headerlink" href="#shells" title="链接到此标题。"></a></h3>
+<p>与 <code class="docutils literal notranslate"><span class="pre">shell</span></code> 类似，但返回一个 <a class="reference internal" href="#shell-class">Shell</a> 对象列表，每个预留的 DUT 对应一个对象，且每个对象都已在等待 shell 提示符。</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">twister_harness</span><span class="w"> </span><span class="kn">import</span> <span class="n">Shell</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">test_sample</span><span class="p">(</span><span class="n">shells</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="n">Shell</span><span class="p">]):</span>
+   <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">shells</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span>
+   <span class="n">shells</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">exec_command</span><span class="p">(</span><span class="s1">'help'</span><span class="p">)</span>
+   <span class="n">shells</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">exec_command</span><span class="p">(</span><span class="s1">'help'</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="classes">
+<h2>类<a class="headerlink" href="#classes" title="链接到此标题。"></a></h2>
+<section id="deviceadapter">
+<h3>DeviceAdapter<a class="headerlink" href="#deviceadapter" title="链接到此标题。"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="twister_harness.DeviceAdapter">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">twister_harness.</span></span><span class="sig-name descname"><span class="pre">DeviceAdapter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device_config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">DeviceConfig</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#twister_harness.DeviceAdapter" title="链接到此定义。"></a></dt>
+<dd><p>该类为测试中使用的所有设备类型（硬件、模拟器、QEMU）定义了统一接口，用于收集设备输出并向设备发送数据。</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="twister_harness.DeviceAdapter.launch">
+<span class="sig-name descname"><span class="pre">launch</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#twister_harness.DeviceAdapter.launch" title="链接到此定义。"></a></dt>
+<dd><p>在目标设备上启动测试应用程序。</p>
+<p>该方法执行完整的设备初始化流程：</p>
+<ul class="simple">
+<li><p>关闭之前正在运行的应用程序（清理）</p></li>
+<li><p>如果尚未设置执行命令，则生成该命令</p></li>
+<li><p>将额外的测试参数添加到命令中</p></li>
+<li><p>启动读取线程以捕获设备输出</p></li>
+<li><p>启动应用程序（硬件设备为烧录，模拟器为执行）</p></li>
+</ul>
+<p>启动过程因设备类型而异：</p>
+<ul class="simple">
+<li><p>硬件设备：烧录应用程序并建立串口通信。根据设备配置，可能在烧录之前或之后建立连接。</p></li>
+<li><p>QEMU/模拟器：启动子进程并建立 FIFO/管道通信</p></li>
+<li><p>原生模拟器：执行二进制文件并通过进程管道连接</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="twister_harness.DeviceAdapter.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#twister_harness.DeviceAdapter.close" title="链接到此定义。"></a></dt>
+<dd><p>断开连接，关闭设备并关闭读取线程。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="twister_harness.DeviceAdapter.readline">
+<span class="sig-name descname"><span class="pre">readline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#twister_harness.DeviceAdapter.readline" title="链接到此定义。"></a></dt>
+<dd><p>从设备输出中读取一行。</p>
+<dl class="field-list simple">
+<dt class="field-odd">参数<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>connection_index</strong> -- 要读取的连接端口（0 = 主 UART，1 = 第二个核，依此类推）</p></li>
+<li><p><strong>kwargs</strong> -- 其他关键字参数（timeout、print_output）</p></li>
+</ul>
+</dd>
+<dt class="field-even">返回<span class="colon">:</span></dt>
+<dd class="field-even"><p>不含末尾换行符的单行文本</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="twister_harness.DeviceAdapter.readlines">
+<span class="sig-name descname"><span class="pre">readlines</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#twister_harness.DeviceAdapter.readlines" title="链接到此定义。"></a></dt>
+<dd><p>从内部缓冲区读取设备产生的所有可用输出行。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="twister_harness.DeviceAdapter.readlines_until">
+<span class="sig-name descname"><span class="pre">readlines_until</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connection_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#twister_harness.DeviceAdapter.readlines_until" title="链接到此定义。"></a></dt>
+<dd><p>从设备输出中读取行，直到满足特定条件。</p>
+<p>该方法提供了灵活的设备输出收集方式：等待特定模式出现、收集固定行数，或获取当前所有可用的行。</p>
+<dl class="field-list simple">
+<dt class="field-odd">参数<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>connection_index</strong> -- 要读取的连接/端口索引（默认为 0）。对于硬件设备：0 = 主 UART，1 = 第二个核的 UART，依此类推。对于 QEMU 和 native：始终使用 0（只有一个连接可用）</p></li>
+<li><p><strong>kwargs</strong> -- 传递给底层连接的关键字参数，包括：  - regex - 要搜索的正则表达式模式 - num_of_lines - 要读取的确切行数 - timeout - 最长等待时间，单位为秒（未提供时使用 base_timeout） - print_output - 是否在读取每一行时将其记录到日志（默认为 True）</p></li>
+</ul>
+</dd>
+<dt class="field-even">返回<span class="colon">:</span></dt>
+<dd class="field-even"><p>不含末尾换行符的输出行列表</p>
+</dd>
+<dt class="field-odd">抛出<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>AssertionError</strong> -- 在满足条件之前超时</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="twister_harness.DeviceAdapter.write">
+<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connection_index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#twister_harness.DeviceAdapter.write" title="链接到此定义。"></a></dt>
+<dd><p>向目标设备写入数据字节。</p>
+<p>通过相应的通信通道向设备发送原始字节。底层传输机制因设备类型而异：硬件设备写入串口/UART 端口，QEMU 设备写入 FIFO 队列，原生模拟器写入进程的 stdin 管道。</p>
+<dl class="field-list simple">
+<dt class="field-odd">参数<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> -- 要发送给设备的原始字节</p></li>
+<li><p><strong>connection_index</strong> -- 要写入的连接/端口索引（默认为 0）</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="shell-class">
+<span id="id3"></span><h3>Shell<a class="headerlink" href="#shell-class" title="链接到此标题。"></a></h3>
+<dl class="py class">
+<dt class="sig sig-object py" id="twister_harness.Shell">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">twister_harness.</span></span><span class="sig-name descname"><span class="pre">Shell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">device</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#twister_harness.DeviceAdapter" title="twister_harness.device.device_adapter.DeviceAdapter"><span class="pre">DeviceAdapter</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">prompt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'uart:~$'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#twister_harness.Shell" title="链接到此定义。"></a></dt>
+<dd><p>辅助类，提供与 shell 应用程序交互的方法。</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="twister_harness.Shell.exec_command">
+<span class="sig-name descname"><span class="pre">exec_command</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">print_output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="仅关键字参数分隔符 (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">get_full_output</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">full_output_timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#twister_harness.Shell.exec_command" title="链接到此定义。"></a></dt>
+<dd><p>向设备发送 shell 命令并返回响应。传入的命令会在末尾追加两个回车符：第一个用于在设备上执行该命令，第二个用于接收下一个提示符，以此作为执行完成的信号。该方法返回所执行命令的输出。</p>
+<dl class="field-list simple">
+<dt class="field-odd">参数<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>get_full_output</strong> -- 如果为 True，在看到 shell 提示符后，会继续读取行，直到 <code class="docutils literal notranslate"><span class="pre">full_output_timeout</span></code>（挂钟时间）耗尽。适用于提示符出现后仍有输出（例如解码后的日志）持续到达的情况。</p></li>
+<li><p><strong>full_output_timeout</strong> -- 在提示符之后继续读取额外行所花费的秒数。当 <code class="docutils literal notranslate"><span class="pre">get_full_output</span></code> 为 True 且省略此参数时，使用 <code class="docutils literal notranslate"><span class="pre">timeout</span></code>（或 <code class="xref py py-attr docutils literal notranslate"><span class="pre">base_timeout</span></code>）。</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="twister_harness.Shell.wait_for_prompt">
+<span class="sig-name descname"><span class="pre">wait_for_prompt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">timeout</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#twister_harness.Shell.wait_for_prompt" title="链接到此定义。"></a></dt>
+<dd><p>每隔 0.5 秒向设备发送一次 &quot;enter&quot; 命令，直到出现 shell 提示符（返回 True）或超时（返回 False）。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="twister_harness.Shell.get_filtered_output">
+<span class="sig-name descname"><span class="pre">get_filtered_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command_lines</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#twister_harness.Shell.get_filtered_output" title="链接到此定义。"></a></dt>
+<dd><p>过滤掉提示符和日志消息</p>
+<p>获取 exec_command 的输出（其中可能包含日志消息和命令提示符），并对其进行过滤，只保留命令本身的输出。</p>
+<dl>
+<dt>示例：</dt><dd><div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="c1"># equivalent to `lines = shell.exec_command("kernel version")`</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">lines</span> <span class="o">=</span> <span class="p">[</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s1">'uart:~$'</span><span class="p">,</span>                    <span class="c1"># filter prompts</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s1">'Zephyr version 3.6.0'</span><span class="p">,</span>       <span class="c1"># keep this line</span>
+<span class="gp">&gt;&gt;&gt; </span>   <span class="s1">'uart:~$ &lt;dbg&gt; debug message'</span> <span class="c1"># filter log messages</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">filtered_output</span> <span class="o">=</span> <span class="n">shell</span><span class="o">.</span><span class="n">get_filtered_output</span><span class="p">(</span><span class="n">output</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">filtered_output</span>
+<span class="go">['Zephyr version 3.6.0']</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">参数<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>command_lines</strong> -- 字符串列表，即 <cite>exec_command</cite> 的输出。</p>
+</dd>
+<dt class="field-even">返回<span class="colon">:</span></dt>
+<dd class="field-even"><p>字符串列表，其中不包含提示符和日志消息。</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+<section id="examples-of-pytest-tests-in-the-zephyr-project">
+<h2>Zephyr 项目中的 pytest 测试示例<a class="headerlink" href="#examples-of-pytest-tests-in-the-zephyr-project" title="链接到此标题。"></a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../samples/subsys/testsuite/pytest/shell/README.html#pytest_shell" title="针对 Zephyr shell 执行 pytest 测试。">Pytest shell application testing</a></p></li>
+<li><p>MCUmgr 测试 - <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/tests/boot/with_mcumgr">tests/boot/with_mcumgr</a></p></li>
+<li><p>LwM2M 测试 - <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/tests/net/lib/lwm2m/interop">tests/net/lib/lwm2m/interop</a></p></li>
+<li><p>GDB stub 测试 - <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/tests/subsys/debug/gdbstub">tests/subsys/debug/gdbstub</a></p></li>
+</ul>
+</section>
+<section id="faq">
+<h2>常见问题<a class="headerlink" href="#faq" title="链接到此标题。"></a></h2>
+<section id="how-to-flash-run-application-only-once-per-pytest-session">
+<h3>如何在每个 pytest 会话中只烧录/运行一次应用程序？<a class="headerlink" href="#how-to-flash-run-application-only-once-per-pytest-session" title="链接到此标题。"></a></h3>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">dut</span></code> 是负责烧录/运行应用程序的 fixture，其作用范围默认为 <code class="docutils literal notranslate"><span class="pre">function</span></code>。可以在 .yaml 文件的 <code class="docutils literal notranslate"><span class="pre">harness_config</span></code> 部分中添加关键字 <code class="docutils literal notranslate"><span class="pre">pytest_dut_scope</span></code> 来更改：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">harness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pytest</span>
+<span class="nt">harness_config</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">pytest_dut_scope</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">session</span>
+</pre></div>
+</div>
+<p>更多信息请参阅 <a class="reference internal" href="harness/pytest.html#pytest-dut-scope"><span class="std std-ref">此处</span></a>。</p>
+</div></blockquote>
+</section>
+<section id="how-to-run-only-one-particular-test-from-a-python-file">
+<h3>如何只运行 Python 文件中的某个特定测试？<a class="headerlink" href="#how-to-run-only-one-particular-test-from-a-python-file" title="链接到此标题。"></a></h3>
+<blockquote>
+<div><p>有多种方法可以做到。在 .yaml 文件中，可以在 <code class="docutils literal notranslate"><span class="pre">harness_config</span></code> 下添加 <code class="docutils literal notranslate"><span class="pre">pytest_root</span></code> 条目，列出需要运行的测试：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">harness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pytest</span>
+<span class="nt">harness_config</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">pytest_root</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"pytest/test_shell.py::test_shell_print_help"</span>
+</pre></div>
+</div>
+<p>也可以使用 pytest 的 <code class="docutils literal notranslate"><span class="pre">-k</span></code> 选项选择特定测试（有关 pytest 关键字过滤器的更多信息请参阅 <a class="reference external" href="https://docs.pytest.org/en/latest/example/markers.html#using-k-expr-to-select-tests-based-on-their-name">此处</a>）。可以在 .yaml 文件的 <code class="docutils literal notranslate"><span class="pre">pytest_args</span></code> 中添加 <code class="docutils literal notranslate"><span class="pre">-k</span></code> 过滤器：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">harness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pytest</span>
+<span class="nt">harness_config</span><span class="p">:</span>
+<span class="w">   </span><span class="nt">pytest_args</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"-k</span><span class="nv"> </span><span class="s">test_shell_print_help"</span>
+</pre></div>
+</div>
+<p>或者将其添加到 Twister 命令中，以覆盖 .yaml 文件中的参数：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>west<span class="w"> </span>twister<span class="w"> </span>...<span class="w"> </span>--pytest-args<span class="o">=</span><span class="s1">'-k test_shell_print_help'</span>
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+<section id="how-to-get-information-about-used-device-type-in-test">
+<h3>如何在测试中获取所使用的设备类型信息？<a class="headerlink" href="#how-to-get-information-about-used-device-type-in-test" title="链接到此标题。"></a></h3>
+<blockquote>
+<div><p>可以从 <code class="docutils literal notranslate"><span class="pre">dut</span></code> fixture（表示 <a class="reference internal" href="#deviceadapter">DeviceAdapter</a> 对象）中获取：</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">device_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">dut</span><span class="o">.</span><span class="n">device_config</span><span class="o">.</span><span class="n">type</span>
+<span class="k">if</span> <span class="n">device_type</span> <span class="o">==</span> <span class="s1">'hardware'</span><span class="p">:</span>
+   <span class="o">...</span>
+<span class="k">elif</span> <span class="n">device_type</span> <span class="o">==</span> <span class="s1">'native'</span><span class="p">:</span>
+   <span class="o">...</span>
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+<section id="how-to-rerun-locally-pytest-tests-without-rebuilding-application-by-twister">
+<h3>如何在本地重新运行 pytest 测试，而不让 Twister 重新构建应用程序？<a class="headerlink" href="#how-to-rerun-locally-pytest-tests-without-rebuilding-application-by-twister" title="链接到此标题。"></a></h3>
+<blockquote>
+<div><p>可以在 Twister 命令中添加 <code class="docutils literal notranslate"><span class="pre">--test-only</span></code> 参数再次运行 Twister。另一种方法是以最高详细级别（<code class="docutils literal notranslate"><span class="pre">-vv</span></code>）运行 Twister，然后从日志中复制用于启动 pytest 的命令（以 <code class="docutils literal notranslate"><span class="pre">Running</span> <span class="pre">pytest</span> <span class="pre">command:</span> <span class="pre">...</span></code> 开头的日志）。</p>
+<p>首先，使用 Twister 运行场景：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>west<span class="w"> </span>twister<span class="w"> </span>-vv<span class="w"> </span>-ll<span class="w"> </span>debug<span class="w"> </span>-T<span class="w"> </span>samples/subsys/testsuite/pytest/shell<span class="w"> </span><span class="se">\</span>
+-s<span class="w"> </span>sample.pytest.shell<span class="w"> </span>--device-testing<span class="w"> </span>-p<span class="w"> </span>nrf54l15dk/nrf54l15/cpuapp<span class="w"> </span>--device-serial<span class="w"> </span><span class="se">\</span>
+/dev/ttyACM1<span class="w"> </span>--west-flash<span class="o">=</span>--erase
+</pre></div>
+</div>
+<p>Twister 会在构建目录中自动生成配置文件 <code class="docutils literal notranslate"><span class="pre">twister_pytest_config.yaml</span></code>，其中包含设备配置等所有测试参数。</p>
+<p>然后，如果尚未设置 PYTHONPATH 环境变量，请导出它：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span><span class="nb">export</span><span class="w"> </span><span class="nv">PYTHONPATH</span><span class="o">=</span><span class="nv">$ZEPHYR_BASE</span>/scripts/pylib/pytest-twister-harness/src
+</pre></div>
+</div>
+<p>最后，运行 pytest 命令：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>pytest<span class="w"> </span>-s<span class="w"> </span>-v<span class="w"> </span>-p<span class="w"> </span>twister_harness.plugin<span class="w"> </span><span class="se">\</span>
+--twister-config<span class="o">=</span>twister-out/.../sample.pytest.shell/twister_pytest_config.yaml<span class="w"> </span><span class="se">\</span>
+samples/subsys/testsuite/pytest/shell/pytest
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+<section id="is-this-possible-to-run-pytest-tests-in-parallel">
+<h3>能否并行运行 pytest 测试？<a class="headerlink" href="#is-this-possible-to-run-pytest-tests-in-parallel" title="链接到此标题。"></a></h3>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">pytest-harness-plugin</span></code> 在编写时并未考虑并行运行 pytest 测试，尤其是针对硬件的测试。其设计假设是由 Twister 负责测试的并行化，并负责管理可用资源（作业和硬件）。如果出于某些原因确实需要并行运行（例如通过 <a class="reference external" href="https://pytest-xdist.readthedocs.io/en/stable/">pytest-xdist 插件</a>），风险由使用者自行承担。</p>
+</div></blockquote>
+</section>
+</section>
+<section id="limitations">
+<h2>限制<a class="headerlink" href="#limitations" title="链接到此标题。"></a></h2>
+<ul class="simple">
+<li><p>该插件（目前）尚不支持所有平台类型。</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 8月 04, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

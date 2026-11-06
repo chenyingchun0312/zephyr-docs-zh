@@ -1,0 +1,25 @@
+var structpulse__io__caps =
+[
+    [ "cell_duty_bits", "structpulse__io__caps.html#a173fa1c857ed24a2ecb5f9de8527136b", null ],
+    [ "cell_period_per_chunk", "structpulse__io__caps.html#a64cf12b881eab0f538536c34d3273c14", null ],
+    [ "max_duration_ticks", "structpulse__io__caps.html#a4da263bc4a355448249400ad364f87b9", null ],
+    [ "max_tick_ns", "structpulse__io__caps.html#a6300be8f6722fd166d33849df9c031aa", null ],
+    [ "min_tick_ns", "structpulse__io__caps.html#aad176fbf3bf21edc3b45a89be128002d", null ],
+    [ "modes", "structpulse__io__caps.html#acb4396add794dda4933f9c176d1766be", null ],
+    [ "num_channels", "structpulse__io__caps.html#a16fa91b3ccba69c11ebc826eeb29245d", null ],
+    [ "rx_carrier_demod", "structpulse__io__caps.html#adfa8d33306657b2870d3b5df8a4dce04", null ],
+    [ "rx_channel_mask", "structpulse__io__caps.html#aa91e3a0fe7e1fd95c89a2436558467eb", null ],
+    [ "rx_dma_buffered", "structpulse__io__caps.html#a2084a3bd36ed5c131d898edfbcdfba0a", null ],
+    [ "rx_filter_max_ticks", "structpulse__io__caps.html#a986f4a6419df94ce618b0d05ee876276", null ],
+    [ "rx_idle_threshold_max", "structpulse__io__caps.html#a92a922e8a11823ad0ba733a2ee88cf0d", null ],
+    [ "rx_streaming", "structpulse__io__caps.html#a5da774fe623fd1f35cbf2e54671399d6", null ],
+    [ "supports_rx", "structpulse__io__caps.html#a1de73e3e72e07bc99d09808402d17b61", null ],
+    [ "supports_tx", "structpulse__io__caps.html#ad85c4a8652bbf80da429c87bbcb680c6", null ],
+    [ "tx_carrier", "structpulse__io__caps.html#aead2efb6f8fe2955d2d9b188cd9264eb", null ],
+    [ "tx_channel_mask", "structpulse__io__caps.html#a219331ae467da4a2583d4d905bbac05b", null ],
+    [ "tx_loop_auto_stop", "structpulse__io__caps.html#a2ee6e5254c8f3bf474c9c49745d8c377", null ],
+    [ "tx_loop_max", "structpulse__io__caps.html#a3b0e9052d24dbc55e53b2f0d9ceda0cf", null ],
+    [ "tx_max_streaming", "structpulse__io__caps.html#afc8e349e152b2a271b51a2810eab2586", null ],
+    [ "tx_min_chunk_symbols", "structpulse__io__caps.html#af6dee58bfc47780ccc77092777080ce8", null ],
+    [ "tx_sync_multi_channel", "structpulse__io__caps.html#ab8b1aa9fea93cd697bcc760214f12760", null ]
+];

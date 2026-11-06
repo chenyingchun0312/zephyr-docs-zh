@@ -1,0 +1,424 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="实现一个以 Meta-IRQ 优先级运行的线程。" name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Meta-IRQ Thread Priority &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/samples/kernel/metairq_dispatch/README.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" />
+    <link rel="next" title="Message Queue" href="../msg_queue/README.html" />
+    <link rel="prev" title="条件变量" href="../condition_variables/simple/README.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1 current"><a class="category-link reference internal" href="../../index.html">Samples and Demos</a><ul class="current">
+<li class="toctree-l2"><a class="category-link reference internal" href="../../boards/96boards/index.html">96Boards</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../boards/96boards/argonkey/index.html">96Boards ArgonKey</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../drivers/adc/index.html">ADC</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../boards/adi/index.html">ADI</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../boards/amd/index.html">AMD</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../application_development/application_development.html">Application Development</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../arch/index.html">Architecture-dependent Samples</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../drivers/audio/index.html">Audio</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/authentication/authentication.html">Authentication</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../boards/bbc/index.html">BBC</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../boards/bbc/microbit/microbit.html">BBC micro:bit</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../basic/basic.html">Basic</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/bindesc/bindesc.html">Binary Descriptor</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../drivers/biometrics/index.html">Biometrics</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../bluetooth/bluetooth.html">Bluetooth</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../bluetooth/audio/index.html">Bluetooth Audio</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../boards/boards.html">Boards</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../drivers/buzzer/index.html">Buzzer</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../cpp/cpp.html">C++</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/portability/cmsis_rtos_v1/cmsis_rtos_v1.html">CMSIS RTOS v1</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/portability/cmsis_rtos_v2/cmsis_rtos_v2.html">CMSIS RTOS v2</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../modules/cmsis_dsp/cmsis_dsp.html">CMSIS-DSP</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/cpu_freq/cpu_freq.html">CPU Freq</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../drivers/clock_monitor/index.html">Clock Monitor</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/console/console.html">Console</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../drivers/can/index.html">Controller Area Network (CAN)</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/canbus/canbus.html">Controller Area Network (CAN) Bus</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../drivers/counter/index.html">Counter</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../data_structures/data_structures.html">Data Structures</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/debug/index.html">Debug</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/display/display.html">Display</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../drivers/drivers.html">Drivers</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../modules/index.html">External modules</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/fs/fs.html">File Systems</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/input/input.html">Input</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/ipc/ipc.html">Inter-Processor Communication (IPC)</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../net/cloud/README.html">IoT Cloud</a></li>
+<li class="toctree-l2 current"><a class="category-link reference internal" href="../index.html">Kernel and Scheduler</a><ul class="current">
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../bootargs/README.html" title="将收到的启动参数打印到控制台。">Bootargs</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../condition_variables/condvar/README.html" title="在多线程应用程序中操作条件变量。">Condition Variables</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../msg_queue/README.html" title="实现一对基本的消息队列生产者/消费者线程。">Message Queue</a></li>
+<li class="toctree-l3 current"><a class="code-sample-link current reference internal" href="#" title="实现一个以 Meta-IRQ 优先级运行的线程。">Meta-IRQ Thread Priority</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../object_cores/README.html" title="枚举运行中系统的内核对象并查询其统计信息。">Object cores</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../object_monitor/README.html" title="观察运行中应用程序的内核对象的出现与消失。">Object monitor</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/kvss/kvss.html">Key-Value Storage Systems</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/llext/llext.html">Linkable Loadable Extensions (LLEXT)</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/lorawan/lorawan.html">LoRaWAN</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/logging/logging.html">Logging</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../net/mcp/mcp.html">MCP (Model Context Protocol)</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/pmci/mctp/mctp.html">MCTP</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/mgmt/mgmt.html">Management</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/modbus/modbus.html">Modbus</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../net/ethernet/README.html">Network Ethernet</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../net/net.html">Networking</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/pmci/index.html">PMCI</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/portability/posix/posix.html">POSIX API</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../psa/index.html">PSA</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/portability/portability.html">Portability</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/pm/index.html">Power Management</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/profiling/profiling.html">Profiling</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/rtio/rtio.html">Real Time I/O (RTIO)</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../regulator/index.html">Regulator</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/sensing/sensing.html">Sensing</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../sensor/sensor.html">Sensors</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/shell/shell.html">Shell</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../shields/shields.html">Shields</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/smf/smf.html">State Machine Framework</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../subsys/subsys.html">Subsystems</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../sysbuild/sysbuild.html">Sysbuild</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../tfm_integration/tfm_integration.html">TF-M Integration</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../userspace/index.html">Userspace</a></li>
+<li class="toctree-l2"><a class="code-sample-link reference internal" href="../../synchronization/README.html" title="操作基本的内核同步原语。">Basic Synchronization</a></li>
+<li class="toctree-l2"><a class="code-sample-link reference internal" href="../../philosophers/README.html" title="使用 Zephyr 内核服务实现哲学家就餐问题的解决方案。">Dining Philosophers</a></li>
+<li class="toctree-l2"><a class="code-sample-link reference internal" href="../../hello_world/README.html" title="向控制台打印 &quot;Hello World&quot;。">Hello World</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">示例与演示</a> &raquo;</li>
+  
+     <li><a href="../index.html">内核与调度器</a> &raquo;</li>
+  
+  <li>Meta-IRQ Thread Priority</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="Meta-IRQ_dispatch">
+<h1>Meta-IRQ Thread Priority<a class="headerlink" href="#Meta-IRQ_dispatch" title="链接到此标题。"></a></h1>
+<p>
+                <a href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0//samples\kernel\metairq_dispatch\README.rst/.." class="btn btn-info fa fa-github"
+                    target="_blank" style="text-align: center;">
+                    Browse source code on GitHub
+                </a>
+                </p>
+<section id="overview">
+<h2>概述<a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>本示例实现一个以 Meta-IRQ 优先级运行的线程，在硬件 ISR 结束时同步地执行“下半部”（bottom half）式处理。它实现了一个模拟“设备”，该设备产生的消息需要分发到多个异步队列，这些队列分别供给以不同优先级运行的工作线程。分发由一个 Meta-IRQ 线程处理，该线程通过队列从设备 ISR（实际上只是一个定时器中断）获取数据。</p>
+<p>每条消息都需要在工作线程中进行随机（且不可忽略）量的处理。这构成了一个“突发负载”环境：偶尔的负载尖峰需要抢占正在运行的线程，并推迟较低优先级线程的调度。每条消息附带一个时间戳，可以在以下几个点计算每条消息的延迟：</p>
+<ul class="simple">
+<li><p>从 ISR 中创建消息到 Meta-IRQ 线程收到并分发消息之间的周期数。</p></li>
+<li><p>从 ISR 到工作线程收到消息之间的时间。</p></li>
+<li><p>在工作线程中处理消息实际花费的时间，用于与所需处理时间比较。这提供了一种测量线程未被调度时抢占开销的方法。</p></li>
+</ul>
+<p>结果中需要注意的几点：</p>
+<ul class="simple">
+<li><p>平均而言，较高优先级（编号较小）的线程延迟更低、处理延时更小，符合预期。</p></li>
+<li><p>协作式调度线程的处理延时表现明显优于可抢占线程，因为它们只能被 Meta-IRQ 线程抢占。</p></li>
+<li><p>由于排队和突发负载，任何优先级的工作线程都会经历一些与负载相关的延时，因为 CPU 偶尔会出现工作量超过可用时间的情况。</p></li>
+<li><p>但无论系统负载或线程配置如何，Meta-IRQ 线程总是在 ISR 之后立即运行。它在所有情况下都表现出可靠、恒定的延迟，因为它可以抢占所有其他线程，包括通常无法被抢占的协作式线程。</p></li>
+</ul>
+</section>
+<section id="requirements">
+<h2>要求<a class="headerlink" href="#requirements" title="链接到此标题。"></a></h2>
+<p>本示例应能在任何支持中断抢占正在运行的线程、具有可用定时器驱动和日志输出的 Zephyr 平台上良好运行。出于精度考虑，在定时器节拍率较高（理想情况下 10 kHz 以上）的系统上，它会产生更好（也更多）的数据。</p>
+<p>注意，由于本测试本质上测量的是线程抢占行为，未经修改无法在 native_sim 平台上运行。在该仿真环境中，线程不会被抢占，只会在特定的检测点（例如 k_busy_wait() 中）主动释放 CPU。</p>
+</section>
+<section id="building-and-running">
+<h2>构建与运行<a class="headerlink" href="#building-and-running" title="链接到此标题。"></a></h2>
+<p>本应用程序可以按如下方式在 frdm_k64f 上构建并运行：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>frdm_k64f<span class="w"> </span>samples/kernel/metairq_dispatch
+west<span class="w"> </span>flash
+</pre></div>
+</div>
+<p>要为其他开发板构建，请将上面的 &quot;frdm_k64f&quot; 改为该开发板的名称。</p>
+<section id="sample-output">
+<h3>示例输出<a class="headerlink" href="#sample-output" title="链接到此标题。"></a></h3>
+<p>下面的示例输出来自 frdm_k64f。根据开发板时钟频率和其他因素的不同，数值会有所差异。</p>
+<p>注意：对于 T2 和 T3 等非协作式线程，'real' 值可能明显高于对应的 'proc' 值（这是预期行为），原因在于线程抢占造成的延时。</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">I: Starting Thread0 at priority -2</span>
+<span class="go">I: Starting Thread1 at priority -1</span>
+<span class="go">II: M0 T0 mirq 4478 disp 7478 proc 24336 real 24613</span>
+<span class="go">I: M8 T0 mirq 4273 disp 86983 proc 9824 real 16753</span>
+<span class="go">I: M10 T0 mirq 4273 disp 495455 proc 21177 real 28273</span>
+<span class="go">I: M11 T0 mirq 4273 disp 981565 proc 48337 real 48918</span>
+<span class="go">I: M14 T0 mirq 4273 disp 1403627 proc 7079 real 7690</span>
+<span class="go">I: M17 T0 mirq 4273 disp 1810028 proc 42143 real 42925</span>
+<span class="go">I: M19 T0 mirq 4273 disp 2369217 proc 42471 real 42925</span>
+<span class="go">I: M20 T0 mirq 4273 disp 2940429 proc 30427 real 30775</span>
+<span class="go">I: M21 T0 mirq 4273 disp 3524151 proc 35871 real 36850</span>
+<span class="go">I: M22 T0 mirq 4273 disp 4042148 proc 33738 real 34420</span>
+<span class="go">I: M23 T0 mirq 4273 disp 4557010 proc 5757 real 6475</span>
+<span class="go">I: M29 T0 mirq 4273 disp 4759422 proc 49748 real 50215</span>
+<span class="go">I: M33 T0 mirq 4273 disp 5218935 proc 32105 real 33205</span>
+<span class="go">I: M35 T0 mirq 4273 disp 5732769 proc 32678 real 33205</span>
+<span class="go">I: M36 T0 mirq 4273 disp 6294586 proc 9303 real 10120</span>
+<span class="go">I: M37 T0 mirq 4273 disp 6819398 proc 29960 real 30775</span>
+<span class="go">I: M40 T0 mirq 3189 disp 7199139 proc 19692 real 21055</span>
+<span class="go">I: M9 T1 mirq 4273 disp 9417562 proc 53844 real 55075</span>
+<span class="go">I: M18 T1 mirq 4273 disp 9522780 proc 4560 real 5260</span>
+<span class="go">I: M25 T1 mirq 4273 disp 9713189 proc 56656 real 57505</span>
+<span class="go">I: M27 T1 mirq 4273 disp 10238978 proc 48347 real 49000</span>
+<span class="go">: Starting Thread2 at priority 0</span>
+<span class="go">I: M1 T2 mirq 4273 disp 12740821 proc 40449 real 41710</span>
+<span class="go">I: M2 T2 mirq 4273 disp 13311098 proc 43926 real 44140</span>
+<span class="go">I: M3 T2 mirq 4273 disp 13824365 proc 41212 real 41710</span>
+<span class="go">I: M4 T2 mirq 4273 disp 14382522 proc 12859 real 13765</span>
+<span class="go">I: M5 T2 mirq 4273 disp 14869754 proc 17303 real 18625</span>
+<span class="go">I: M7 T2 mirq 4273 disp 15368993 proc 10666 real 11335</span>
+<span class="go">I: M15 T2 mirq 4273 disp 15364239 proc 45304 real 46570</span>
+<span class="go">I: M24 T2 mirq 4273 disp 15602017 proc 39637 real 40495</span>
+<span class="go">I: M28 T2 mirq 4273 disp 15989555 proc 24436 real 24700</span>
+<span class="go">I: M30 T2 mirq 4273 disp 16493444 proc 44374 real 45355</span>
+<span class="go">I: M31 T2 mirq 4273 disp 17078141 proc 21947 real 22270</span>
+<span class="go">I: M34 T2 mirq 4273 disp 17555966 proc 47779 real 49000</span>
+<span class="go">I: M39 T2 mirq 4273 disp 17843806 proc 10954 real 11335</span>
+<span class="go">I: Starting Thread3 at priority 1</span>
+<span class="go">I: M6 T3 mirq 4273 disp 20625899 proc 13459 real 13765</span>
+<span class="go">I: M12 T3 mirq 4273 disp 20813171 proc 13534 real 13765</span>
+<span class="go">I: M13 T3 mirq 4273 disp 21334833 proc 37091 real 38065</span>
+<span class="go">I: M16 T3 mirq 4273 disp 21744289 proc 42514 real 42925</span>
+<span class="go">I: M26 T3 mirq 4273 disp 21846939 proc 36261 real 36850</span>
+<span class="go">I: M32 T3 mirq 4273 disp 22207336 proc 49987 real 50215</span>
+<span class="go">I: M38 T3 mirq 4273 disp 22532228 proc 37164 real 38065</span>
+<span class="go">I:         ---------- Latency (cyc) ----------</span>
+<span class="go">I:             Best    Worst     Mean    Stdev</span>
+<span class="go">I: MetaIRQ     4273     4478     4278       32</span>
+<span class="go">I: Thread0     7478  6819398  3190200  2183592</span>
+<span class="go">I: Thread1  9417562 10238978  9723127   316113</span>
+<span class="go">I: Thread2 12740821 17843806 15417286  1525493</span>
+<span class="go">I: Thread3 20625899 22532228 21586385   649911</span>
+<span class="go">I: MetaIRQ Test Complete</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<script type="application/ld+json">
+                {"@context": "http://schema.org", "@type": "SoftwareSourceCode", "name": "Meta-IRQ Thread Priority", "description": "\u5b9e\u73b0\u4e00\u4e2a\u4ee5 Meta-IRQ \u4f18\u5148\u7ea7\u8fd0\u884c\u7684\u7ebf\u7a0b\u3002", "codeSampleType": "full", "codeRepository": "https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0//samples\\kernel\\metairq_dispatch\\README.rst"}
+                </script>
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 2月 18, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

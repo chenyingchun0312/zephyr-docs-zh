@@ -1,0 +1,383 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>内存属性 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/mem_mgmt/index.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="网络缓冲区" href="../net_buf/index.html" />
+    <link rel="prev" title="内存管理" href="../memory_management.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">服务</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../connectivity/index.html">连接</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../memory_management.html">内存管理</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">内存属性</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#memory-attributes-heap-allocator">内存属性堆分配器</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api-reference">API 参考</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../net_buf/index.html">网络缓冲区</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../memory_management.html">内存管理</a> &raquo;</li>
+  
+  <li>内存属性</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="memory-attributes">
+<span id="mem-mgmt-api"></span><h1>内存属性<a class="headerlink" href="#memory-attributes" title="链接到此标题。"></a></h1>
+<p>在设备树中，可以使用 <code class="docutils literal notranslate"><span class="pre">zephyr,memory-attr</span></code> 属性为内存区域标记属性。之后可以借助提供的辅助库，在运行时获取该属性及相关的内存区域。</p>
+<p>可在该属性中指定的通用属性集合，其定义和说明见 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/dt-bindings/memory-attr/memory-attr.h">include/zephyr/dt-bindings/memory-attr/memory-attr.h</a>。</p>
+<p>例如，要在设备树中将某个内存区域标记为非易失、可缓存、乱序：</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nl">mem</span><span class="p">:</span><span class="w"> </span><span class="nf">memory</span><span class="o">@</span><span class="mi">10000000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"mmio-sram"</span><span class="p">;</span>
+<span class="w">    </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x10000000</span><span class="w"> </span><span class="mh">0x1000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">zephyr</span><span class="p">,</span><span class="n">memory-attr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="p">(</span><span class="na">DT_MEM_NON_VOLATILE</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="na">DT_MEM_CACHEABLE</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="na">DT_MEM_OOO</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>使用 <code class="docutils literal notranslate"><span class="pre">zephyr,memory-attr</span></code> 并不会真正创建任何内存区域。如果需要根据设备树中定义的内存区域创建实际的段，可以使用兼容属性 <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,memory-region</span></code>，它会（仅在架构支持时）生成一个新的链接器段和区域。</p>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">zephyr,memory-attr</span></code> 属性还可用于设置架构特定和软件特定的自定义属性，以便在运行时解释。这一点的用途之一是根据设备树中定义的内存区域创建 MPU 区域，例如：</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nl">mem</span><span class="p">:</span><span class="w"> </span><span class="nf">memory</span><span class="o">@</span><span class="mi">10000000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"mmio-sram"</span><span class="p">;</span>
+<span class="w">    </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x10000000</span><span class="w"> </span><span class="mh">0x1000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">zephyr</span><span class="p">,</span><span class="n">memory-region</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"NOCACHE_REGION"</span><span class="p">;</span>
+<span class="w">    </span><span class="n">zephyr</span><span class="p">,</span><span class="n">memory-attr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="na">DT_MEM_ARM_MPU_RAM_NOCACHE</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>有关 MPU 用法的更多细节，请参阅 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/dt-bindings/memory-attr/memory-attr-arm.h">include/zephyr/dt-bindings/memory-attr/memory-attr-arm.h</a> 以及 <a class="reference internal" href="../../hardware/arch/arm_cortex_m.html#arm-cortex-m-developer-guide"><span class="std std-ref">Arm Cortex-M 开发者指南</span></a> 中的 <a class="reference internal" href="../../hardware/arch/arm_cortex_m.html#arm-cortex-m-mpu-considerations"><span class="std std-ref">内存映射和 MPU 注意事项</span></a>。有关 Zephyr 如何处理缓存，另请参阅 <a class="reference internal" href="../../hardware/cache/guide.html#cache-guide"><span class="std std-ref">缓存基础</span></a>。</p>
+<p>处理和管理带属性标记的内存区域的常规且推荐的方式，是启用 <a class="reference internal" href="../../kconfig.html#CONFIG_MEM_ATTR" title="CONFIG_MEM_ATTR"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MEM_ATTR</span></code></a> 来使用提供的 <code class="docutils literal notranslate"><span class="pre">mem-attr</span></code> 辅助库。启用此选项后，内存区域及其属性的列表会被编译进一个用户可访问的数组，并提供一组函数，用于查询、探测内存区域和属性并据此进行操作（详见下一节）。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p><code class="docutils literal notranslate"><span class="pre">zephyr,memory-attr</span></code> 属性只是对相关内存区域能力的描述，并不会对内存进行任何实际设置。希望利用这些信息完成某些工作（例如根据该属性创建 MPU 区域）的用户、代码或子系统，必须使用提供的 <code class="docutils literal notranslate"><span class="pre">mem-attr</span></code> 库或常规的设备树辅助工具来执行所需的工作或设置。但请注意，在某些架构（如 ARM 和 ARM64）上，MPU 驱动会利用这些信息在启动时正确初始化缓存。参见 <a class="reference internal" href="../../kconfig.html#CONFIG_ARM_MPU" title="CONFIG_ARM_MPU"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARM_MPU</span></code></a>、<a class="reference internal" href="../../kconfig.html#CONFIG_RISCV_PMP" title="CONFIG_RISCV_PMP"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_RISCV_PMP</span></code></a> 等。</p>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">tests/subsys/mem_mgmt/mem_attr/</span></code> 中提供了 <code class="docutils literal notranslate"><span class="pre">mem-attr</span></code> 库及其用法的测试。</p>
+<section id="memory-attributes-heap-allocator">
+<h2>内存属性堆分配器<a class="headerlink" href="#memory-attributes-heap-allocator" title="链接到此标题。"></a></h2>
+<p>可以利用内存属性 <code class="docutils literal notranslate"><span class="pre">zephyr,memory-attr</span></code> 定义并创建一组内存堆，用户可以从中分配具有特定属性或能力的内存。</p>
+<p>设置 <a class="reference internal" href="../../kconfig.html#CONFIG_MEM_ATTR_HEAP" title="CONFIG_MEM_ATTR_HEAP"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MEM_ATTR_HEAP</span></code></a> 后，凡是标记了 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/dt-bindings/memory-attr/memory-attr-sw.h">include/zephyr/dt-bindings/memory-attr/memory-attr-sw.h</a> 中所列某个内存属性的区域，都会被加入一个内存堆池，用于动态分配具有特定属性的内存缓冲区。</p>
+<p>以下是部分可用属性（并非完整列表）：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>DT_MEM_SW_ALLOC_CACHE
+DT_MEM_SW_ALLOC_NON_CACHE
+DT_MEM_SW_ALLOC_DMA
+</pre></div>
+</div>
+<p>例如，可以定义多个具有不同属性的内存区域，并使用相应的属性表明可以从这些区域动态分配内存：</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nl">mem_cacheable</span><span class="p">:</span><span class="w"> </span><span class="nf">memory</span><span class="o">@</span><span class="mi">10000000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"mmio-sram"</span><span class="p">;</span>
+<span class="w">    </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x10000000</span><span class="w"> </span><span class="mh">0x1000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">zephyr</span><span class="p">,</span><span class="n">memory-attr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="p">(</span><span class="na">DT_MEM_CACHEABLE</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="na">DT_MEM_SW_ALLOC_CACHE</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nl">mem_non_cacheable</span><span class="p">:</span><span class="w"> </span><span class="nf">memory</span><span class="o">@</span><span class="mi">20000000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"mmio-sram"</span><span class="p">;</span>
+<span class="w">    </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x20000000</span><span class="w"> </span><span class="mh">0x1000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">zephyr</span><span class="p">,</span><span class="n">memory-attr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="p">(</span><span class="na">DT_MEM_NON_CACHEABLE</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="na">ATTR_SW_ALLOC_NON_CACHE</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nl">mem_cacheable_big</span><span class="p">:</span><span class="w"> </span><span class="nf">memory</span><span class="o">@</span><span class="mi">30000000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"mmio-sram"</span><span class="p">;</span>
+<span class="w">    </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x30000000</span><span class="w"> </span><span class="mh">0x10000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">zephyr</span><span class="p">,</span><span class="n">memory-attr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="p">(</span><span class="na">DT_MEM_CACHEABLE</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="na">DT_MEM_OOO</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="na">DT_MEM_SW_ALLOC_CACHE</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="nl">mem_cacheable_dma</span><span class="p">:</span><span class="w"> </span><span class="nf">memory</span><span class="o">@</span><span class="mi">40000000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"mmio-sram"</span><span class="p">;</span>
+<span class="w">    </span><span class="kr">reg</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="mh">0x40000000</span><span class="w"> </span><span class="mh">0x10000</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">    </span><span class="n">zephyr</span><span class="p">,</span><span class="n">memory-attr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="p">(</span><span class="na">DT_MEM_CACHEABLE</span><span class="w">      </span><span class="o">|</span><span class="w"> </span><span class="na">DT_MEM_DMA</span><span class="w"> </span><span class="o">|</span>
+<span class="w">                           </span><span class="na">DT_MEM_SW_ALLOC_CACHE</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="na">DT_MEM_SW_ALLOC_DMA</span><span class="p">)</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>然后，用户可以使用提供的函数从这些区域中动态划分内存，库会根据提供的属性和大小，从正确的堆中分配内存：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// Init the pool</span>
+<span class="n">mem_attr_heap_pool_init</span><span class="p">();</span>
+
+<span class="c1">// Allocate 0x100 bytes of cacheable memory from `mem_cacheable`</span>
+<span class="n">block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mem_attr_heap_alloc</span><span class="p">(</span><span class="n">DT_MEM_SW_ALLOC_CACHE</span><span class="p">,</span><span class="w"> </span><span class="mh">0x100</span><span class="p">);</span>
+
+<span class="c1">// Allocate 0x200 bytes of non-cacheable memory aligned to 32 bytes</span>
+<span class="c1">// from `mem_non_cacheable`</span>
+<span class="n">block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mem_attr_heap_aligned_alloc</span><span class="p">(</span><span class="n">ATTR_SW_ALLOC_NON_CACHE</span><span class="p">,</span><span class="w"> </span><span class="mh">0x100</span><span class="p">,</span><span class="w"> </span><span class="mi">32</span><span class="p">);</span>
+
+<span class="c1">// Allocate 0x100 bytes of cacheable and dma-able memory from `mem_cacheable_dma`</span>
+<span class="n">block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mem_attr_heap_alloc</span><span class="p">(</span><span class="n">DT_MEM_SW_ALLOC_CACHE</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">DT_MEM_SW_ALLOC_DMA</span><span class="p">,</span><span class="w"> </span><span class="mh">0x100</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>当多个区域标记了相同的属性时，内存的分配方式如下：</p>
+<ol class="arabic simple">
+<li><p>从 <code class="docutils literal notranslate"><span class="pre">zephyr,memory-attr</span></code> 属性包含所请求属性（一个或多个）的区域中分配。</p></li>
+<li><p>在第 1 点所述的区域中，如果最小的区域还有足够的未分配空间满足请求的大小，则从该区域分配</p></li>
+<li><p>如果空间不足，则从下一个能够容纳所请求大小的更大区域中分配</p></li>
+</ol>
+<p>以下示例展示了第 3 点：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="c1">// This memory is allocated from `mem_non_cacheable`</span>
+<span class="n">block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mem_attr_heap_alloc</span><span class="p">(</span><span class="n">DT_MEM_SW_ALLOC_NON_CACHE</span><span class="p">,</span><span class="w"> </span><span class="mh">0x100</span><span class="p">);</span>
+
+<span class="c1">// This memory is allocated from `mem_cacheable_big`</span>
+<span class="n">block</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mem_attr_heap_alloc</span><span class="p">(</span><span class="n">DT_MEM_SW_ALLOC_CACHE</span><span class="p">,</span><span class="w"> </span><span class="mh">0x5000</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>该框架假定用于创建堆的内存区域可被代码使用，并且在初始化时可用。用户必须在调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">mem_attr_heap_pool_init()</span></code> 之前负责初始化和设置该内存区域。</p>
+<p>这意味着该区域必须在 MPU / MMU 方面正确配置（如有需要），并且能够在其上创建实际的堆，例如利用 <code class="docutils literal notranslate"><span class="pre">zephyr,memory-region</span></code> 属性创建合适的链接器段来容纳该堆。</p>
+</div>
+</section>
+<section id="api-reference">
+<h2>API 参考<a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">memory_attr_interface</span></dt>
+</dl>
+
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">memory_attr_heap</span></dt>
+</dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 8月 19, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

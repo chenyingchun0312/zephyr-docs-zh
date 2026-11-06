@@ -1,0 +1,721 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>HTTP 服务器 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/connectivity/networking/api/http_server.html" />
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../../search.html" />
+    <link rel="next" title="轻量级 M2M（LwM2M）" href="lwm2m.html" />
+    <link rel="prev" title="HTTP 客户端" href="http_client.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html">
+            
+              <img src="../../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">服务</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">连接</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html">网络</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../overview.html">概述</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../net-stack-architecture.html">网络协议栈架构</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../net_config_guide.html">网络配置指南</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../networking_with_host.html">与主机系统联网</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../network_monitoring.html">监视网络流量</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../network_tracing.html">网络跟踪</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../conformance/index.html">使用 TTCN-3 进行协议一致性测试</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="index.html">网络 API</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="apis.html">网络 API</a></li>
+<li class="toctree-l5"><a class="reference internal" href="buf_mgmt.html">网络数据包管理</a></li>
+<li class="toctree-l5"><a class="reference internal" href="net_tech.html">网络技术</a></li>
+<li class="toctree-l5 current"><a class="reference internal" href="protocols.html">协议</a><ul class="current">
+<li class="toctree-l6"><a class="reference internal" href="coap.html">CoAP</a></li>
+<li class="toctree-l6"><a class="reference internal" href="coap_client.html">CoAP 客户端</a></li>
+<li class="toctree-l6"><a class="reference internal" href="coap_server.html">CoAP 服务器</a></li>
+<li class="toctree-l6"><a class="reference internal" href="coap_oscore.html">OSCORE 支持（<strong>RFC 8613</strong>）</a></li>
+<li class="toctree-l6"><a class="reference internal" href="ftp_client.html">FTP 客户端</a></li>
+<li class="toctree-l6"><a class="reference internal" href="http_client.html">HTTP 客户端</a></li>
+<li class="toctree-l6 current"><a class="current reference internal" href="#">HTTP 服务器</a></li>
+<li class="toctree-l6"><a class="reference internal" href="lwm2m.html">轻量级 M2M（LwM2M）</a></li>
+<li class="toctree-l6"><a class="reference internal" href="mcp.html">MCP 服务器</a></li>
+<li class="toctree-l6"><a class="reference internal" href="mqtt.html">MQTT</a></li>
+<li class="toctree-l6"><a class="reference internal" href="mqtt_sn.html">MQTT-SN</a></li>
+<li class="toctree-l6"><a class="reference internal" href="ocpp.html">开放充电点协议（OCPP）</a></li>
+<li class="toctree-l6"><a class="reference internal" href="rtp.html">RTP</a></li>
+<li class="toctree-l6"><a class="reference internal" href="tftp.html">TFTP</a></li>
+<li class="toctree-l6"><a class="reference internal" href="latmon.html">Latmon 网络服务</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="quic.html">QUIC 传输接口</a></li>
+<li class="toctree-l5"><a class="reference internal" href="system_mgmt.html">网络系统管理</a></li>
+<li class="toctree-l5"><a class="reference internal" href="tsn.html">时间敏感网络</a></li>
+<li class="toctree-l5"><a class="reference internal" href="zperf.html">zperf：网络流量生成器</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../conn_mgr/index.html">连接管理器</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../dsa.html">分布式交换架构（DSA）</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../bluetooth/index.html">Bluetooth</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../usb/index.html">USB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../canbus/index.html">控制器局域网（CAN）总线协议</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../lora_lorawan/index.html">LoRa 和 LoRaWAN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modbus/index.html">Modbus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../modem/index.html">调制解调器模块</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../../index.html">连接</a> &raquo;</li>
+  
+     <li><a href="../index.html">网络</a> &raquo;</li>
+  
+     <li><a href="index.html">网络 API</a> &raquo;</li>
+  
+     <li><a href="protocols.html">协议</a> &raquo;</li>
+  
+  <li>HTTP 服务器</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="http-server">
+<span id="http-server-interface"></span><h1>HTTP 服务器<a class="headerlink" href="#http-server" title="链接到此标题。"></a></h1>
+<nav class="contents local" id="id1">
+<ul class="simple">
+<li><p><a class="reference internal" href="#overview" id="id6">概述</a></p></li>
+<li><p><a class="reference internal" href="#server-setup" id="id7">服务器设置</a></p></li>
+<li><p><a class="reference internal" href="#sample-usage" id="id8">使用示例</a></p>
+<ul>
+<li><p><a class="reference internal" href="#services" id="id9">服务</a></p></li>
+<li><p><a class="reference internal" href="#per-service-configuration" id="id10">按服务配置</a></p></li>
+<li><p><a class="reference internal" href="#fallback-resources" id="id11">回退资源</a></p></li>
+<li><p><a class="reference internal" href="#static-resources" id="id12">静态资源</a></p></li>
+<li><p><a class="reference internal" href="#static-filesystem-resources" id="id13">静态文件系统资源</a></p></li>
+<li><p><a class="reference internal" href="#dynamic-resources" id="id14">动态资源</a></p></li>
+<li><p><a class="reference internal" href="#websocket-resources" id="id15">Websocket 资源</a></p></li>
+<li><p><a class="reference internal" href="#accessing-request-headers" id="id16">访问请求头部</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#api-reference" id="id17">API 参考</a></p></li>
+</ul>
+</nav>
+<section id="overview">
+<h2><a class="toc-backref" href="#id6" role="doc-backlink">概述</a><a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>Zephyr 提供了一个 HTTP 服务器库，可以注册 HTTP 服务以及与这些服务关联的 HTTP 资源。服务器为每个已注册的服务创建一个监听套接字，并处理传入的客户端连接。可以通过普通 TCP 套接字（HTTP）或 TLS 套接字（HTTPS）进行通信。支持 HTTP/1.1（<span class="target" id="index-6"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc2616.html"><strong>RFC 2616</strong></a>）、HTTP/2（<span class="target" id="index-7"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc9113.html"><strong>RFC 9113</strong></a>）和 HTTP/3（<span class="target" id="index-8"></span><a class="rfc reference external" href="https://datatracker.ietf.org/doc/html/rfc9114.html"><strong>RFC 9114</strong></a>）协议版本。</p>
+<p>服务器的运行通常对应用程序透明，它在后台线程中运行。应用程序可以通过相应的 API 函数控制服务器的活动。</p>
+<p>某些资源类型（例如动态资源）提供针对资源的应用程序回调，使服务器能够与应用程序交互（例如提供资源内容或处理请求负载）。</p>
+<p>目前支持以下资源类型：</p>
+<ul class="simple">
+<li><p>静态资源：内容在编译时定义，运行时不能修改（<code class="xref c c-enumerator docutils literal notranslate"><span class="pre">HTTP_RESOURCE_TYPE_STATIC</span></code>）。</p></li>
+<li><p>静态文件系统资源：文件系统的挂载路径以及提供该文件系统的 URL 在构建时固定，但文件系统中的内容可以动态改变。这意味着 HTTP 服务器之外的其他代码可以创建、修改或删除这些文件（<code class="xref c c-enumerator docutils literal notranslate"><span class="pre">HTTP_RESOURCE_TYPE_STATIC_FS</span></code>）。</p></li>
+<li><p>动态资源：内容在运行时由相应的应用程序回调提供（<code class="xref c c-enumerator docutils literal notranslate"><span class="pre">HTTP_RESOURCE_TYPE_DYNAMIC</span></code>）。</p></li>
+<li><p>Websocket 资源：允许与服务器建立 Websocket 连接（<code class="xref c c-enumerator docutils literal notranslate"><span class="pre">HTTP_RESOURCE_TYPE_WEBSOCKET</span></code>）。</p></li>
+</ul>
+<p>Zephyr 提供了一个示例，演示 HTTP(s) 服务器的运行以及各种资源类型的用法。更多信息请参见 <a class="reference internal" href="../../../../samples/net/sockets/http_server/README.html#sockets-http-server" title="实现一个演示多种资源类型的 HTTP(S) 服务器。">HTTP Server</a>。</p>
+</section>
+<section id="server-setup">
+<h2><a class="toc-backref" href="#id7" role="doc-backlink">服务器设置</a><a class="headerlink" href="#server-setup" title="链接到此标题。"></a></h2>
+<p>要在应用程序中启用 HTTP 服务器功能，需要满足几个前提条件。</p>
+<p>首先，必须在应用程序配置文件中通过 Kconfig 选项 <a class="reference internal" href="../../../../kconfig.html#CONFIG_HTTP_SERVER" title="CONFIG_HTTP_SERVER"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HTTP_SERVER</span></code></a> 启用 HTTP 服务器：</p>
+<div class="literal-block-wrapper docutils container" id="id2">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">prj.conf</span></code></span><a class="headerlink" href="#id2" title="链接到此段代码"></a></div>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">CONFIG_HTTP_SERVER</span><span class="o">=</span><span class="s">y</span>
+</pre></div>
+</div>
+</div>
+<p>所有 HTTP 服务和 HTTP 资源都放在专用的链接器段中。服务的链接器段已在本地预定义，但应用程序负责为与各服务关联的资源定义链接器段。资源的链接器段名称应以 <code class="docutils literal notranslate"><span class="pre">http_resource_desc_</span></code> 为前缀，后接服务名称。</p>
+<p>资源的链接器段应在链接器文件中定义。例如，对于名为 <code class="docutils literal notranslate"><span class="pre">my_service</span></code> 的服务，链接器段应按如下方式定义：</p>
+<div class="literal-block-wrapper docutils container" id="id3">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">sections-rom.ld</span></code></span><a class="headerlink" href="#id3" title="链接到此段代码"></a></div>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/linker/iterable_sections.h&gt;</span>
+
+<span class="n">ITERABLE_SECTION_ROM</span><span class="p">(</span><span class="n">http_resource_desc_my_service</span><span class="p">,</span><span class="w"> </span><span class="n">Z_LINK_ITERABLE_SUBALIGN</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<p>最后，必须使用 CMake 把链接器文件和链接器段添加到应用程序中：</p>
+<div class="literal-block-wrapper docutils container" id="id4">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></span><a class="headerlink" href="#id4" title="链接到此段代码"></a></div>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nf">zephyr_linker_sources(</span><span class="no">SECTIONS</span><span class="w"> </span><span class="nb">sections-rom.ld</span><span class="nf">)</span>
+<span class="nf">zephyr_linker_section(</span><span class="no">NAME</span><span class="w"> </span><span class="nb">http_resource_desc_my_service</span>
+<span class="w">                      </span><span class="no">KVMA</span><span class="w"> </span><span class="no">RAM_REGION</span><span class="w"> </span><span class="no">GROUP</span><span class="w"> </span><span class="no">RODATA_REGION</span><span class="nf">)</span>
+</pre></div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>需要为系统中注册的每个 HTTP 服务定义一个单独的链接器段。</p>
+</div>
+</section>
+<section id="sample-usage">
+<h2><a class="toc-backref" href="#id8" role="doc-backlink">使用示例</a><a class="headerlink" href="#sample-usage" title="链接到此标题。"></a></h2>
+<section id="services">
+<h3><a class="toc-backref" href="#id9" role="doc-backlink">服务</a><a class="headerlink" href="#services" title="链接到此标题。"></a></h3>
+<p>应用程序需要使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">HTTP_SERVICE_DEFINE</span></code> 宏定义一个（或多个）HTTP 服务，其名称与链接器段所用的名称相同：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/net/http/service.h&gt;</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">http_service_port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">80</span><span class="p">;</span>
+
+<span class="n">HTTP_SERVICE_DEFINE</span><span class="p">(</span><span class="n">my_service</span><span class="p">,</span><span class="w"> </span><span class="s">"0.0.0.0"</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">http_service_port</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>也可以使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">HTTPS_SERVICE_DEFINE</span></code> 定义 HTTPS 服务：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/net/http/service.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/net/tls_credentials.h&gt;</span>
+
+<span class="cp">#define HTTP_SERVER_CERTIFICATE_TAG 1</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">https_service_port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">443</span><span class="p">;</span>
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="n">sec_tag_t</span><span class="w"> </span><span class="n">sec_tag_list</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">HTTP_SERVER_CERTIFICATE_TAG</span><span class="p">,</span>
+<span class="p">};</span>
+
+<span class="n">HTTPS_SERVICE_DEFINE</span><span class="p">(</span><span class="n">my_service</span><span class="p">,</span><span class="w"> </span><span class="s">"0.0.0.0"</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">https_service_port</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
+<span class="w">                     </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="n">sec_tag_list</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">sec_tag_list</span><span class="p">));</span>
+</pre></div>
+</div>
+</section>
+<section id="per-service-configuration">
+<h3><a class="toc-backref" href="#id10" role="doc-backlink">按服务配置</a><a class="headerlink" href="#per-service-configuration" title="链接到此标题。"></a></h3>
+<p>HTTP 服务支持单独的服务配置，目前只包括通过 <code class="docutils literal notranslate"><span class="pre">http_service_config</span></code> 结构体创建套接字。这使应用程序可以定制套接字的创建行为，例如设置特定的套接字选项或使用自定义套接字类型。</p>
+<p>要使用自定义套接字创建：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">my_socket_create</span><span class="p">(</span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">http_service_desc</span><span class="w"> </span><span class="o">*</span><span class="n">svc</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">af</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">proto</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">fd</span><span class="p">;</span>
+
+<span class="w">    </span><span class="cm">/* Create socket with custom parameters */</span>
+<span class="w">    </span><span class="n">fd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zsock_socket</span><span class="p">(</span><span class="n">af</span><span class="p">,</span><span class="w"> </span><span class="n">SOCK_STREAM</span><span class="p">,</span><span class="w"> </span><span class="n">proto</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">fd</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">fd</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/* Set custom socket options */</span>
+<span class="w">    </span><span class="cm">/* Add any other custom socket configuration */</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">fd</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">http_service_config</span><span class="w"> </span><span class="n">my_service_config</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">.</span><span class="n">socket_create</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">my_socket_create</span><span class="p">,</span>
+<span class="p">};</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">http_service_port</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">80</span><span class="p">;</span>
+
+<span class="n">HTTP_SERVICE_DEFINE</span><span class="p">(</span><span class="n">my_service</span><span class="p">,</span><span class="w"> </span><span class="s">"0.0.0.0"</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">http_service_port</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
+<span class="w">                    </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">my_service_config</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>自定义套接字创建函数接收以下参数：- <code class="docutils literal notranslate"><span class="pre">svc</span></code>：指向服务描述符的指针 - <code class="docutils literal notranslate"><span class="pre">af</span></code>：地址族（NET_AF_INET 或 NET_AF_INET6）- <code class="docutils literal notranslate"><span class="pre">proto</span></code>：协议（NET_IPPROTO_TCP，HTTPS 则为 NET_IPPROTO_TLS_1_2）</p>
+<p>该函数成功时应返回套接字文件描述符，失败时应返回负的错误码。</p>
+<p>如果不需要自定义配置，只需为 config 参数传入 <code class="docutils literal notranslate"><span class="pre">NULL</span></code>：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">HTTP_SERVICE_DEFINE</span><span class="p">(</span><span class="n">my_service</span><span class="p">,</span><span class="w"> </span><span class="s">"0.0.0.0"</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">http_service_port</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span>
+<span class="w">                    </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="fallback-resources">
+<h3><a class="toc-backref" href="#id11" role="doc-backlink">回退资源</a><a class="headerlink" href="#fallback-resources" title="链接到此标题。"></a></h3>
+<p>定义 HTTP/HTTPS 服务时，可以使用 <code class="docutils literal notranslate"><span class="pre">_res_fallback</span></code> 参数指定一个回退资源，当没有其他资源与 URL 匹配时就使用该资源。例如，可以用它为所有未知路径提供首页（适用于在前端处理路由的单页应用），或提供自定义的 404 响应。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">default_handler</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">http_client_ctx</span><span class="w"> </span><span class="o">*</span><span class="n">client</span><span class="p">,</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="n">http_transaction_status</span><span class="w"> </span><span class="n">status</span><span class="p">,</span>
+<span class="w">                   </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">http_request_ctx</span><span class="w"> </span><span class="o">*</span><span class="n">request_ctx</span><span class="p">,</span>
+<span class="w">                   </span><span class="k">struct</span><span class="w"> </span><span class="nc">http_response_ctx</span><span class="w"> </span><span class="o">*</span><span class="n">response_ctx</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">user_data</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">response_404</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"Oops, page not found!"</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">status</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">HTTP_SERVER_REQUEST_DATA_FINAL</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">response_ctx</span><span class="o">-&gt;</span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">404</span><span class="p">;</span>
+<span class="w">        </span><span class="n">response_ctx</span><span class="o">-&gt;</span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">response_404</span><span class="p">;</span>
+<span class="w">        </span><span class="n">response_ctx</span><span class="o">-&gt;</span><span class="n">body_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">response_404</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">;</span>
+<span class="w">        </span><span class="n">response_ctx</span><span class="o">-&gt;</span><span class="n">final_chunk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">static</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">http_resource_detail_dynamic</span><span class="w"> </span><span class="n">default_detail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">.</span><span class="n">common</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">HTTP_RESOURCE_TYPE_DYNAMIC</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">bitmask_of_supported_http_methods</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BIT</span><span class="p">(</span><span class="n">HTTP_GET</span><span class="p">),</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">.</span><span class="n">cb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">default_handler</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">user_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="p">};</span>
+
+<span class="cm">/* Register a fallback resource to handle any unknown path */</span>
+<span class="n">HTTP_SERVICE_DEFINE</span><span class="p">(</span><span class="n">my_service</span><span class="p">,</span><span class="w"> </span><span class="s">"0.0.0.0"</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">http_service_port</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">default_detail</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>HTTPS 服务依赖于在系统中注册的 TLS 凭据。关于如何在系统中配置 TLS 凭据，请参见 <a class="reference internal" href="sockets.html#sockets-tls-credentials-subsys"><span class="std std-ref">TLS 凭据子系统</span></a>。</p>
+</div>
+<p>定义 HTTP(s) 服务后，就可以使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">HTTP_RESOURCE_DEFINE</span></code> 宏为其注册资源。</p>
+<p>应用程序可以通过启用 <a class="reference internal" href="../../../../kconfig.html#CONFIG_HTTP_SERVER_RESOURCE_WILDCARD" title="CONFIG_HTTP_SERVER_RESOURCE_WILDCARD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HTTP_SERVER_RESOURCE_WILDCARD</span></code></a> 选项来启用资源通配符支持。设置该选项后，只用一个资源处理函数就可以匹配多个传入的 HTTP 请求。URL 路径中的模式使用 POSIX API 函数 <a class="reference external" href="https://pubs.opengroup.org/onlinepubs/9699919799/functions/fnmatch.html">fnmatch()</a> 进行匹配。</p>
+<p>示例：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">HTTP_RESOURCE_DEFINE</span><span class="p">(</span><span class="n">my_resource</span><span class="p">,</span><span class="w"> </span><span class="n">my_service</span><span class="p">,</span><span class="w"> </span><span class="s">"/foo*"</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">resource_detail</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>这会匹配所有以字符串 <code class="docutils literal notranslate"><span class="pre">foo</span></code> 开头的 URL。模式匹配语法的说明请参见 <a class="reference external" href="https://pubs.opengroup.org/onlinepubs/9699919799/utilities/V3_chap02.html#tag_18_13">POSIX.2 第 2.13 章</a>。</p>
+</section>
+<section id="static-resources">
+<h3><a class="toc-backref" href="#id12" role="doc-backlink">静态资源</a><a class="headerlink" href="#static-resources" title="链接到此标题。"></a></h3>
+<p>静态资源的内容在构建时定义，且不可更改。下面的示例展示了如何在应用程序中把经过 gzip 压缩的网页定义为静态资源：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="k">const</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">index_html_gz</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cp">#include</span><span class="w"> </span><span class="cpf">"index.html.gz.inc"</span>
+<span class="p">};</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">http_resource_detail_static</span><span class="w"> </span><span class="n">index_html_gz_resource_detail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">.</span><span class="n">common</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">HTTP_RESOURCE_TYPE_STATIC</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">bitmask_of_supported_http_methods</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BIT</span><span class="p">(</span><span class="n">HTTP_GET</span><span class="p">),</span>
+<span class="w">        </span><span class="p">.</span><span class="n">content_encoding</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"gzip"</span><span class="p">,</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">.</span><span class="n">static_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">index_html_gz</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">static_data_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">index_html_gz</span><span class="p">),</span>
+<span class="p">};</span>
+
+<span class="n">HTTP_RESOURCE_DEFINE</span><span class="p">(</span><span class="n">index_html_gz_resource</span><span class="p">,</span><span class="w"> </span><span class="n">my_service</span><span class="p">,</span><span class="w"> </span><span class="s">"/"</span><span class="p">,</span>
+<span class="w">                     </span><span class="o">&amp;</span><span class="n">index_html_gz_resource_detail</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>资源内容及其内容编码由应用程序决定。对于上面的示例，可以在应用程序的 <code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> 文件中添加以下代码，在构建期间生成经过 gzip 压缩的网页：</p>
+<div class="literal-block-wrapper docutils container" id="id5">
+<div class="code-block-caption"><span class="caption-text"><code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code></span><a class="headerlink" href="#id5" title="链接到此段代码"></a></div>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nf">set(</span><span class="nb">gen_dir</span><span class="w"> </span><span class="o">${</span><span class="nt">ZEPHYR_BINARY_DIR</span><span class="o">}</span><span class="na">/include/generated/</span><span class="nf">)</span>
+<span class="nf">set(</span><span class="nb">source_file_index</span><span class="w"> </span><span class="na">src/index.html</span><span class="nf">)</span>
+<span class="nf">generate_inc_file_for_target(</span><span class="nb">app</span><span class="w"> </span><span class="o">${</span><span class="nt">source_file_index</span><span class="o">}</span><span class="w"> </span><span class="o">${</span><span class="nt">gen_dir</span><span class="o">}</span><span class="na">/index.html.gz.inc</span><span class="w"> </span><span class="p">--</span><span class="nb">gzip</span><span class="nf">)</span>
+</pre></div>
+</div>
+</div>
+<p>其中 <code class="docutils literal notranslate"><span class="pre">src/index.html</span></code> 是要压缩的网页的位置。</p>
+</section>
+<section id="static-filesystem-resources">
+<h3><a class="toc-backref" href="#id13" role="doc-backlink">静态文件系统资源</a><a class="headerlink" href="#static-filesystem-resources" title="链接到此标题。"></a></h3>
+<p>静态文件系统资源的内容在构建时定义，且不可更改。注意，只支持 <code class="docutils literal notranslate"><span class="pre">GET</span></code> 操作，用户无法向文件系统上传文件。下面的示例展示了如何在应用程序中把路径定义为静态资源：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">http_resource_detail_static_fs</span><span class="w"> </span><span class="n">static_fs_resource_detail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">.</span><span class="n">common</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">type</span><span class="w">                              </span><span class="o">=</span><span class="w"> </span><span class="n">HTTP_RESOURCE_TYPE_STATIC_FS</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">bitmask_of_supported_http_methods</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BIT</span><span class="p">(</span><span class="n">HTTP_GET</span><span class="p">),</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">.</span><span class="n">fs_path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"/lfs1/www"</span><span class="p">,</span>
+<span class="p">};</span>
+
+<span class="n">HTTP_RESOURCE_DEFINE</span><span class="p">(</span><span class="n">static_fs_resource</span><span class="p">,</span><span class="w"> </span><span class="n">my_service</span><span class="p">,</span><span class="w"> </span><span class="s">"*"</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">static_fs_resource_detail</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>位于 /lfs1/www 中的所有文件都可供客户端访问。如果文件经过 gzip 压缩，文件名必须加上 .gz 后缀（例如 index.html.gz），这样当客户端请求 index.html 时，服务器会发送 index.html.gz，并在 HTTP 头部中添加 gzip 内容编码。</p>
+<p>内容类型根据文件扩展名确定。服务器支持 .html、.js、.css、.jpg、.png 和 .svg。可以使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">HTTP_SERVER_CONTENT_TYPE</span></code> 宏提供更多内容类型。所有其他文件都以 text/html 内容类型提供。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">HTTP_SERVER_CONTENT_TYPE</span><span class="p">(</span><span class="n">json</span><span class="p">,</span><span class="w"> </span><span class="s">"application/json"</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>从静态文件系统提供文件时，可以使用 Kconfig 选项 <a class="reference internal" href="../../../../kconfig.html#CONFIG_HTTP_SERVER_STATIC_FS_RESPONSE_SIZE" title="CONFIG_HTTP_SERVER_STATIC_FS_RESPONSE_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HTTP_SERVER_STATIC_FS_RESPONSE_SIZE</span></code></a> 配置响应分块大小。它决定了向客户端传输文件内容时每个分块的大小。</p>
+</section>
+<section id="dynamic-resources">
+<h3><a class="toc-backref" href="#id14" role="doc-backlink">动态资源</a><a class="headerlink" href="#dynamic-resources" title="链接到此标题。"></a></h3>
+<p>对于动态资源，需要注册一个资源回调，用于在服务器与应用程序之间交换数据。</p>
+<p>下面的示例代码展示了如何使用一个简单的资源处理函数注册动态资源，该处理函数会把收到的数据回显给客户端：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">dyn_handler</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">http_client_ctx</span><span class="w"> </span><span class="o">*</span><span class="n">client</span><span class="p">,</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="n">http_transaction_status</span><span class="w"> </span><span class="n">status</span><span class="p">,</span>
+<span class="w">                       </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">http_request_ctx</span><span class="w"> </span><span class="o">*</span><span class="n">request_ctx</span><span class="p">,</span>
+<span class="w">                       </span><span class="k">struct</span><span class="w"> </span><span class="nc">http_response_ctx</span><span class="w"> </span><span class="o">*</span><span class="n">response_ctx</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">user_data</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="cp">#define MAX_TEMP_PRINT_LEN 32</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">print_str</span><span class="p">[</span><span class="n">MAX_TEMP_PRINT_LEN</span><span class="p">];</span>
+<span class="w">    </span><span class="k">enum</span><span class="w"> </span><span class="n">http_method</span><span class="w"> </span><span class="n">method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">client</span><span class="o">-&gt;</span><span class="n">method</span><span class="p">;</span>
+<span class="w">    </span><span class="k">static</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">processed</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">__ASSERT_NO_MSG</span><span class="p">(</span><span class="n">request_ctx</span><span class="o">-&gt;</span><span class="n">data</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">status</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">HTTP_SERVER_TRANSACTION_ABORTED</span><span class="w"> </span><span class="o">||</span>
+<span class="w">        </span><span class="n">status</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">HTTP_SERVER_TRANSACTION_COMPLETE</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">status</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">HTTP_SERVER_TRANSACTION_ABORTED</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">LOG_DBG</span><span class="p">(</span><span class="s">"Transaction aborted after %zd bytes."</span><span class="p">,</span><span class="w"> </span><span class="n">processed</span><span class="p">);</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">processed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">processed</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">request_ctx</span><span class="o">-&gt;</span><span class="n">data_len</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">snprintf</span><span class="p">(</span><span class="n">print_str</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">print_str</span><span class="p">),</span><span class="w"> </span><span class="s">"%s received (%zd bytes)"</span><span class="p">,</span>
+<span class="w">             </span><span class="n">http_method_str</span><span class="p">(</span><span class="n">method</span><span class="p">),</span><span class="w"> </span><span class="n">request_ctx</span><span class="o">-&gt;</span><span class="n">data_len</span><span class="p">);</span>
+<span class="w">    </span><span class="n">LOG_HEXDUMP_DBG</span><span class="p">(</span><span class="n">request_ctx</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">request_ctx</span><span class="o">-&gt;</span><span class="n">data_len</span><span class="p">,</span><span class="w"> </span><span class="n">print_str</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">status</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">HTTP_SERVER_REQUEST_DATA_FINAL</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">LOG_DBG</span><span class="p">(</span><span class="s">"All data received (%zd bytes)."</span><span class="p">,</span><span class="w"> </span><span class="n">processed</span><span class="p">);</span>
+<span class="w">        </span><span class="n">processed</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/* Echo data back to client */</span>
+<span class="w">    </span><span class="n">response_ctx</span><span class="o">-&gt;</span><span class="n">body</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">request_ctx</span><span class="o">-&gt;</span><span class="n">data</span><span class="p">;</span>
+<span class="w">    </span><span class="n">response_ctx</span><span class="o">-&gt;</span><span class="n">body_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">request_ctx</span><span class="o">-&gt;</span><span class="n">data_len</span><span class="p">;</span>
+<span class="w">    </span><span class="n">response_ctx</span><span class="o">-&gt;</span><span class="n">final_chunk</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">status</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">HTTP_SERVER_REQUEST_DATA_FINAL</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">http_resource_detail_dynamic</span><span class="w"> </span><span class="n">dyn_resource_detail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">.</span><span class="n">common</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">HTTP_RESOURCE_TYPE_DYNAMIC</span><span class="p">,</span>
+<span class="w">        </span><span class="p">.</span><span class="n">bitmask_of_supported_http_methods</span><span class="w"> </span><span class="o">=</span>
+<span class="w">            </span><span class="n">BIT</span><span class="p">(</span><span class="n">HTTP_GET</span><span class="p">)</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="n">BIT</span><span class="p">(</span><span class="n">HTTP_POST</span><span class="p">),</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">.</span><span class="n">cb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">dyn_handler</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">user_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span>
+<span class="p">};</span>
+
+<span class="n">HTTP_RESOURCE_DEFINE</span><span class="p">(</span><span class="n">dyn_resource</span><span class="p">,</span><span class="w"> </span><span class="n">my_service</span><span class="p">,</span><span class="w"> </span><span class="s">"/dynamic"</span><span class="p">,</span>
+<span class="w">                     </span><span class="o">&amp;</span><span class="n">dyn_resource_detail</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>对于单个请求，资源回调可能会被调用多次，因此应用程序应能够跟踪数据接收的进度。</p>
+<p><code class="docutils literal notranslate"><span class="pre">status</span></code> 字段告知应用程序服务器向应用程序传递请求负载的进度。只要状态报告为 <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">HTTP_SERVER_REQUEST_DATA_MORE</span></code>，应用程序就应预期在后续的回调调用中还会收到更多数据。当所有请求负载都已传给应用程序后，服务器报告 <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">HTTP_SERVER_REQUEST_DATA_FINAL</span></code> 状态。如果在请求处理期间发生通信错误（例如客户端在完整负载接收完之前关闭了连接），服务器报告 <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">HTTP_SERVER_TRANSACTION_ABORTED</span></code>。当响应已完整发送给客户端时，服务器报告 <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">HTTP_SERVER_TRANSACTION_COMPLETE</span></code> 状态。这两个事件中的任何一个都表示请求处理已结束，应用程序应重置为该资源记录的所有进度，并等待新请求到来。服务器保证同一时间只有一个客户端可以访问该资源。</p>
+<p><code class="docutils literal notranslate"><span class="pre">request_ctx</span></code> 参数用于向应用程序传递请求数据：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">data</span></code> 和 <code class="docutils literal notranslate"><span class="pre">data_len</span></code> 字段向应用程序传递请求数据。</p></li>
+<li><p>如果启用了 <a class="reference internal" href="../../../../kconfig.html#CONFIG_HTTP_SERVER_CAPTURE_HEADERS" title="CONFIG_HTTP_SERVER_CAPTURE_HEADERS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HTTP_SERVER_CAPTURE_HEADERS</span></code></a>，<code class="docutils literal notranslate"><span class="pre">headers</span></code>、<code class="docutils literal notranslate"><span class="pre">header_count</span></code> 和 <code class="docutils literal notranslate"><span class="pre">headers_status</span></code> 字段会向应用程序传递请求头部。这些字段只在请求的第一次回调中填充；详情请参见 <a class="reference internal" href="#http-server-interface-accessing-request-headers"><span class="std std-ref">访问请求头部</span></a>。</p></li>
+</ul>
+<p>应用程序使用 <code class="docutils literal notranslate"><span class="pre">response_ctx</span></code> 字段向 HTTP 服务器传递响应数据：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">status</span></code> 字段允许应用程序发送 HTTP 响应码。如果未填充，响应码默认为 200。</p></li>
+<li><p>应用程序可以使用 <code class="docutils literal notranslate"><span class="pre">headers</span></code> 和 <code class="docutils literal notranslate"><span class="pre">header_count</span></code> 字段发送任意 HTTP 头部。如果未填充，默认只发送 Transfer-Encoding 和 Content-Type。如有需要，回调可以覆盖 Content-Type。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">body</span></code> 和 <code class="docutils literal notranslate"><span class="pre">body_len</span></code> 字段用于发送正文数据。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">final_chunk</span></code> 字段用于表示应用程序已没有更多响应数据要发送。</p></li>
+</ul>
+<p>头部和/或响应码只能在第一个被填充的 <code class="docutils literal notranslate"><span class="pre">response_ctx</span></code> 中发送，之后的回调中只允许发送后续的正文数据。</p>
+<p>服务器会持续调用资源回调，直到它把所有请求数据都提供给应用程序，并且应用程序报告没有更多数据要放入应答中。</p>
+</section>
+<section id="websocket-resources">
+<h3><a class="toc-backref" href="#id15" role="doc-backlink">Websocket 资源</a><a class="headerlink" href="#websocket-resources" title="链接到此标题。"></a></h3>
+<p>Websocket 资源会注册一个应用程序回调，在发生 Websocket 连接升级时调用。回调会收到与底层 TCP/TLS 连接对应的套接字描述符。一旦被调用，应用程序就完全接管该套接字，即负责在用完后将其释放。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">ws_socket</span><span class="p">;</span>
+<span class="k">static</span><span class="w"> </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">ws_recv_buffer</span><span class="p">[</span><span class="mi">1024</span><span class="p">];</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">ws_setup</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">sock</span><span class="p">,</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">http_request_ctx</span><span class="w"> </span><span class="o">*</span><span class="n">request_ctx</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">user_data</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">ws_socket</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sock</span><span class="p">;</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">http_resource_detail_websocket</span><span class="w"> </span><span class="n">ws_resource_detail</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">.</span><span class="n">common</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">HTTP_RESOURCE_TYPE_WEBSOCKET</span><span class="p">,</span>
+<span class="w">        </span><span class="cm">/* We need HTTP/1.1 Get method for upgrading */</span>
+<span class="w">        </span><span class="p">.</span><span class="n">bitmask_of_supported_http_methods</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">BIT</span><span class="p">(</span><span class="n">HTTP_GET</span><span class="p">),</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="p">.</span><span class="n">cb</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ws_setup</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">data_buffer</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ws_recv_buffer</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">data_buffer_len</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">ws_recv_buffer</span><span class="p">),</span>
+<span class="w">    </span><span class="p">.</span><span class="n">user_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="cm">/* Fill this for any user specific data */</span>
+<span class="p">};</span>
+
+<span class="n">HTTP_RESOURCE_DEFINE</span><span class="p">(</span><span class="n">ws_resource</span><span class="p">,</span><span class="w"> </span><span class="n">my_service</span><span class="p">,</span><span class="w"> </span><span class="s">"/"</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">ws_resource_detail</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>上面这个最简示例展示了如何使用一个简单的回调注册 Websocket 资源，该回调只用于保存所提供的套接字描述符。对 Websocket 连接的进一步处理由应用程序决定，超出了本指南的范围。基于 Websocket 的回显服务实现示例请参见 <a class="reference internal" href="../../../../samples/net/sockets/http_server/README.html#sockets-http-server" title="实现一个演示多种资源类型的 HTTP(S) 服务器。">HTTP Server</a>。</p>
+</section>
+<section id="accessing-request-headers">
+<span id="http-server-interface-accessing-request-headers"></span><h3><a class="toc-backref" href="#id16" role="doc-backlink">访问请求头部</a><a class="headerlink" href="#accessing-request-headers" title="链接到此标题。"></a></h3>
+<p>应用程序可以登记它关注的特定 HTTP 请求头部。这些头部随后会针对每个传入请求进行存储，并可在动态资源回调中访问。</p>
+<div class="admonition important">
+<p class="admonition-title">重要</p>
+<p>捕获的请求头部 <strong>只在</strong> 给定请求的 <strong>第一次回调中</strong> 传递给应用程序。在同一请求的后续回调中，<code class="docutils literal notranslate"><span class="pre">request_ctx</span></code> 的 <code class="docutils literal notranslate"><span class="pre">headers</span></code>、<code class="docutils literal notranslate"><span class="pre">header_count</span></code> 和 <code class="docutils literal notranslate"><span class="pre">headers_status</span></code> 字段会被清除（<code class="docutils literal notranslate"><span class="pre">headers_status</span></code> 变为 <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">HTTP_HEADER_STATUS_NONE</span></code>）。应用程序必须在第一次回调期间把所需的头部值复制出来，而不是稍后再读取。</p>
+<p>注意，第一次回调可能也可能不会同时携带请求正文数据（这取决于 HTTP 方法和传输分帧）。不要以是否存在正文数据作为处理头部的条件：始终检查 <code class="docutils literal notranslate"><span class="pre">headers_status</span></code>，并在其不为 <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">HTTP_HEADER_STATUS_NONE</span></code> 时保存头部。</p>
+</div>
+<p>必须先通过 Kconfig 选项 <a class="reference internal" href="../../../../kconfig.html#CONFIG_HTTP_SERVER_CAPTURE_HEADERS" title="CONFIG_HTTP_SERVER_CAPTURE_HEADERS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HTTP_SERVER_CAPTURE_HEADERS</span></code></a> 启用此功能。</p>
+<p>然后，应用程序就可以登记要捕获的头部，并在动态资源回调中读取其值。推荐的模式是在第一次回调中把关注的头部复制出来，等收到完整的请求正文后再进行处理：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">HTTP_SERVER_REGISTER_HEADER_CAPTURE</span><span class="p">(</span><span class="n">capture_user_agent</span><span class="p">,</span><span class="w"> </span><span class="s">"User-Agent"</span><span class="p">);</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">char</span><span class="w"> </span><span class="n">user_agent</span><span class="p">[</span><span class="mi">64</span><span class="p">];</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">dyn_handler</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">http_client_ctx</span><span class="w"> </span><span class="o">*</span><span class="n">client</span><span class="p">,</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="n">http_transaction_status</span><span class="w"> </span><span class="n">status</span><span class="p">,</span>
+<span class="w">                       </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">http_request_ctx</span><span class="w"> </span><span class="o">*</span><span class="n">request_ctx</span><span class="p">,</span>
+<span class="w">                       </span><span class="k">struct</span><span class="w"> </span><span class="nc">http_response_ctx</span><span class="w"> </span><span class="o">*</span><span class="n">response_ctx</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">user_data</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="cm">/* Request headers are only present in the first callback, so copy out</span>
+<span class="cm">     * any values needed later before they are gone.</span>
+<span class="cm">     */</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">request_ctx</span><span class="o">-&gt;</span><span class="n">headers_status</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">HTTP_HEADER_STATUS_NONE</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="w"> </span><span class="o">&lt;</span><span class="w"> </span><span class="n">request_ctx</span><span class="o">-&gt;</span><span class="n">header_count</span><span class="p">;</span><span class="w"> </span><span class="n">i</span><span class="o">++</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">const</span><span class="w"> </span><span class="k">struct</span><span class="w"> </span><span class="nc">http_header</span><span class="w"> </span><span class="o">*</span><span class="n">hdr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">request_ctx</span><span class="o">-&gt;</span><span class="n">headers</span><span class="p">[</span><span class="n">i</span><span class="p">];</span>
+
+<span class="w">            </span><span class="n">LOG_INF</span><span class="p">(</span><span class="s">"Captured header: '%s: %s'"</span><span class="p">,</span><span class="w"> </span><span class="n">hdr</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">hdr</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">);</span>
+
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">strcasecmp</span><span class="p">(</span><span class="n">hdr</span><span class="o">-&gt;</span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="s">"User-Agent"</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">strncpy</span><span class="p">(</span><span class="n">user_agent</span><span class="p">,</span><span class="w"> </span><span class="n">hdr</span><span class="o">-&gt;</span><span class="n">value</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">user_agent</span><span class="p">)</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">);</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/* Process request body data (may be empty in the first callback). */</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">status</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">HTTP_SERVER_REQUEST_DATA_FINAL</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="cm">/* Full request received: act on the body together with the header</span>
+<span class="cm">         * values stashed above (e.g. user_agent).</span>
+<span class="cm">         */</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="api-reference">
+<h2><a class="toc-backref" href="#id17" role="doc-backlink">API 参考</a><a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">http_service</span></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/sockets/http_server/README.html#sockets-http-server" title="实现一个演示多种资源类型的 HTTP(S) 服务器。">HTTP Server</a></span><span class="code-sample-description">实现一个演示多种资源类型的 HTTP(S) 服务器。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/prometheus/README.html#prometheus" title="实现一个演示多种指标类型的 Prometheus 指标服务器。">Prometheus Sample</a></span><span class="code-sample-description">实现一个演示多种指标类型的 Prometheus 指标服务器。</span></li>
+</ul>
+</div>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">http_server</span></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/sockets/http_server/README.html#sockets-http-server" title="实现一个演示多种资源类型的 HTTP(S) 服务器。">HTTP Server</a></span><span class="code-sample-description">实现一个演示多种资源类型的 HTTP(S) 服务器。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../../../samples/net/prometheus/README.html#prometheus" title="实现一个演示多种指标类型的 Prometheus 指标服务器。">Prometheus Sample</a></span><span class="code-sample-description">实现一个演示多种指标类型的 Prometheus 指标服务器。</span></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 6月 16, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,460 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>定时器 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/kernel/services/timing/timers.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" />
+    <link rel="next" title="系统定时器驱动" href="system_timer_drivers.html" />
+    <link rel="prev" title="内核计时" href="clocks.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">内核</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">内核服务</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../index.html#scheduling-interrupts-and-synchronization">调度、中断与同步</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#data-passing">数据传递</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#memory-management">内存管理</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html#timing">计时</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="clocks.html">内核计时</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">定时器</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#concepts">概念</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#timer-observers">定时器观察者</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#implementation">实现</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#defining-a-timer">定义定时器</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#using-a-timer-expiry-function">使用定时器到期函数</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#reading-timer-status">读取定时器状态</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#using-timer-status-synchronization">使用定时器状态同步</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#suggested-uses">建议用法</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#configuration-options">配置选项</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#api-reference">API 参考</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="system_timer_drivers.html">系统定时器驱动</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#other">其他</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../drivers/index.html">设备驱动模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../usermode/index.html">用户模式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../memory_management/index.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../data_structures/index.html">数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../timing_functions/index.html">计时函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../object_cores/index.html">对象核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../timeutil.html">时间工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../precision_timing.html">精密计时</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../util/index.html">实用工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../iterable_sections/index.html">可迭代段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../code-relocation.html">代码和数据重定位</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanup.html">基于作用域的清理辅助工具</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">内核</a> &raquo;</li>
+  
+     <li><a href="../index.html">内核服务</a> &raquo;</li>
+  
+  <li>定时器</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="timers">
+<span id="timers-v2"></span><h1>定时器<a class="headerlink" href="#timers" title="链接到此标题。"></a></h1>
+<p><em class="dfn">timer</em> （定时器）是使用内核系统时钟度量时间流逝的内核对象。当定时器达到指定的时限时，它可以执行应用程序定义的操作，也可以只记录到期事件，等待应用程序读取其状态。</p>
+<nav class="contents local" id="id1">
+<ul class="simple">
+<li><p><a class="reference internal" href="#concepts" id="id2">概念</a></p></li>
+<li><p><a class="reference internal" href="#timer-observers" id="id3">定时器观察者</a></p></li>
+<li><p><a class="reference internal" href="#implementation" id="id4">实现</a></p>
+<ul>
+<li><p><a class="reference internal" href="#defining-a-timer" id="id5">定义定时器</a></p></li>
+<li><p><a class="reference internal" href="#using-a-timer-expiry-function" id="id6">使用定时器到期函数</a></p></li>
+<li><p><a class="reference internal" href="#reading-timer-status" id="id7">读取定时器状态</a></p></li>
+<li><p><a class="reference internal" href="#using-timer-status-synchronization" id="id8">使用定时器状态同步</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#suggested-uses" id="id9">建议用法</a></p></li>
+<li><p><a class="reference internal" href="#configuration-options" id="id10">配置选项</a></p></li>
+<li><p><a class="reference internal" href="#api-reference" id="id11">API 参考</a></p></li>
+</ul>
+</nav>
+<section id="concepts">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">概念</a><a class="headerlink" href="#concepts" title="链接到此标题。"></a></h2>
+<p>可以定义任意数量的定时器（仅受可用 RAM 限制）。每个定时器通过其内存地址引用。</p>
+<p>定时器具有以下关键属性：</p>
+<ul class="simple">
+<li><p><strong>持续时间</strong>，指定定时器首次到期之前的时间间隔。它是一个 <code class="xref c c-type docutils literal notranslate"><span class="pre">k_timeout_t</span></code> 值，可以用不同的单位初始化。</p></li>
+<li><p><strong>周期</strong>，指定首次到期之后各次到期之间的时间间隔，同样是 <code class="xref c c-type docutils literal notranslate"><span class="pre">k_timeout_t</span></code> 值，且必须是非负数。周期为 <code class="docutils literal notranslate"><span class="pre">K_NO_WAIT</span></code> （即零）或 <code class="docutils literal notranslate"><span class="pre">K_FOREVER</span></code> 表示该定时器是单次定时器，到期一次后即停止。（例如，如果以持续时间 200、周期 75 启动定时器，它会在 200 ms 后首次到期，之后每 75 ms 到期一次。）</p></li>
+<li><p><strong>到期函数</strong>，每次定时器到期时执行。该函数由系统时钟中断处理程序执行。如果不需要到期函数，可以指定 <code class="docutils literal notranslate"><span class="pre">NULL</span></code>。</p></li>
+<li><p><strong>停止函数</strong>，在定时器运行期间被提前停止时执行。该函数由停止定时器的线程执行。如果不需要停止函数，可以指定 <code class="docutils literal notranslate"><span class="pre">NULL</span></code>。</p></li>
+<li><p><strong>状态</strong> 值，表示自上次读取状态值以来定时器到期的次数。</p></li>
+</ul>
+<p>定时器必须先初始化才能使用。初始化会指定其到期函数和停止函数，将定时器的状态置零，并使定时器进入 <strong>停止</strong> 状态。</p>
+<p>通过指定持续时间和周期来 <strong>启动</strong> 定时器。定时器的状态被重置为零，然后定时器进入 <strong>运行</strong> 状态，开始倒计时直至到期。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>定时器的持续时间是相对于定时器启动时刻的 <strong>最小</strong> 延迟。定时器的周期是相对于定时器上一次“本应”到期时刻的 <strong>最小</strong> 延迟。这意味着周期定时器相对于系统定时器不会产生漂移，其周期性延迟可能比指定的周期更短或更长。</p>
+<p>要确保定时器到期前至少经过最小延迟，请在 <strong>到期函数</strong> 中或在定时器到期之后重新启动定时器。</p>
+<p>延迟的变化源于系统中的可变因素，例如中断处理延迟和之前的定时器处理函数的执行时间。</p>
+</div>
+<p>运行中的定时器到期时，其状态加一，并执行到期函数（如果有）；如果有线程正在等待该定时器，该线程会被解除阻塞。如果定时器的周期为零，定时器进入停止状态；否则，定时器以新的持续时间重新启动，该持续时间等于其周期与定时器“本应”到期时刻之间的差值。</p>
+<p>如有需要，可以在倒计时过程中停止运行中的定时器。定时器的状态保持不变，然后定时器进入停止状态，并执行停止函数（如果有）。如果有线程正在等待该定时器，该线程会被解除阻塞。允许尝试停止未运行的定时器，但由于定时器已经停止，这不会产生任何效果。</p>
+<p>如有需要，可以在倒计时过程中重新启动运行中的定时器。定时器的状态被重置为零，然后定时器使用调用者指定的新持续时间和周期开始倒计时。如果有线程正在等待该定时器，该线程会继续等待。</p>
+<p>可以随时直接读取定时器的状态，以确定自上次读取状态以来定时器到期的次数。读取定时器状态会将其值重置为零。还可以读取定时器到期前的剩余时间；值为零表示定时器已停止。</p>
+<p>线程可以通过与定时器 <strong>同步</strong> 来间接读取定时器的状态。这会阻塞线程，直到定时器状态不为零（表示它至少到期过一次）或定时器被停止；如果定时器状态已经不为零或定时器已经停止，线程会继续执行而不等待。同步操作返回定时器的状态，并将其重置为零。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>对于任何给定的定时器，只应由一个使用者检查其状态，因为（直接或间接）读取状态会改变其值。同样，同一时刻只应有一个线程与给定的定时器同步。ISR 不允许与定时器同步，因为 ISR 不允许阻塞。</p>
+</div>
+</section>
+<section id="timer-observers">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">定时器观察者</a><a class="headerlink" href="#timer-observers" title="链接到此标题。"></a></h2>
+<p>启用 <a class="reference internal" href="../../../kconfig.html#CONFIG_TIMER_OBSERVER" title="CONFIG_TIMER_OBSERVER"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TIMER_OBSERVER</span></code></a> 后，代码可以注册 <em class="dfn">timer observers</em> （定时器观察者），以便接收系统中所有定时器的生命周期事件通知。观察者是一组可选回调，在定时器被初始化、启动、停止或到期时调用。这使外部模块（例如跟踪、性能分析或电源管理代码）无需修改内核内部实现或各个定时器，就能对定时器活动作出响应。</p>
+<p>观察者通过 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_TIMER_OBSERVER_DEFINE</span></code> 静态定义，该宏接受指向 <code class="docutils literal notranslate"><span class="pre">on_init</span></code>、<code class="docutils literal notranslate"><span class="pre">on_start</span></code>、<code class="docutils literal notranslate"><span class="pre">on_stop</span></code> 和 <code class="docutils literal notranslate"><span class="pre">on_expiry</span></code> 回调的指针；不需要的回调可以传入 <code class="docutils literal notranslate"><span class="pre">NULL</span></code>。由于到期回调在中断上下文中运行，它必须保持简短且不阻塞。</p>
+</section>
+<section id="implementation">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">实现</a><a class="headerlink" href="#implementation" title="链接到此标题。"></a></h2>
+<section id="defining-a-timer">
+<h3><a class="toc-backref" href="#id5" role="doc-backlink">定义定时器</a><a class="headerlink" href="#defining-a-timer" title="链接到此标题。"></a></h3>
+<p>定时器使用 <code class="xref c c-struct docutils literal notranslate"><span class="pre">k_timer</span></code> 类型的变量定义，然后必须调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_timer_init()</span></code> 进行初始化。</p>
+<p>以下代码定义并初始化了一个定时器。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">k_timer</span><span class="w"> </span><span class="n">my_timer</span><span class="p">;</span>
+<span class="k">extern</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">my_expiry_function</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">k_timer</span><span class="w"> </span><span class="o">*</span><span class="n">timer_id</span><span class="p">);</span>
+
+<span class="n">k_timer_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_timer</span><span class="p">,</span><span class="w"> </span><span class="n">my_expiry_function</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>也可以调用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_TIMER_DEFINE</span></code> 在编译时定义并初始化定时器。</p>
+<p>以下代码与上面的代码段效果相同。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">K_TIMER_DEFINE</span><span class="p">(</span><span class="n">my_timer</span><span class="p">,</span><span class="w"> </span><span class="n">my_expiry_function</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="using-a-timer-expiry-function">
+<h3><a class="toc-backref" href="#id6" role="doc-backlink">使用定时器到期函数</a><a class="headerlink" href="#using-a-timer-expiry-function" title="链接到此标题。"></a></h3>
+<p>以下代码使用定时器周期性地执行一项较复杂的操作。由于所需的工作不能在中断级别完成，定时器的到期函数会将一个工作项提交到 <a class="reference internal" href="../threads/workqueue.html#workqueues-v2"><span class="std std-ref">系统工作队列</span></a>，由其线程执行该工作。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">my_work_handler</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">k_work</span><span class="w"> </span><span class="o">*</span><span class="n">work</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="cm">/* do the processing that needs to be done periodically */</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="p">}</span>
+
+<span class="n">K_WORK_DEFINE</span><span class="p">(</span><span class="n">my_work</span><span class="p">,</span><span class="w"> </span><span class="n">my_work_handler</span><span class="p">);</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">my_timer_handler</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">k_timer</span><span class="w"> </span><span class="o">*</span><span class="n">dummy</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">k_work_submit</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_work</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="n">K_TIMER_DEFINE</span><span class="p">(</span><span class="n">my_timer</span><span class="p">,</span><span class="w"> </span><span class="n">my_timer_handler</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+
+<span class="p">...</span>
+
+<span class="cm">/* start a periodic timer that expires once every second */</span>
+<span class="n">k_timer_start</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_timer</span><span class="p">,</span><span class="w"> </span><span class="n">K_SECONDS</span><span class="p">(</span><span class="mi">1</span><span class="p">),</span><span class="w"> </span><span class="n">K_SECONDS</span><span class="p">(</span><span class="mi">1</span><span class="p">));</span>
+</pre></div>
+</div>
+</section>
+<section id="reading-timer-status">
+<h3><a class="toc-backref" href="#id7" role="doc-backlink">读取定时器状态</a><a class="headerlink" href="#reading-timer-status" title="链接到此标题。"></a></h3>
+<p>以下代码直接读取定时器的状态，以确定定时器是否已到期。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">K_TIMER_DEFINE</span><span class="p">(</span><span class="n">my_status_timer</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+
+<span class="p">...</span>
+
+<span class="cm">/* start a one-shot timer that expires after 200 ms */</span>
+<span class="n">k_timer_start</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_status_timer</span><span class="p">,</span><span class="w"> </span><span class="n">K_MSEC</span><span class="p">(</span><span class="mi">200</span><span class="p">),</span><span class="w"> </span><span class="n">K_NO_WAIT</span><span class="p">);</span>
+
+<span class="cm">/* do work */</span>
+<span class="p">...</span>
+
+<span class="cm">/* check timer status */</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">k_timer_status_get</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_status_timer</span><span class="p">)</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/* timer has expired */</span>
+<span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">k_timer_remaining_get</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_status_timer</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/* timer was stopped (by someone else) before expiring */</span>
+<span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/* timer is still running */</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="using-timer-status-synchronization">
+<h3><a class="toc-backref" href="#id8" role="doc-backlink">使用定时器状态同步</a><a class="headerlink" href="#using-timer-status-synchronization" title="链接到此标题。"></a></h3>
+<p>以下代码执行定时器状态同步，使线程在确保两个协议操作之间相隔指定时间间隔的同时，还能完成其他有用的工作。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">K_TIMER_DEFINE</span><span class="p">(</span><span class="n">my_sync_timer</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+
+<span class="p">...</span>
+
+<span class="cm">/* do first protocol operation */</span>
+<span class="p">...</span>
+
+<span class="cm">/* start a one-shot timer that expires after 500 ms */</span>
+<span class="n">k_timer_start</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_sync_timer</span><span class="p">,</span><span class="w"> </span><span class="n">K_MSEC</span><span class="p">(</span><span class="mi">500</span><span class="p">),</span><span class="w"> </span><span class="n">K_NO_WAIT</span><span class="p">);</span>
+
+<span class="cm">/* do other work */</span>
+<span class="p">...</span>
+
+<span class="cm">/* ensure timer has expired (waiting for expiry, if necessary) */</span>
+<span class="n">k_timer_status_sync</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_sync_timer</span><span class="p">);</span>
+
+<span class="cm">/* do second protocol operation */</span>
+<span class="p">...</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>如果线程没有其他工作要做，可以直接在两个协议操作之间睡眠，而无需使用定时器。</p>
+</div>
+</section>
+</section>
+<section id="suggested-uses">
+<h2><a class="toc-backref" href="#id9" role="doc-backlink">建议用法</a><a class="headerlink" href="#suggested-uses" title="链接到此标题。"></a></h2>
+<p>使用定时器在指定时间之后启动异步操作。</p>
+<p>使用定时器判断是否已经过了指定的时间。特别是，当需要比更简单的 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_sleep()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_usleep()</span></code> 调用更高的精度和/或单位控制时，应使用定时器。</p>
+<p>在执行有时限的操作时，使用定时器以便同时完成其他工作。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>如果线程需要测量执行某个操作所需的时间，可以直接读取 <a class="reference internal" href="clocks.html#kernel-timing"><span class="std std-ref">系统时钟或硬件时钟</span></a>，而不必使用定时器。</p>
+</div>
+</section>
+<section id="configuration-options">
+<h2><a class="toc-backref" href="#id10" role="doc-backlink">配置选项</a><a class="headerlink" href="#configuration-options" title="链接到此标题。"></a></h2>
+<p>相关配置选项：</p>
+<ul class="simple">
+<li><p>无</p></li>
+</ul>
+</section>
+<section id="api-reference">
+<h2><a class="toc-backref" href="#id11" role="doc-backlink">API 参考</a><a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">timer_apis</span></dt>
+</dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 6月 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

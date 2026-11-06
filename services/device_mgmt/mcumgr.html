@@ -1,0 +1,721 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MCUmgr &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/device_mgmt/mcumgr.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="MCUmgr 处理程序" href="mcumgr_handlers.html" />
+    <link rel="prev" title="设备管理" href="index.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">服务</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../connectivity/index.html">连接</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../security.html">安全</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">设备管理</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">MCUmgr</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">概述</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#supported-transports">支持的传输方式</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tools-libraries">工具/库</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#j-link-virtual-msd-interaction-note">J-Link 虚拟 MSD 交互说明</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#bootloader-integration">引导加载程序集成</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#discord-channel">Discord 频道</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api-reference">API 参考</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mcumgr_handlers.html">MCUmgr 处理程序</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mcumgr_callbacks.html">MCUmgr 回调</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smp_protocol.html">SMP 协议规范</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smp_transport.html">SMP 传输规范</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dfu.html">设备固件升级</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ota.html">空中升级（OTA）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="fota_http.html">基于 HTTP 的固件空中升级</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ec_host_cmd.html">EC 主机命令</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../binary_descriptors/index.html">二进制描述符</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="index.html">设备管理</a> &raquo;</li>
+  
+  <li>MCUmgr</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="mcumgr">
+<span id="mcu-mgr"></span><h1>MCUmgr<a class="headerlink" href="#mcumgr" title="链接到此标题。"></a></h1>
+<section id="overview">
+<h2>概述<a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>管理子系统允许对运行 Zephyr 的设备进行远程管理。可用的管理操作如下：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="smp_groups/smp_group_0.html#mcumgr-smp-group-0"><span class="std std-ref">操作系统管理</span></a></p></li>
+<li><p><a class="reference internal" href="smp_groups/smp_group_1.html#mcumgr-smp-group-1"><span class="std std-ref">镜像管理</span></a></p></li>
+<li><p><a class="reference internal" href="smp_groups/smp_group_2.html#mcumgr-smp-group-2"><span class="std std-ref">统计信息管理</span></a></p></li>
+<li><p><a class="reference internal" href="smp_groups/smp_group_3.html#mcumgr-smp-group-3"><span class="std std-ref">设置（配置）管理</span></a></p></li>
+<li><p><a class="reference internal" href="smp_groups/smp_group_8.html#mcumgr-smp-group-8"><span class="std std-ref">文件系统管理</span></a></p></li>
+<li><p><a class="reference internal" href="smp_groups/smp_group_9.html#mcumgr-smp-group-9"><span class="std std-ref">Shell 管理</span></a></p></li>
+<li><p><a class="reference internal" href="smp_groups/smp_group_10.html#mcumgr-smp-group-10"><span class="std std-ref">枚举管理</span></a></p></li>
+<li><p><a class="reference internal" href="smp_groups/smp_group_11.html#mcumgr-smp-group-11"><span class="std std-ref">传输管理</span></a></p></li>
+<li><p><a class="reference internal" href="smp_groups/smp_group_63.html#mcumgr-smp-group-63"><span class="std std-ref">Zephyr 基本管理</span></a></p></li>
+</ul>
+<p>管理子系统基于 <a class="reference external" href="https://github.com/apache/mynewt-mcumgr">MCUmgr</a> 提供的简单管理协议（Simple Management Protocol，SMP）。MCUmgr 是一个开源项目，它提供的管理子系统可以在多种实时操作系统之间移植。</p>
+<p>管理子系统位于 Zephyr 源码树中的 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/subsys/mgmt/">subsys/mgmt/</a>。</p>
+<p>此外，还有一个 <a class="reference internal" href="../../samples/subsys/mgmt/mcumgr/smp_svr/README.html#smp-svr" title="实现一个简单管理协议（SMP）服务器。"><span class="xref zephyr zephyr-code-sample">示例</span></a> 服务器，通过低功耗蓝牙和串口提供管理功能。</p>
+</section>
+<section id="supported-transports">
+<span id="mcumgr-transports"></span><h2>支持的传输方式<a class="headerlink" href="#supported-transports" title="链接到此标题。"></a></h2>
+<p>MCUmgr 在 Zephyr 树内支持多种传输方式；还可以添加其他传输方式并提交到上游，或者在下游项目中以树外方式使用，而无需派生（fork）Zephyr 仓库。</p>
+<p>Zephyr 支持以下传输方式：</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head" rowspan="2"><p>名称</p></th>
+<th class="head" rowspan="2"><p>Kconfig 选项</p></th>
+<th class="head" rowspan="2"><p>补充说明</p></th>
+<th class="head" colspan="2"><p>支持的模式</p></th>
+<th class="head" colspan="2"><p><a class="reference internal" href="smp_groups/smp_group_11.html#mcumgr-smp-group-11"><span class="std std-ref">传输组管理支持</span></a></p></th>
+</tr>
+<tr class="row-even"><th class="head"><p>服务器</p></th>
+<th class="head"><p>客户端</p></th>
+<th class="head"><p>传入</p></th>
+<th class="head"><p>传出</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td><p>UART</p></td>
+<td><p><a class="reference internal" href="../../kconfig.html#CONFIG_MCUMGR_TRANSPORT_UART" title="CONFIG_MCUMGR_TRANSPORT_UART"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MCUMGR_TRANSPORT_UART</span></code></a></p></td>
+<td><p><a class="reference internal" href="smp_transport.html#mcumgr-smp-transport-uart"><span class="std std-ref">基于控制台编码的 UART SMP</span></a></p></td>
+<td><p>✓</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-even"><td><p>原始 UART</p></td>
+<td><p><a class="reference internal" href="../../kconfig.html#CONFIG_MCUMGR_TRANSPORT_RAW_UART" title="CONFIG_MCUMGR_TRANSPORT_RAW_UART"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MCUMGR_TRANSPORT_RAW_UART</span></code></a></p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>Shell</p></td>
+<td><p><a class="reference internal" href="../../kconfig.html#CONFIG_MCUMGR_TRANSPORT_SHELL" title="CONFIG_MCUMGR_TRANSPORT_SHELL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MCUMGR_TRANSPORT_SHELL</span></code></a></p></td>
+<td><p><a class="reference internal" href="smp_transport.html#mcumgr-smp-transport-uart"><span class="std std-ref">基于控制台编码的 UART SMP</span></a></p></td>
+<td><p>✓</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✕</p></td>
+</tr>
+<tr class="row-even"><td><p>Bluetooth</p></td>
+<td><p><a class="reference internal" href="../../kconfig.html#CONFIG_MCUMGR_TRANSPORT_BT" title="CONFIG_MCUMGR_TRANSPORT_BT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MCUMGR_TRANSPORT_BT</span></code></a></p></td>
+<td><p><a class="reference internal" href="smp_transport.html#mcumgr-smp-transport-ble"><span class="std std-ref">低功耗蓝牙</span></a></p></td>
+<td><p>✓</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>UDP（IPv4）</p></td>
+<td><p><a class="reference internal" href="../../kconfig.html#CONFIG_MCUMGR_TRANSPORT_UDP" title="CONFIG_MCUMGR_TRANSPORT_UDP"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MCUMGR_TRANSPORT_UDP</span></code></a> 和 <br /> <a class="reference internal" href="../../kconfig.html#CONFIG_MCUMGR_TRANSPORT_UDP_IPV4" title="CONFIG_MCUMGR_TRANSPORT_UDP_IPV4"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MCUMGR_TRANSPORT_UDP_IPV4</span></code></a></p></td>
+<td><p>可选 DTLS 支持</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+</tr>
+<tr class="row-even"><td><p>UDP（IPv6）</p></td>
+<td><p><a class="reference internal" href="../../kconfig.html#CONFIG_MCUMGR_TRANSPORT_UDP" title="CONFIG_MCUMGR_TRANSPORT_UDP"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MCUMGR_TRANSPORT_UDP</span></code></a> 和 <br /> <a class="reference internal" href="../../kconfig.html#CONFIG_MCUMGR_TRANSPORT_UDP_IPV6" title="CONFIG_MCUMGR_TRANSPORT_UDP_IPV6"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MCUMGR_TRANSPORT_UDP_IPV6</span></code></a></p></td>
+<td><p>可选 DTLS 支持</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+</tr>
+<tr class="row-odd"><td><p>LoRaWAN</p></td>
+<td><p><a class="reference internal" href="../../kconfig.html#CONFIG_MCUMGR_TRANSPORT_LORAWAN" title="CONFIG_MCUMGR_TRANSPORT_LORAWAN"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MCUMGR_TRANSPORT_LORAWAN</span></code></a></p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+</tr>
+<tr class="row-even"><td><p>SPI</p></td>
+<td><p><a class="reference internal" href="../../kconfig.html#CONFIG_MCUMGR_TRANSPORT_SPI" title="CONFIG_MCUMGR_TRANSPORT_SPI"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MCUMGR_TRANSPORT_SPI</span></code></a></p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+</tr>
+<tr class="row-odd"><td colspan="7"><p><em>以下传输方式专为测试设计：</em></p></td>
+</tr>
+<tr class="row-even"><td><p>Dummy</p></td>
+<td><p><a class="reference internal" href="../../kconfig.html#CONFIG_MCUMGR_TRANSPORT_DUMMY" title="CONFIG_MCUMGR_TRANSPORT_DUMMY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MCUMGR_TRANSPORT_DUMMY</span></code></a></p></td>
+<td><p>虚拟</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+<tr class="row-odd"><td><p>Raw Dummy</p></td>
+<td><p><a class="reference internal" href="../../kconfig.html#CONFIG_MCUMGR_TRANSPORT_RAW_DUMMY" title="CONFIG_MCUMGR_TRANSPORT_RAW_DUMMY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MCUMGR_TRANSPORT_RAW_DUMMY</span></code></a></p></td>
+<td><p><a class="reference internal" href="smp_transport.html#mcumgr-smp-transport-uart"><span class="std std-ref">基于控制台编码的 UART SMP</span></a>，虚拟</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="tools-libraries">
+<span id="mcumgr-tools-libraries"></span><h2>工具/库<a class="headerlink" href="#tools-libraries" title="链接到此标题。"></a></h2>
+<p>有多种工具和库可以在设备上使用 MCUmgr 功能，下面列出了这些工具和库。注意，这些工具不属于 Zephyr 项目，也与 Zephyr 项目无关。</p>
+<table class="docutils align-center" id="id13">
+<caption><span class="caption-text">MCUmgr 工具和库</span><a class="headerlink" href="#id13" title="链接到此表格。"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head" rowspan="2"><p>名称</p></th>
+<th class="head" colspan="5"><p>操作系统支持</p></th>
+<th class="head" colspan="6"><p>传输方式</p></th>
+<th class="head" colspan="9"><p>组</p></th>
+<th class="head" rowspan="2"><p>类型</p></th>
+<th class="head" rowspan="2"><p>语言</p></th>
+<th class="head" rowspan="2"><p>许可证</p></th>
+</tr>
+<tr class="row-even"><th class="head"><p>Windows</p></th>
+<th class="head"><p>Linux</p></th>
+<th class="head"><p>mac</p></th>
+<th class="head"><p>移动端</p></th>
+<th class="head"><p>嵌入式</p></th>
+<th class="head"><p>串口</p></th>
+<th class="head"><p>串口（原始）</p></th>
+<th class="head"><p>Bluetooth</p></th>
+<th class="head"><p>UDP</p></th>
+<th class="head"><p>LoRaWAN</p></th>
+<th class="head"><p>SPI</p></th>
+<th class="head"><p>OS</p></th>
+<th class="head"><p>IMG</p></th>
+<th class="head"><p>Stat</p></th>
+<th class="head"><p>Settings</p></th>
+<th class="head"><p>FS</p></th>
+<th class="head"><p>Shell</p></th>
+<th class="head"><p>Enum</p></th>
+<th class="head"><p>Transport</p></th>
+<th class="head"><p>Zephyr</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/thedjnK/AuTerm/">AuTerm</a></p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✕</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✕</p></td>
+<td><p>✓</p></td>
+<td><p>应用程序</p></td>
+<td><p>C++ (Qt)</p></td>
+<td><p>GPL-3.0</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/vouch-opensource/mcumgr-client/">mcumgr-client</a></p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✓</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✓</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>应用程序</p></td>
+<td><p>Rust</p></td>
+<td><p>Apache-2.0</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/boogie/mcumgr-web/">mcumgr-web</a></p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✓</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✓</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>网页（仅限 Chrome）</p></td>
+<td><p>Javascript</p></td>
+<td><p>MIT</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/boogie/mcumgr-mac/">mcumgr-mac</a></p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✓</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✓</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>应用程序</p></td>
+<td><p>Rust</p></td>
+<td><p>MIT</p></td>
+</tr>
+<tr class="row-odd"><td><p>nRF Connect Device Manager：<br /> <a class="reference external" href="https://github.com/NordicSemiconductor/Android-nRF-Connect-Device-Manager/">Android</a> 和 <a class="reference external" href="https://github.com/NordicSemiconductor/IOS-nRF-Connect-Device-Manager">iOS</a></p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✓</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✓</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✓</p></td>
+<td><p>库和应用程序</p></td>
+<td><p>Java,
+Kotlin,
+Swift</p></td>
+<td><p>Apache-2.0</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://pypi.org/project/smp/">smp</a></p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✕</p></td>
+<td><p>不适用</p></td>
+<td><p>不适用</p></td>
+<td><p>不适用</p></td>
+<td><p>不适用</p></td>
+<td><p>不适用</p></td>
+<td><p>不适用</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✕</p></td>
+<td><p>✓</p></td>
+<td><p>库</p></td>
+<td><p>Python</p></td>
+<td><p>Apache-2.0</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://pypi.org/project/smpclient/">smpclient</a></p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✓</p></td>
+<td><p>✕</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✕</p></td>
+<td><p>✓</p></td>
+<td><p>库</p></td>
+<td><p>Python</p></td>
+<td><p>Apache-2.0</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://pypi.org/project/smpmgr/">smpmgr</a></p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✓</p></td>
+<td><p>✕</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✕</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>应用程序</p></td>
+<td><p>Python</p></td>
+<td><p>Apache-2.0</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/Finomnis/mcumgr-toolkit/">mcumgr-toolkit</a> <br /> （CLI：<a class="reference external" href="https://crates.io/crates/mcumgrctl/">mcumgrctl</a>）</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✓</p></td>
+<td><p>✕</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✕</p></td>
+<td><p>✓</p></td>
+<td><p>库和应用程序</p></td>
+<td><p>Rust,
+Python</p></td>
+<td><p>Apache-2.0</p></td>
+</tr>
+<tr class="row-even"><td><p>Zephyr MCUmgr 客户端（树内）</p></td>
+<td><p>✕</p></td>
+<td><p>✓</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>✕</p></td>
+<td><p>库</p></td>
+<td><p>C</p></td>
+<td><p>Apache-2.0</p></td>
+</tr>
+</tbody>
+</table>
+<p>注意，某个组打勾仅表示代码对该组提供了基本支持，实现可能并不支持该组的所有命令/功能。</p>
+</section>
+<section id="j-link-virtual-msd-interaction-note">
+<span id="mcumgr-jlink-ob-virtual-msd"></span><h2>J-Link 虚拟 MSD 交互说明<a class="headerlink" href="#j-link-virtual-msd-interaction-note" title="链接到此标题。"></a></h2>
+<p>在板载 J-Link OB 同时支持 CDC 和 MSC（虚拟大容量存储设备，也称为拖放功能）的开发板上（例如 <a class="reference internal" href="../../boards/nordic/nrf52840dk/doc/index.html#nrf52840dk">nRF52840 DK</a> 开发板），由于 J-Link 固件中 USB 端点的配置方式限制了最大数据包大小，MSD 功能可能会导致通过 CDC UART 端口执行的 MCUmgr 命令无法工作（使用镜像管理命令更新固件时最有可能发生）。可以通过禁用 J-Link 设备上的 MSD 功能来解决此问题，请按照 <a class="reference internal" href="../../develop/flash_debug/nordic_segger.html#nordic-segger-msd"><span class="std std-ref">禁用大容量存储设备功能</span></a> 中的说明禁用 MSD 支持。</p>
+</section>
+<section id="bootloader-integration">
+<h2>引导加载程序集成<a class="headerlink" href="#bootloader-integration" title="链接到此标题。"></a></h2>
+<p><a class="reference internal" href="dfu.html#dfu"><span class="std std-ref">设备固件升级</span></a> 子系统将管理子系统与引导加载程序集成在一起，提供将 Zephyr 镜像发送到设备并进行升级的能力。</p>
+<p>目前只支持 MCUboot 引导加载程序。更多信息请参阅 <a class="reference internal" href="dfu.html#mcuboot"><span class="std std-ref">MCUboot</span></a>。</p>
+</section>
+<section id="discord-channel">
+<h2>Discord 频道<a class="headerlink" href="#discord-channel" title="链接到此标题。"></a></h2>
+<p>欢迎开发者加入！</p>
+<ul class="simple">
+<li><p>Discord mcumgr 频道：<a class="reference external" href="https://discord.com/invite/Ck7jw53nU2">https://discord.com/invite/Ck7jw53nU2</a></p></li>
+</ul>
+</section>
+<section id="api-reference">
+<h2>API 参考<a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">mcumgr_mgmt_api</span></dt>
+</dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 9月 14, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,900 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>开发板移植指南 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/hardware/porting/board_porting.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="扩展板（shield）" href="shields.html" />
+    <link rel="prev" title="SoC 移植指南" href="soc_porting.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">硬件支持</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../arch/index.html">架构相关指南</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../barriers/index.html">屏障 API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cache/index.html">缓存</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../emulator/index.html">Zephyr 的设备仿真器/模拟器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../emulator/bus_emulators.html">外部总线及总线所连外设的仿真器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../firmware/index.html">固件</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../peripherals/index.html">外设</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pinctrl/index.html">引脚控制</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">移植</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="arch.html">架构移植指南</a></li>
+<li class="toctree-l3"><a class="reference internal" href="soc_porting.html">SoC 移植指南</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">开发板移植指南</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#transition-to-the-current-hardware-model">过渡到当前硬件模型</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#hardware-support-hierarchy">硬件支持层级</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#board-terminology">开发板术语</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#make-sure-your-soc-is-supported">确认你的 SoC 已受支持</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#architecture">架构</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#cpu-core">CPU 核心</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#soc">SoC</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#create-your-board-directory">创建开发板目录</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#write-your-board-yaml">编写开发板 YAML</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#write-your-devicetree">编写设备树</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#example-frdm-k64f-and-hexiwear-k64">示例：FRDM-K64F 和 Hexiwear K64</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#write-kconfig-files">编写 Kconfig 文件</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#build-test-and-fix">构建、测试和修复</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#general-recommendations">一般建议</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#flash-and-debug-support">烧录和调试支持</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#multiple-board-revisions">多个开发板版本</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#fuzzy-revision-matching">模糊版本匹配</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#exact-revision-matching">精确版本匹配</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#board-revision-configuration-adjustment">开发板版本配置调整</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#custom-revision-cmake-files">自定义 revision.cmake 文件</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#contributing-your-board">贡献你的开发板</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#board-extensions">开发板扩展</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="shields.html">扩展板（shield）</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../virtualization/index.html">虚拟化</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">硬件支持</a> &raquo;</li>
+  
+     <li><a href="index.html">移植</a> &raquo;</li>
+  
+  <li>开发板移植指南</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="board-porting-guide">
+<span id="id1"></span><h1>开发板移植指南<a class="headerlink" href="#board-porting-guide" title="链接到此标题。"></a></h1>
+<p>要为新的 <a class="reference internal" href="../../glossary.html#term-board"><span class="xref std std-term">开发板</span></a> 添加 Zephyr 支持，至少需要一个包含各种文件的 <em>开发板目录</em>。开发板目录中的文件会继承对至少一个 SoC 及其所有特性的支持。因此，Zephyr 也必须支持你的 <a class="reference internal" href="../../glossary.html#term-SoC"><span class="xref std std-term">SoC</span></a>。</p>
+<section id="transition-to-the-current-hardware-model">
+<span id="hw-model-v2"></span><h2>过渡到当前硬件模型<a class="headerlink" href="#transition-to-the-current-hardware-model" title="链接到此标题。"></a></h2>
+<p>Zephyr 3.6.0 发布后不久，Zephyr 引入了一种新的硬件模型。这一新模型彻底改变了 SoC 和开发板的命名与定义方式，并增加了对多年来被认为很重要的一些特性的支持，其中包括：</p>
+<ul class="simple">
+<li><p>支持多核、多架构的 AMP（非对称多处理）SoC</p></li>
+<li><p>支持多 SoC 开发板</p></li>
+<li><p>支持在 Zephyr 构建系统之外复用 SoC 和开发板 Kconfig 树</p></li>
+<li><p>支持 <a class="reference internal" href="../../build/sysbuild/index.html#sysbuild"><span class="std std-ref">Sysbuild（系统构建）</span></a> 的高级用例</p></li>
+<li><p>清除了所有现存的随意且不一致的 Kconfig 和文件夹命名用法</p></li>
+</ul>
+<p>本页的所有文档均针对当前硬件模型。有关之前已过时的硬件模型的信息，请参阅 Zephyr v3.6.0（或更早版本）中的文档。</p>
+<p>有关新模型背后的设计理由、开发过程和概念的更多信息，请参阅 <a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/51831">original issue</a>、<a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/50305">original Pull Request</a>，完整的变更内容请参阅 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/commit/8dc3f856229ce083c956aa301c31a23e65bd8cd8">hardware model v2 commit</a>。</p>
+<p>新硬件模型的部分非关键特性、增强和改进仍在开发中。完整列表请查看 <a class="extlink-github reference external" href="https://github.com/zephyrproject-rtos/zephyr/issues/69546">hardware model v2 enhancements issue</a>。</p>
+<p>从之前的硬件模型过渡到当前硬件模型（通常称为“硬件模型 v2”）需要修改所有现有的开发板和 SoC 定义。项目决定不为之前的模型提供直接的向后兼容，因此从旧版 Zephyr 过渡到包含新模型的版本（v3.7.0 及以后）时，如果用户有树外开发板（或 SoC），则有两种选择：</p>
+<ol class="arabic simple">
+<li><p>将树外开发板转换为当前硬件模型（推荐）</p></li>
+<li><p>从 Zephyr v3.6.0 中取出 SoC 定义，复制到你的下游仓库（确保构建系统能通过 <a class="reference internal" href="../../develop/modules.html#modules"><span class="std std-ref">Zephyr 模块</span></a> 或 <code class="docutils literal notranslate"><span class="pre">SOC_ROOT</span></code> 找到它）。这样，按照之前硬件模型定义的开发板就能继续工作</p></li>
+</ol>
+<p>将开发板从之前的硬件模型转换到当前硬件模型时，建议先通读本页，详细了解该模型。然后可以参考 <a class="reference external" href="https://github.com/zephyrproject-rtos/example-application/pull/58">example-application conversion Pull Request</a>，了解如何移植一个简单的开发板。此外，还提供了一个 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/main/scripts/utils/board_v1_to_v2.py">conversion script</a>，在许多情况下都能可靠工作（不过可能无法完全处理多核 SoC）。最后，<a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/commit/8dc3f856229ce083c956aa301c31a23e65bd8cd8">hardware model v2 commit</a> 包含了将所有现有开发板从旧模型转换为当前模型的完整改动，可作为完整的转换参考。</p>
+</section>
+<section id="hardware-support-hierarchy">
+<span id="hw-support-hierarchy"></span><h2>硬件支持层级<a class="headerlink" href="#hardware-support-hierarchy" title="链接到此标题。"></a></h2>
+<p>Zephyr 的硬件支持基于一系列层级化的抽象。首先，每个 <a class="reference internal" href="../../glossary.html#term-board"><span class="xref std std-term">开发板</span></a> 有一个或多个 <a class="reference internal" href="../../glossary.html#term-SoC"><span class="xref std std-term">SoC</span></a>。每个 SoC 可以选择归入一个 <a class="reference internal" href="../../glossary.html#term-SoC-series"><span class="xref std std-term">SoC 系列</span></a>，而 SoC 系列又可以选择属于一个 <a class="reference internal" href="../../glossary.html#term-SoC-family"><span class="xref std std-term">SoC 家族</span></a>。每个 SoC 有一个或多个 <a class="reference internal" href="../../glossary.html#term-CPU-cluster"><span class="xref std std-term">CPU 集群</span></a>，每个集群包含一个或多个特定 <a class="reference internal" href="../../glossary.html#term-architecture"><span class="xref std std-term">架构</span></a> 的 <a class="reference internal" href="../../glossary.html#term-CPU-core"><span class="xref std std-term">CPU 核心</span></a>。</p>
+<p>该层级结构可以用下图直观表示：</p>
+<figure class="align-center" id="id6">
+<a class="reference internal image-reference" href="../../_images/hierarchy.png"><img alt="硬件支持层级" src="../../_images/hierarchy.png" style="width: 500px;" />
+</a>
+<figcaption>
+<p><span class="caption-text">硬件支持层级</span><a class="headerlink" href="#id6" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<p>下面是本节所述层级结构的一些示例，每行一个 <a class="reference internal" href="../../glossary.html#term-board"><span class="xref std std-term">开发板</span></a> 及其对应的层级条目。注意，<a class="reference internal" href="../../glossary.html#term-SoC-series"><span class="xref std std-term">SoC 系列</span></a> 和 <a class="reference internal" href="../../glossary.html#term-SoC-family"><span class="xref std std-term">SoC 家族</span></a> 这两个层级并不总是会用到。</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p><a class="reference internal" href="../../glossary.html#term-board-name"><span class="xref std std-term">开发板名称</span></a></p></th>
+<th class="head"><p><a class="reference internal" href="../../glossary.html#term-board-qualifiers"><span class="xref std std-term">开发板限定符</span></a></p></th>
+<th class="head"><p><a class="reference internal" href="../../glossary.html#term-SoC"><span class="xref std std-term">SoC</span></a></p></th>
+<th class="head"><p><a class="reference internal" href="../../glossary.html#term-SoC-series"><span class="xref std std-term">SoC 系列</span></a></p></th>
+<th class="head"><p><a class="reference internal" href="../../glossary.html#term-SoC-family"><span class="xref std std-term">SoC 家族</span></a></p></th>
+<th class="head"><p>CPU 核心</p></th>
+<th class="head"><p><a class="reference internal" href="../../glossary.html#term-architecture"><span class="xref std std-term">架构</span></a></p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference internal" href="../../boards/nordic/nrf52dk/doc/index.html#nrf52dk">nRF52 DK</a></p></td>
+<td><p>nrf52832</p></td>
+<td><p>nRF52832</p></td>
+<td><p>nRF52</p></td>
+<td><p>Nordic nRF</p></td>
+<td><p>Arm Cortex-M4</p></td>
+<td><p>ARMv7-M</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="../../boards/nxp/frdm_k64f/doc/index.html#frdm_k64f"><span class="xref zephyr zephyr-board">frdm_k64f</span></a></p></td>
+<td><p>mk64f12</p></td>
+<td><p>MK64F12</p></td>
+<td><p>Kinetis K6x</p></td>
+<td><p>NXP Kinetis</p></td>
+<td><p>Arm Cortex-M4</p></td>
+<td><p>ARMv7-M</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="../../boards/openisa/rv32m1_vega/doc/index.html#rv32m1_vega"><span class="xref zephyr zephyr-board">rv32m1_vega</span></a></p></td>
+<td><p>openisa_rv32m1/ri5cy</p></td>
+<td><p>RV32M1</p></td>
+<td><p>（未使用）</p></td>
+<td><p>（未使用）</p></td>
+<td><p>RI5CY</p></td>
+<td><p>RISC-V RV32</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="2"><p><a class="reference internal" href="../../boards/nordic/nrf5340dk/doc/index.html#nrf5340dk">nRF5340 DK</a></p></td>
+<td><p>nrf5340/cpuapp</p></td>
+<td><p>nRF5340</p></td>
+<td><p>nRF53</p></td>
+<td><p>Nordic nRF</p></td>
+<td><p>Arm Cortex-M33</p></td>
+<td><p>ARMv8-M</p></td>
+</tr>
+<tr class="row-even"><td><p>nrf5340/cpunet</p></td>
+<td><p>nRF5340</p></td>
+<td><p>nRF53</p></td>
+<td><p>Nordic nRF</p></td>
+<td><p>Arm Cortex-M33</p></td>
+<td><p>ARMv8-M</p></td>
+</tr>
+<tr class="row-odd"><td rowspan="3"><p><a class="reference internal" href="../../boards/nxp/imx8mp_evk/doc/index.html#imx8mp_evk"><span class="xref zephyr zephyr-board">mimx8mp_evk</span></a></p></td>
+<td><p>mimx8ml8/a53</p></td>
+<td><p>i.MX8M Plus</p></td>
+<td><p>i.MX8M</p></td>
+<td><p>NXP i.MX</p></td>
+<td><p>Arm Cortex-A53</p></td>
+<td><p>ARMv8-A</p></td>
+</tr>
+<tr class="row-even"><td><p>mimx8ml8/m7</p></td>
+<td><p>i.MX8M Plus</p></td>
+<td><p>i.MX8M</p></td>
+<td><p>NXP i.MX</p></td>
+<td><p>Arm Cortex-M7</p></td>
+<td><p>ARMv7-M</p></td>
+</tr>
+<tr class="row-odd"><td><p>mimx8ml8/adsp</p></td>
+<td><p>i.MX8M Plus</p></td>
+<td><p>i.MX8M</p></td>
+<td><p>NXP i.MX</p></td>
+<td><p>Cadence HIFI4</p></td>
+<td><p>Xtensa LX6</p></td>
+</tr>
+</tbody>
+</table>
+<p>有关术语的更多细节见下一节。</p>
+</section>
+<section id="board-terminology">
+<span id="id2"></span><h2>开发板术语<a class="headerlink" href="#board-terminology" title="链接到此标题。"></a></h2>
+<p>上一节介绍了 Zephyr 对硬件支持进行分类和实现的层级方式。本节重点介绍硬件支持相关的术语，特别是在定义和使用开发板与 SoC 时用到的术语。</p>
+<p>下图以 <a class="reference internal" href="../../boards/ezurio/bl5340_dvk/doc/index.html#bl5340_dvk">BL5340 DVK</a> 开发板为例，展示了 Zephyr 中围绕开发板概念使用的全部术语。</p>
+<figure class="align-center" id="id7">
+<a class="reference internal image-reference" href="../../_images/board-terminology.svg"><img alt="开发板术语示意图" src="../../_images/board-terminology.svg" style="width: 500px;" />
+</a>
+<figcaption>
+<p><span class="caption-text">开发板术语示意图</span><a class="headerlink" href="#id7" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<p>该图展示了用于描述开发板的各种术语：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../glossary.html#term-board-name"><span class="xref std std-term">开发板名称</span></a>：<code class="docutils literal notranslate"><span class="pre">bl5340_dvk</span></code></p></li>
+<li><p>可选的 <a class="reference internal" href="../../glossary.html#term-board-revision"><span class="xref std std-term">开发板版本</span></a>：<code class="docutils literal notranslate"><span class="pre">1.2.0</span></code></p></li>
+<li><p><a class="reference internal" href="../../glossary.html#term-board-qualifiers"><span class="xref std std-term">开发板限定符</span></a>，可选地描述 <a class="reference internal" href="../../glossary.html#term-SoC"><span class="xref std std-term">SoC</span></a>、<a class="reference internal" href="../../glossary.html#term-CPU-cluster"><span class="xref std std-term">CPU 集群</span></a> 和 <a class="reference internal" href="../../glossary.html#term-variant"><span class="xref std std-term">变体</span></a>：<code class="docutils literal notranslate"><span class="pre">nrf5340/cpuapp/ns</span></code></p></li>
+<li><p><a class="reference internal" href="../../glossary.html#term-board-target"><span class="xref std std-term">开发板目标</span></a>，唯一标识上述各项的组合，在使用 Zephyr 提供的工具时可用于指定构建所针对的硬件：<code class="docutils literal notranslate"><span class="pre">bl5340_dvk&#64;1.2.0/nrf5340/cpuapp/ns</span></code></p></li>
+</ul>
+<p>形式上也可以表示为 <code class="samp docutils literal notranslate"><em><span class="pre">board</span> <span class="pre">name</span></em><span class="pre">[&#64;</span><em><span class="pre">revision</span></em><span class="pre">][/</span><em><span class="pre">board</span> <span class="pre">qualifiers</span></em><span class="pre">]</span></code>，进一步展开为 <code class="samp docutils literal notranslate"><em><span class="pre">board</span> <span class="pre">name</span></em><span class="pre">[&#64;</span><em><span class="pre">revision</span></em><span class="pre">][/</span><em><span class="pre">SoC</span></em><span class="pre">[/</span><em><span class="pre">CPU</span> <span class="pre">cluster</span></em><span class="pre">][/</span><em><span class="pre">variant</span></em><span class="pre">]]</span></code>。</p>
+<p>如果开发板只包含一个单核 SoC，则可以在开发板目标中省略 SoC。这意味着，如果开发板没有定义任何开发板限定符，则开发板名称就可以用作开发板目标。反之，如果开发板定义中包含开发板限定符，则可以省略 SoC，但需保留相应的正斜杠：<code class="docutils literal notranslate"><span class="pre">//</span></code>。</p>
+<p>继续上面的例子，开发板 <a class="reference internal" href="../../boards/ezurio/bl5340_dvk/doc/index.html#bl5340_dvk">BL5340 DVK</a> 是一块单 SoC 开发板，其 SoC 定义了两个 CPU 集群：<code class="docutils literal notranslate"><span class="pre">cpuapp</span></code> 和 <code class="docutils literal notranslate"><span class="pre">cpunet</span></code>。其中 <code class="docutils literal notranslate"><span class="pre">cpuapp</span></code> 集群还额外定义了一个非安全的开发板变体 <code class="docutils literal notranslate"><span class="pre">ns</span></code>。</p>
+<p>开发板限定符 <code class="docutils literal notranslate"><span class="pre">nrf5340/cpuapp/ns</span></code> 可以理解为：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">nrf5340</span></code>：SoC，即 Nordic nRF5340 双核 SoC</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cpuapp</span></code>：CPU 集群 <code class="docutils literal notranslate"><span class="pre">cpuapp</span></code>，由单个 Cortex-M33 CPU 核心组成。无法从开发板限定符中得知 CPU 集群包含多少个核心。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ns</span></code>：一个变体，此处的 <code class="docutils literal notranslate"><span class="pre">ns</span></code> 是 Zephyr 中常见的变体名称，表示面向支持 <a class="reference internal" href="../../services/tfm/index.html#tfm"><span class="std std-ref">Trusted Firmware-M (TF-M)</span></a> 的开发板的非安全构建。</p></li>
+</ul>
+<p>并非所有 SoC 都定义了 CPU 集群或变体。例如，<a class="reference internal" href="../../boards/nordic/thingy52/doc/index.html#thingy52">Thingy:52</a> 这样的简单开发板只包含一个 SoC，没有 CPU 集群，也没有变体。对于 <code class="docutils literal notranslate"><span class="pre">thingy52</span></code>，开发板目标 <code class="docutils literal notranslate"><span class="pre">thingy52/nrf52832</span></code> 可以理解为：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">thingy52</span></code>：开发板名称。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">nrf52832</span></code>：开发板限定符，此处与 SoC 相同，即 Nordic nRF52832。</p></li>
+</ul>
+</section>
+<section id="make-sure-your-soc-is-supported">
+<h2>确认你的 SoC 已受支持<a class="headerlink" href="#make-sure-your-soc-is-supported" title="链接到此标题。"></a></h2>
+<p>首先确认 Zephyr 是否支持你的 SoC。如果支持，就可以开始 <a class="reference internal" href="#create-your-board-directory"><span class="std std-ref">创建开发板目录</span></a>。如果不确定，可以尝试：</p>
+<ul class="simple">
+<li><p>在 <a class="reference internal" href="../../boards/index.html#boards"><span class="std std-ref">支持的开发板和扩展板</span></a> 中查找看起来相关的名称，并阅读具体开发板的文档加以确认。</p></li>
+<li><p>询问你的 SoC 厂商</p></li>
+</ul>
+<p>如果你需要添加 SoC、CPU 集群甚至架构支持，那么本页并不适合你，不过这里给出一些一般性建议。</p>
+<section id="architecture">
+<h3>架构<a class="headerlink" href="#architecture" title="链接到此标题。"></a></h3>
+<p>见 <a class="reference internal" href="arch.html#architecture-porting-guide"><span class="std std-ref">架构移植指南</span></a>。</p>
+</section>
+<section id="cpu-core">
+<h3>CPU 核心<a class="headerlink" href="#cpu-core" title="链接到此标题。"></a></h3>
+<p>CPU 核心支持文件放在 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/arch">arch</a> 下的 <code class="docutils literal notranslate"><span class="pre">core</span></code> 子目录中，例如 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/arch/x86/core">arch/x86/core</a>。</p>
+<p>有关 Zephyr 支持的工具链（编译器、链接器等）的信息，请参阅 <a class="reference internal" href="../../develop/beyond-GSG.html#gs-toolchain"><span class="std std-ref">安装工具链</span></a>。如果需要支持新的工具链，<a class="reference internal" href="../../build/index.html#build-overview"><span class="std std-ref">构建与配置系统</span></a> 是了解构建系统的良好起点。如果你需要建议或希望合作开发工具链支持，请联系社区。</p>
+</section>
+<section id="soc">
+<h3>SoC<a class="headerlink" href="#soc" title="链接到此标题。"></a></h3>
+<p>Zephyr 的 SoC 支持文件位于 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/soc">soc</a> 下特定于架构的子目录中，通常按 SoC 家族分组。</p>
+<p>如果为一个在 Zephyr 中已有 SoC 支持的厂商添加新的 SoC 家族或系列，请尽量将公共功能提取到共享文件中，以避免重复。如果你的厂商尚无任何支持，可以在新目录 <code class="docutils literal notranslate"><span class="pre">zephyr/soc/&lt;VENDOR&gt;/&lt;YOUR-SOC&gt;</span></code> 中添加；请使用含义明确的目录名。</p>
+</section>
+</section>
+<section id="create-your-board-directory">
+<span id="id3"></span><h2>创建开发板目录<a class="headerlink" href="#create-your-board-directory" title="链接到此标题。"></a></h2>
+<p>找到一块使用你的 SoC 的现有开发板后，通常可以先复制其开发板目录，再根据你的硬件修改其中的内容。</p>
+<p>你需要为开发板取一个唯一的名称。运行 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">boards</span></code> 可以列出已被占用的名称，请另选一个新名称。假设你的开发板名为 <code class="docutils literal notranslate"><span class="pre">plank</span></code>（请不要真的使用这个名称）。</p>
+<p>首先创建开发板目录 <code class="docutils literal notranslate"><span class="pre">zephyr/boards/&lt;VENDOR&gt;/plank</span></code>，其中 <code class="docutils literal notranslate"><span class="pre">&lt;VENDOR&gt;</span></code> 是你的厂商子目录。（开发板目录不一定要放在 zephyr 仓库中，但这是最简单的入门方式。开发板能正常工作后，如何将开发板目录移到单独的仓库，请参阅 <a class="reference internal" href="../../develop/application/index.html#custom-board-definition"><span class="std std-ref">自定义开发板、设备树和 SOC 定义</span></a>。）</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>如果要将开发板贡献给 Zephyr，则必须使用 <code class="docutils literal notranslate"><span class="pre">&lt;VENDOR&gt;</span></code> 子目录；但如果开发板放在本地仓库中，则 <code class="docutils literal notranslate"><span class="pre">&lt;your-repo&gt;/boards</span></code> 下可以使用任意目录结构。如果厂商已在 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/dts/bindings/vendor-prefixes.txt">dts/bindings/vendor-prefixes.txt</a> 列表中定义，则必须使用该厂商前缀作为 <code class="docutils literal notranslate"><span class="pre">&lt;VENDOR&gt;</span></code>。如果厂商未定义，可以使用 <code class="docutils literal notranslate"><span class="pre">others</span></code> 作为厂商前缀。</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>开发板目录名不必与开发板名称一致，甚至可以在一个目录中定义多块开发板。</p>
+</div>
+<p>开发板目录应如下所示：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>boards/&lt;VENDOR&gt;/plank
+├── board.yml
+├── board.cmake
+├── CMakeLists.txt
+├── doc
+│   ├── plank.webp
+│   └── index.rst
+├── Kconfig.plank
+├── Kconfig.defconfig
+├── plank_&lt;qualifiers&gt;_defconfig
+├── plank_&lt;qualifiers&gt;.dts
+└── plank_&lt;qualifiers&gt;.yaml
+</pre></div>
+</div>
+<p>当然，要把 <code class="docutils literal notranslate"><span class="pre">plank</span></code> 替换为你的开发板名称。</p>
+<p>必需的文件有：</p>
+<ol class="arabic simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">board.yml</span></code>：描述开发板高层元数据的 YAML 文件，例如开发板名称、其 SoC 和变体。多核 SoC 的 CPU 集群不在此文件中描述，因为它们继承自 SoC 的 YAML 描述。</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">plank_&lt;qualifiers&gt;.dts</span></code>：以 <a class="reference internal" href="../../build/dts/index.html#dt-guide"><span class="std std-ref">设备树</span></a> 格式编写的硬件描述。它声明你的 SoC、连接器以及其他硬件组件，例如 LED、按键、传感器或通信外设（USB、Bluetooth 控制器等）。</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">Kconfig.plank</span></code>：基础软件配置，用于选择 SoC 以及其他与开发板和 SoC 相关的设置。不得 select 开发板和 SoC 树之外的 Kconfig 设置。要选择通用的 Zephyr Kconfig 设置，必须使用 <code class="file docutils literal notranslate"><span class="pre">Kconfig</span></code> 文件。</p></li>
+</ol>
+<p>可选的文件有：</p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">Kconfig</span></code>、<code class="file docutils literal notranslate"><span class="pre">Kconfig.defconfig</span></code>：<a class="reference internal" href="../../build/kconfig/index.html#kconfig"><span class="std std-ref">配置系统（Kconfig）</span></a> 格式的软件配置。它们为软件特性和外设驱动提供默认设置。</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">plank_defconfig</span></code> 和 <code class="file docutils literal notranslate"><span class="pre">plank_&lt;qualifiers&gt;_defconfig</span></code>：Kconfig <code class="docutils literal notranslate"><span class="pre">.conf</span></code> 格式的软件配置。</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">board.cmake</span></code>：用于 <a class="reference internal" href="#flash-and-debug-support"><span class="std std-ref">烧录和调试支持</span></a></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code>：用于向构建中添加额外的源文件。</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">doc/index.rst</span></code>、<code class="file docutils literal notranslate"><span class="pre">doc/plank.webp</span></code>：开发板的文档和图片。只有在 <a class="reference internal" href="#contributing-your-board"><span class="std std-ref">贡献你的开发板</span></a> 到 Zephyr 时才需要它们。</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">plank_&lt;qualifiers&gt;.yaml</span></code>：包含 <a class="reference internal" href="../../develop/twister/index.html#twister-script"><span class="std std-ref">测试运行器（Twister）</span></a> 所用各类元数据的 YAML 文件。</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">&lt;soc&gt;/&lt;cpucluster&gt;/&lt;variant&gt;</span></code> 形式的开发板限定符在用于文件名时会被规范化，即把 <code class="docutils literal notranslate"><span class="pre">/</span></code> 替换为 <code class="docutils literal notranslate"><span class="pre">_</span></code>，例如 <code class="docutils literal notranslate"><span class="pre">soc1/foo</span></code> 用于文件名时变为 <code class="docutils literal notranslate"><span class="pre">soc1_foo</span></code>。</p>
+</section>
+<section id="write-your-board-yaml">
+<span id="board-description"></span><h2>编写开发板 YAML<a class="headerlink" href="#write-your-board-yaml" title="链接到此标题。"></a></h2>
+<p>开发板 YAML 文件从高层描述开发板，包括 SoC、开发板变体和开发板版本。</p>
+<p>详细配置（例如硬件描述和配置）在设备树和 Kconfig 中完成。</p>
+<p>开发板 YAML 文件的骨架如下：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">board</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;board-name&gt;</span>
+<span class="w">  </span><span class="nt">full_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;board-full-name&gt;</span>
+<span class="w">  </span><span class="nt">vendor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;board-vendor&gt;</span>
+<span class="w">  </span><span class="nt">revision</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;major.minor.patch|letter|number|custom&gt;</span>
+<span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;default-revision-value&gt;</span>
+<span class="w">    </span><span class="nt">exact</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;true|false&gt;</span>
+<span class="w">    </span><span class="nt">revisions</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;revA&gt;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;revB&gt;</span>
+<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="w">  </span><span class="nt">socs</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;soc-1&gt;</span>
+<span class="w">    </span><span class="nt">variants</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;variant-1&gt;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;variant-2&gt;</span>
+<span class="w">      </span><span class="nt">variants</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;sub-variant-2-1&gt;</span>
+<span class="w">        </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;soc-2&gt;</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+</pre></div>
+</div>
+<p>开发板文件夹中可以存放多块开发板。如果多块开发板放在同一个开发板文件夹中，则 <code class="file docutils literal notranslate"><span class="pre">board.yml</span></code> 文件必须以列表形式描述它们：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">boards</span><span class="p">:</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;board-name-1&gt;</span>
+<span class="w">  </span><span class="nt">vendor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;board-vendor&gt;</span>
+<span class="w">  </span><span class="nt">full_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;board-full-name&gt;</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;board-name-2&gt;</span>
+<span class="w">  </span><span class="nt">vendor</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;board-vendor&gt;</span>
+<span class="w">  </span><span class="nt">full_name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;board-full-name&gt;</span>
+<span class="w">  </span><span class="l l-Scalar l-Scalar-Plain">...</span>
+<span class="nn">...</span>
+</pre></div>
+</div>
+</section>
+<section id="write-your-devicetree">
+<span id="default-board-configuration"></span><h2>编写设备树<a class="headerlink" href="#write-your-devicetree" title="链接到此标题。"></a></h2>
+<p>设备树文件 <code class="file docutils literal notranslate"><span class="pre">boards/&lt;vendor&gt;/plank/plank_&lt;qualifiers&gt;.dts</span></code> 以设备树源（DTS）格式描述你的开发板硬件（同样，请把 <code class="docutils literal notranslate"><span class="pre">plank</span></code> 换成你的开发板名称）。如果你刚接触设备树，请参阅 <a class="reference internal" href="../../build/dts/intro.html#devicetree-intro"><span class="std std-ref">设备树简介</span></a>。</p>
+<p>一般来说，<code class="file docutils literal notranslate"><span class="pre">plank_&lt;qualifiers&gt;.dts</span></code> 应如下所示：</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="cp">/dts-v1/</span><span class="p">;</span>
+<span class="cp">#include</span><span class="cm"> </span><span class="cpf">&lt;your_soc_vendor/your_soc.dtsi&gt;</span>
+
+<span class="nf">/</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">model</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"A human readable name"</span><span class="p">;</span>
+<span class="w">        </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"yourcompany,plank"</span><span class="p">;</span>
+
+<span class="w">        </span><span class="nf">chosen</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">zephyr</span><span class="p">,</span><span class="n">console</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">your_uart_console</span><span class="p">;</span>
+<span class="w">                </span><span class="n">zephyr</span><span class="p">,</span><span class="n">sram</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">your_memory_node</span><span class="p">;</span>
+<span class="w">                </span><span class="cm">/* other chosen settings  for your hardware */</span>
+<span class="w">        </span><span class="p">};</span>
+
+<span class="w">        </span><span class="cm">/*</span>
+<span class="cm">         * Your board-specific hardware: buttons, LEDs, sensors, etc.</span>
+<span class="cm">         */</span>
+
+<span class="w">        </span><span class="nf">leds</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"gpio-leds"</span><span class="p">;</span>
+<span class="w">                </span><span class="nl">led0</span><span class="p">:</span><span class="w"> </span><span class="nf">led_0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                        </span><span class="n">gpios</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&lt;</span><span class="cm">/* GPIO your LED is hooked up to */</span><span class="o">&gt;</span><span class="p">;</span>
+<span class="w">                        </span><span class="n">label</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"LED 0"</span><span class="p">;</span>
+<span class="w">                </span><span class="p">};</span>
+<span class="w">                </span><span class="cm">/* ... other LEDs ... */</span>
+<span class="w">        </span><span class="p">};</span>
+
+<span class="w">        </span><span class="nf">buttons</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="kr">compatible</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"gpio-keys"</span><span class="p">;</span>
+<span class="w">                </span><span class="cm">/* ... your button definitions ... */</span>
+<span class="w">        </span><span class="p">};</span>
+
+<span class="w">        </span><span class="cm">/* These aliases are provided for compatibility with samples */</span>
+<span class="w">        </span><span class="nf">aliases</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">led0</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">led0</span><span class="p">;</span><span class="w"> </span><span class="cm">/* now you support the blinky sample! */</span>
+<span class="w">                </span><span class="cm">/* other aliases go here */</span>
+<span class="w">        </span><span class="p">};</span>
+<span class="p">};</span>
+
+<span class="o">&amp;</span><span class="nf">some_peripheral_you_want_to_enable</span><span class="cm"> </span><span class="p">{</span><span class="w"> </span><span class="cm">/* like a GPIO or SPI controller */</span>
+<span class="w">        </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"okay"</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="o">&amp;</span><span class="nf">another_peripheral_you_want</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"okay"</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>如果开发板只有一个 SoC，且没有任何开发板变体，则 dts 文件也可以命名为 <code class="file docutils literal notranslate"><span class="pre">&lt;plank&gt;.dts</span></code>。但不建议这样做，因为一旦为该开发板添加了变体或其他 SoC，这个文件就会在没有任何提示的情况下不再被使用。</p>
+<p>如果时间紧迫，简单的硬件通常可以通过复制粘贴再反复试错来获得支持。如果想了解细节，则需要阅读设备树文档的其余部分以及设备树规范。</p>
+<section id="example-frdm-k64f-and-hexiwear-k64">
+<span id="dt-k6x-example"></span><h3>示例：FRDM-K64F 和 Hexiwear K64<a class="headerlink" href="#example-frdm-k64f-and-hexiwear-k64" title="链接到此标题。"></a></h3>
+<p>本节给出与编写开发板设备树相关的具体示例。</p>
+<p>FRDM-K64F 和 Hexiwear K64 开发板的设备树分别定义在 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/boards/nxp/frdm_k64f/frdm_k64f.dts">frdm_k64fs.dts</a> 和 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/boards/mikroe/hexiwear/hexiwear_mk64f12.dts">hexiwear_k64.dts</a> 中。这两块开发板都使用同一 Kinetis SoC 家族（K6X）的 NXP SoC。</p>
+<p>K6X 的通用设备树定义保存在 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/dts/arm/nxp/kinetis/k6x/nxp_k6x.dtsi">nxp_k6x.dtsi</a> 中，两块开发板的 <code class="file docutils literal notranslate"><span class="pre">.dts</span></code> 文件都包含了它。<a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/dts/arm/nxp/kinetis/k6x/nxp_k6x.dtsi">nxp_k6x.dtsi</a> 又包含了 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/dts/arm/armv7-m.dtsi">armv7-m.dtsi</a>，后者提供 Arm v7-M 核心的通用定义。</p>
+<p>由于 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/dts/arm/nxp/kinetis/k6x/nxp_k6x.dtsi">nxp_k6x.dtsi</a> 旨在适用于所有基于 K6X 的开发板，它通过 <code class="docutils literal notranslate"><span class="pre">status</span></code> 属性默认禁用了许多设备。例如，其中定义了如下 CAN 控制器（省略了不重要的部分）：</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="nl">can0</span><span class="p">:</span><span class="w"> </span><span class="nf">can</span><span class="o">@</span><span class="mi">40024000</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">     </span><span class="p">...</span>
+<span class="w">     </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"disabled"</span><span class="p">;</span>
+<span class="w">     </span><span class="p">...</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p>由开发板 <code class="file docutils literal notranslate"><span class="pre">.dts</span></code> 或应用程序覆盖文件根据需要设置 <code class="docutils literal notranslate"><span class="pre">status</span> <span class="pre">=</span> <span class="pre">&quot;okay&quot;</span></code> 来启用这些设备。开发板 <code class="file docutils literal notranslate"><span class="pre">.dts</span></code> 文件还负责设备的所有开发板特定配置，例如为板载传感器、LED、按键等添加节点。</p>
+<p>例如，FRDM-K64（而非 Hexiwear K64）的 <code class="file docutils literal notranslate"><span class="pre">.dts</span></code> 启用了 CAN 控制器并设置了总线速率：</p>
+<div class="highlight-devicetree notranslate"><div class="highlight"><pre><span></span><span class="o">&amp;</span><span class="nf">can0</span><span class="cm"> </span><span class="p">{</span>
+<span class="w">     </span><span class="kr">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">"okay"</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">&amp;can0</span> <span class="pre">{</span> <span class="pre">...</span> <span class="pre">};</span></code> 语法用于在标签为 <code class="docutils literal notranslate"><span class="pre">can0</span></code> 的节点（即 <code class="file docutils literal notranslate"><span class="pre">.dtsi</span></code> 文件中定义的 <code class="docutils literal notranslate"><span class="pre">can&#64;4002400</span></code> 节点）上添加或覆盖属性。</p>
+<p>开发板特定定制的其他示例包括：让 <code class="docutils literal notranslate"><span class="pre">aliases</span></code> 和 <code class="docutils literal notranslate"><span class="pre">chosen</span></code> 中的属性指向正确的节点（见 <a class="reference internal" href="../../build/dts/intro-syntax-structure.html#dt-alias-chosen"><span class="std std-ref">别名和 chosen 节点</span></a>），以及进行 GPIO/引脚复用分配。</p>
+</section>
+</section>
+<section id="write-kconfig-files">
+<span id="board-kconfig-files"></span><h2>编写 Kconfig 文件<a class="headerlink" href="#write-kconfig-files" title="链接到此标题。"></a></h2>
+<p>Zephyr 使用 Kconfig 语言配置软件特性。在为你的开发板编译 Zephyr 应用程序之前，开发板需要提供一些 Kconfig 设置。</p>
+<p>设置 Kconfig 配置值的方法详见 <a class="reference internal" href="../../build/kconfig/setting.html#setting-configuration-values"><span class="std std-ref">设置 Kconfig 配置值</span></a>。</p>
+<p>对于名为 <code class="docutils literal notranslate"><span class="pre">plank</span></code> 的开发板，开发板目录中有一个必需的 Kconfig 文件，以及若干可选文件：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>boards/&lt;vendor&gt;/plank
+├── Kconfig
+├── Kconfig.plank
+├── Kconfig.defconfig
+└── plank_&lt;qualifiers&gt;_defconfig
+</pre></div>
+</div>
+<dl>
+<dt><code class="file docutils literal notranslate"><span class="pre">Kconfig.plank</span></code></dt><dd><p>一个共享的 Kconfig 文件，可以同时被 Zephyr Kconfig 树和 sysbuild Kconfig 树引入（source）。</p>
+<p>此文件在 Kconfig 树中选择 SoC，以及其他可能与 SoC 相关的 Kconfig 设置。此文件不得 select 可复用的 Kconfig 开发板树和 SoC 树之外的任何内容。</p>
+<p><code class="file docutils literal notranslate"><span class="pre">Kconfig.plank</span></code> 可能如下所示：</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span><span class="k">config</span><span class="w"> </span>BOARD_PLANK
+<span class="w">        </span><span class="k">select</span><span class="w"> </span>SOC_SOC1
+</pre></div>
+</div>
+<p>Kconfig 符号 <code class="samp docutils literal notranslate"><span class="pre">BOARD_</span><em><span class="pre">board</span></em></code> 和 <code class="samp docutils literal notranslate"><span class="pre">BOARD_</span><em><span class="pre">normalized_board_target</span></em></code> 由构建系统构造，因此上面的代码片段中不应定义类型。</p>
+</dd>
+<dt><code class="file docutils literal notranslate"><span class="pre">Kconfig</span></code></dt><dd><p>由 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/boards/Kconfig">boards/Kconfig</a> 包含。</p>
+<p>此文件可以添加当前开发板特有的 Kconfig 设置。</p>
+<p>并非所有开发板都有 <code class="file docutils literal notranslate"><span class="pre">Kconfig</span></code> 文件。</p>
+<p>开发板特定的设置应当是自定义设置，并且通常带有提示文字，如下所示：</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span><span class="k">config</span><span class="w"> </span>BOARD_FEATURE
+<span class="w">        </span><span class="nb">bool</span><span class="w"> </span><span class="s2">"Board specific feature"</span>
+</pre></div>
+</div>
+<p>如果设置名称与 Zephyr 中已有的某个 Kconfig 设置相同，并且只修改该设置的默认值，则应改用 <code class="file docutils literal notranslate"><span class="pre">Kconfig.defconfig</span></code>。</p>
+</dd>
+<dt><code class="file docutils literal notranslate"><span class="pre">Kconfig.defconfig</span></code></dt><dd><p>Kconfig 选项的开发板特定默认值。</p>
+<p>并非所有开发板都有 <code class="file docutils literal notranslate"><span class="pre">Kconfig.defconfig</span></code> 文件。</p>
+<p>整个文件应放在一对 <code class="docutils literal notranslate"><span class="pre">if</span> <span class="pre">BOARD_PLANK</span></code> / <code class="docutils literal notranslate"><span class="pre">endif</span></code> 行之间，如下所示：</p>
+<div class="highlight-kconfig notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="w"> </span>BOARD_PLANK
+
+<span class="k">config</span><span class="w"> </span>FOO
+<span class="w">        </span><span class="k">default</span><span class="w"> </span>y
+
+<span class="k">if</span><span class="w"> </span>NETWORKING
+
+<span class="k">config</span><span class="w"> </span>SOC_ETHERNET_DRIVER
+<span class="w">        </span><span class="k">default</span><span class="w"> </span>y
+
+<span class="k">endif</span><span class="w"> </span><span class="c1"># NETWORKING</span>
+
+<span class="k">endif</span><span class="w"> </span><span class="c1"># BOARD_PLANK</span>
+</pre></div>
+</div>
+</dd>
+<dt><code class="file docutils literal notranslate"><span class="pre">plank_&lt;qualifiers&gt;_defconfig</span></code>（在少数情况下为 <code class="file docutils literal notranslate"><span class="pre">plank_defconfig</span></code>）</dt><dd><p>一个 Kconfig 片段，每当为你的开发板编译应用程序时，都会原样合并到最终构建目录的 <code class="file docutils literal notranslate"><span class="pre">.config</span></code> 中。</p>
+<p><code class="file docutils literal notranslate"><span class="pre">plank_defconfig</span></code> 只能用于没有限定符、没有变体且只有一个 SoC 的开发板。但不建议采用这种命名方式，因为一旦上游 Zephyr 为该开发板添加了新的 SoC 或开发板变体/限定符，示例/测试或下游用法就会在毫无警告的情况下突然失效。</p>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>多个文件不会被合并，文件也没有回退机制。这意味着，如果一块开发板有 2 个不同的 SoC，每个 SoC 有 2 个开发板变体，那么 <code class="file docutils literal notranslate"><span class="pre">plank_defconfig</span></code> 文件将完全不会被使用；对于第一个限定符和变体，将使用 <code class="file docutils literal notranslate"><span class="pre">plank_&lt;soc1&gt;_&lt;variant1&gt;_defconfig</span></code>，且它不会包含其他文件。</p>
+<p><code class="docutils literal notranslate"><span class="pre">_defconfig</span></code> 应包含 UART、控制台等的必需设置。具体内容与架构相关，但通常类似如下：</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">CONFIG_GPIO</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_CONSOLE</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_UART_CONSOLE</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_SERIAL</span><span class="o">=</span><span class="s">y</span>
+</pre></div>
+</div>
+</div>
+<dl class="simple">
+<dt><code class="file docutils literal notranslate"><span class="pre">plank_x_y_z_defconfig</span></code> / <code class="file docutils literal notranslate"><span class="pre">plank_&lt;qualifiers&gt;_x_y_z_defconfig</span></code></dt><dd><p>一个 Kconfig 片段，每当为开发板版本 <code class="docutils literal notranslate"><span class="pre">x.y.z</span></code> 编译应用程序时，都会原样合并到最终构建目录的 <code class="file docutils literal notranslate"><span class="pre">.config</span></code> 中。</p>
+</dd>
+</dl>
+</section>
+<section id="build-test-and-fix">
+<h2>构建、测试和修复<a class="headerlink" href="#build-test-and-fix" title="链接到此标题。"></a></h2>
+<p>现在可以构建并测试你想在开发板上运行的应用程序了，直到结果令你满意为止。</p>
+<p>例如：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">west build -b plank samples/hello_world</span>
+<span class="go">west flash</span>
+</pre></div>
+</div>
+<p>要让 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">flash</span></code> 正常工作，请参阅下文 <a class="reference internal" href="#flash-and-debug-support"><span class="std std-ref">烧录和调试支持</span></a>。你也可以使用自己喜欢的任何其他工具直接烧录 <code class="file docutils literal notranslate"><span class="pre">build/zephyr/zephyr.elf</span></code>、<code class="file docutils literal notranslate"><span class="pre">zephyr.hex</span></code> 或 <code class="file docutils literal notranslate"><span class="pre">zephyr.bin</span></code>。</p>
+<p>向上游提交开发板之前，请确认你添加的每个开发板目标都能仅使用主线 Zephyr 仓库及其模块中的代码，通过项目的最小开源测试套件。该套件目前包括：</p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">samples/philosophers</span></code></p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">tests/kernel</span></code></p></li>
+</ul>
+<p>例如，可以这样为某个开发板目标构建该套件：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">west twister -p plank -T samples/philosophers -T tests/kernel</span>
+</pre></div>
+</div>
+<p>对于具有多个 SoC、CPU 集群、变体或版本的开发板，请对每个新的开发板目标重复运行该测试套件。还建议构建 <a class="reference internal" href="../../samples/hello_world/README.html#hello_world" title="向控制台打印 &quot;Hello World&quot;。">Hello World</a>，作为快速冒烟检查，例如：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">west build -p always -b plank/soc1/foo samples/hello_world</span>
+<span class="go">west build -p always -b plank@1.0.0/soc1/foo samples/hello_world</span>
+</pre></div>
+</div>
+<p>如果开发板目标需要，请使用 <a class="reference internal" href="../../build/sysbuild/index.html#sysbuild"><span class="std std-ref">Sysbuild（系统构建）</span></a>。如果使用了开发板测试元数据（例如开发板目标 YAML 文件中的 <code class="docutils literal notranslate"><span class="pre">testing:</span> <span class="pre">only_tags</span></code>），请确保该目标在本地测试或 CI 中仍会针对最小测试套件进行验证。</p>
+</section>
+<section id="general-recommendations">
+<span id="porting-general-recommendations"></span><h2>一般建议<a class="headerlink" href="#general-recommendations" title="链接到此标题。"></a></h2>
+<p>为了保持一致，并让用户更容易构建与开发板无关的应用程序，移植打算贡献给 Zephyr 的开发板时，请遵循以下准则：</p>
+<dl>
+<dt>在设备树中启用有价值的组件</dt><dd><p>有价值的板载组件（LED、按键、传感器、板载 USB/以太网/BLE/Wi-Fi 等）的设备树节点必须 <strong>默认启用</strong>，并具有正确的引脚控制和驱动配置，从而开箱即用。</p>
+</dd>
+<dt>默认保持子系统禁用（Kconfig）</dt><dd><p>除非某个子系统是开发板基本运行所严格必需的，或在这些建议中被明确列为例外，否则不要在开发板 defconfig 中启用它。</p>
+</dd>
+<dt>配置系统时钟和节拍源</dt><dd><p>设置可正常工作的系统时钟和节拍源。</p>
+</dd>
+<dt>提供默认控制台</dt><dd><p>使用 <code class="docutils literal notranslate"><span class="pre">zephyr,console</span></code> chosen 节点指向用于控制台输出的 UART 控制器。</p>
+<p>带有内置调试器或 USB 转 UART 适配器的开发板，应将控制台设置为连接到该适配器的 UART 控制器。</p>
+<p>没有任何调试适配器、只有 USB 的开发板，必须包含通用的 USB CDC-ACM <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/boards/common/usb/Kconfig.cdc_acm_serial.defconfig">Kconfig</a> 和 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/boards/common/usb/cdc_acm_serial.dtsi">DTS</a> 片段，以启用 CDC-ACM UART 作为日志和 Shell 的默认后端。</p>
+</dd>
+<dt>添加 <a class="reference internal" href="shields.html#shield-interfaces"><span class="std std-ref">扩展板接口</span></a> 定义</dt><dd><p>对于引出标准扩展排针的开发板，请添加连接器节点和引脚复用配置。只启用预期/标准连接器功能所需的外设。</p>
+</dd>
+<dt>配置引脚和外设实例</dt><dd><p>将外设映射到正确的引脚（例如将 SPI 映射到 Arduino SPI 引脚），并提供支持开发板特性的默认引脚复用条目。</p>
+</dd>
+<dt>启用网络接口</dt><dd><p>如果存在网络硬件，请为每种受支持的技术配置默认接口，使网络示例开箱即用。</p>
+</dd>
+<dt>启用 GPIO 控制器</dt><dd><p>所有连接到板载组件或扩展排针的 GPIO 端口都应启用。</p>
+</dd>
+<dt>启用 MPU 和栈保护</dt><dd><p>建议在可用时启用 MPU（除非内存资源过于有限）。启用 MPU 后，建议同时启用硬件栈保护（<a class="reference internal" href="../../kconfig.html#CONFIG_HW_STACK_PROTECTION" title="CONFIG_HW_STACK_PROTECTION"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HW_STACK_PROTECTION</span></code></a>），让内核能够检测栈溢出，便于调试。</p>
+</dd>
+</dl>
+</section>
+<section id="flash-and-debug-support">
+<span id="id4"></span><h2>烧录和调试支持<a class="headerlink" href="#flash-and-debug-support" title="链接到此标题。"></a></h2>
+<p>Zephyr 通过 west 扩展命令支持 <a class="reference internal" href="../../develop/west/build-flash-debug.html#west-build-flash-debug"><span class="std std-ref">构建、烧录和调试</span></a>。</p>
+<p>要为开发板添加 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">flash</span></code> 和 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">debug</span></code> 支持，需要在开发板目录中创建 <code class="file docutils literal notranslate"><span class="pre">board.cmake</span></code> 文件。此文件的作用是为开发板配置一个“运行器（runner）”。（要让开发板支持 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code>，无需做任何特殊处理。）</p>
+<p>“运行器”是 Zephyr 特有的 Python 类，它封装了 <a class="reference internal" href="../../develop/flash_debug/host-tools.html#flash-debug-host-tools"><span class="std std-ref">烧录和调试主机工具</span></a>，并与 west 和 Zephyr 构建系统集成，以支持 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">flash</span></code> 及相关命令。每个运行器支持烧录、调试或两者兼有。你需要在 <code class="file docutils literal notranslate"><span class="pre">board.cmake</span></code> 中配置这些 Python 脚本的参数以支持这些命令，例如下面这个 <code class="file docutils literal notranslate"><span class="pre">board.cmake</span></code> 示例：</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nf">board_runner_args(</span><span class="nb">jlink</span><span class="w"> </span><span class="s">"--device=nrf52"</span><span class="w"> </span><span class="s">"--speed=4000"</span><span class="nf">)</span>
+<span class="nf">board_runner_args(</span><span class="nb">pyocd</span><span class="w"> </span><span class="s">"--target=nrf52"</span><span class="w"> </span><span class="s">"--frequency=4000000"</span><span class="nf">)</span>
+
+<span class="nf">include(</span><span class="o">${</span><span class="nt">ZEPHYR_BASE</span><span class="o">}</span><span class="na">/boards/common/nrfutil.board.cmake</span><span class="nf">)</span>
+<span class="nf">include(</span><span class="o">${</span><span class="nt">ZEPHYR_BASE</span><span class="o">}</span><span class="na">/boards/common/nrfjprog.board.cmake</span><span class="nf">)</span>
+<span class="nf">include(</span><span class="o">${</span><span class="nt">ZEPHYR_BASE</span><span class="o">}</span><span class="na">/boards/common/jlink.board.cmake</span><span class="nf">)</span>
+<span class="nf">include(</span><span class="o">${</span><span class="nt">ZEPHYR_BASE</span><span class="o">}</span><span class="na">/boards/common/pyocd.board.cmake</span><span class="nf">)</span>
+</pre></div>
+</div>
+<p>此示例配置了 <code class="docutils literal notranslate"><span class="pre">nrfutil</span></code>、<code class="docutils literal notranslate"><span class="pre">nrfjprog</span></code>、<code class="docutils literal notranslate"><span class="pre">jlink</span></code> 和 <code class="docutils literal notranslate"><span class="pre">pyocd</span></code> 运行器。</p>
+<div class="admonition warning">
+<p class="admonition-title">警告</p>
+<p>运行器的名称通常与其封装的工具一致，例如 <code class="docutils literal notranslate"><span class="pre">jlink</span></code> 运行器封装的是 Segger 的 J-Link 工具，以此类推。但 <code class="docutils literal notranslate"><span class="pre">--speed</span></code> 等运行器命令行选项是这些 Python 脚本特有的。</p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>如果工具支持多种操作系统，创建运行器和开发板配置时就不应只针对某一种操作系统，也不应依赖特殊的系统设置/配置。例如：不要假定用户已有相关知识/配置，或（在使用 Linux 时）安装了特殊的 udev 规则；不要假定所有平台都使用某个特定的 <code class="docutils literal notranslate"><span class="pre">/dev/X</span></code> 设备，因为这与 Windows 或 macOS 不兼容；并且应允许覆盖所选设备，以便在一个系统上连接多块开发板，由用户选择对哪一块进行烧录/调试。</p>
+</div>
+<p>更多详细信息：</p>
+<ul class="simple">
+<li><p>运行 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">flash</span> <span class="pre">--context</span></code> 可查看支持烧录的可用运行器列表，运行 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">flash</span> <span class="pre">--context</span> <span class="pre">-r</span> <span class="pre">&lt;RUNNER&gt;</span></code> 可查看某个运行器可用的具体选项。</p></li>
+<li><p>对于支持调试的运行器，运行 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">debug</span> <span class="pre">--context</span></code> 和 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">debug</span> <span class="pre">--context</span> <span class="pre">&lt;RUNNER&gt;</span></code> 可获得相同的输出。</p></li>
+<li><p>运行 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">flash</span> <span class="pre">--help</span></code> 和 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">debug</span> <span class="pre">--help</span></code> 可查看烧录和调试的顶层选项。</p></li>
+<li><p>Python API 见 <a class="reference internal" href="../../develop/west/build-flash-debug.html#west-runner"><span class="std std-ref">配置选项</span></a>。</p></li>
+<li><p>可参考与你的开发板类似的其他开发板的 <code class="file docutils literal notranslate"><span class="pre">board.cmake</span></code> 文件，获取更多示例。</p></li>
+</ul>
+<p>要查看 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">flash</span></code> 或 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">debug</span></code> 命令具体做了什么，请以详细模式运行它：</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>--verbose<span class="w"> </span>flash
+west<span class="w"> </span>--verbose<span class="w"> </span>debug
+</pre></div>
+</div>
+<p>详细模式会打印运行器所使用的所有主机工具命令。</p>
+<p><code class="file docutils literal notranslate"><span class="pre">board.cmake</span></code> 中 <code class="docutils literal notranslate"><span class="pre">include()</span></code> 调用的顺序很重要。如果尚未设置默认运行器，第一个 <code class="docutils literal notranslate"><span class="pre">include</span></code> 会设置它。例如，先包含 <code class="docutils literal notranslate"><span class="pre">nrfjprog.board.cmake</span></code> 意味着 <code class="docutils literal notranslate"><span class="pre">nrfjprog</span></code> 是该开发板的默认烧录运行器。由于 <code class="docutils literal notranslate"><span class="pre">nrfjprog</span></code> 不支持调试，<code class="docutils literal notranslate"><span class="pre">jlink</span></code> 就成为默认调试运行器。</p>
+</section>
+<section id="multiple-board-revisions">
+<span id="porting-board-revisions"></span><h2>多个开发板版本<a class="headerlink" href="#multiple-board-revisions" title="链接到此标题。"></a></h2>
+<p>从用户角度介绍此功能的基础知识，请参阅 <a class="reference internal" href="../../develop/application/index.html#application-board-version"><span class="std std-ref">为开发板版本构建</span></a>。</p>
+<p>开发板版本在 <code class="file docutils literal notranslate"><span class="pre">board.yml</span></code> 的 <code class="docutils literal notranslate"><span class="pre">revision</span></code> 条目中描述。</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">board</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">revision</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;major.minor.patch|letter|number|custom&gt;</span>
+<span class="w">    </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;default-revision-value&gt;</span>
+<span class="w">    </span><span class="nt">exact</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;true|false&gt;</span>
+<span class="w">    </span><span class="nt">revisions</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;revA&gt;</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;revB&gt;</span>
+</pre></div>
+</div>
+<p>Zephyr 原生支持以下版本格式：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">major.minor.patch</span></code>：匹配三段数字的版本，例如 <code class="docutils literal notranslate"><span class="pre">1.2.3</span></code>。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">number</span></code>：匹配整数版本</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">letter</span></code>：仅匹配 <code class="docutils literal notranslate"><span class="pre">A</span></code> 到 <code class="docutils literal notranslate"><span class="pre">Z</span></code> 的单个字母版本</p></li>
+</ul>
+<section id="fuzzy-revision-matching">
+<span id="board-fuzzy-revision-matching"></span><h3>模糊版本匹配<a class="headerlink" href="#fuzzy-revision-matching" title="链接到此标题。"></a></h3>
+<p>模糊版本匹配默认启用。</p>
+<p>如果用户选择的版本介于可用版本之间，则使用不大于用户所选版本的最接近版本号。例如，如果开发板 <code class="docutils literal notranslate"><span class="pre">plank</span></code> 定义了版本 <code class="docutils literal notranslate"><span class="pre">0.5.0</span></code> 和 <code class="docutils literal notranslate"><span class="pre">1.5.0</span></code>，而用户为 <code class="docutils literal notranslate"><span class="pre">plank&#64;0.7.0</span></code> 构建，构建系统将以版本 <code class="docutils literal notranslate"><span class="pre">0.5.0</span></code> 为目标。</p>
+<p>构建系统会在 CMake 配置时打印如下信息：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">-- Board: plank, Revision: 0.7.0 (Active: 0.5.0)</span>
+</pre></div>
+</div>
+<p>这样，你只需为引入了不兼容改动的开发板版本号创建版本配置文件。</p>
+<p><code class="docutils literal notranslate"><span class="pre">letter</span></code> 版本格式与此类似：如果定义了版本 <code class="docutils literal notranslate"><span class="pre">A</span></code>、<code class="docutils literal notranslate"><span class="pre">D</span></code> 和 <code class="docutils literal notranslate"><span class="pre">F</span></code>，而用户为 <code class="docutils literal notranslate"><span class="pre">plank&#64;E</span></code> 构建，构建系统将以版本 <code class="docutils literal notranslate"><span class="pre">D</span></code> 为目标。</p>
+</section>
+<section id="exact-revision-matching">
+<h3>精确版本匹配<a class="headerlink" href="#exact-revision-matching" title="链接到此标题。"></a></h3>
+<p>在 <code class="file docutils literal notranslate"><span class="pre">board.yml</span></code> 的 revision 部分中指定 <code class="docutils literal notranslate"><span class="pre">exact:</span> <span class="pre">true</span></code> 时，启用精确版本匹配。</p>
+<p>定义了 exact 后，在上例中为 <code class="docutils literal notranslate"><span class="pre">plank&#64;0.7.0</span></code> 构建会产生如下错误信息：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">Board revision `0.7.0` not found.  Please specify a valid board revision.</span>
+</pre></div>
+</div>
+</section>
+<section id="board-revision-configuration-adjustment">
+<h3>开发板版本配置调整<a class="headerlink" href="#board-revision-configuration-adjustment" title="链接到此标题。"></a></h3>
+<p>当用户为开发板 <code class="docutils literal notranslate"><span class="pre">plank&#64;&lt;revision&gt;</span></code> 构建时，可以对开发板的常规配置进行调整。</p>
+<p>如 <a class="reference internal" href="#default-board-configuration"><span class="std std-ref">编写设备树</span></a> 和 <a class="reference internal" href="#board-kconfig-files"><span class="std std-ref">编写 Kconfig 文件</span></a> 两节所述，开发板默认配置由 <code class="file docutils literal notranslate"><span class="pre">&lt;board&gt;.dts</span></code> / <code class="file docutils literal notranslate"><span class="pre">&lt;board&gt;_&lt;qualifiers&gt;.dts</span></code> 和 <code class="file docutils literal notranslate"><span class="pre">&lt;board&gt;_defconfig</span></code> / <code class="file docutils literal notranslate"><span class="pre">&lt;board&gt;_&lt;qualifiers&gt;_defconfig</span></code> 文件生成。为特定开发板版本构建时，以上述文件为起点，并额外使用以下开发板文件：</p>
+<ul class="simple">
+<li><p><code class="file docutils literal notranslate"><span class="pre">&lt;board&gt;_&lt;qualifiers&gt;_&lt;revision&gt;_defconfig</span></code>：特定版本的 defconfig，只用于由 <code class="docutils literal notranslate"><span class="pre">&lt;board&gt;_&lt;qualifiers&gt;</span></code> 标识的开发板及 SOC / 变体。</p></li>
+<li><p><code class="file docutils literal notranslate"><span class="pre">&lt;board&gt;_&lt;qualifiers&gt;_&lt;revision&gt;.overlay</span></code>：特定版本的 dts 覆盖文件，只用于由 <code class="docutils literal notranslate"><span class="pre">&lt;board&gt;_&lt;qualifiers&gt;</span></code> 标识的开发板及 SOC / 变体。</p></li>
+</ul>
+<p>这种划分方式使具有多个 SoC、多核 SoC 或多个变体的开发板，可以把适用于所有 SoC 和变体的通用版本调整放在单个文件中，同时仍能将 SoC 或变体特定的调整放在专门的版本文件中。</p>
+<p>以前面几节中的 <code class="docutils literal notranslate"><span class="pre">plank</span></code> 开发板为例，可以有如下版本调整：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>boards/zephyr/plank
+├── plank_soc1_foo_1_5_0.overlay   # DTS overlay for plank board when building for soc1 variant foo on revision 1.5.0
+└── plank_soc1_foo_1_5_0_defconfig # Kconfig adjustment for plank board when building for soc1 variant foo on revision 1.5.0
+</pre></div>
+</div>
+</section>
+</section>
+<section id="custom-revision-cmake-files">
+<h2>自定义 revision.cmake 文件<a class="headerlink" href="#custom-revision-cmake-files" title="链接到此标题。"></a></h2>
+<p>某些开发板可能使用 Zephyr 不原生支持的开发板版本，例如字符串版本。</p>
+<p>Zephyr 不支持字符串修订版本的原因之一是，字符串可以有多种形式，而且并不总是能清楚地判断给定的字符串只是普通字符串（例如 <code class="docutils literal notranslate"><span class="pre">blue</span></code>、<code class="docutils literal notranslate"><span class="pre">green</span></code>、<code class="docutils literal notranslate"><span class="pre">red</span></code> 等），还是表示一种可以与更高或更低修订版本进行比较的顺序（例如 <code class="docutils literal notranslate"><span class="pre">alpha</span></code>、<code class="docutils literal notranslate"><span class="pre">beta`</span></code>, <code class="docutils literal notranslate"><span class="pre">gamma</span></code>）。</p>
+<p>由于字符串的可能性实在太多（包括在内部进行正则匹配的可能性），字符串版本必须使用 <code class="docutils literal notranslate"><span class="pre">custom</span></code> 版本类型来实现。</p>
+<p>要告知构建系统使用的是 <code class="docutils literal notranslate"><span class="pre">custom</span></code> 版本，<code class="file docutils literal notranslate"><span class="pre">board.yml</span></code> 中 <code class="docutils literal notranslate"><span class="pre">revision</span></code> 部分的 format 字段必须写成：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">board</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">revision</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">format</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">custom</span>
+</pre></div>
+</div>
+<p>使用自定义版本时，必须在开发板目录中创建 <code class="file docutils literal notranslate"><span class="pre">revision.cmake</span></code>。</p>
+<p>为该开发板构建时，构建系统会包含 <code class="file docutils literal notranslate"><span class="pre">revision.cmake</span></code>，由该文件负责验证用户指定的版本。</p>
+<p><strong class="makevar">BOARD_REVISION</strong> 变量保存用户指定的版本值。</p>
+<p>如果要告知构建系统使用与用户指定版本不同的版本，<code class="file docutils literal notranslate"><span class="pre">revision.cmake</span></code> 可以将 CMake 变量 <span class="target" id="index-0-variable:ACTIVE_BOARD_REVISION"></span><a class="reference internal" href="../../build/cmake-ref/variable/ACTIVE_BOARD_REVISION.html#variable:ACTIVE_BOARD_REVISION" title="ACTIVE_BOARD_REVISION"><code class="xref cmake cmake-variable docutils literal notranslate"><span class="pre">ACTIVE_BOARD_REVISION</span></code></a> 设置为实际要使用的版本。相应的 Kconfig 文件和设备树覆盖文件必须命名为 <code class="file docutils literal notranslate"><span class="pre">&lt;board&gt;_&lt;ACTIVE_BOARD_REVISION&gt;_defconfig</span></code> 和 <code class="file docutils literal notranslate"><span class="pre">&lt;board&gt;_&lt;ACTIVE_BOARD_REVISION&gt;.overlay</span></code>。</p>
+</section>
+<section id="contributing-your-board">
+<span id="id5"></span><h2>贡献你的开发板<a class="headerlink" href="#contributing-your-board" title="链接到此标题。"></a></h2>
+<p>如果你想把开发板贡献给 Zephyr，首先，感谢你！</p>
+<p>你还需要完成一些额外的工作：</p>
+<ol class="arabic simple">
+<li><p>确保已遵循所有 <a class="reference internal" href="#porting-general-recommendations"><span class="std std-ref">一般建议</span></a>。它们是 Zephyr 收录开发板的必要条件。</p></li>
+<li><p>使用模板文件 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/doc/templates/board.tmpl">doc/templates/board.tmpl</a> 为开发板添加文档。提交 PR（拉取请求）之前如何构建文档，请参阅 <a class="reference internal" href="../../contribute/documentation/generation.html#zephyr-doc"><span class="std std-ref">文档生成</span></a>。</p></li>
+<li><p>按照 <a class="reference internal" href="../../contribute/guidelines.html#contribute-guidelines"><span class="std std-ref">贡献指南</span></a> 准备一个添加你的开发板的 PR（拉取请求）。</p></li>
+</ol>
+</section>
+<section id="board-extensions">
+<span id="extend-board"></span><h2>开发板扩展<a class="headerlink" href="#board-extensions" title="链接到此标题。"></a></h2>
+<p>Zephyr 的开发板硬件模型允许你用新的开发板变体扩展现有开发板。这类开发板扩展可以在你的自定义仓库中完成，因此可以位于 Zephyr 仓库之外。</p>
+<p>用额外的变体扩展现有开发板，可以让你在调整现有开发板的同时，在构建时选择是为未经修改的现有开发板构建，还是为新变体构建。</p>
+<p>要扩展现有开发板，首先在扩展开发板中创建 <code class="file docutils literal notranslate"><span class="pre">board.yml</span></code>。请确保使用 <a class="reference internal" href="#create-your-board-directory"><span class="std std-ref">创建开发板目录</span></a> 中所述的目录结构。</p>
+<p>用于扩展开发板的开发板 YAML 文件骨架如下：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">board</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">extend</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;existing-board-name&gt;</span>
+<span class="w">  </span><span class="nt">variants</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;new-variant&gt;</span>
+<span class="w">      </span><span class="nt">qualifier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;existing-qualifier&gt;</span>
+</pre></div>
+</div>
+<p>扩展开发板时，开发板目录应如下所示：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>boards/&lt;VENDOR&gt;/plank
+├── board.yml
+├── plank_&lt;new-qualifiers&gt;_defconfig
+└── plank_&lt;new-qualifiers&gt;.dts
+</pre></div>
+</div>
+<p>将 <code class="docutils literal notranslate"><span class="pre">plank</span></code> 替换为你所扩展的开发板的真实名称。</p>
+<p>某些情况下，你可能还想调整其他设置，例如 <code class="file docutils literal notranslate"><span class="pre">Kconfig.defconfig</span></code> 或 <code class="file docutils literal notranslate"><span class="pre">Kconfig.</span><em><span class="pre">board</span></em></code>。因此，扩展开发板时还可以额外提供以下文件。</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>boards/&lt;VENDOR&gt;/plank
+├── board.cmake
+├── Kconfig
+├── Kconfig.plank
+├── Kconfig.defconfig
+└── plank_&lt;new-qualifiers&gt;.yaml
+</pre></div>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 9月 16, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,337 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="使用 PWM API 驱动 RGB LED。" name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PWM RGB LED &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/samples/basic/rgb_led/README.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" />
+    <link rel="next" title="Servomotor" href="../servo_motor/README.html" />
+    <link rel="prev" title="Minimal footprint" href="../minimal/README.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">示例与演示</a><ul class="current">
+<li class="toctree-l2"><a class="category-link reference internal" href="../../application_development/application_development.html">Application Development</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../arch/index.html">Architecture-dependent Samples</a></li>
+<li class="toctree-l2 current"><a class="category-link reference internal" href="../basic.html">Basic</a><ul class="current">
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../threads/README.html" title="创建多个线程，让 LED 闪烁并向控制台打印信息。">Basic thread manipulation</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../blinky/README.html" title="使用 GPIO API 让 LED 无限闪烁。">Blinky</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../button/README.html" title="使用输入子系统处理 GPIO 按键输入。">Button</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../fade_led/README.html" title="使用 PWM API 让 LED 渐变。">Fade LED</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../custom_dts_binding/README.html" title="使用自定义设备树绑定控制 GPIO。">GPIO with custom Devicetree binding</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../minimal/README.html" title="测量 Zephyr 在不同配置下的最小 ROM 占用。">Minimal footprint</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../blinky_pwm/README.html" title="使用 PWM API 让 LED 闪烁。">PWM Blinky</a></li>
+<li class="toctree-l3 current"><a class="code-sample-link current reference internal" href="#" title="使用 PWM API 驱动 RGB LED。">PWM RGB LED</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../servo_motor/README.html" title="使用 PWM API 驱动伺服电机。">Servomotor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../hash_map/README.html" title="在哈希表中插入、替换和删除条目。">System hashmap</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../sys_heap/README.html" title="将系统堆的使用情况打印到控制台。">System heap</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../bluetooth/bluetooth.html">蓝牙</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../boards/boards.html">开发板</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cpp/cpp.html">C++</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../data_structures/data_structures.html">数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../drivers/drivers.html">驱动</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../hello_world/README.html">Hello World</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../kernel/index.html">内核与调度器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules/index.html">外部模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../net/net.html">网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../philosophers/README.html">Dining Philosophers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../psa/index.html">PSA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../regulator/index.html">稳压器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sensor/sensor.html"><span class="xref std std-ref">传感器</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../shields/shields.html">扩展板（shield）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../subsys/subsys.html">子系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../synchronization/README.html">Basic Synchronization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sysbuild/sysbuild.html">Sysbuild</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tfm_integration/tfm_integration.html">TF-M 集成</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../userspace/index.html">用户空间</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sample_definition_and_criteria.html">示例的定义与标准</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">示例与演示</a> &raquo;</li>
+  
+     <li><a href="../basic.html">基础</a> &raquo;</li>
+  
+  <li>PWM RGB LED</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="rgb-led">
+<h1>PWM RGB LED<a class="headerlink" href="#rgb-led" title="链接到此标题。"></a></h1>
+<p>
+                <a href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0//samples\basic\rgb_led\README.rst/.." class="btn btn-info fa fa-github"
+                    target="_blank" style="text-align: center;">
+                    Browse source code on GitHub
+                </a>
+                </p>
+<section id="overview">
+<h2>概述<a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>这是一个使用 <a class="reference internal" href="../../../hardware/peripherals/pwm.html#pwm-api"><span class="std std-ref">PWM API</span></a> 驱动 RGB LED 的示例应用程序。</p>
+<p>一个 RGB LED 中有三个单色 LED 组件。每个 LED 组件由一个 PWM 端口驱动，其脉冲宽度在零到设备树中指定的周期之间变化。该周期应足够快，以高于闪烁融合阈值（即人眼感知 LED 为稳定发光的最低闪烁频率）。示例让每个 LED 组件从全暗逐步变到最大亮度。三个 <strong>for</strong> 循环（每个 LED 组件一个）使 RGB LED 产生渐变的颜色变化，示例会无限重复。</p>
+</section>
+<section id="requirements">
+<h2>要求<a class="headerlink" href="#requirements" title="链接到此标题。"></a></h2>
+<p>开发板必须有通过 PWM 输出通道连接的红、绿、蓝 LED。</p>
+<p>LED 的 PWM 通道必须通过以下 <a class="reference internal" href="../../../build/dts/index.html#dt-guide"><span class="std std-ref">设备树</span></a> 别名配置，通常在 <a class="reference internal" href="../../../build/dts/intro-input-output.html#devicetree-in-out-files"><span class="std std-ref">BOARD.dts 文件</span></a> 中：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">red-pwm-led</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">green-pwm-led</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">blue-pwm-led</span></code></p></li>
+</ul>
+<p>如果尝试为不受支持的开发板构建本示例，至少会看到以下错误之一：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>Unsupported board: red-pwm-led devicetree alias is not defined
+Unsupported board: green-pwm-led devicetree alias is not defined
+Unsupported board: blue-pwm-led devicetree alias is not defined
+</pre></div>
+</div>
+<p>支持本示例的 <code class="file docutils literal notranslate"><span class="pre">BOARD.dts</span></code> 文件示例请参阅 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/boards/mikroe/hexiwear/hexiwear_mk64f12.dts">boards/mikroe/hexiwear/hexiwear_mk64f12.dts</a>。</p>
+</section>
+<section id="wiring">
+<h2>接线<a class="headerlink" href="#wiring" title="链接到此标题。"></a></h2>
+<p>如果所需的设备树别名指向的硬件已经连接到开发板上的 LED，则无需额外接线。</p>
+<p>否则，应将 LED 连接到相应的 PWM 通道。</p>
+</section>
+<section id="building-and-running">
+<h2>构建与运行<a class="headerlink" href="#building-and-running" title="链接到此标题。"></a></h2>
+<p>例如，为 <a class="reference internal" href="../../../boards/mikroe/hexiwear/doc/index.html#hexiwear">Hexiwear</a> 构建并烧录：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>hexiwear/mk64f12<span class="w"> </span>samples/basic/rgb_led
+west<span class="w"> </span>flash
+</pre></div>
+</div>
+<p>对于其他受支持的开发板，请相应修改 <code class="docutils literal notranslate"><span class="pre">hexiwear/mk64f12</span></code>。</p>
+</section>
+<section id="see-also">
+<h2>See also<a class="headerlink" href="#see-also" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">pwm_interface</span></dt>
+</dl>
+
+</section>
+</section>
+<script type="application/ld+json">
+                {"@context": "http://schema.org", "@type": "SoftwareSourceCode", "name": "PWM RGB LED", "description": "\u4f7f\u7528 PWM API \u9a71\u52a8 RGB LED\u3002", "codeSampleType": "full", "codeRepository": "https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0//samples\\basic\\rgb_led\\README.rst"}
+                </script>
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 1月 22, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

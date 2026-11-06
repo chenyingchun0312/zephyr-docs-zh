@@ -1,0 +1,666 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>调试探针 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/tabs.css?v=a5c4661c" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/develop/flash_debug/probes.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script src="../../_static/tabs.js?v=3030b3cb"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="模块（外部项目）" href="../modules.html" />
+    <link rel="prev" title="烧录与调试主机工具" href="host-tools.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">使用 Zephyr 进行开发</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/index.html">入门指南</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beyond-GSG.html">入门指南之外</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../env_vars.html">环境变量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../application/index.html">应用程序开发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../debug/index.html">调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/index.html">API 状态与准则</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../languages/index.html">编程语言支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../optimizations/index.html">优化</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">烧录与硬件调试</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="host-tools.html">烧录与调试主机工具</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">调试探针</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#nxp-onboard-debug-probes">NXP 板载调试探针</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#mcu-link-onboard-debug-probe">MCU-Link 板载调试探针</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#mcu-link-cmsis-dap-onboard-debug-probe">MCU-Link CMSIS-DAP 板载调试探针</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#mcu-link-jlink-onboard-debug-probe">MCU-Link JLink 板载调试探针</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#lpc-link2-onboard-debug-probe">LPC-LINK2 板载调试探针</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#lpc-link2-cmsis-dap-onboard-debug-probe">LPC-LINK2 CMSIS DAP 板载调试探针</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lpc-link2-j-link-onboard-debug-probe">LPC-Link2 J-Link 板载调试探针</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lpc-link2-daplink-onboard-debug-probe">LPC-Link2 DAPLink 板载调试探针</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#opensda-onboard-debug-probe">OpenSDA 板载调试探针</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#opensda-daplink-onboard-debug-probe">OpenSDA DAPLink 板载调试探针</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#opensda-j-link-onboard-debug-probe">OpenSDA J-Link 板载调试探针</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#j-link-external-debug-probe">J-Link 外部调试探针</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#st-link-v2-1-onboard-debug-probe">ST-LINK/V2-1 板载调试探针</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#flash-and-debug-with-st-link">使用 ST-Link 烧录和调试</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#updating-or-restoring-st-link-firmware">更新或恢复 ST-Link 固件</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#openocd-deprecates-hla-st-link-interface">OpenOCD 弃用 HLA ST-Link 接口</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#nxp-s32-debug-probe">NXP S32 调试探针</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#black-magic-probe">Black Magic Probe</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html">模块（外部项目）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../west/index.html">West（Zephyr 的元工具）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../twister/index.html">测试运行器（Twister）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../test/index.html">测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sca/index.html">静态代码分析（SCA）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../toolchains/index.html">工具链</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tools/index.html">工具与 IDE</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">使用 Zephyr 进行开发</a> &raquo;</li>
+  
+     <li><a href="index.html">烧录与硬件调试</a> &raquo;</li>
+  
+  <li>调试探针</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="debug-probes">
+<span id="id1"></span><h1>调试探针<a class="headerlink" href="#debug-probes" title="链接到此标题。"></a></h1>
+<p><em>调试探针</em> 是一种特殊硬件，可用于控制在另一块开发板上运行的 Zephyr 应用程序的执行。调试探针通常可以读写寄存器和内存，并支持在主机工作站上使用 GDB 等工具对 Zephyr 应用程序进行断点调试。它们还可能支持其他调试软件以及更高级的功能，例如 <a class="reference internal" href="../../services/tracing/index.html#tracing"><span class="std std-ref">跟踪程序执行</span></a>。关于 Zephyr 支持的相关主机软件，详见 <a class="reference internal" href="host-tools.html#flash-debug-host-tools"><span class="std std-ref">烧录与调试主机工具</span></a>。</p>
+<p>调试探针通常通过 USB 连接到主机工作站，有时也可以通过 IP 网络或其他方式访问。它们通常使用 JTAG 或 SWD 协议连接到运行 Zephyr 的器件。调试探针可以是独立的硬件设备，也可以是集成在运行 Zephyr 的同一块开发板上的电路。</p>
+<p>Zephyr 支持的许多开发板都带有第二颗微控制器，用作板载调试探针、USB 转串口适配器，有时还用作拖放式 Flash 编程器。这样就无需另外购买外部调试探针，并提供多种调试主机工具选择。</p>
+<p>一些硬件厂商有自己品牌的板载调试探针实现：NXP 开发板根据调试探针固件所运行的微控制器，可能使用 <a class="reference external" href="#opensda-onboard-debug-probe">OpenSDA</a>、<a class="reference external" href="#lpc-link2-onboard-debug-probe">LPC-Link2</a> 或 <a class="reference external" href="#mcu-link-onboard-debug-probe">MCU-Link</a> 探针。ST 开发板配备 <a class="reference external" href="#stlink-v21-onboard-debug-probe">ST-LINK 探针</a>。每种板载调试探针微控制器都可以支持一种或多种固件，用于与各自的调试主机工具通信。例如，OpenSDA 微控制器可以烧录 DAPLink 固件以便与 pyOCD 或 OpenOCD 调试主机工具通信，也可以烧录 J-Link 固件以便与 J-Link 调试主机工具通信。</p>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td colspan="2" rowspan="2"><div class="line-block">
+<div class="line"><em>调试探针与主机工具</em></div>
+<div class="line"><em>兼容性对照表</em></div>
+</div>
+</td>
+<td colspan="6"><p>主机工具</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>J-Link Debug</strong></p></td>
+<td><p><strong>OpenOCD</strong></p></td>
+<td><p><strong>pyOCD</strong></p></td>
+<td><p><strong>NXP S32DS</strong></p></td>
+<td><p><strong>NXP LinkServer</strong></p></td>
+<td><p><strong>ST-LINK GDB Server</strong></p></td>
+</tr>
+<tr class="row-odd"><td rowspan="9"><p>调试探针</p></td>
+<td><p><strong>J-Link External</strong></p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>LPC-Link2 CMSIS-DAP</strong></p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>LPC-Link2 J-Link</strong></p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>MCU-Link CMSIS-DAP</strong></p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>MCU-Link J-Link</strong></p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>NXP S32 Debug Probe</strong></p></td>
+<td></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>OpenSDA DAPLink</strong></p></td>
+<td></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td></td>
+<td><p>✓</p></td>
+<td></td>
+</tr>
+<tr class="row-even"><td><p><strong>OpenSDA J-Link</strong></p></td>
+<td><p>✓</p></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="row-odd"><td><p><strong>ST-LINK/V2-1</strong></p></td>
+<td><p>✓</p></td>
+<td><p>✓</p></td>
+<td><p><em>部分 STM32 开发板</em></p></td>
+<td></td>
+<td></td>
+<td><p>✓</p></td>
+</tr>
+</tbody>
+</table>
+<p>Zephyr 支持的某些开发板不带板载调试探针，因此需要外部调试探针。此外，带板载调试探针的开发板通常也有 SWD 或 JTAG 接头，以便改用外部调试探针。这样做的一个原因是板载调试探针可能存在局限，例如不支持高级调试器或高速跟踪。你可能需要调整跳线，防止板载调试探针干扰外部调试探针。</p>
+<section id="nxp-onboard-debug-probes">
+<span id="id2"></span><h2>NXP 板载调试探针<a class="headerlink" href="#nxp-onboard-debug-probes" title="链接到此标题。"></a></h2>
+<p>NXP 开发板可能带有几种板载调试探针之一。这些探针包括 <a class="reference internal" href="#mcu-link-onboard-debug-probe"><span class="std std-ref">MCU-Link 板载调试探针</span></a>、<a class="reference internal" href="#lpc-link2-onboard-debug-probe"><span class="std std-ref">LPC-LINK2 板载调试探针</span></a> 和 <a class="reference internal" href="#opensda-onboard-debug-probe"><span class="std std-ref">OpenSDA 板载调试探针</span></a>。每种探针都实现为评估板上的一颗辅助微控制器。某块开发板上具体是哪种调试探针，可以根据调试微控制器的 SoC 来判断：</p>
+<ul class="simple">
+<li><p>LPC55S69：<a class="reference internal" href="#mcu-link-onboard-debug-probe"><span class="std std-ref">MCU-Link 板载调试探针</span></a></p></li>
+<li><p>LPC4322：<a class="reference internal" href="#lpc-link2-onboard-debug-probe"><span class="std std-ref">LPC-LINK2 板载调试探针</span></a></p></li>
+<li><p>MK20：<a class="reference internal" href="#opensda-onboard-debug-probe"><span class="std std-ref">OpenSDA 板载调试探针</span></a></p></li>
+</ul>
+<p>例如，<a class="reference internal" href="../../boards/nxp/frdm_k64f/doc/index.html#frdm_k64f">FRDM-K64F</a> 开发板带有一颗 MK20 调试微控制器，因此该开发板使用 <a class="reference internal" href="#opensda-onboard-debug-probe"><span class="std std-ref">OpenSDA 板载调试探针</span></a>。</p>
+</section>
+<section id="mcu-link-onboard-debug-probe">
+<span id="id3"></span><h2>MCU-Link 板载调试探针<a class="headerlink" href="#mcu-link-onboard-debug-probe" title="链接到此标题。"></a></h2>
+<p>MCU-Link 板载调试探针使用 LPC55S69 SoC。该探针支持以下固件：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#mcu-link-cmsis-onboard-debug-probe"><span class="std std-ref">MCU-Link CMSIS-DAP 板载调试探针</span></a>（默认固件）</p></li>
+<li><p><a class="reference internal" href="#mcu-link-jlink-onboard-debug-probe"><span class="std std-ref">MCU-Link JLink 板载调试探针</span></a></p></li>
+</ul>
+<p>该探针使用 MCU-Link 主机工具进行编程，这些工具随 <a class="reference internal" href="host-tools.html#linkserver-debug-host-tools"><span class="std std-ref">LinkServer 调试主机工具</span></a> 一起安装。NXP 建议使用 NXP 的 <a class="reference external" href="https://www.nxp.com/lgfiles/updates/mcuxpresso/MCUXpressoInstaller.exe">MCUXpresso Installer</a> 安装 Linkserver 工具。</p>
+<section id="mcu-link-cmsis-dap-onboard-debug-probe">
+<span id="mcu-link-cmsis-onboard-debug-probe"></span><h3>MCU-Link CMSIS-DAP 板载调试探针<a class="headerlink" href="#mcu-link-cmsis-dap-onboard-debug-probe" title="链接到此标题。"></a></h3>
+<p>这是 MCU-Link 调试探针上默认安装的固件。CMSIS-DAP 调试探针支持从任何兼容的工具链进行调试，包括 IAR EWARM、Keil MDK、NXP 的 MCUXpresso IDE 以及 VS Code 的 MCUXpresso 扩展。除调试探针功能外，MCU-Link 探针还可能提供：</p>
+<ol class="arabic simple">
+<li><p>SWO 跟踪端点：MCUXpresso 使用此虚拟设备获取 SWO 跟踪数据。更多信息请参阅 MCUXpresso IDE 文档。</p></li>
+<li><p>连接到目标处理器的虚拟 COM（VCOM）端口 / UART 桥</p></li>
+<li><p>USB 转 UART、SPI 和/或 I2C 接口（取决于 MCU-Link 的类型/实现）</p></li>
+<li><p>目标 MCU 的能耗测量</p></li>
+</ol>
+<p>该调试探针兼容以下调试主机工具：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="host-tools.html#linkserver-debug-host-tools"><span class="std std-ref">LinkServer 调试主机工具</span></a></p></li>
+</ul>
+<p>安装 MCU-Link 主机工具后，需要按以下步骤烧录 CMSIS-DAP 固件：</p>
+<ol class="arabic simple">
+<li><p>确保主机上有 MCU-Link 实用程序。可以通过安装 <a class="reference internal" href="host-tools.html#linkserver-debug-host-tools"><span class="std std-ref">LinkServer 调试主机工具</span></a> 获得。</p></li>
+<li><p>装上 DFU 跳线，然后连接开发板上的 USB 调试端口，使 MCU-Link 微控制器进入 DFU 启动模式。该跳线也可能被称为 ISP 跳线，连接到 LPC55S69 的 <code class="docutils literal notranslate"><span class="pre">PIO0_5</span></code>。</p></li>
+<li><p>运行已安装的 MCU-Link <code class="docutils literal notranslate"><span class="pre">scripts</span></code> 文件夹中的 <code class="docutils literal notranslate"><span class="pre">program_CMSIS</span></code> 脚本。</p></li>
+<li><p>取下 DFU 跳线，并给开发板重新上电。</p></li>
+</ol>
+</section>
+<section id="mcu-link-jlink-onboard-debug-probe">
+<span id="id4"></span><h3>MCU-Link JLink 板载调试探针<a class="headerlink" href="#mcu-link-jlink-onboard-debug-probe" title="链接到此标题。"></a></h3>
+<p>该调试探针固件提供与 JLink 兼容的调试接口以及 USB 转串口适配器。它兼容以下调试主机工具：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="host-tools.html#jlink-debug-host-tools"><span class="std std-ref">J-Link 调试主机工具</span></a></p></li>
+</ul>
+<p>这些探针默认未安装 JLink 固件，必须进行更新。安装 MCU-Link 主机工具后，需要按以下步骤烧录 JLink 固件：</p>
+<ol class="arabic simple">
+<li><p>确保主机上有 MCU-Link 实用程序。可以通过安装 <a class="reference internal" href="host-tools.html#linkserver-debug-host-tools"><span class="std std-ref">LinkServer 调试主机工具</span></a> 获得。</p></li>
+<li><p>装上 DFU 跳线，然后连接开发板上的 USB 调试端口，使 MCU-Link 微控制器进入 DFU 启动模式。该跳线也可能被称为 ISP 跳线，连接到 LPC55S69 的 <code class="docutils literal notranslate"><span class="pre">PIO0_5</span></code>。</p></li>
+<li><p>运行已安装的 MCU-Link <code class="docutils literal notranslate"><span class="pre">scripts</span></code> 文件夹中的 <code class="docutils literal notranslate"><span class="pre">program_JLINK</span></code> 脚本。</p></li>
+<li><p>取下 DFU 跳线，并给开发板重新上电。</p></li>
+</ol>
+</section>
+</section>
+<section id="lpc-link2-onboard-debug-probe">
+<span id="id5"></span><h2>LPC-LINK2 板载调试探针<a class="headerlink" href="#lpc-link2-onboard-debug-probe" title="链接到此标题。"></a></h2>
+<p>LPC-LINK2 板载调试探针使用 LPC4322 SoC。该探针支持以下固件：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#lpclink2-cmsis-onboard-debug-probe"><span class="std std-ref">LPC-LINK2 CMSIS DAP 板载调试探针</span></a></p></li>
+<li><p><a class="reference internal" href="#lpclink2-jlink-onboard-debug-probe"><span class="std std-ref">LPC-Link2 J-Link 板载调试探针</span></a></p></li>
+<li><p><a class="reference internal" href="#lpclink2-daplink-onboard-debug-probe"><span class="std std-ref">LPC-Link2 DAPLink 板载调试探针</span></a>（默认固件）</p></li>
+</ul>
+<p>该探针使用 LPCScrypt 主机工具进行编程，这些工具随 <a class="reference internal" href="host-tools.html#linkserver-debug-host-tools"><span class="std std-ref">LinkServer 调试主机工具</span></a> 一起安装。NXP 建议使用 NXP 的 <a class="reference external" href="https://www.nxp.com/lgfiles/updates/mcuxpresso/MCUXpressoInstaller.exe">MCUXpresso Installer</a> 安装 Linkserver 工具。</p>
+<section id="lpc-link2-cmsis-dap-onboard-debug-probe">
+<span id="lpclink2-cmsis-onboard-debug-probe"></span><h3>LPC-LINK2 CMSIS DAP 板载调试探针<a class="headerlink" href="#lpc-link2-cmsis-dap-onboard-debug-probe" title="链接到此标题。"></a></h3>
+<p>CMSIS-DAP 调试探针支持从任何兼容的工具链进行调试，包括 IAR EWARM、Keil MDK，以及 NXP 的 MCUXpresso IDE 和 VS Code 的 MCUXpresso 扩展。除调试探针功能外，LPC-Link2 探针还提供：</p>
+<ol class="arabic simple">
+<li><p>SWO 跟踪端点：MCUXpresso 使用此虚拟设备获取 SWO 跟踪数据。更多信息请参阅 MCUXpresso IDE 文档。</p></li>
+<li><p>连接到目标处理器的虚拟 COM（VCOM）端口 / UART 桥</p></li>
+<li><p>LPCSIO 桥，用于与 I2C 和 SPI 外设通信</p></li>
+</ol>
+<p>该调试探针固件兼容以下调试主机工具：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="host-tools.html#linkserver-debug-host-tools"><span class="std std-ref">LinkServer 调试主机工具</span></a></p></li>
+</ul>
+<p>可以按以下步骤将探针更新为使用 CMSIS-DAP 固件：</p>
+<ol class="arabic simple">
+<li><p>确保主机上有 LPCScrypt 实用程序。可以通过安装 <a class="reference internal" href="host-tools.html#linkserver-debug-host-tools"><span class="std std-ref">LinkServer 调试主机工具</span></a> 获得。</p></li>
+<li><p>装上 DFU 跳线，然后连接开发板上的 USB 调试端口，使 LPC-Link2 微控制器进入 DFU 启动模式。该跳线连接到 LPC4322 SoC 的 <code class="docutils literal notranslate"><span class="pre">P2_6</span></code>。</p></li>
+<li><p>运行已安装的 LPCScrypt <code class="docutils literal notranslate"><span class="pre">scripts</span></code> 文件夹中的 <code class="docutils literal notranslate"><span class="pre">program_CMSIS</span></code> 脚本。</p></li>
+<li><p>取下 DFU 跳线，并给开发板重新上电。</p></li>
+</ol>
+</section>
+<section id="lpc-link2-j-link-onboard-debug-probe">
+<span id="lpclink2-jlink-onboard-debug-probe"></span><h3>LPC-Link2 J-Link 板载调试探针<a class="headerlink" href="#lpc-link2-j-link-onboard-debug-probe" title="链接到此标题。"></a></h3>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>在某些开发板上，J-Link 探针固件不再通过 USB 调试端口为开发板供电。在这些开发板上烧录该固件后，必须采用其他方式为开发板供电。</p>
+</div>
+<p>该调试探针固件提供与 JLink 兼容的调试接口以及 USB 转串口适配器。它兼容以下调试主机工具：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="host-tools.html#jlink-debug-host-tools"><span class="std std-ref">J-Link 调试主机工具</span></a></p></li>
+</ul>
+<p>可以按以下步骤将探针更新为使用 J-Link 固件：</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>访问 <a class="reference external" href="https://www.segger.com/products/debug-probes/j-link/models/other-j-links/lpcxpresso-on-board/">Firmware for LPCXpresso</a>，确认该固件支持你的开发板</p>
+</div>
+<ol class="arabic simple">
+<li><p>确保主机上有 LPCScrypt 实用程序。可以通过安装 <a class="reference internal" href="host-tools.html#linkserver-debug-host-tools"><span class="std std-ref">LinkServer 调试主机工具</span></a> 获得。</p></li>
+<li><p>装上 DFU 跳线，然后连接开发板上的 USB 调试端口，使 LPC-Link2 微控制器进入 DFU 启动模式。该跳线连接到 LPC4322 SoC 的 <code class="docutils literal notranslate"><span class="pre">P2_6</span></code>。</p></li>
+<li><p>运行已安装的 LPCScrypt <code class="docutils literal notranslate"><span class="pre">scripts</span></code> 文件夹中的 <code class="docutils literal notranslate"><span class="pre">program_JLINK</span></code> 脚本。</p></li>
+<li><p>取下 DFU 跳线，并给开发板重新上电。</p></li>
+</ol>
+</section>
+<section id="lpc-link2-daplink-onboard-debug-probe">
+<span id="lpclink2-daplink-onboard-debug-probe"></span><h3>LPC-Link2 DAPLink 板载调试探针<a class="headerlink" href="#lpc-link2-daplink-onboard-debug-probe" title="链接到此标题。"></a></h3>
+<p>LPC-Link2 DAPLink 固件是基于 LPC-Link2 的开发板出厂时默认附带的固件，但并不是推荐的固件。用户应按照上文的说明更新为 <a class="reference internal" href="#lpclink2-cmsis-onboard-debug-probe"><span class="std std-ref">LPC-LINK2 CMSIS DAP 板载调试探针</span></a> 固件。关于烧录 DAPLink 固件的详细信息，请参阅 <a class="reference external" href="https://www.nxp.com/docs/en/application-note/AN13206.pdf">NXP AN13206</a>。</p>
+</section>
+</section>
+<section id="opensda-onboard-debug-probe">
+<span id="id6"></span><h2>OpenSDA 板载调试探针<a class="headerlink" href="#opensda-onboard-debug-probe" title="链接到此标题。"></a></h2>
+<p>OpenSDA 板载调试探针基于 NXP MK20 SoC。它支持拖放式编程，并支持以下调试固件：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#opensda-daplink-onboard-debug-probe"><span class="std std-ref">OpenSDA DAPLink 板载调试探针</span></a>（默认固件）</p></li>
+<li><p><a class="reference internal" href="#opensda-jlink-onboard-debug-probe"><span class="std std-ref">OpenSDA J-Link 板载调试探针</span></a></p></li>
+</ul>
+<section id="opensda-daplink-onboard-debug-probe">
+<span id="id7"></span><h3>OpenSDA DAPLink 板载调试探针<a class="headerlink" href="#opensda-daplink-onboard-debug-probe" title="链接到此标题。"></a></h3>
+<p>该调试探针固件兼容以下调试主机工具：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="host-tools.html#pyocd-debug-host-tools"><span class="std std-ref">pyOCD 调试主机工具</span></a></p></li>
+<li><p><a class="reference internal" href="host-tools.html#openocd-debug-host-tools"><span class="std std-ref">OpenOCD 调试主机工具</span></a></p></li>
+<li><p><a class="reference internal" href="host-tools.html#linkserver-debug-host-tools"><span class="std std-ref">LinkServer 调试主机工具</span></a></p></li>
+</ul>
+<p>该探针通过在 OpenSDA 微控制器上烧录 DAPLink OpenSDA 固件实现。NXP 提供了 <a class="reference external" href="https://www.nxp.com/opensda">OpenSDA DAPLink Board-Specific Firmwares</a>。</p>
+<p>烧录固件之前，请先安装调试主机工具。</p>
+<p>与所有 OpenSDA 调试探针一样，烧录固件的步骤如下：</p>
+<ol class="arabic simple">
+<li><p>按住复位按钮的同时给开发板上电，使 OpenSDA 微控制器进入引导加载程序模式。注意，此处的“引导加载程序模式”指的是 OpenSDA 微控制器本身，而不是 Zephyr 应用程序的目标微控制器。</p></li>
+<li><p>开发板上电后，松开复位按钮。系统会枚举出一个名为 <strong>BOOTLOADER</strong> 或 <strong>MAINTENANCE</strong> 的 USB 大容量存储设备。如果枚举出的设备名为 <strong>BOOTLOADER</strong>，请先按照 <a class="reference external" href="https://os.mbed.com/blog/entry/DAPLink-bootloader-update/">DAPLink Bootloader Update</a> 的说明将引导加载程序更新到最新版本。</p></li>
+<li><p>将 OpenSDA 固件二进制文件复制到该 USB 大容量存储设备。</p></li>
+<li><p>给开发板重新上电，这次不要按住复位按钮。此时应枚举出三个 USB 设备：一个 CDC 设备（串口）、一个 HID 设备（调试端口）和一个大容量存储设备（拖放式 Flash 编程）。</p></li>
+</ol>
+</section>
+<section id="opensda-j-link-onboard-debug-probe">
+<span id="opensda-jlink-onboard-debug-probe"></span><h3>OpenSDA J-Link 板载调试探针<a class="headerlink" href="#opensda-j-link-onboard-debug-probe" title="链接到此标题。"></a></h3>
+<p>该调试探针兼容以下调试主机工具：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="host-tools.html#jlink-debug-host-tools"><span class="std std-ref">J-Link 调试主机工具</span></a></p></li>
+</ul>
+<p>该探针通过在 OpenSDA 微控制器上烧录 J-Link OpenSDA 固件实现。Segger 提供 <a class="reference external" href="https://www.segger.com/downloads/jlink/#JLinkOpenSDAGenericFirmwares">OpenSDA J-Link Generic Firmwares</a> 和 <a class="reference external" href="https://www.segger.com/downloads/jlink/#JLinkOpenSDABoardSpecificFirmwares">OpenSDA J-Link Board-Specific Firmwares</a>，如有后者，一般推荐使用后者。i.MX RT 开发板需要使用开发板专用固件以支持其外部 Flash 存储器，而通用固件兼容所有 Kinetis 开发板。</p>
+<p>烧录固件之前，请先安装调试主机工具。</p>
+<p>与所有 OpenSDA 调试探针一样，烧录固件的步骤如下：</p>
+<ol class="arabic simple">
+<li><p>按住复位按钮的同时将 USB 线插入开发板的 USB 调试端口，使 OpenSDA 微控制器进入引导加载程序模式。注意，此处的“引导加载程序模式”指的是 OpenSDA 微控制器本身，而不是 Zephyr 应用程序的目标微控制器。</p></li>
+<li><p>开发板上电后，松开复位按钮。系统会枚举出一个名为 <strong>BOOTLOADER</strong> 或 <strong>MAINTENANCE</strong> 的 USB 大容量存储设备。如果枚举出的设备名为 <strong>BOOTLOADER</strong>，请先按照 <a class="reference external" href="https://os.mbed.com/blog/entry/DAPLink-bootloader-update/">DAPLink Bootloader Update</a> 的说明将引导加载程序更新到最新版本。</p></li>
+<li><p>将 OpenSDA 固件二进制文件复制到该 USB 大容量存储设备。</p></li>
+<li><p>给开发板重新上电，这次不要按住复位按钮。此时应枚举出两个 USB 设备：一个 CDC 设备（串口）和一个厂商专用设备（调试端口）。</p></li>
+</ol>
+</section>
+</section>
+<section id="j-link-external-debug-probe">
+<span id="jlink-external-debug-probe"></span><h2>J-Link 外部调试探针<a class="headerlink" href="#j-link-external-debug-probe" title="链接到此标题。"></a></h2>
+<p><a class="reference external" href="https://www.segger.com/products/debug-probes/j-link/">Segger J-Link</a> 是一系列外部调试探针，包括 J-Link EDU、J-Link PLUS、J-Link ULTRA+ 和 J-Link PRO，支持来自不同硬件架构和厂商的大量器件。</p>
+<p>该调试探针兼容以下调试主机工具：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="host-tools.html#jlink-debug-host-tools"><span class="std std-ref">J-Link 调试主机工具</span></a></p></li>
+<li><p><a class="reference internal" href="host-tools.html#openocd-debug-host-tools"><span class="std std-ref">OpenOCD 调试主机工具</span></a></p></li>
+</ul>
+<p>烧录固件之前，请先安装调试主机工具。</p>
+</section>
+<section id="st-link-v2-1-onboard-debug-probe">
+<span id="stlink-v21-onboard-debug-probe"></span><h2>ST-LINK/V2-1 板载调试探针<a class="headerlink" href="#st-link-v2-1-onboard-debug-probe" title="链接到此标题。"></a></h2>
+<p>ST-LINK/V2-1 是内置于所有 Nucleo 和 Discovery 开发板中的串口与调试适配器。它在你的计算机（或其他 USB 主机）与嵌入式目标处理器之间架起桥梁，只需一根普通 USB 线即可进行调试、Flash 编程和串口通信。</p>
+<p>它兼容以下主机调试工具：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="host-tools.html#openocd-debug-host-tools"><span class="std std-ref">OpenOCD 调试主机工具</span></a></p></li>
+<li><p><a class="reference internal" href="host-tools.html#jlink-debug-host-tools"><span class="std std-ref">J-Link 调试主机工具</span></a></p></li>
+<li><p><a class="reference internal" href="host-tools.html#stm32cubeclt-host-tools"><span class="std std-ref">STM32CubeCLT 烧录与调试主机工具</span></a></p></li>
+</ul>
+<p>对于某些基于 STM32 的开发板，它还兼容：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="host-tools.html#pyocd-debug-host-tools"><span class="std std-ref">pyOCD 调试主机工具</span></a></p></li>
+</ul>
+<p>它可以直接配合 OpenOCD 使用，但要配合 J-Link 使用则需要烧录一些固件。为此，SEGGER 提供了一款固件，用于升级 Nucleo 和 Discovery 开发板上的板载 ST-LINK/V2-1。该固件使 ST-LINK/V2-1 与 J-LinkOB 兼容，让用户可以利用 J-Link 的大多数特性，例如超高速的 Flash 下载和调试速度，或可免费使用的 GDBServer。</p>
+<p>关于将 ST-LINK/V2-1 升级为 JLink 或恢复 ST-Link/V2-1 固件的更多信息，请访问：<a class="reference external" href="https://www.segger.com/products/debug-probes/j-link/models/other-j-links/st-link-on-board/">Segger over ST-Link</a></p>
+<section id="flash-and-debug-with-st-link">
+<h3>使用 ST-Link 烧录和调试<a class="headerlink" href="#flash-and-debug-with-st-link" title="链接到此标题。"></a></h3>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-0-0" aria-selected="true" class="sphinx-tabs-tab" id="tab-0-0-0" name="0-0" role="tab" tabindex="0">Using OpenOCD</button><button aria-controls="panel-0-0-1" aria-selected="false" class="sphinx-tabs-tab" id="tab-0-0-1" name="0-1" role="tab" tabindex="-1"><span class="target" id="using-segger-j-link">Using Segger J-Link</span></button></div><div aria-labelledby="tab-0-0-0" class="sphinx-tabs-panel" id="panel-0-0-0" name="0-0" role="tabpanel" tabindex="0"><p>ST-Link 默认支持 OpenOCD，并将其配置为默认的烧录和调试工具。烧录和调试可以按如下方式进行：</p>
+<blockquote>
+<div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>None<span class="w"> </span>samples/hello_world
+west<span class="w"> </span>flash
+</pre></div>
+</div>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>None<span class="w"> </span>samples/hello_world
+west<span class="w"> </span>debug
+</pre></div>
+</div>
+</div></blockquote>
+</div><div aria-labelledby="tab-0-0-1" class="sphinx-tabs-panel" hidden="true" id="panel-0-0-1" name="0-1" role="tabpanel" tabindex="0"><p>为 STLink 烧录 SEGGER 固件并在主机上安装 J-Link GDB 服务器后，可以按如下方式烧录和调试：</p>
+<p>在 CMake 中使用 <code class="docutils literal notranslate"><span class="pre">-DBOARD_FLASH_RUNNER=jlink</span></code>，将默认的 OpenOCD 运行器改为 J-Link。也可以在应用程序的 <code class="docutils literal notranslate"><span class="pre">CMakeList.txt</span></code> 文件中添加以下一行。</p>
+<blockquote>
+<div><div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nf">set(</span><span class="no">BOARD_FLASH_RUNNER</span><span class="w"> </span><span class="nb">jlink</span><span class="nf">)</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>如果使用 West（Zephyr 的元工具），可以通过 <code class="docutils literal notranslate"><span class="pre">--runner</span></code>（或 <code class="docutils literal notranslate"><span class="pre">-r</span></code>）选项修改默认运行器。</p>
+<blockquote>
+<div><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">west flash --runner jlink</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>使用 <code class="docutils literal notranslate"><span class="pre">jlink</span></code> 将调试器连接到开发板并打开调试控制台。</p>
+<blockquote>
+<div><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">west debug --runner jlink</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>关于 West 及其可用选项的更多信息，请参阅 <a class="reference internal" href="../west/index.html#west"><span class="std std-ref">West（Zephyr 的元工具）</span></a>。</p>
+<p>如果你将 Zephyr 应用程序配置为改用 <a class="reference external" href="https://www.segger.com/jlink-rtt.html">Segger RTT</a> 控制台，请打开 telnet：</p>
+<blockquote>
+<div><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>telnet<span class="w"> </span>localhost<span class="w"> </span><span class="m">19021</span>
+<span class="go">Trying ::1...</span>
+<span class="go">Trying 127.0.0.1...</span>
+<span class="go">Connected to localhost.</span>
+<span class="go">Escape character is '^]'.</span>
+<span class="go">SEGGER J-Link V6.30f - Real time terminal output</span>
+<span class="go">J-Link STLink V21 compiled Jun 26 2017 10:35:16 V1.0, SN=773895351</span>
+<span class="go">Process: JLinkGDBServerCLExe</span>
+<span class="go">Zephyr Shell, Zephyr version: 1.12.99</span>
+<span class="go">Type 'help' for a list of available commands</span>
+<span class="go">shell&gt;</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>如果没有 RTT 输出，并且你运行的示例或应用程序默认启用了与 RTT 冲突的其他控制台，则可能需要禁用这些控制台，例如在 menuconfig 中禁用 UART_CONSOLE</p>
+</div></div>
+</section>
+<section id="updating-or-restoring-st-link-firmware">
+<span id="stlink-adapter-firmware-update"></span><h3>更新或恢复 ST-Link 固件<a class="headerlink" href="#updating-or-restoring-st-link-firmware" title="链接到此标题。"></a></h3>
+<p>可以使用 <a class="reference external" href="https://www.st.com/en/development-tools/stm32cubeprog.html">STM32CubeProgrammer Tool</a> 更新 ST-Link 固件。遇到烧录问题时（例如使用 twister 的设备测试选项时），这通常很有用。</p>
+<p>安装后，可以用以下命令更新所连接开发板的 ST-Link 固件</p>
+<blockquote>
+<div><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">s java -jar ~/STMicroelectronics/STM32Cube/STM32CubeProgrammer/Drivers/FirmwareUpgrade/STLinkUpgrade.jar -sn &lt;board_uid&gt;</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>其中 board_uid 可以通过 twister 的 generate-hardware-map 选项获取。关于 twister 及其可用选项的更多信息，请参阅 <a class="reference internal" href="../twister/index.html#twister-script"><span class="std std-ref">测试运行器（Twister）</span></a>。</p>
+</section>
+<section id="openocd-deprecates-hla-st-link-interface">
+<h3>OpenOCD 弃用 HLA ST-Link 接口<a class="headerlink" href="#openocd-deprecates-hla-st-link-interface" title="链接到此标题。"></a></h3>
+<p>2024 年 1 月，OpenOCD 弃用了 ST-Link 固件所使用的旧版 HLA 接口，转而采用通用 DAP 接口（参见 <a class="reference external" href="https://sourceforge.net/p/openocd/code/ci/34ec5536c0ba3315bc5a841244bbf70141ccfbb4">OpenOCD deprecates ST-Link HLA Interface</a>）。ST-Link 固件自 2015 年（从 v2j24 版本起）就已支持 DAP 接口。</p>
+<p>OpenOCD 弃用该接口后，如果使用较新的 OpenOCD 工具（v0.12.0 发布标签之后），而 ST-Link 适配器内置的固件早于 v2j24 版本，则可能遇到通信问题。这种情况下，建议更新 ST-Link 固件（参见 <a class="reference external" href="#_stlink-adapter-firmware-update">ST-LINK 固件更新</a>）。如果无法更新固件，仍然可以使用旧的 HLA 接口，方法是修改 OpenOCD 配置脚本，将下面两行（如果存在）：</p>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>source [find interface/stlink-dap.cfg]
+transport select dapdirect_swd
+</pre></div>
+</div>
+</div></blockquote>
+<p>替换为以下两行：</p>
+<blockquote>
+<div><div class="highlight-none notranslate"><div class="highlight"><pre><span></span>source [find interface/stlink-hla.cfg]
+transport select hla_swd
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+</section>
+<section id="nxp-s32-debug-probe">
+<span id="id8"></span><h2>NXP S32 调试探针<a class="headerlink" href="#nxp-s32-debug-probe" title="链接到此标题。"></a></h2>
+<p><a class="reference external" href="https://www.nxp.com/design/software/automotive-software-and-tools/s32-debug-probe:S32-DP">NXP S32 Debug Probe</a> 通过 USB 或以太网远程连接到开发者工作站，并通过标准调试端口调试 NXP S32 目标系统。</p>
+<p>NXP S32 调试探针设计为与 NXP S32 Design Studio（S32DS）以及 NXP 汽车级微控制器和处理器配合使用。烧录固件之前，请按照 <a class="reference internal" href="host-tools.html#nxp-s32-debug-host-tools"><span class="std std-ref">NXP S32 调试探针主机工具</span></a> 中的说明安装调试主机工具。</p>
+</section>
+<section id="black-magic-probe">
+<span id="id9"></span><h2>Black Magic Probe<a class="headerlink" href="#black-magic-probe" title="链接到此标题。"></a></h2>
+<p>Black Magic Probe 是一款开源调试硬件，设计为与 <a class="reference external" href="https://black-magic.org/index.html">Black Magic Debug</a> 固件配合使用。该固件集成了 GDB 服务器，因此可以直接从 <code class="docutils literal notranslate"><span class="pre">gdb</span></code> 连接到目标器件。</p>
+<p>部分基于 STM32F103 的开发板可以运行 <a class="reference external" href="https://black-magic.org/index.html">Black Magic Debug</a> 固件。参见 <a class="reference external" href="https://black-magic.org/index.html#other-hardware-supported-by-black-magic-debug">Black Magic Debug supported hardware</a>。</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 8月 13, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

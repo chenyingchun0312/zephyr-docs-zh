@@ -1,0 +1,639 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CVE-2020 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/security/vulnerabilities/2020.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="CVE-2021" href="2021.html" />
+    <link rel="prev" title="CVE-2019" href="2019.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">信息安全</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../security-overview.html">Zephyr 信息安全概述</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../reporting.html">信息安全漏洞报告</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../secure-coding.html">安全编码</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sensor-threat.html">传感器设备威胁模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../hardening-tool.html">加固工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../control-flow-integrity.html">控制流完整性</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../vulnerabilities.html">漏洞</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="2017.html">CVE-2017</a></li>
+<li class="toctree-l3"><a class="reference internal" href="2019.html">CVE-2019</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">CVE-2020</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#cve-2020-10019"><strong>CVE 2020-10019</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cve-2020-10021"><strong>CVE 2020-10021</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cve-2020-10022"><strong>CVE 2020-10022</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cve-2020-10023"><strong>CVE 2020-10023</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cve-2020-10024"><strong>CVE 2020-10024</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cve-2020-10027"><strong>CVE 2020-10027</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cve-2020-10028"><strong>CVE 2020-10028</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cve-2020-10058"><strong>CVE 2020-10058</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cve-2020-10059"><strong>CVE 2020-10059</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cve-2020-10060"><strong>CVE 2020-10060</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cve-2020-10061"><strong>CVE 2020-10061</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cve-2020-10062"><strong>CVE 2020-10062</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cve-2020-10063"><strong>CVE 2020-10063</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cve-2020-10064"><strong>CVE 2020-10064</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cve-2020-10065"><strong>CVE 2020-10065</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cve-2020-10066"><strong>CVE 2020-10066</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cve-2020-10067"><strong>CVE 2020-10067</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cve-2020-10068"><strong>CVE 2020-10068</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cve-2020-10069"><strong>CVE 2020-10069</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cve-2020-10070"><strong>CVE 2020-10070</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cve-2020-10071"><strong>CVE 2020-10071</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cve-2020-10072"><strong>CVE 2020-10072</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cve-2020-10136"><strong>CVE 2020-10136</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cve-2020-13598"><strong>CVE 2020-13598</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cve-2020-13599"><strong>CVE 2020-13599</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cve-2020-13600"><strong>CVE 2020-13600</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cve-2020-13601"><strong>CVE 2020-13601</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cve-2020-13602"><strong>CVE 2020-13602</strong></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#cve-2020-13603"><strong>CVE 2020-13603</strong></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="2021.html">CVE-2021</a></li>
+<li class="toctree-l3"><a class="reference internal" href="2022.html">CVE-2022</a></li>
+<li class="toctree-l3"><a class="reference internal" href="2023.html">CVE-2023</a></li>
+<li class="toctree-l3"><a class="reference internal" href="2024.html">CVE-2024</a></li>
+<li class="toctree-l3"><a class="reference internal" href="2025.html">CVE-2025</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../vulnerabilities.html#cve-2026">CVE-2026</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../standards/index.html">信息安全标准与 Zephyr</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">信息安全</a> &raquo;</li>
+  
+     <li><a href="../vulnerabilities.html">漏洞</a> &raquo;</li>
+  
+  <li>CVE-2020</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="cve-2020">
+<span id="vulnerabilities-2020"></span><h1>CVE-2020<a class="headerlink" href="#cve-2020" title="链接到此标题。"></a></h1>
+<section id="cve-2020-10019">
+<h2><span class="target" id="index-0"></span><a class="cve reference external" href="https://www.cve.org/CVERecord?id=CVE-2020-10019"><strong>CVE 2020-10019</strong></a><a class="headerlink" href="#cve-2020-10019" title="链接到此标题。"></a></h2>
+<p>Zephyr USB DFU 中的缓冲区溢出漏洞允许通过 USB 连接的主机造成可能的远程代码执行。</p>
+<p>此问题已在 v1.14.2、v2.2.0 和 v2.1.1 版本中修复。</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://zephyrprojectsec.atlassian.net/browse/ZEPSEC-25">Zephyr project bug tracker ZEPSEC-25</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/23460">PR23460 fix for 1.14.x</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/23457">PR23457 fix for 2.1.x</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/23190">PR23190 fix in 2.2.0</a></p></li>
+</ul>
+</section>
+<section id="cve-2020-10021">
+<h2><span class="target" id="index-1"></span><a class="cve reference external" href="https://www.cve.org/CVERecord?id=CVE-2020-10021"><strong>CVE 2020-10021</strong></a><a class="headerlink" href="#cve-2020-10021" title="链接到此标题。"></a></h2>
+<p>USB 大容量存储在大小未对齐时存在越界写</p>
+<p>USB 大容量存储（Mass Storage）的 memoryWrite 处理函数在大小未对齐时存在越界写。</p>
+<p>参见 NCC-ZEP-024、NCC-ZEP-025、NCC-ZEP-026</p>
+<p>此问题已在 v1.14.2 和 v2.2.0 版本中修复。</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://zephyrprojectsec.atlassian.net/browse/ZEPSEC-26">Zephyr project bug tracker ZEPSEC-26</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/23455">PR23455 fix for v1.14.2</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/23456">PR23456 fix for the v2.1 branch</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/23240">PR23240 fix for v2.2.0</a></p></li>
+</ul>
+</section>
+<section id="cve-2020-10022">
+<h2><span class="target" id="index-2"></span><a class="cve reference external" href="https://www.cve.org/CVERecord?id=CVE-2020-10022"><strong>CVE 2020-10022</strong></a><a class="headerlink" href="#cve-2020-10022" title="链接到此标题。"></a></h2>
+<p>UpdateHub 模块将可变长度的哈希字符串复制到固定大小的数组中</p>
+<p>从 UpdateHub 服务器接收到的格式错误的 JSON 载荷可能在 Zephyr OS 中引发内存损坏。最好的情况下会导致拒绝服务，最坏的情况下会导致代码执行。</p>
+<p>参见 NCC-ZEP-016</p>
+<p>此问题已通过以下针对 main 分支、v2.1.0 派生分支和 v2.2.0 派生分支的 PR 修复。</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://zephyrprojectsec.atlassian.net/browse/ZEPSEC-28">Zephyr project bug tracker ZEPSEC-28</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/24154">PR24154 fix for main</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/24065">PR24065 fix for branch from v2.1.0</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/24066">PR24066 fix for branch from v2.2.0</a></p></li>
+</ul>
+</section>
+<section id="cve-2020-10023">
+<h2><span class="target" id="index-3"></span><a class="cve reference external" href="https://www.cve.org/CVERecord?id=CVE-2020-10023"><strong>CVE 2020-10023</strong></a><a class="headerlink" href="#cve-2020-10023" title="链接到此标题。"></a></h2>
+<p>Shell 子系统的 shell_spaces_trim 中存在缓冲区溢出漏洞</p>
+<p>Shell 子系统中存在缓冲区溢出，能够物理接触设备的攻击者可借此造成内存损坏，导致拒绝服务，或可能在 Zephyr 内核中执行代码。</p>
+<p>参见 NCC-ZEP-019</p>
+<p>此问题已在 v1.14.2、v2.2.0 版本以及 v2.1.0 的派生分支中修复。</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://zephyrprojectsec.atlassian.net/browse/ZEPSEC-29">Zephyr project bug tracker ZEPSEC-29</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/23646">PR23646 fix for v1.14.2</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/23649">PR23649 fix for branch from v2.1.0</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/23304">PR23304 fix for v2.2.0</a></p></li>
+</ul>
+</section>
+<section id="cve-2020-10024">
+<h2><span class="target" id="index-4"></span><a class="cve reference external" href="https://www.cve.org/CVERecord?id=CVE-2020-10024"><strong>CVE 2020-10024</strong></a><a class="headerlink" href="#cve-2020-10024" title="链接到此标题。"></a></h2>
+<p>ARM 平台在校验系统调用号时使用有符号整数比较</p>
+<p>arm 平台相关代码在校验系统调用号时使用了有符号整数比较。已在用户线程中获得代码执行能力的攻击者可借此将权限提升至内核级别。</p>
+<p>参见 NCC-ZEP-001</p>
+<p>此问题已在 v1.14.2、v2.2.0 版本以及 v2.1.0 的派生分支中修复。</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://zephyrprojectsec.atlassian.net/browse/ZEPSEC-30">Zephyr project bug tracker ZEPSEC-30</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/23535">PR23535 fix for v1.14.2</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/23498">PR23498 fix for branch from v2.1.0</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/23323">PR23323 fix for v2.2.0</a></p></li>
+</ul>
+</section>
+<section id="cve-2020-10027">
+<h2><span class="target" id="index-5"></span><a class="cve reference external" href="https://www.cve.org/CVERecord?id=CVE-2020-10027"><strong>CVE 2020-10027</strong></a><a class="headerlink" href="#cve-2020-10027" title="链接到此标题。"></a></h2>
+<p>ARC 平台在校验系统调用号时使用有符号整数比较</p>
+<p>已在用户线程中获得代码执行能力的攻击者可借此将权限提升至内核级别。</p>
+<p>参见 NCC-ZEP-001</p>
+<p>此问题已在 v1.14.2、v2.2.0 版本以及 v2.1.0 的派生分支中修复。</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://zephyrprojectsec.atlassian.net/browse/ZEPSEC-35">Zephyr project bug tracker ZEPSEC-35</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/23500">PR23500 fix for v1.14.2</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/23499">PR23499 fix for branch from v2.1.0</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/23328">PR23328 fix for v2.2.0</a></p></li>
+</ul>
+</section>
+<section id="cve-2020-10028">
+<h2><span class="target" id="index-6"></span><a class="cve reference external" href="https://www.cve.org/CVERecord?id=CVE-2020-10028"><strong>CVE 2020-10028</strong></a><a class="headerlink" href="#cve-2020-10028" title="链接到此标题。"></a></h2>
+<p>GPIO 子系统中的多个系统调用未进行参数校验</p>
+<p>多个系统调用的参数校验不充分</p>
+<p>参见 NCC-ZEP-006</p>
+<p>此问题已在 v1.14.2、v2.2.0 版本以及 v2.1.0 的派生分支中修复。</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://zephyrprojectsec.atlassian.net/browse/ZEPSEC-32">Zephyr project bug tracker ZEPSEC-32</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/23733">PR23733 fix for v1.14.2</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/23737">PR23737 fix for branch from v2.1.0</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/23308">PR23308 fix for v2.2.0 (gpio patch)</a></p></li>
+</ul>
+</section>
+<section id="cve-2020-10058">
+<h2><span class="target" id="index-7"></span><a class="cve reference external" href="https://www.cve.org/CVERecord?id=CVE-2020-10058"><strong>CVE 2020-10058</strong></a><a class="headerlink" href="#cve-2020-10058" title="链接到此标题。"></a></h2>
+<p>kscan 子系统中的多个系统调用未进行参数校验</p>
+<p>Kscan 子系统中的多个系统调用参数校验不充分，使在用户空间执行的代码有可能获得更高的权限。</p>
+<p>参见 NCC-ZEP-006</p>
+<p>此问题已在 v2.1.0 的派生分支和 v2.2.0 版本中修复。</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://zephyrprojectsec.atlassian.net/browse/ZEPSEC-34">Zephyr project bug tracker ZEPSEC-34</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/23748">PR23748 fix for branch from v2.1.0</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/23308">PR23308 fix for v2.2.0 (kscan patch)</a></p></li>
+</ul>
+</section>
+<section id="cve-2020-10059">
+<h2><span class="target" id="index-8"></span><a class="cve reference external" href="https://www.cve.org/CVERecord?id=CVE-2020-10059"><strong>CVE 2020-10059</strong></a><a class="headerlink" href="#cve-2020-10059" title="链接到此标题。"></a></h2>
+<p>UpdateHub 模块显式禁用了 TLS 验证</p>
+<p>UpdateHub 模块禁用了 DTLS 对端检查，因此可能遭受中间人攻击。由于固件镜像要求具备有效签名，这一风险有所缓解。但是，不进行对端检查时使用 DTLS 没有任何意义。</p>
+<p>参见 NCC-ZEP-018</p>
+<p>此问题已通过一个针对 Zephyr main 分支的 PR 修复。</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://zephyrprojectsec.atlassian.net/browse/ZEPSEC-36">Zephyr project bug tracker ZEPSEC-36</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/24954">PR24954 fix on main (to be fixed in v2.3.0)</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/24999">PR24954 fix v2.1.0</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/24997">PR24954 fix v2.2.0</a></p></li>
+</ul>
+</section>
+<section id="cve-2020-10060">
+<h2><span class="target" id="index-9"></span><a class="cve reference external" href="https://www.cve.org/CVERecord?id=CVE-2020-10060"><strong>CVE 2020-10060</strong></a><a class="headerlink" href="#cve-2020-10060" title="链接到此标题。"></a></h2>
+<p>UpdateHub 可能解引用未初始化的指针</p>
+<p>在 updatehub_probe 中，JSON 解析完成后，紧接着在两个不同的位置访问了输出结构体中的 objects[1]。如果 JSON 中的元素少于两个，此访问将引用未初始化的栈内存。这可能导致崩溃、拒绝服务，或可能导致信息泄露。</p>
+<p>建议在修复发布之前禁用 updatehub。</p>
+<p>参见 NCC-ZEP-030</p>
+<p>此问题已通过一个针对 Zephyr main 分支的 PR 修复。</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://zephyrprojectsec.atlassian.net/browse/ZEPSEC-37">Zephyr project bug tracker ZEPSEC-37</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/27865">PR27865 fix on main (to be fixed in v2.4.0)</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/27889">PR27865 fix for v2.3.0</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/27891">PR27865 fix for v2.2.0</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/27893">PR27865 fix for v2.1.0</a></p></li>
+</ul>
+</section>
+<section id="cve-2020-10061">
+<h2><span class="target" id="index-10"></span><a class="cve reference external" href="https://www.cve.org/CVERecord?id=CVE-2020-10061"><strong>CVE 2020-10061</strong></a><a class="headerlink" href="#cve-2020-10061" title="链接到此标题。"></a></h2>
+<p>处理无效数据包序列时出错</p>
+<p>Zephyr Bluetooth 实现对缓冲区已满情况的处理不当，可能导致内存损坏。</p>
+<p>此问题已在 v1.14.0 和 v2.2.0 的分支中修复，并将包含在 v2.3.0 中。</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://zephyrprojectsec.atlassian.net/browse/ZEPSEC-75">Zephyr project bug tracker ZEPSEC-75</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/23516">PR23516 fix for v2.3 (split driver)</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/23517">PR23517 fix for v2.3 (legacy driver)</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/23091">PR23091 fix for branch from v1.14.0</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/23547">PR23547 fix for branch from v2.2.0</a></p></li>
+</ul>
+</section>
+<section id="cve-2020-10062">
+<h2><span class="target" id="index-11"></span><a class="cve reference external" href="https://www.cve.org/CVERecord?id=CVE-2020-10062"><strong>CVE 2020-10062</strong></a><a class="headerlink" href="#cve-2020-10062" title="链接到此标题。"></a></h2>
+<p>MQTT 中的数据包长度解码错误</p>
+<p>CVE：Zephyr 项目 MQTT 数据包长度解码器中的差一错误（off-by-one）可能导致内存损坏，并可能导致远程代码执行。NCC-ZEP-031</p>
+<p>MQTT 数据包头部的长度字段可以是 1 到 4 个字节。代码中的差一错误可能导致它被解释为 5 个字节，从而引起整数溢出，导致内存损坏。</p>
+<p>此问题已在 main 分支中修复，将包含在 v2.3 中。</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://zephyrprojectsec.atlassian.net/browse/ZEPSEC-84">Zephyr project bug tracker ZEPSEC-84</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/23821/commits/11b7a37d9a0b438270421b224221d91929843de4">commit 11b7a37d for v2.3</a></p></li>
+<li><p><a class="reference external" href="https://research.nccgroup.com/2020/05/26/research-report-zephyr-and-mcuboot-security-assessment">NCC-ZEP report</a> (NCC-ZEP-031)</p></li>
+</ul>
+</section>
+<section id="cve-2020-10063">
+<h2><span class="target" id="index-12"></span><a class="cve reference external" href="https://www.cve.org/CVERecord?id=CVE-2020-10063"><strong>CVE 2020-10063</strong></a><a class="headerlink" href="#cve-2020-10063" title="链接到此标题。"></a></h2>
+<p>CoAP 选项解析中的整数溢出导致远程拒绝服务</p>
+<p>能够发送任意 CoAP 数据包供 Zephyr 解析的远程攻击者可借此造成拒绝服务。</p>
+<p>此问题已在 main 分支中修复，将包含在 v2.3 中。</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://zephyrprojectsec.atlassian.net/browse/ZEPSEC-55">Zephyr project bug tracker ZEPSEC-55</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/24435">PR24435 fix in main for v2.3</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/24531">PR24531 fix for branch from v2.2</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/24535">PR24535 fix for branch from v2.1</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/24530">PR24530 fix for branch from v1.14</a></p></li>
+<li><p><a class="reference external" href="https://research.nccgroup.com/2020/05/26/research-report-zephyr-and-mcuboot-security-assessment">NCC-ZEP report</a> (NCC-ZEP-032)</p></li>
+</ul>
+</section>
+<section id="cve-2020-10064">
+<h2><span class="target" id="index-13"></span><a class="cve reference external" href="https://www.cve.org/CVERecord?id=CVE-2020-10064"><strong>CVE 2020-10064</strong></a><a class="headerlink" href="#cve-2020-10064" title="链接到此标题。"></a></h2>
+<p>ieee802154 处理中的输入帧校验不当</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://zephyrprojectsec.atlassian.net/browse/ZEPSEC-65">Zephyr project bug tracker ZEPSEC-65</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/24971">PR24971 fix for v2.4</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/33451">PR33451 fix for v1.4</a></p></li>
+</ul>
+</section>
+<section id="cve-2020-10065">
+<h2><span class="target" id="index-14"></span><a class="cve reference external" href="https://www.cve.org/CVERecord?id=CVE-2020-10065"><strong>CVE 2020-10065</strong></a><a class="headerlink" href="#cve-2020-10065" title="链接到此标题。"></a></h2>
+<p>在 Bluetooth HCI over SPI 驱动中，对于 HCI_ACL 数据包，未校验用户提供的长度（&lt;= 0xffff）就将数据复制到固定大小的缓冲区（默认：77 字节），导致越界写。</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://zephyrprojectsec.atlassian.net/browse/ZEPSEC-66">Zephyr project bug tracker ZEPSEC-66</a></p></li>
+<li><p>此问题尚未修复。</p></li>
+</ul>
+</section>
+<section id="cve-2020-10066">
+<h2><span class="target" id="index-15"></span><a class="cve reference external" href="https://www.cve.org/CVERecord?id=CVE-2020-10066"><strong>CVE 2020-10066</strong></a><a class="headerlink" href="#cve-2020-10066" title="链接到此标题。"></a></h2>
+<p>Bluetooth HCI 核心中的错误处理不正确</p>
+<p>在 hci_cmd_done 中，传入的 buf 参数为空时会导致空指针解引用。</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://zephyrprojectsec.atlassian.net/browse/ZEPSEC-67">Zephyr project bug tracker ZEPSEC-67</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/24902">PR24902 fix for v2.4</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/25089">PR25089 fix for v1.4</a></p></li>
+</ul>
+</section>
+<section id="cve-2020-10067">
+<h2><span class="target" id="index-16"></span><a class="cve reference external" href="https://www.cve.org/CVERecord?id=CVE-2020-10067"><strong>CVE 2020-10067</strong></a><a class="headerlink" href="#cve-2020-10067" title="链接到此标题。"></a></h2>
+<p>is_in_region 中的整数溢出允许用户线程访问内核内存</p>
+<p>恶意的用户空间应用程序可以引发整数溢出，绕过系统调用处理函数执行的安全检查。其影响取决于所涉及的系统调用，可能从拒绝服务、信息泄露，到内存损坏并导致在内核中执行代码。</p>
+<p>参见 NCC-ZEP-005</p>
+<p>此问题已在 v1.14.2 和 v2.2.0 版本中修复。</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://zephyrprojectsec.atlassian.net/browse/ZEPSEC-27">Zephyr project bug tracker ZEPSEC-27</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/23653">PR23653 fix for v1.14.2</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/23654">PR23654 fix for the v2.1 branch</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/23239">PR23239 fix for v2.2.0</a></p></li>
+</ul>
+</section>
+<section id="cve-2020-10068">
+<h2><span class="target" id="index-17"></span><a class="cve reference external" href="https://www.cve.org/CVERecord?id=CVE-2020-10068"><strong>CVE 2020-10068</strong></a><a class="headerlink" href="#cve-2020-10068" title="链接到此标题。"></a></h2>
+<p>Zephyr Bluetooth DLE 重复请求漏洞</p>
+<p>在 Zephyr 项目的 Bluetooth 子系统中，某些重复且连续发送的数据包可能导致错误行为，进而造成拒绝服务。</p>
+<p>此问题已在 v1.14.0 和 v2.2.0 的分支中修复，并将包含在 v2.3.0 中。</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://zephyrprojectsec.atlassian.net/browse/ZEPSEC-78">Zephyr project bug tracker ZEPSEC-78</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/23707">PR23707 fix for v2.3 (split driver)</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/23708">PR23708 fix for v2.3 (legacy driver)</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/23091">PR23091 fix for branch from v1.14.0</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/23964">PR23964 fix for v2.2.0</a></p></li>
+</ul>
+</section>
+<section id="cve-2020-10069">
+<h2><span class="target" id="index-18"></span><a class="cve reference external" href="https://www.cve.org/CVERecord?id=CVE-2020-10069"><strong>CVE 2020-10069</strong></a><a class="headerlink" href="#cve-2020-10069" title="链接到此标题。"></a></h2>
+<p>Zephyr Bluetooth 未检查数据包数据导致拒绝服务</p>
+<p>Bluetooth 数据中一个未经检查的参数可能导致断言失败或除零错误，从而造成拒绝服务攻击。</p>
+<p>此问题已在 v1.14.0 和 v2.2.0 的分支中修复，并将包含在 v2.3.0 中。</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://zephyrprojectsec.atlassian.net/browse/ZEPSEC-81">Zephyr project bug tracker ZEPSEC-81</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/23705">PR23705 fix for v2.3 (split driver)</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/23706">PR23706 fix for v2.3 (legacy driver)</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/23091">PR23091 fix for branch from v1.14.0</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/23963">PR23963 fix for branch from v2.2.0</a></p></li>
+</ul>
+</section>
+<section id="cve-2020-10070">
+<h2><span class="target" id="index-19"></span><a class="cve reference external" href="https://www.cve.org/CVERecord?id=CVE-2020-10070"><strong>CVE 2020-10070</strong></a><a class="headerlink" href="#cve-2020-10070" title="链接到此标题。"></a></h2>
+<p>MQTT 接收缓冲区溢出</p>
+<p>在 Zephyr 项目的 MQTT 代码中，边界检查不当可能导致内存损坏，并可能导致远程代码执行。NCC-ZEP-031</p>
+<p>计算数据包长度时，算术溢出可能导致接受一个大于可用缓冲区空间的接收缓冲区，致使用户数据被写到该缓冲区之外。</p>
+<p>此问题已在 main 分支中修复，将包含在 v2.3 中。</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://zephyrprojectsec.atlassian.net/browse/ZEPSEC-85">Zephyr project bug tracker ZEPSEC-85</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/23821/commits/0b39cbf3c01d7feec9d0dd7cc7e0e374b6113542">commit 0b39cbf3 for v2.3</a></p></li>
+<li><p><a class="reference external" href="https://research.nccgroup.com/2020/05/26/research-report-zephyr-and-mcuboot-security-assessment">NCC-ZEP report</a> (NCC-ZEP-031)</p></li>
+</ul>
+</section>
+<section id="cve-2020-10071">
+<h2><span class="target" id="index-20"></span><a class="cve reference external" href="https://www.cve.org/CVERecord?id=CVE-2020-10071"><strong>CVE 2020-10071</strong></a><a class="headerlink" href="#cve-2020-10071" title="链接到此标题。"></a></h2>
+<p>MQTT 中对发布（publish）消息长度的校验不充分</p>
+<p>Zephyr MQTT 解析代码对发布消息长度字段的检查不充分，可导致缓冲区溢出，并可能导致远程代码执行。NCC-ZEP-031</p>
+<p>此问题已在 main 分支中修复，将包含在 v2.3 中。</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://zephyrprojectsec.atlassian.net/browse/ZEPSEC-86">Zephyr project bug tracker ZEPSEC-86</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/23821/commits/989c4713ba429aa5105fe476b4d629718f3e6082">commit 989c4713 fix for v2.3</a></p></li>
+<li><p><a class="reference external" href="https://research.nccgroup.com/2020/05/26/research-report-zephyr-and-mcuboot-security-assessment">NCC-ZEP report</a> (NCC-ZEP-031)</p></li>
+</ul>
+</section>
+<section id="cve-2020-10072">
+<h2><span class="target" id="index-21"></span><a class="cve reference external" href="https://www.cve.org/CVERecord?id=CVE-2020-10072"><strong>CVE 2020-10072</strong></a><a class="headerlink" href="#cve-2020-10072" title="链接到此标题。"></a></h2>
+<p>所有线程都能访问所有 socket 文件描述符</p>
+<p>网络 socket API 文件描述符没有任何权限管理。系统中运行的任何线程只需知道文件描述符的数值，就能读写该 socket 文件描述符。</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://zephyrprojectsec.atlassian.net/browse/ZEPSEC-87">Zephyr project bug tracker ZEPSEC-87</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/25804">PR25804 fix for v2.4</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/27176">PR27176 fix for v1.4</a></p></li>
+</ul>
+</section>
+<section id="cve-2020-10136">
+<h2><span class="target" id="index-22"></span><a class="cve reference external" href="https://www.cve.org/CVERecord?id=CVE-2020-10136"><strong>CVE 2020-10136</strong></a><a class="headerlink" href="#cve-2020-10136" title="链接到此标题。"></a></h2>
+<p>zephyrproject 的 IP-in-IP 协议默认会路由任意流量</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://zephyrprojectsec.atlassian.net/browse/ZEPSEC-64">Zephyr project bug tracker ZEPSEC-64</a></p></li>
+</ul>
+</section>
+<section id="cve-2020-13598">
+<h2><span class="target" id="index-23"></span><a class="cve reference external" href="https://www.cve.org/CVERecord?id=CVE-2020-13598"><strong>CVE 2020-13598</strong></a><a class="headerlink" href="#cve-2020-13598" title="链接到此标题。"></a></h2>
+<p>FS：在 FAT_FS 中启用长文件名并调用 fs_stat 时发生缓冲区溢出</p>
+<p>对文件名长度超过 12 个字符的文件执行 fs_stat 会导致缓冲区溢出。</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://zephyrprojectsec.atlassian.net/browse/ZEPSEC-88">Zephyr project bug tracker ZEPSEC-88</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/25852">PR25852 fix for v2.4</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/28782">PR28782 fix for v2.3</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/33577">PR33577 fix for v1.4</a></p></li>
+</ul>
+</section>
+<section id="cve-2020-13599">
+<h2><span class="target" id="index-24"></span><a class="cve reference external" href="https://www.cve.org/CVERecord?id=CVE-2020-13599"><strong>CVE 2020-13599</strong></a><a class="headerlink" href="#cve-2020-13599" title="链接到此标题。"></a></h2>
+<p>settings 与 littlefs 组合使用时的安全问题</p>
+<p>当 settings 与 littlefs 组合使用时，可以通过 MCUmgr 从设备中提取所有安全相关信息。例如在 bt-mesh 中，可借此从设备获取设备密钥、网络密钥和应用密钥。</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://zephyrprojectsec.atlassian.net/browse/ZEPSEC-57">Zephyr project bug tracker ZEPSEC-57</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/26083">PR26083 fix for v2.4</a></p></li>
+</ul>
+</section>
+<section id="cve-2020-13600">
+<h2><span class="target" id="index-25"></span><a class="cve reference external" href="https://www.cve.org/CVERecord?id=CVE-2020-13600"><strong>CVE 2020-13600</strong></a><a class="headerlink" href="#cve-2020-13600" title="链接到此标题。"></a></h2>
+<p>eswifi 的 SPI 响应格式错误可能破坏内核内存</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://zephyrprojectsec.atlassian.net/browse/ZEPSEC-91">Zephyr project bug tracker ZEPSEC-91</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/26712">PR26712 fix for v2.4</a></p></li>
+</ul>
+</section>
+<section id="cve-2020-13601">
+<h2><span class="target" id="index-26"></span><a class="cve reference external" href="https://www.cve.org/CVERecord?id=CVE-2020-13601"><strong>CVE 2020-13601</strong></a><a class="headerlink" href="#cve-2020-13601" title="链接到此标题。"></a></h2>
+<p>DNS 读取中可能存在越界读</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://zephyrprojectsec.atlassian.net/browse/ZEPSEC-92">Zephyr project bug tracker ZEPSEC-92</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/27774">PR27774 fix for v2.4</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/30503">PR30503 fix for v1.4</a></p></li>
+</ul>
+</section>
+<section id="cve-2020-13602">
+<h2><span class="target" id="index-27"></span><a class="cve reference external" href="https://www.cve.org/CVERecord?id=CVE-2020-13602"><strong>CVE 2020-13602</strong></a><a class="headerlink" href="#cve-2020-13602" title="链接到此标题。"></a></h2>
+<p>LwM2M do_write_op_tlv 中的远程拒绝服务</p>
+<p>在 Zephyr LwM2M 实现中，格式错误的输入可能导致无限循环，从而造成拒绝服务攻击。</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://zephyrprojectsec.atlassian.net/browse/ZEPSEC-56">Zephyr project bug tracker ZEPSEC-56</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/26571">PR26571 fix for v2.4</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/33578">PR33578 fix for v1.4</a></p></li>
+</ul>
+</section>
+<section id="cve-2020-13603">
+<h2><span class="target" id="index-28"></span><a class="cve reference external" href="https://www.cve.org/CVERecord?id=CVE-2020-13603"><strong>CVE 2020-13603</strong></a><a class="headerlink" href="#cve-2020-13603" title="链接到此标题。"></a></h2>
+<p>mempool 中可能存在溢出</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>Zephyr 另外提供了预构建的 'malloc' 包装函数。</p></li>
+<li><p>'malloc' 函数是 'sys_mem_pool_alloc' 函数的包装</p></li>
+<li><p>sys_mem_pool_alloc 以不安全的方式分配 'size + WB_UP(sizeof(struct sys_mem_pool_block))' 大小的内存。</p></li>
+<li><p>请求非常大的 size 值会导致内部整数回绕。</p></li>
+<li><p>整数回绕导致只分配了很小的内存，但分配却返回成功。</p></li>
+<li><p>例如：调用 malloc(0xffffffff) 会成功分配 7 个字节。</p></li>
+<li><p>这会导致堆溢出。</p></li>
+</ul>
+</div></blockquote>
+<ul class="simple">
+<li><p><a class="reference external" href="https://zephyrprojectsec.atlassian.net/browse/ZEPSEC-111">Zephyr project bug tracker ZEPSEC-111</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/31796">PR31796 fix for v2.4</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/pull/26571">PR32808 fix for v1.4</a></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 6月 15, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

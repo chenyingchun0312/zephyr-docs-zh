@@ -1,0 +1,354 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>基于 HTTP 的固件空中升级 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/device_mgmt/fota_http.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="EC 主机命令" href="ec_host_cmd.html" />
+    <link rel="prev" title="空中升级（OTA）" href="ota.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">服务</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../connectivity/index.html">连接</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../security.html">安全</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">设备管理</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="mcumgr.html">MCUmgr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mcumgr_handlers.html">MCUmgr 处理程序</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mcumgr_callbacks.html">MCUmgr 回调</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smp_protocol.html">SMP 协议规范</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smp_transport.html">SMP 传输规范</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dfu.html">设备固件升级</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ota.html">空中升级（OTA）</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">基于 HTTP 的固件空中升级</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">概述</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#update-cycle">更新周期</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#threads-and-stack">线程与栈</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#redirects-and-resume">重定向与续传</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#multiple-images">多镜像</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#downgrade-protection">降级保护</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#tls">TLS</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#shell-commands">Shell 命令</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api-reference">API 参考</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="ec_host_cmd.html">EC 主机命令</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../binary_descriptors/index.html">二进制描述符</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="index.html">设备管理</a> &raquo;</li>
+  
+  <li>基于 HTTP 的固件空中升级</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="firmware-over-the-air-over-http">
+<span id="fota-http"></span><h1>基于 HTTP 的固件空中升级<a class="headerlink" href="#firmware-over-the-air-over-http" title="链接到此标题。"></a></h1>
+<section id="overview">
+<h2>概述<a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>FOTA HTTP 库从 HTTP 服务器下载固件镜像，并将其直接写入当前未运行的 MCUboot 槽位。随后，应用程序可以请求交换、确认新镜像或擦除该槽位。与 <a class="reference internal" href="ota.html#ota"><span class="std std-ref">hawkBit 或 UpdateHub</span></a> 不同，它不涉及任何设备管理协议：任何能够提供文件的 Web 服务器都可以充当更新源，因此非常适合简单的部署场景和台架测试。</p>
+<p>镜像在到达时即通过 <a class="reference internal" href="dfu.html#flash-img-api"><span class="std std-ref">Flash 镜像</span></a> 流式写入 Flash，因此其大小不受 RAM 限制。槽位在写入过程中逐步擦除，并且在第一个字节写入之前就会清除该槽位的 MCUboot 尾部（trailer），因此先前镜像的残留数据永远不会被误认为待处理的交换。</p>
+<p>下载完成后，库会从 Flash 中读回 MCUboot 头部，如果数据不是镜像，则以 <code class="docutils literal notranslate"><span class="pre">-ENOEXEC</span></code> 失败。它不验证签名：MCUboot 会在镜像启动之前进行验证，并由这项检查决定镜像能否运行。启用 <a class="reference internal" href="../../kconfig.html#CONFIG_FOTA_HTTP_SHA256_CHECK" title="CONFIG_FOTA_HTTP_SHA256_CHECK"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FOTA_HTTP_SHA256_CHECK</span></code></a> 后，可以与调用者提供的摘要进行可选的 SHA-256 比较，以便在重启之前发现传输损坏。被该比较或下文所述的降级检查拒绝的镜像会从槽位中擦除。如果下载中途失败，<code class="xref c c-func docutils literal notranslate"><span class="pre">fota_http_apply()</span></code> 会拒绝使用该槽位，直到再次成功下载到该槽位为止；而部分数据会保留在原处，以便续传。</p>
+</section>
+<section id="update-cycle">
+<h2>更新周期<a class="headerlink" href="#update-cycle" title="链接到此标题。"></a></h2>
+<p>典型的流程如下：</p>
+<ol class="arabic simple">
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">fota_http_download()</span></code> 或 <code class="xref c c-func docutils literal notranslate"><span class="pre">fota_http_download_async()</span></code> 将镜像获取到次槽位中。<code class="xref c c-struct docutils literal notranslate"><span class="pre">fota_http_download_params</span></code> 的可选成员 <code class="docutils literal notranslate"><span class="pre">sha256</span></code>、<code class="docutils literal notranslate"><span class="pre">resume</span></code> 以及与 TLS 相关的成员，只有在启用相应 Kconfig 选项时才存在。</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">fota_http_apply()</span></code> 将镜像标记为测试启动或永久启用。</p></li>
+<li><p>设备重启，MCUboot 将镜像交换到位。</p></li>
+<li><p>在测试启动时，应用程序自行验证后调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">fota_http_confirm()</span></code>。如果没有这一调用，下次重启时 MCUboot 会回退到先前的镜像。</p></li>
+</ol>
+<p>回退步骤要求 MCUboot 处于支持回退的模式，例如 swap-using-move 或 swap-using-offset。在仅覆盖（overwrite-only）模式下，交换一旦发生，先前的镜像就不复存在，确认也不起作用，因此请检查开发板的 sysbuild 配置选择了哪种模式。</p>
+<p>测试镜像运行期间，次槽位中保存的是 MCUboot 要回退到的镜像，因此在调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">fota_http_confirm()</span></code> 之前，<code class="xref c c-func docutils literal notranslate"><span class="pre">fota_http_download()</span></code> 会以 <code class="docutils literal notranslate"><span class="pre">-EPERM</span></code> 拒绝下载。</p>
+</section>
+<section id="threads-and-stack">
+<h2>线程与栈<a class="headerlink" href="#threads-and-stack" title="链接到此标题。"></a></h2>
+<p><code class="xref c c-func docutils literal notranslate"><span class="pre">fota_http_download()</span></code> 在整个传输期间阻塞调用线程，并需要足够的栈来运行 HTTP 客户端，使用 https 时还需支持 TLS 握手。启用 <a class="reference internal" href="../../kconfig.html#CONFIG_FOTA_HTTP_ASYNC" title="CONFIG_FOTA_HTTP_ASYNC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FOTA_HTTP_ASYNC</span></code></a> 后，<code class="xref c c-func docutils literal notranslate"><span class="pre">fota_http_download_async()</span></code> 会在库拥有的线程上执行同样的传输，该线程的栈大小由 <a class="reference internal" href="../../kconfig.html#CONFIG_FOTA_HTTP_THREAD_STACK_SIZE" title="CONFIG_FOTA_HTTP_THREAD_STACK_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FOTA_HTTP_THREAD_STACK_SIZE</span></code></a> 决定，并通过完成回调报告结果。shell 命令选用异步版本，因此与 shell 的栈大小无关。只调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">fota_http_download()</span></code> 的应用程序可以保持该选项禁用，从而无需为该线程栈付出开销。</p>
+<p>同一时刻只能运行一个下载。<code class="xref c c-func docutils literal notranslate"><span class="pre">fota_http_cancel()</span></code> 会在下一个分片到达或请求超时时中止正在进行的传输。</p>
+</section>
+<section id="redirects-and-resume">
+<h2>重定向与续传<a class="headerlink" href="#redirects-and-resume" title="链接到此标题。"></a></h2>
+<p>对于状态码为 301、302、303、307 或 308 的响应，最多跟随 <a class="reference internal" href="../../kconfig.html#CONFIG_FOTA_HTTP_MAX_REDIRECTS" title="CONFIG_FOTA_HTTP_MAX_REDIRECTS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FOTA_HTTP_MAX_REDIRECTS</span></code></a> 次重定向。绝对形式和仅含路径形式的 <code class="docutils literal notranslate"><span class="pre">Location</span></code> 头部都可以接受。</p>
+<p>启用 <a class="reference internal" href="../../kconfig.html#CONFIG_FOTA_HTTP_RESUME" title="CONFIG_FOTA_HTTP_RESUME"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FOTA_HTTP_RESUME</span></code></a> 后，在传输进行期间以及传输失败时，下载偏移量会保存在设置中。之后设置了 <code class="docutils literal notranslate"><span class="pre">resume</span></code> 参数的下载会通过 HTTP <code class="docutils literal notranslate"><span class="pre">Range</span></code> 请求从该偏移量继续。只有当 URL 和镜像索引与中断的下载一致时才会复用该偏移量；如果服务器发送过 <code class="docutils literal notranslate"><span class="pre">ETag</span></code> 或 <code class="docutils literal notranslate"><span class="pre">Last-Modified</span></code> 头部，请求会同时携带 <code class="docutils literal notranslate"><span class="pre">If-Range</span></code>，因此服务器上已更改的文件会从头重新获取。如果服务器忽略 <code class="docutils literal notranslate"><span class="pre">Range</span></code> 头部并返回完整文件，传输会从零重新开始；收到 <code class="docutils literal notranslate"><span class="pre">416</span> <span class="pre">Range</span> <span class="pre">Not</span> <span class="pre">Satisfiable</span></code> 应答（文件变得比已保存的偏移量更短时服务器会发送该应答）时也是如此。如果校验值（validator）过长而无法存储，也会丢弃已保存的进度，以便下一次下载从头开始，而不是针对可能已更改的文件续传。镜像下载完成后，该偏移量即被清除。</p>
+</section>
+<section id="multiple-images">
+<h2>多镜像<a class="headerlink" href="#multiple-images" title="链接到此标题。"></a></h2>
+<p>在包含多个可更新镜像的布局中，<code class="docutils literal notranslate"><span class="pre">image_index</span></code> 参数用于选择下载到哪个次槽位。<code class="xref c c-func docutils literal notranslate"><span class="pre">fota_http_apply()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">fota_http_confirm()</span></code> 都接受同样的索引，因此在携带另一设备固件的布局中，只会确认本设备已验证的镜像。当多个镜像必须一起运行时，应在重启之前下载并应用所有这些镜像：MCUboot 会验证整组镜像并一次性完成交换；之后还要逐一确认每个镜像，因为未确认的镜像会被单独回退。<code class="xref c c-func docutils literal notranslate"><span class="pre">fota_http_confirm_pending()</span></code> 只报告镜像 0，因此更新多个镜像的应用程序需要自行跟踪其余镜像。<a class="reference internal" href="../../kconfig.html#CONFIG_FOTA_HTTP_REJECT_DOWNGRADE" title="CONFIG_FOTA_HTTP_REJECT_DOWNGRADE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FOTA_HTTP_REJECT_DOWNGRADE</span></code></a> 的降级检查也只涵盖镜像 0。</p>
+<p>使用 direct-XIP 引导加载程序时，镜像运行所在的槽位在链接时就已确定，因此设备必须获取为空闲槽位构建的镜像变体。<code class="xref c c-func docutils literal notranslate"><span class="pre">fota_http_get_download_slot()</span></code> 会报告该槽位。这只适用于单镜像布局：对于第一个之后的所有镜像，库总是上传到槽位对中编号为奇数的槽位，这对交换模式和覆盖模式是正确的，但对 direct-XIP 不正确。</p>
+</section>
+<section id="downgrade-protection">
+<h2>降级保护<a class="headerlink" href="#downgrade-protection" title="链接到此标题。"></a></h2>
+<p><a class="reference internal" href="../../kconfig.html#CONFIG_FOTA_HTTP_REJECT_DOWNGRADE" title="CONFIG_FOTA_HTTP_REJECT_DOWNGRADE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FOTA_HTTP_REJECT_DOWNGRADE</span></code></a> 会将下载的头部中的版本与正在运行的镜像进行比较，如果版本更旧，则使下载失败，并擦除被拒绝的镜像，以免被误应用。这是为应用程序提供的便捷检查。强制执行的策略应由引导加载程序负责，请参阅 MCUboot 的降级防护和硬件回滚保护选项。</p>
+</section>
+<section id="tls">
+<h2>TLS<a class="headerlink" href="#tls" title="链接到此标题。"></a></h2>
+<p>启用 <a class="reference internal" href="../../kconfig.html#CONFIG_FOTA_HTTP_TLS" title="CONFIG_FOTA_HTTP_TLS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FOTA_HTTP_TLS</span></code></a> 后即可接受 <code class="docutils literal notranslate"><span class="pre">https</span></code> URL。服务器的 CA 证书会在 <a class="reference internal" href="../../kconfig.html#CONFIG_FOTA_HTTP_TLS_SEC_TAG" title="CONFIG_FOTA_HTTP_TLS_SEC_TAG"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FOTA_HTTP_TLS_SEC_TAG</span></code></a> 或下载参数中传入的标签下查找，可以通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">fota_http_tls_add_ca()</span></code> 或直接通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">tls_credential_add()</span></code> 注册。对于双向 TLS，请使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">fota_http_tls_add_client_cert()</span></code> 注册客户端证书和密钥。</p>
+<p>默认要求验证对端，在生产环境中应保持 <a class="reference internal" href="../../kconfig.html#CONFIG_FOTA_HTTP_TLS_PEER_VERIFY" title="CONFIG_FOTA_HTTP_TLS_PEER_VERIFY"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FOTA_HTTP_TLS_PEER_VERIFY</span></code></a> 的默认值。URL 中的主机名会与证书进行比对验证。如果 URL 中使用的是 IP 地址且证书中没有匹配的条目，请在 <code class="docutils literal notranslate"><span class="pre">tls_hostname</span></code> 参数中传入预期的名称。</p>
+<p>只有在启用 <a class="reference internal" href="../../kconfig.html#CONFIG_MBEDTLS_HAVE_TIME_DATE" title="CONFIG_MBEDTLS_HAVE_TIME_DATE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MBEDTLS_HAVE_TIME_DATE</span></code></a> 时才会强制检查证书的有效期，这要求设备在首次下载之前具有正确的挂钟时间。可以通过 <a class="reference internal" href="../../kconfig.html#CONFIG_FOTA_HTTP_TLS_VERSION_1_3" title="CONFIG_FOTA_HTTP_TLS_VERSION_1_3"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FOTA_HTTP_TLS_VERSION_1_3</span></code></a> 选择 TLS 1.3。</p>
+</section>
+<section id="shell-commands">
+<h2>Shell 命令<a class="headerlink" href="#shell-commands" title="链接到此标题。"></a></h2>
+<p>启用 <a class="reference internal" href="../../kconfig.html#CONFIG_FOTA_HTTP_SHELL" title="CONFIG_FOTA_HTTP_SHELL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_FOTA_HTTP_SHELL</span></code></a> 后，<code class="docutils literal notranslate"><span class="pre">fota</span></code> 命令可以在控制台中使用该库：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">fota download &lt;url&gt; [resume] [image=&lt;n&gt;]   download an image</span>
+<span class="go">fota cancel                                abort the download in progress</span>
+<span class="go">fota apply [permanent] [image=&lt;n&gt;]         boot the downloaded image on the next reset</span>
+<span class="go">fota confirm [image]                       confirm the running image</span>
+<span class="go">fota status                                show images and confirmation state</span>
+<span class="go">fota erase [image]                         erase the secondary slot</span>
+</pre></div>
+</div>
+<p>完整的操作演示请参阅 <a class="reference internal" href="../../samples/subsys/mgmt/fota_http/README.html#fota-http" title="Download a signed firmware image over HTTP into the MCUboot secondary slot and swap to it.">Firmware Over-the-Air over HTTP</a> 示例。</p>
+</section>
+<section id="api-reference">
+<h2>API 参考<a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">fota_http</span></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/subsys/mgmt/fota_http/README.html#fota-http" title="Download a signed firmware image over HTTP into the MCUboot secondary slot and swap to it.">Firmware Over-the-Air over HTTP</a></span><span class="code-sample-description">Download a signed firmware image over HTTP into the MCUboot secondary
+slot and swap to it.</span></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 9月 06, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

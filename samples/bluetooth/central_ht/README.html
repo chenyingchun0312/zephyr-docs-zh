@@ -1,0 +1,394 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="连接低功耗蓝牙健康体温计传感器并读取温度测量值。" name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Health Thermometer (Central) &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/samples/bluetooth/central_ht/README.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" />
+    <link rel="next" title="Central Multilink" href="../central_multilink/README.html" />
+    <link rel="prev" title="Heart-rate Monitor (Central)" href="../central_hr/README.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">示例与演示</a><ul class="current">
+<li class="toctree-l2"><a class="category-link reference internal" href="../../application_development/application_development.html">Application Development</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../arch/index.html">Architecture-dependent Samples</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../basic/basic.html">Basic</a></li>
+<li class="toctree-l2 current"><a class="category-link reference internal" href="../bluetooth.html">Bluetooth</a><ul class="current">
+<li class="toctree-l3"><a class="category-link reference internal" href="../classic/index.html">Bluetooth Classic</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../audio/bap_broadcast_assistant/README.html" title="使用 BAP 广播助手功能。">Basic Audio Profile (BAP) Broadcast Audio Assistant</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../audio/bap_broadcast_sink/README.html" title="使用 BAP 广播接收端功能。">Basic Audio Profile (BAP) Broadcast Audio Sink</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../audio/bap_broadcast_source/README.html" title="使用 BAP 广播源功能。">Basic Audio Profile (BAP) Broadcast Audio Source</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../audio/bap_unicast_client/README.html" title="使用 BAP 单播客户端功能。">Basic Audio Profile (BAP) Unicast Audio Client</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../audio/bap_unicast_server/README.html" title="使用 BAP 单播服务器功能。">Basic Audio Profile (BAP) Unicast Audio Server</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../beacon/README.html" title="使用 GAP 广播者角色广播 Eddystone URL。">Beacon</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../broadcaster/README.html" title="周期性地发送带有厂商数据元素的广播包。">Broadcaster</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../bthome_sensor_template/README.html" title="实现一个 BTHome 传感器。">BTHome sensor template</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../audio/ccp_call_control_client/README.html" title="CCP Call Control Server sample that registers one or more TBS bearers and advertises the TBS UUID(s).">Call Control Profile (CCP) Call Control Server</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../audio/ccp_call_control_server/README.html" title="CCP Call Control Server sample that registers one or more TBS bearers and advertises the TBS UUID(s).">Call Control Profile (CCP) Call Control Server</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../central/README.html" title="Implement basic Bluetooth LE Central role functionality (scanning and connecting).">Central</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../central_gatt_write/README.html" title="扫描低功耗蓝牙设备，连接该设备并向某个特征写入值。">Central / GATT Write</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../central_multilink/README.html" title="扫描、连接并与最多 62 个外围设备建立连接。">Central Multilink</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../central_otc/README.html" title="连接支持对象传输服务（OTS）的低功耗蓝牙外围设备">Central OTC</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../central_past/README.html" title="以发送方身份使用周期性广播同步传输（PAST）功能。">Central Periodic Advertising Sync Transfer (PAST)</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../channel_sounding/README.html" title="使用信道探测功能。">Channel Sounding</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../audio/cap_acceptor/README.html" title="使用 CAP 接受者角色向 CAP 发起者通告音频可用性。">Common Audio Profile (CAP) Acceptor</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../audio/cap_handover/README.html" title="连接 CAP 接受者并执行 CAP 切换流程">Common Audio Profile (CAP) Handover</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../audio/cap_initiator/README.html" title="连接 CAP 接受者并建立单播音频流或广播音频流。">Common Audio Profile (CAP) Initiator</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../peripheral_csc/README.html" title="提供骑行速度和踏频（CSC）GATT 服务。">Cycling Speed and Cadence (CSC) Peripheral</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../direct_adv/README.html" title="向已绑定的中心设备直接发送定向广播。">Direct Advertising</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../direction_finding_central/README.html" title="连接低功耗蓝牙测向外围设备并请求恒定音调扩展（CTE）。">Direction Finding Central</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../direction_finding_connectionless_tx/README.html" title="实现低功耗蓝牙测向 CTE 广播者（Broadcaster）功能。">Direction Finding Periodic Advertising Beacon</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../direction_finding_connectionless_rx/README.html" title="实现低功耗蓝牙测向 CTE 定位器（Locator）功能。">Direction Finding Periodic Advertising Locator</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../direction_finding_peripheral/README.html" title="实现在连接模式下发送 CTE 的低功耗蓝牙测向外围设备。">Direction Finding Peripheral</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../peripheral_dis/README.html" title="使用设备信息服务（DIS）提供设备信息。">DIS Peripheral</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../eddystone/README.html" title="将 Eddystone 配置服务导出为低功耗蓝牙 GATT 服务。">Eddystone</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../peripheral_ets/README.html" title="提供经过时间服务（ETS）GATT 服务。">Elapsed Time Service (ETS) Peripheral</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../encrypted_advertising/README.html" title="使用低功耗蓝牙加密广播功能。">Encrypted Advertising</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../peripheral_esp/README.html" title="使用环境感测规范（ESP）提供环境信息。">ESP Peripheral</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../extended_adv/README.html" title="使用低功耗蓝牙扩展广播功能。">Extended Advertising</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../hci_uart_3wire/README.html" title="通过 H5:HCI 传输将蓝牙控制器提供给另一台设备或 CPU。">HCI 3-wire (H:5)</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../hci_ipc/README.html" title="通过 IPC 子系统将蓝牙控制器提供给另一台设备或 CPU。">HCI IPC</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../hci_pwr_ctrl/README.html" title="使用 HCI 厂商专用命令动态控制低功耗蓝牙控制器的发射功率。">HCI Power Control</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../hci_spi/README.html" title="通过 SPI 将蓝牙控制器提供给另一台设备或 CPU。">HCI SPI</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../hci_uart/README.html" title="通过 UART 将蓝牙控制器提供给另一台设备或 CPU。">HCI UART</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../hci_uart_async/README.html" title="通过异步 UART 将蓝牙控制器提供给另一台设备或 CPU。">HCI UART async</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../hci_usb/README.html" title="将 Zephyr 开发板变成 USB 蓝牙适配器（兼容所有操作系统）。">HCI USB</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../hci_vs_scan_req/README.html" title="使用厂商专用 HCI 命令，在使用传统广播时启用扫描请求（Scan Request）事件。">HCI Vendor-Specific Scan Request</a></li>
+<li class="toctree-l3 current"><a class="code-sample-link current reference internal" href="#" title="连接低功耗蓝牙健康体温计传感器并读取温度测量值。">Health Thermometer (Central)</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../peripheral_ht/README.html" title="提供生成虚拟温度值的健康体温计（HT）GATT 服务。">Health Thermometer (Peripheral)</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../audio/hap_ha/README.html" title="发送广播并等待助听器单播客户端或远程控制器连接。">Hearing Access Profile (HAP) Hearing Aid (HA)</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../central_hr/README.html" title="连接低功耗蓝牙心率监测器并读取心率测量值。">Heart-rate Monitor (Central)</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../peripheral_hr/README.html" title="提供生成虚拟心率值的心率（HR）GATT 服务。">Heart-rate Monitor (Peripheral)</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../peripheral_hids/README.html" title="实现一个蓝牙 HID 外围设备（通用鼠标）">HID Peripheral</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../ibeacon/README.html" title="使用 GAP 广播者角色广播 Apple iBeacon。">iBeacon</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../iso_central/README.html" title="以中心设备身份使用同步信道向对端设备传输同步数据。">ISO (Central)</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../iso_peripheral/README.html" title="实现使用同步信道的低功耗蓝牙外围设备。">ISO (Peripheral)</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../iso_broadcast/README.html" title="使用低功耗蓝牙同步广播者功能。">Isochronous Broadcaster</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../iso_broadcast_benchmark/README.html" title="测量 ISO 广播者相对于一个或多个接收者的丢包和同步丢失情况。">Isochronous Broadcaster Benchmark</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../iso_connected_benchmark/README.html" title="测量连接 ISO 信道中的丢包和同步丢失情况。">Isochronous Connected Channels Benchmark</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../l2cap_coc_acceptor/README.html" title="接受传入的 L2CAP 面向连接信道连接。">L2CAP Connection Oriented Channels (Acceptor)</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../l2cap_coc_initiator/README.html" title="发起 L2CAP 面向连接信道连接并发送数据。">L2CAP Connection Oriented Channels (Initiator)</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../mesh/README.html" title="使用基本的蓝牙 Mesh 功能。">Mesh</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../mesh_demo/README.html" title="实现一个蓝牙 Mesh 演示应用程序。">Mesh Demo</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../mesh_provisioner/README.html" title="使用蓝牙 Mesh API 为节点配网并进行配置。">Mesh Provisioner</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../mtu_update/README.html" title="在两台设备之间配置并交换 MTU。">MTU Update</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../broadcaster_multiple/README.html" title="广播多个广播集。">Multiple Broadcaster</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../observer/README.html" title="扫描附近的蓝牙设备并打印其信息。">Observer</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../periodic_adv/README.html" title="使用低功耗蓝牙周期性广播功能。">Periodic Advertising</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../periodic_adv_conn/README.html" title="使用周期性广播连接流程发起与设备的连接。">Periodic Advertising Connection Procedure (Initiator)</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../periodic_sync_conn/README.html" title="响应周期性广播并建立连接。">Periodic Advertising Connection Procedure (Responder)</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../periodic_sync/README.html" title="使用低功耗蓝牙周期性广播同步功能。">Periodic Advertising Synchronization</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../peripheral_past/README.html" title="以接收方身份使用周期性广播同步传输（PAST）功能。">Periodic Advertising Synchronization Transfer Peripheral</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../periodic_adv_rsp/README.html" title="使用低功耗蓝牙带响应的周期性广播（PAwR）广播者功能。">Periodic Advertising with Responses (PAwR) Advertiser</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../periodic_sync_rsp/README.html" title="实现低功耗蓝牙带响应的周期性广播同步。">Periodic Advertising with Responses (PAwR) Synchronization</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../peripheral/README.html" title="实现低功耗蓝牙外围设备角色的基本功能（广播并提供 GATT 服务）。">Peripheral</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../peripheral_accept_list/README.html" title="发送广播，并只接受来自接受列表中设备的连接。">Peripheral Accept List</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../peripheral_ans/README.html" title="使用警报通知服务（ANS）发送通知。">Peripheral ANS</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../peripheral_gap_svc/README.html" title="实现一个带 GAP 服务的外围设备，限制可接受的名称">Peripheral GAP service custom implementation</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../peripheral_gatt_write/README.html" title="使用 GATT 无响应写入向某个特征写入值。">Peripheral GATT Write</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../peripheral_identity/README.html" title="使用多个身份，允许多台中心设备连接。">Peripheral Identity</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../peripheral_nus/README.html" title="使用 Nordic UART 服务（NUS）实现一个简单的回显服务器。">Peripheral NUS</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../peripheral_ots/README.html" title="提供对象传输服务（OTS）GATT 服务。">Peripheral Object Transfer Service (OTS)</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../peripheral_sc_only/README.html" title="为低功耗蓝牙外围设备启用“仅安全连接”模式。">Peripheral SC-only</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../audio/pbp_public_broadcast_sink/README.html" title="使用 PBP 公共广播接收端功能。">Public Broadcast Profile (PBP) Public Broadcast Sink</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../audio/pbp_public_broadcast_source/README.html" title="使用 PBP 公共广播源功能。">Public Broadcast Profile (PBP) Public Broadcast Source</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../scan_adv/README.html" title="结合低功耗蓝牙广播者与观察者角色，同时进行广播和设备扫描。">Scan &amp; Advertise</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../iso_receive/README.html" title="使用低功耗蓝牙同步接收者功能。">Synchronized Receiver</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../audio/tmap_bmr/README.html" title="实现 TMAP 广播媒体接收端（BMR）角色。">Telephone and Media Audio Profile (TMAP) Broadcast Media Receiver (BMR)</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../audio/tmap_bms/README.html" title="实现 LE Audio TMAP 广播媒体发送端（BMS）角色。">Telephone and Media Audio Profile (TMAP) Broadcast Media Sender (BMS)</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../audio/tmap_central/README.html" title="实现 TMAP 呼叫网关（CG）和单播媒体发送端（UMS）角色。">Telephone and Media Audio Profile (TMAP) Central</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../audio/tmap_peripheral/README.html" title="实现 TMAP 呼叫终端（CT）和单播媒体接收端（UMR）角色。">Telephone and Media Audio Profile (TMAP) Peripheral</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../boards/boards.html">开发板</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cpp/cpp.html">C++</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../data_structures/data_structures.html">数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../drivers/drivers.html">驱动</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../hello_world/README.html">Hello World</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../kernel/index.html">内核与调度器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../modules/index.html">外部模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../net/net.html">网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../philosophers/README.html">Dining Philosophers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../psa/index.html">PSA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../regulator/index.html">稳压器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sensor/sensor.html"><span class="xref std std-ref">传感器</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../shields/shields.html">扩展板（shield）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../subsys/subsys.html">子系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../synchronization/README.html">Basic Synchronization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sysbuild/sysbuild.html">Sysbuild</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../tfm_integration/tfm_integration.html">TF-M 集成</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../userspace/index.html">用户空间</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sample_definition_and_criteria.html">示例的定义与标准</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">示例与演示</a> &raquo;</li>
+  
+     <li><a href="../bluetooth.html">蓝牙</a> &raquo;</li>
+  
+  <li>Health Thermometer (Central)</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="ble_central_ht">
+<h1>Health Thermometer (Central)<a class="headerlink" href="#ble_central_ht" title="链接到此标题。"></a></h1>
+<p>
+                <a href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0//samples\bluetooth\central_ht\README.rst/.." class="btn btn-info fa fa-github"
+                    target="_blank" style="text-align: center;">
+                    Browse source code on GitHub
+                </a>
+                </p>
+<section id="overview">
+<h2>概述<a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>与 <a class="reference internal" href="../central/README.html#ble_central" title="Implement basic Bluetooth LE Central role functionality (scanning and connecting).">Central</a> 示例类似，不同之处在于本应用程序专门查找健康体温计传感器，并在连接后报告芯片温度读数。</p>
+</section>
+<section id="requirements">
+<h2>要求<a class="headerlink" href="#requirements" title="链接到此标题。"></a></h2>
+<ul class="simple">
+<li><p>在主机上运行的 BlueZ，或</p></li>
+<li><p>一块支持低功耗蓝牙（Bluetooth LE）的开发板</p></li>
+</ul>
+</section>
+<section id="building-and-running">
+<h2>构建与运行<a class="headerlink" href="#building-and-running" title="链接到此标题。"></a></h2>
+<p>按如下方式构建并烧录本示例，将 <code class="docutils literal notranslate"><span class="pre">&lt;board&gt;</span></code> 替换为你的目标开发板：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>&lt;board&gt;<span class="w"> </span>samples/bluetooth/central_ht
+west<span class="w"> </span>flash
+</pre></div>
+</div>
+<p>烧录后，示例扫描广播健康体温计服务（HTS）的外围设备。找到后，连接该设备并订阅温度测量（Temperature Measurement）指示。请在另一块开发板上使用 <a class="reference internal" href="../peripheral_ht/README.html#ble_peripheral_ht" title="提供生成虚拟温度值的健康体温计（HT）GATT 服务。">Health Thermometer (Peripheral)</a> 示例作为外围设备。</p>
+</section>
+<section id="see-also">
+<h2>See also<a class="headerlink" href="#see-also" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">bluetooth</span></dt>
+</dl>
+
+</section>
+</section>
+<script type="application/ld+json">
+                {"@context": "http://schema.org", "@type": "SoftwareSourceCode", "name": "Health Thermometer (Central)", "description": "\u8fde\u63a5\u4f4e\u529f\u8017\u84dd\u7259\u5065\u5eb7\u4f53\u6e29\u8ba1\u4f20\u611f\u5668\u5e76\u8bfb\u53d6\u6e29\u5ea6\u6d4b\u91cf\u503c\u3002", "codeSampleType": "full", "codeRepository": "https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0//samples\\bluetooth\\central_ht\\README.rst"}
+                </script>
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 5月 08, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

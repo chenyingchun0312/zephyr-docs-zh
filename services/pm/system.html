@@ -1,0 +1,814 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>系统电源管理 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/pm/system.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@12.1.0/dist/mermaid.esm.min.mjs";
+
+
+
+
+
+const initStyles = () => {
+    const defaultStyle = document.createElement('style');
+    defaultStyle.textContent = "pre.mermaid {\n    /* Same as .mermaid-container > pre */\n    display: block;\n    width: 100%;\n}\n\npre.mermaid > svg {\n    /* Same as .mermaid-container > pre > svg */\n    height: auto;\n    width: 100%;\n    max-width: 100% !important;\n}";
+    document.head.appendChild(defaultStyle);
+
+    const fullscreenStyle = document.createElement('style');
+    fullscreenStyle.textContent = ".mermaid-container {\n    position: relative;\n    display: flex;\n    flex-direction: row;\n    width: 100%;\n}\n\n.mermaid-container > pre {\n    display: block;\n    width: 100%;\n}\n\n.mermaid-container > pre > svg {\n    height: auto;\n    width: 100%;\n    max-width: 100% !important;\n}\n\n.mermaid-fullscreen-btn {\n    position: absolute;\n    width: 28px;\n    height: 28px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.3);\n    border-radius: 4px;\n    cursor: pointer;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    transition: all 0.2s;\n    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);\n    font-size: 14px;\n    line-height: 1;\n    padding: 0;\n    color: #333;\n}\n\n.mermaid-fullscreen-btn:hover {\n    opacity: 100% !important;\n    background: rgba(255, 255, 255, 1);\n    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.3);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-btn.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.3);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-btn.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 3px 10px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal {\n    display: none;\n    position: fixed !important;\n    top: 0 !important;\n    left: 0 !important;\n    width: 95vw;\n    height: 100vh;\n    background: rgba(255, 255, 255, 0.98);\n    z-index: 9999;\n    padding: 20px;\n    overflow: auto;\n}\n\n.mermaid-fullscreen-modal.dark-theme {\n    background: rgba(0, 0, 0, 0.98);\n}\n\n.mermaid-fullscreen-modal.active {\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen {\n    position: relative;\n    width: 95vw;\n    height: 90vh;\n    max-width: 95vw;\n    max-height: 90vh;\n    background: white;\n    border-radius: 8px;\n    padding: 20px;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);\n    overflow: auto;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen.dark-theme {\n    background: #1a1a1a;\n    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);\n}\n\n.mermaid-container-fullscreen pre.mermaid {\n    width: 100%;\n    height: 100%;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n}\n\n.mermaid-container-fullscreen .mermaid svg {\n    height: 100% !important;\n    width: 100% !important;\n    cursor: grab;\n}\n\n.mermaid-fullscreen-close {\n    position: fixed !important;\n    top: 20px !important;\n    right: 20px !important;\n    width: 40px;\n    height: 40px;\n    background: rgba(255, 255, 255, 0.95);\n    border: 1px solid rgba(0, 0, 0, 0.2);\n    border-radius: 50%;\n    cursor: pointer;\n    z-index: 10000;\n    display: flex;\n    align-items: center;\n    justify-content: center;\n    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);\n    transition: all 0.2s;\n    font-size: 24px;\n    line-height: 1;\n    color: #333;\n}\n\n.mermaid-fullscreen-close:hover {\n    background: white;\n    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);\n    transform: scale(1.1);\n}\n\n.mermaid-fullscreen-close.dark-theme {\n    background: rgba(50, 50, 50, 0.95);\n    border: 1px solid rgba(255, 255, 255, 0.2);\n    color: #e0e0e0;\n}\n\n.mermaid-fullscreen-close.dark-theme:hover {\n    background: rgba(60, 60, 60, 1);\n    box-shadow: 0 6px 16px rgba(255, 255, 255, 0.2);\n}\n\n.mermaid-fullscreen-modal .mermaid-fullscreen-btn {\n    display: none !important;\n}";
+    document.head.appendChild(fullscreenStyle);
+}
+
+// Detect if page has dark background
+const isDarkTheme = () => {
+    // We use a set of heuristics:
+    // 1. Check for common dark mode classes or attributes
+    // 2. Check computed background color brightness
+    if (document.documentElement.classList.contains('dark') ||
+        document.documentElement.getAttribute('data-theme') === 'dark' ||
+        document.body.classList.contains('dark') ||
+        document.body.getAttribute('data-theme') === 'dark') {
+        // console.log("Dark theme detected via class/attribute");
+        return true;
+    }
+    if (document.documentElement.classList.contains('light') ||
+        document.documentElement.getAttribute('data-theme') === 'light' ||
+        document.body.classList.contains('light') ||
+        document.body.getAttribute('data-theme') === 'light') {
+        // console.log("Light theme detected via class/attribute");
+        return false;
+    }
+    if (window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches) {
+        // console.log("Dark theme detected via prefers-color-scheme");
+        return true;
+    }
+    const bgColor = window.getComputedStyle(document.body).backgroundColor;
+    const match = bgColor.match(/rgb\((\d+),\s*(\d+),\s*(\d+)/);
+    if (match) {
+        const r = parseInt(match[1]);
+        const g = parseInt(match[2]);
+        const b = parseInt(match[3]);
+        const brightness = (r * 299 + g * 587 + b * 114) / 1000;
+        // console.log("Background color brightness:", brightness);
+        return brightness < 128;
+    }
+    // console.log("No dark or light theme detected, defaulting to light theme");
+    return false;
+};
+
+let darkTheme = isDarkTheme();
+let modal = null;
+let modalContent = null;
+let previousScrollOffset = [window.scrollX, window.scrollY];
+let _lazyObserver = null;
+let _renderQueue = Promise.resolve();
+let closeModal = () => {};
+
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && modal?.classList.contains('active')) {
+        closeModal();
+    }
+});
+
+// Apply d3 zoom to each SVG. Idempotent: an SVG already wrapped is skipped,
+// so this is safe to call both for the initial batch and for diagrams that
+// render lazily once they become visible.
+const addZoomToSvgs = (svgs) => {
+    svgs.each(function() {
+        if (this.getAttribute('data-zoom-applied') === 'true') return;
+        var svg = d3.select(this);
+        svg.html("<g class='wrapper'>" + svg.html() + "</g>");
+        var inner = svg.select("g");
+        var zoom = d3.zoom().on("zoom", function(event) {
+            inner.attr("transform", event.transform);
+        });
+        svg.call(zoom);
+        this.setAttribute('data-zoom-applied', 'true');
+    });
+};
+
+const runMermaid = async (rerun) => {
+    console.log("Running mermaid diagrams, rerun =", rerun);
+    // clear all existing mermaid charts
+    let all_mermaids = document.querySelectorAll(".mermaid");
+
+    if (rerun) {
+        // Disconnect any previous lazy rendering observer
+        if (_lazyObserver) {
+            _lazyObserver.disconnect();
+            _lazyObserver = null;
+        }
+
+        all_mermaids.forEach((el) => {
+            el.removeAttribute('data-mermaid-deferred');
+            el.removeAttribute('data-mermaid-render-failed');
+            if(!el.hasAttribute("data-original-code")) {
+                // store original code
+                // console.log(`Storing original code for first run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+            if(el.getAttribute("data-processed") === "true") {
+                // remove and restore original
+                el.removeAttribute("data-processed");
+                // console.log(`Restoring original code for re-run: `, el.getAttribute('data-original-code'));
+                el.innerHTML = el.getAttribute('data-original-code');
+            } else {
+                // store original code
+                // console.log(`Storing original code for re-run: `, el.innerHTML);
+                el.setAttribute('data-original-code', el.innerHTML);
+            }
+        });
+
+        // Separate visible and hidden elements. Mermaid's layout engine measures
+        // text dimensions via the DOM, which fails for elements hidden by a parent
+        // (e.g., Reveal.js non-active slides, sphinx-design unopened tabs),
+        // producing broken SVGs. Render visible elements now, defer hidden ones.
+        const visible = [];
+        const hidden = [];
+        all_mermaids.forEach((el) => {
+            // offsetParent is null for display:none ancestors.
+            // getClientRects().length > 0 catches position:fixed elements
+            // (which also have null offsetParent but are still visible).
+            if (el.offsetParent !== null || el.getClientRects().length > 0) {
+                visible.push(el);
+            } else {
+                hidden.push(el);
+                el.setAttribute('data-mermaid-deferred', 'true');
+            }
+        });
+
+        if (visible.length > 0) {
+            try {
+                await mermaid.run({ nodes: visible });
+            } catch (e) {
+                console.error("Mermaid rendering failed:", e);
+            }
+        }
+
+        // Lazily render hidden elements when they become visible.
+        // Uses a promise chain (_renderQueue) to serialize rendering,
+        // since IntersectionObserver may report multiple entries at once
+        // and mermaid.run() is not safe to call concurrently.
+        if (hidden.length > 0) {
+            if (typeof IntersectionObserver === 'undefined') {
+                console.warn("IntersectionObserver not available; hidden mermaid diagrams will not render.");
+            } else {
+                _renderQueue = Promise.resolve();
+                _lazyObserver = new IntersectionObserver((entries) => {
+                    for (const entry of entries) {
+                        if (entry.isIntersecting && entry.target.getAttribute("data-processed") !== "true") {
+                            _lazyObserver.unobserve(entry.target);
+                            const el = entry.target;
+                            _renderQueue = _renderQueue.then(async () => {
+                                try {
+                                    await mermaid.run({ nodes: [el] });
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    // Apply zoom to the now-rendered diagram, matching
+                                    // the decoration visible diagrams receive.
+                                    if (false) {
+                                        addZoomToSvgs(d3.selectAll("").select(function() {
+                                            return this.querySelector("svg");
+                                        }));
+                                    }
+                                } catch (e) {
+                                    console.error("Mermaid deferred rendering failed:", e);
+                                    el.removeAttribute('data-mermaid-deferred');
+                                    el.setAttribute('data-mermaid-render-failed', 'true');
+                                }
+                            });
+                        }
+                    }
+                });
+                hidden.forEach((el) => _lazyObserver.observe(el));
+            }
+        }
+    }
+
+    all_mermaids = document.querySelectorAll(".mermaid");
+    // Exclude deferred (hidden) and render-failed elements from completion checks
+    const mermaids_active = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])");
+    const mermaids_processed = document.querySelectorAll(".mermaid:not([data-mermaid-deferred]):not([data-mermaid-render-failed])[data-processed='true']");
+
+    if (false) {
+        const mermaids_to_add_zoom = 0 === -1 ? mermaids_active.length : 0;
+        if(mermaids_to_add_zoom > 0) {
+            var svgs = d3.selectAll("").select(function() {
+                return this.querySelector("svg");
+            });
+            // Wait until every active (visible) diagram has rendered. Deferred
+            // diagrams are excluded, so a fixed d3_node_count that counts a
+            // hidden diagram no longer loops forever waiting for its SVG.
+            if(mermaids_active.length !== mermaids_processed.length) {
+                setTimeout(() => runMermaid(false), 200);
+                return;
+            }
+            addZoomToSvgs(svgs);
+        }
+    } else if(mermaids_active.length !== mermaids_processed.length) {
+        // Wait for mermaid to process all diagrams
+        setTimeout(() => runMermaid(false), 200);
+        return;
+    }
+
+    // Stop here if not adding fullscreen capability
+    if (!true) return;
+
+    if (modal !== null ) {
+        // Destroy existing modal
+        modal.remove();
+        modal = null;
+        modalContent = null;
+    }
+
+    modal = document.createElement('div');
+    modal.className = 'mermaid-fullscreen-modal' + (darkTheme ? ' dark-theme' : '');
+    modal.setAttribute('role', 'dialog');
+    modal.setAttribute('aria-modal', 'true');
+    modal.setAttribute('aria-label', 'Fullscreen diagram viewer');
+    modal.innerHTML = `
+        <button class="mermaid-fullscreen-close${darkTheme ? ' dark-theme' : ''}" aria-label="Close fullscreen">✕</button>
+        <div class="mermaid-container-fullscreen${darkTheme ? ' dark-theme' : ''}"></div>
+    `;
+    document.body.appendChild(modal);
+
+    modalContent = modal.querySelector('.mermaid-container-fullscreen');
+    const closeBtn = modal.querySelector('.mermaid-fullscreen-close');
+
+    closeModal = () => {
+        modal.classList.remove('active');
+        modalContent.innerHTML = '';
+        document.body.style.overflow = ''
+        window.scrollTo({left: previousScrollOffset[0], top: previousScrollOffset[1], behavior: 'instant'});
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+    document.querySelectorAll('.mermaid').forEach((mermaidDiv) => {
+        if (mermaidDiv.parentNode.classList.contains('mermaid-container') ||
+            mermaidDiv.closest('.mermaid-fullscreen-modal')) {
+            // Already processed, adjust button class if needed
+            const existingBtn = mermaidDiv.parentNode.querySelector('.mermaid-fullscreen-btn');
+            if (existingBtn) {
+                existingBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+            }
+            return;
+        }
+
+        const container = document.createElement('div');
+        container.className = 'mermaid-container';
+        mermaidDiv.parentNode.insertBefore(container, mermaidDiv);
+        container.appendChild(mermaidDiv);
+
+        const fullscreenBtn = document.createElement('button');
+        fullscreenBtn.className = 'mermaid-fullscreen-btn' + (darkTheme ? ' dark-theme' : '');
+        fullscreenBtn.setAttribute('aria-label', 'View diagram in fullscreen');
+        fullscreenBtn.textContent = "\u26f6";
+        fullscreenBtn.style.opacity = "50%";
+
+        // Calculate dynamic position based on diagram's margin and padding
+        const diagramStyle = window.getComputedStyle(mermaidDiv);
+        const marginTop = parseFloat(diagramStyle.marginTop) || 0;
+        const marginRight = parseFloat(diagramStyle.marginRight) || 0;
+        const paddingTop = parseFloat(diagramStyle.paddingTop) || 0;
+        const paddingRight = parseFloat(diagramStyle.paddingRight) || 0;
+        fullscreenBtn.style.top = `${marginTop + paddingTop + 4}px`;
+        fullscreenBtn.style.right = `${marginRight + paddingRight + 4}px`;
+
+        fullscreenBtn.addEventListener('click', () => {
+            previousScrollOffset = [window.scrollX, window.scrollY];
+            const clone = mermaidDiv.cloneNode(true);
+            modalContent.innerHTML = '';
+            modalContent.appendChild(clone);
+
+            const svg = clone.querySelector('svg');
+            if (svg) {
+                svg.removeAttribute('width');
+                svg.removeAttribute('height');
+                svg.style.width = '100%';
+                svg.style.height = 'auto';
+                svg.style.maxWidth = '100%';
+                svg.style.display = 'block';
+
+                if (false) {
+                    setTimeout(() => {
+                        const g = svg.querySelector('g');
+                        if (g) {
+                            var svgD3 = d3.select(svg);
+                            svgD3.html("<g class='wrapper'>" + svgD3.html() + "</g>");
+                            var inner = svgD3.select("g");
+                            var zoom = d3.zoom().on("zoom", function(event) {
+                                inner.attr("transform", event.transform);
+                            });
+                            svgD3.call(zoom);
+                        }
+                    }, 100);
+                }
+            }
+
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        });
+        container.appendChild(fullscreenBtn);
+    });
+};
+
+
+
+const load = async () => {
+    initStyles();
+
+
+    await runMermaid(true);
+
+    const reRunIfThemeChanges = async () => {
+        const newDarkTheme = isDarkTheme();
+        if (newDarkTheme !== darkTheme) {
+            darkTheme = newDarkTheme;
+            console.log("Theme change detected, re-running mermaid with", darkTheme ? "dark" : "default", "theme");
+            await mermaid.initialize(
+                {...{"startOnLoad": false},
+                ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+                }
+            );
+            await runMermaid(true);
+        }
+    };
+
+    // Update theme classes when theme changes
+    const themeObserver = new MutationObserver(reRunIfThemeChanges);
+    themeObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+    themeObserver.observe(document.body, {
+        attributes: true,
+        attributeFilter: ['class', 'style', 'data-theme']
+    });
+};
+
+
+
+
+
+console.log("Initializing mermaid with", darkTheme ? "dark" : "default", "theme");
+mermaid.initialize(
+    {...{"startOnLoad": false},
+    ...{ darkMode: darkTheme, theme: darkTheme ? "dark" : "default" },
+    }
+);
+
+window.addEventListener("load", load);
+window.runMermaid = runMermaid;</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="设备电源管理" href="device.html" />
+    <link rel="prev" title="概述" href="overview.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">服务</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../connectivity/index.html">连接</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../memory_management.html">内存管理</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../power_management.html">电源管理</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">电源管理</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="overview.html">概述</a></li>
+<li class="toctree-l4 current"><a class="current reference internal" href="#">系统电源管理</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#introduction">简介</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#power-states">电源状态</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#power-management-policies">电源管理策略</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#examples">示例</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="device.html">设备电源管理</a></li>
+<li class="toctree-l4"><a class="reference internal" href="device_runtime.html">设备运行时电源管理</a></li>
+<li class="toctree-l4"><a class="reference internal" href="power_domain.html">电源域</a></li>
+<li class="toctree-l4"><a class="reference internal" href="api/index.html">电源管理 API</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../cpu_freq/index.html">CPU 频率调节</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../poweroff.html">关机</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../resource_management/index.html">资源管理</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../power_management.html">电源管理</a> &raquo;</li>
+  
+     <li><a href="index.html">电源管理</a> &raquo;</li>
+  
+  <li>系统电源管理</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="system-power-management">
+<span id="pm-system"></span><h1>系统电源管理<a class="headerlink" href="#system-power-management" title="链接到此标题。"></a></h1>
+<section id="introduction">
+<h2>简介<a class="headerlink" href="#introduction" title="链接到此标题。"></a></h2>
+<p>当内核没有可调度的任务时，会进入空闲状态。启用 <a class="reference internal" href="../../kconfig.html#CONFIG_PM" title="CONFIG_PM"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PM</span></code></a> 后，内核可以请求电源管理子系统把空闲的系统置于某个受支持的电源状态。内核请求一段希望挂起的时间，然后电源管理子系统根据所配置的电源管理策略决定要转换到的合适电源状态。</p>
+<p>设置唤醒事件是应用程序的责任。唤醒事件通常是由 SoC 外设模块触发的中断，例如 SysTick、RTC、计数器或 GPIO。请记住，根据 SoC 和所涉及的电源模式，并非所有外设都处于活动状态，因此某些唤醒源可能无法在所有电源模式下使用。</p>
+<p>下图描述了系统电源管理：</p>
+<figure class="align-default" id="id1">
+digraph G {
+    compound=true
+    node [height=1.2 style=rounded]
+
+    lock [label=&quot;Lock interrupts&quot;]
+    config_pm [label=&quot;CONFIG_PM&quot; shape=diamond style=&quot;rounded,dashed&quot;]
+    forced_state [label=&quot;state forced ?&quot;, shape=diamond style=&quot;rounded,dashed&quot;]
+    config_system_managed_device_pm [label=&quot;CONFIG_PM_DEVICE&quot; shape=diamond style=&quot;rounded,dashed&quot;]
+    config_system_managed_device_pm2 [label=&quot;CONFIG_PM_DEVICE&quot; shape=diamond style=&quot;rounded,dashed&quot;]
+    pm_policy [label=&quot;Check policy manager\nfor a power state &quot;]
+    pm_suspend_devices [label=&quot;Suspend\ndevices&quot;]
+    pm_resume_devices [label=&quot;Resume\ndevices&quot;]
+    pm_state_set [label=&quot;Enter power state\n(SoC API)&quot; style=&quot;rounded,bold&quot;]
+    pm_system_resume [label=&quot;Resume bookkeeping\n(post ops, notify, clock)&quot; style=&quot;rounded,bold&quot;]
+    unlock_irq [label=&quot;Unlock interrupts&quot;]
+    handle_interrupts [label=&quot;Handle interrupts\nand schedule threads&quot;]
+    k_cpu_idle [label=&quot;k_cpu_idle()&quot;]
+
+    subgraph cluster_idle {
+        style=dashed
+        label = &quot;idle()&quot;
+
+        lock -&gt; config_pm
+        config_pm -&gt; k_cpu_idle [label=&quot;no&quot;]
+        k_cpu_idle -&gt; unlock_irq
+    }
+
+    subgraph cluster_pm_system_suspend {
+        style=dashed
+        label = &quot;pm_system_suspend()&quot;
+
+        forced_state -&gt; config_system_managed_device_pm [label=&quot;yes&quot;]
+        forced_state -&gt; pm_policy [label=&quot;no&quot;]
+        pm_policy -&gt; config_system_managed_device_pm
+        config_system_managed_device_pm -&gt; pm_state_set [label=&quot;no&quot;]
+        config_system_managed_device_pm -&gt; pm_suspend_devices [label=&quot;yes&quot;]
+        pm_suspend_devices -&gt; pm_state_set
+        pm_state_set -&gt; config_system_managed_device_pm2
+        config_system_managed_device_pm2 -&gt; pm_resume_devices [label=&quot;yes&quot;]
+        config_system_managed_device_pm2 -&gt; pm_system_resume [label=&quot;no&quot;]
+        pm_resume_devices -&gt; pm_system_resume
+    }
+
+    {rankdir=LR k_cpu_idle; forced_state}
+    config_pm -&gt; forced_state [label=&quot;yes&quot;]
+    pm_policy -&gt; k_cpu_idle [label=&quot;PM_STATE_ACTIVE\n(no power state meets requirements)&quot;]
+    pm_system_resume -&gt; unlock_irq [constraint=false]
+    unlock_irq -&gt; handle_interrupts
+    handle_interrupts -&gt; lock:n [label=&quot;no runnable thread&quot;]
+}<figcaption>
+<p><span class="caption-text">系统电源管理</span><a class="headerlink" href="#id1" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<p>空闲线程在调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">pm_system_suspend()</span></code> 之前锁定中断，并持有原始的架构中断键（interrupt key）。如果电源管理子系统进入了低功耗状态，电源管理的恢复记账工作会在中断仍处于锁定状态时运行。默认情况下，先恢复由系统管理的设备，然后依次执行 <code class="xref c c-func docutils literal notranslate"><span class="pre">pm_state_exit_post_ops()</span></code>、电源管理退出通知以及系统时钟的空闲退出记账。如果低功耗状态停止了定时器，设备恢复回调就不能依赖基于定时器的 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_busy_wait()</span></code>。这些记账工作完成且 <code class="xref c c-func docutils literal notranslate"><span class="pre">pm_system_suspend()</span></code> 返回后，空闲线程恢复原始的中断键。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>默认关闭的实验性选项 <a class="reference internal" href="../../kconfig.html#CONFIG_PM_EARLY_SYSTEM_TIMER_RESUME" title="CONFIG_PM_EARLY_SYSTEM_TIMER_RESUME"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PM_EARLY_SYSTEM_TIMER_RESUME</span></code></a> 会把顺序改为：<code class="xref c c-func docutils literal notranslate"><span class="pre">pm_state_exit_post_ops()</span></code>、系统时钟空闲退出记账、设备恢复，然后是电源管理退出通知。这样可以在设备恢复回调中使用基于定时器的 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_busy_wait()</span></code>，但需要针对具体平台进行验证。SoC 的 post-ops 不得依赖已恢复的设备，定时器空闲退出也不得依赖仍处于挂起状态的设备。定时器空闲退出还可能在设备恢复之前调用 <code class="xref c c-struct docutils literal notranslate"><span class="pre">k_timer</span></code> 的到期函数。</p>
+</div>
+<p>未选择 <code class="docutils literal notranslate"><span class="pre">CONFIG_PM_STATE_SET_IRQ_UNLOCKED</span></code> 的架构和 SoC 会在低功耗指令前后紧接着使用架构钩子，这样低功耗指令仍能感知唤醒事件，而不会先分派唤醒源的 ISR。在这种模式下，<code class="xref c c-func docutils literal notranslate"><span class="pre">pm_state_set()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">pm_state_exit_post_ops()</span></code> 只能用于 SoC 特定的硬件工作，不能用作最终取消中断屏蔽的位置。</p>
+<p>使用这一默认约定时，中断所有权的顺序如下：</p>
+<figure class="align-default" id="id2">
+<pre  class="mermaid">
+        sequenceDiagram
+     participant Workers as Other threads
+     participant Idle as idle()&lt;br/&gt;(idle thread context)
+     participant PM as pm_system_suspend()
+     participant SoC as pm_state_set()&lt;br/&gt;(SoC hook)
+     participant HW as Hardware
+
+     loop Idle cycle
+         Note over Workers: Thread enters SLEEP/PENDING state&lt;br/&gt;e.g. k_sleep() / k_sem_take()
+         alt Runnable thread(s) remaining
+             Workers--&gt;&gt;Workers: Schedule another thread
+         else No runnable thread remaining
+             Workers--&gt;&gt;Idle: Switch to idle thread
+         end
+         Idle-&gt;&gt;Idle: Lock interrupts
+         Note left of Idle: Interrupts are locked&lt;br/&gt;during PM sequence
+         Idle-&gt;&gt;PM: Suspend idle CPU
+         PM-&gt;&gt;PM: Suspend devices&lt;br/&gt;(if applicable)
+         PM-&gt;&gt;PM: Set idle timeout
+         PM-&gt;&gt;PM: Notify PM state entry
+         PM-&gt;&gt;SoC: Enter power state
+         SoC-&gt;&gt;SoC: SoC-specific pre-entry operations
+         SoC-&gt;&gt;SoC: Run arch PM prepare hook
+         SoC-&gt;&gt;HW: Trigger low-power state entry
+         HW--&gt;&gt;SoC: Wake-up event occurs
+         SoC-&gt;&gt;SoC: Run arch PM finish hook
+         SoC-&gt;&gt;SoC: SoC-specific post-wakeup operations
+         SoC--&gt;&gt;PM: Power state exit complete
+         PM-&gt;&gt;PM: Resume devices&lt;br/&gt;(if applicable)
+         PM-&gt;&gt;PM: Run post ops, notify exit, clock idle exit
+         PM--&gt;&gt;Idle: Resume complete
+         Idle-&gt;&gt;Idle: Unlock interrupts
+         HW--&gt;&gt;Idle: Pending interrupts are handled
+         Idle--&gt;&gt;Workers: Idle thread yields&lt;br/&gt;or is preempted
+         Note over Workers: Non-idle thread starts executing
+     end
+    </pre><figcaption>
+<p><span class="caption-text">系统电源管理中断恢复的所有权</span><a class="headerlink" href="#id2" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<p>使用这一默认约定的 SoC 实现不得在 <code class="xref c c-func docutils literal notranslate"><span class="pre">pm_state_set()</span></code> 或 <code class="xref c c-func docutils literal notranslate"><span class="pre">pm_state_exit_post_ops()</span></code> 中取消中断屏蔽。仍在这些钩子中调用 <code class="docutils literal notranslate"><span class="pre">irq_unlock(0)</span></code>、<code class="docutils literal notranslate"><span class="pre">arch_irq_unlock(0)</span></code>、<code class="docutils literal notranslate"><span class="pre">__enable_irq()</span></code> 或等效操作的旧实现，在完成迁移之前必须选择 <code class="docutils literal notranslate"><span class="pre">CONFIG_PM_STATE_SET_IRQ_UNLOCKED</span></code>。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>上述顺序保证只适用于 <code class="xref c c-func docutils literal notranslate"><span class="pre">arch_irq_lock()</span></code> 能够屏蔽的中断。零延迟中断不在此顺序之内。参见 <a class="reference internal" href="../../kernel/services/interrupts.html#zlis"><span class="std std-ref">零延迟中断</span></a>。</p>
+</div>
+<section id="power-states">
+<h3>电源状态<a class="headerlink" href="#power-states" title="链接到此标题。"></a></h3>
+<p>电源管理子系统定义了一组状态，每个状态由其功耗和上下文保留情况来描述。</p>
+<p>电源状态集合由 <code class="xref c c-enum docutils literal notranslate"><span class="pre">pm_state</span></code> 定义。一般来说，功耗越低的状态（在枚举中的索引越大）节能效果越好，唤醒延迟也越长。</p>
+</section>
+<section id="power-management-policies">
+<h3>电源管理策略<a class="headerlink" href="#power-management-policies" title="链接到此标题。"></a></h3>
+<p>电源管理子系统支持以下电源管理策略：</p>
+<ul class="simple">
+<li><p>基于驻留时间</p></li>
+<li><p>由应用程序定义</p></li>
+</ul>
+<p>策略管理器是电源管理子系统中负责决定系统应转换到哪个电源状态的组件。策略管理器只能在为平台定义的状态之间进行选择。根据策略的不同，决策还可能受到其他约束，包括禁止某些电源状态的锁，或各种最小和最大延迟值。</p>
+<p>有关状态定义的更多详情，请参阅 <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,power-state</span></code> 绑定文档。</p>
+<section id="residency">
+<h4>驻留时间<a class="headerlink" href="#residency" title="链接到此标题。"></a></h4>
+<p>在驻留时间策略下，系统将进入节能效果最好的电源状态，约束条件是最小驻留时间值（参见 <code class="xref std std-dtcompatible docutils literal notranslate"><span class="pre">zephyr,power-state</span></code>）与退出该模式的延迟之和必须小于或等于内核调度的系统空闲时长。</p>
+<p>因此核心逻辑可以概括为以下表达式：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">time_to_next_scheduled_event</span><span class="w"> </span><span class="o">&gt;=</span><span class="w"> </span><span class="p">(</span><span class="n">state</span><span class="p">.</span><span class="n">min_residency_us</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">state</span><span class="p">.</span><span class="n">exit_latency</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">   </span><span class="k">return</span><span class="w"> </span><span class="n">state</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="application">
+<h4>应用程序<a class="headerlink" href="#application" title="链接到此标题。"></a></h4>
+<p>应用程序通过实现 <code class="xref c c-func docutils literal notranslate"><span class="pre">pm_policy_next_state()</span></code> 函数来定义电源管理策略。在这种策略下，应用程序可以根据距下一次调度超时的剩余时间，自由决定系统应转换到哪个电源状态。</p>
+<p>定义了自己策略的应用程序示例见 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/tests/subsys/pm/power_mgmt/">tests/subsys/pm/power_mgmt/</a>。</p>
+</section>
+<section id="custom-ticks-hook">
+<h4>自定义节拍钩子<a class="headerlink" href="#custom-ticks-hook" title="链接到此标题。"></a></h4>
+<p>除了内核节拍到期时间和电源管理策略事件列表之外，应用程序和 SoC 特定代码可能还需要从专有或硬件特定的数据源推导下一次唤醒时间。例如硬件寄存器、仅以二进制形式提供的第三方模块，或不便建模为标准电源管理策略事件的复杂/遗留数据结构。</p>
+<p>启用 <a class="reference internal" href="../../kconfig.html#CONFIG_PM_CUSTOM_TICKS_HOOK" title="CONFIG_PM_CUSTOM_TICKS_HOOK"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PM_CUSTOM_TICKS_HOOK</span></code></a> 后，电源管理核心会在 <code class="xref c c-func docutils literal notranslate"><span class="pre">pm_system_suspend()</span></code> 期间调用可选函数 <code class="xref c c-func docutils literal notranslate"><span class="pre">pm_policy_next_custom_ticks()</span></code>。该钩子返回距下一个自定义事件的节拍数；如果不需要考虑自定义事件，则返回 <code class="docutils literal notranslate"><span class="pre">K_TICKS_FOREVER</span></code>。</p>
+<p>然后电源管理核心在以下各项中选择最早的到期时间：</p>
+<ul class="simple">
+<li><p>内核节拍到期时间，</p></li>
+<li><p>电源管理策略事件列表的节拍数（来自 <code class="xref c c-func docutils literal notranslate"><span class="pre">pm_policy_next_event_ticks()</span></code>），</p></li>
+<li><p>自定义节拍值（来自 <code class="xref c c-func docutils literal notranslate"><span class="pre">pm_policy_next_custom_ticks()</span></code>）。</p></li>
+</ul>
+<p>这一机制使开发板和应用程序无需修改电源管理事件列表基础设施，即可将额外的定时源纳入系统电源管理决策。</p>
+</section>
+<section id="policy-and-power-states">
+<span id="pm-policy-power-states"></span><h4>策略与电源状态<a class="headerlink" href="#policy-and-power-states" title="链接到此标题。"></a></h4>
+<p>电源管理子系统允许不同的 Zephyr 组件和应用程序配置策略管理器，阻止系统转换到某些电源状态。设备在后台执行任务时可以借此防止系统进入会丢失上下文的特定状态。参见 <code class="xref c c-func docutils literal notranslate"><span class="pre">pm_policy_state_lock_get()</span></code>。</p>
+</section>
+</section>
+<section id="examples">
+<h3>示例<a class="headerlink" href="#examples" title="链接到此标题。"></a></h3>
+<p>以下是一些展示不同电源管理功能的实用示例：</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/samples/boards/st/power_mgmt/blinky/">samples/boards/st/power_mgmt/blinky/</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/samples/boards/espressif/deep_sleep/">samples/boards/espressif/deep_sleep/</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/samples/subsys/pm/device_pm/">samples/subsys/pm/device_pm/</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/tests/subsys/pm/power_mgmt/">tests/subsys/pm/power_mgmt/</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/tests/subsys/pm/power_mgmt_soc/">tests/subsys/pm/power_mgmt_soc/</a></p></li>
+<li><p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/tests/subsys/pm/power_states_api/">tests/subsys/pm/power_states_api/</a></p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 10月 06, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,400 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>多生产者单消费者数据包缓冲区 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/kernel/data_structures/mpsc_pbuf.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="单生产者单消费者数据包缓冲区" href="spsc_pbuf.html" />
+    <link rel="prev" title="双向链表" href="dlist.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">内核</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../services/index.html">内核服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../drivers/index.html">设备驱动模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usermode/index.html">用户模式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../memory_management/index.html">内存管理</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">数据结构</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="slist.html">单向链表</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dlist.html">双向链表</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">多生产者单消费者数据包缓冲区</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#internals">内部实现</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#allocation">分配</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#allocation-with-overwrite">带覆盖的分配</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#usage">用法</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#packet-header-definition">数据包头部定义</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#packet-buffer-configuration">数据包缓冲区配置</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#packet-producing">生产数据包</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#packet-consuming">消费数据包</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="spsc_pbuf.html">单生产者单消费者数据包缓冲区</a></li>
+<li class="toctree-l3"><a class="reference internal" href="rbtree.html">平衡红黑树</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ring_buffers.html">环形缓冲区</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mpsc_lockfree.html">多生产者单消费者无锁队列</a></li>
+<li class="toctree-l3"><a class="reference internal" href="spsc_lockfree.html">单生产者单消费者无锁队列</a></li>
+<li class="toctree-l3"><a class="reference internal" href="min_heap.html">最小堆数据结构</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ringq.html">sys_ringq 数据结构</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../timing_functions/index.html">计时函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../object_cores/index.html">对象核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../timeutil.html">时间工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../precision_timing.html">精密计时</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../util/index.html">实用工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../iterable_sections/index.html">可迭代段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../code-relocation.html">代码和数据重定位</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanup.html">基于作用域的清理辅助工具</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">内核</a> &raquo;</li>
+  
+     <li><a href="index.html">数据结构</a> &raquo;</li>
+  
+  <li>多生产者单消费者数据包缓冲区</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="multi-producer-single-consumer-packet-buffer">
+<span id="mpsc-pbuf"></span><h1>多生产者单消费者数据包缓冲区<a class="headerlink" href="#multi-producer-single-consumer-packet-buffer" title="链接到此标题。"></a></h1>
+<p><em class="dfn">Multi Producer Single Consumer Packet Buffer (MPSC_PBUF)</em>（多生产者单消费者数据包缓冲区）是一种循环缓冲区，其内容按先进先出的顺序存储。缓冲区中存储的是可变大小的数据包。数据包缓冲区基于只有一个上下文消费数据的假设工作。不过，也可能有另一个上下文介入以刷出数据，并且再也不会返回（panic 的情况）。数据包的生产分两步进行：首先分配所请求数量的数据空间，生产者填入数据并提交。数据包的消费同样分两步进行：消费者申请（claim）数据包，获取指向它的指针及其长度，之后再释放该数据包。这种方式减少了内存复制。</p>
+<p><em class="dfn">MPSC Packet Buffer</em>（MPSC 数据包缓冲区）具有以下关键特性：</p>
+<ul class="simple">
+<li><p>数据包生产采用“分配、提交”方案。</p></li>
+<li><p>数据包消费采用“申请、释放”方案。</p></li>
+<li><p>分配器确保分配所请求长度的连续内存。</p></li>
+<li><p>当无法分配所请求的空间时，可以采用以下策略：</p>
+<ul>
+<li><p><strong>覆盖</strong>：丢弃最旧的条目，直到能够分配所请求数量的内存为止。每丢弃一个数据包都会调用用户回调。</p></li>
+<li><p><strong>不覆盖</strong>：当无法分配所请求数量的空间时，分配失败。</p></li>
+</ul>
+</li>
+<li><p>专门针对存储短数据包优化的 API。</p></li>
+<li><p>支持带超时的分配。</p></li>
+</ul>
+<section id="internals">
+<h2>内部实现<a class="headerlink" href="#internals" title="链接到此标题。"></a></h2>
+<p>缓冲区中的每个数据包都包含一个 <code class="docutils literal notranslate"><span class="pre">MPSC_PBUF</span></code> 专用头部，用于内部管理。头部由 2 个标志位组成。为了优化内存使用，可以使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">MPSC_PBUF_HDR</span></code> 将该头部叠加在用户头部之上，第一个字中的其余位可以由应用程序自行定义。头部包含以下标志：</p>
+<ul class="simple">
+<li><p>valid：当数据包包含有效的用户数据包时，该位置 1</p></li>
+<li><p>busy：当数据包正在被消费（已申请但尚未释放）时，该位置位</p></li>
+</ul>
+<p>头部状态：</p>
+<table class="docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p>valid</p></td>
+<td><p>busy</p></td>
+<td><p>说明</p></td>
+</tr>
+<tr class="row-even"><td><p>0</p></td>
+<td><p>0</p></td>
+<td><p>空闲空间</p></td>
+</tr>
+<tr class="row-odd"><td><p>1</p></td>
+<td><p>0</p></td>
+<td><p>有效数据包</p></td>
+</tr>
+<tr class="row-even"><td><p>1</p></td>
+<td><p>1</p></td>
+<td><p>已申请的有效数据包</p></td>
+</tr>
+<tr class="row-odd"><td><p>0</p></td>
+<td><p>1</p></td>
+<td><p>内部跳过数据包</p></td>
+</tr>
+</tbody>
+</table>
+<p>数据包缓冲区空间中包含空闲空间、有效的用户数据包和内部跳过数据包。内部跳过数据包表示填充，例如位于缓冲区末尾的填充。</p>
+<section id="allocation">
+<h3>分配<a class="headerlink" href="#allocation" title="链接到此标题。"></a></h3>
+<p>通过成对的读写索引确定可用空间。如果可以分配空间，则移动临时写索引，并返回指向缓冲区内该空间的指针，同时重置数据包头部。如果分配需要让写索引回绕，则在缓冲区末尾添加一个跳过数据包。如果无法分配空间且禁用了覆盖，则返回 <code class="docutils literal notranslate"><span class="pre">NULL</span></code> 指针；如果是带超时的分配，则上下文会阻塞。</p>
+</section>
+<section id="allocation-with-overwrite">
+<h3>带覆盖的分配<a class="headerlink" href="#allocation-with-overwrite" title="链接到此标题。"></a></h3>
+<p>如果启用了覆盖，则会丢弃最旧的数据包，直到能够分配所请求数量的空间为止。丢弃数据包时会检查头部中的 <code class="docutils literal notranslate"><span class="pre">busy</span></code> 标志，以确保当前正在被消费的数据包不会被覆盖。在这种情况下，会在忙数据包之前添加一个跳过数据包，并丢弃忙数据包之后的数据包。当释放忙数据包时，会检测到这种情况，并将该数据包转换为跳过数据包，以避免重复处理。</p>
+</section>
+</section>
+<section id="usage">
+<h2>用法<a class="headerlink" href="#usage" title="链接到此标题。"></a></h2>
+<section id="packet-header-definition">
+<h3>数据包头部定义<a class="headerlink" href="#packet-header-definition" title="链接到此标题。"></a></h3>
+<p>数据包头部的详细信息参见 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/sys/mpsc_packet.h">include/zephyr/sys/mpsc_packet.h</a>。API 函数参见 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/sys/mpsc_pbuf.h">include/zephyr/sys/mpsc_pbuf.h</a>。将头文件拆分开是为了避免在声明数据包时引入过多头文件。</p>
+<p>用户头部结构体必须以内部头部开头：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/sys/mpsc_packet.h&gt;</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">foo_header</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">MPSC_PBUF_HDR</span><span class="p">;</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">length</span><span class="o">:</span><span class="w"> </span><span class="mi">32</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">MPSC_PBUF_HDR_BITS</span><span class="p">;</span>
+<span class="p">};</span>
+</pre></div>
+</div>
+</section>
+<section id="packet-buffer-configuration">
+<h3>数据包缓冲区配置<a class="headerlink" href="#packet-buffer-configuration" title="链接到此标题。"></a></h3>
+<p>配置结构体包含缓冲区详细信息、配置标志和回调。数据包缓冲区使用以下回调：</p>
+<ul class="simple">
+<li><p>丢弃通知：每当有数据包因覆盖而被丢弃时调用的回调。</p></li>
+<li><p>获取数据包长度：用于确定数据包长度的回调</p></li>
+</ul>
+</section>
+<section id="packet-producing">
+<h3>生产数据包<a class="headerlink" href="#packet-producing" title="链接到此标题。"></a></h3>
+<p>标准的两步方法：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">foo_packet</span><span class="w"> </span><span class="o">*</span><span class="n">packet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mpsc_pbuf_alloc</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="n">len</span><span class="p">,</span><span class="w"> </span><span class="n">K_NO_WAIT</span><span class="p">);</span>
+
+<span class="n">fill_data</span><span class="p">(</span><span class="n">packet</span><span class="p">);</span>
+
+<span class="n">mpsc_pbuf_commit</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="n">packet</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>针对性能优化的小数据包存储：</p>
+<ul class="simple">
+<li><p>32 位字数据包</p></li>
+<li><p>带指针的 32 位字数据包</p></li>
+</ul>
+<p>注意，由于数据包是按值写入的，它们的头部中应已设置 <code class="docutils literal notranslate"><span class="pre">valid</span></code> 位。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">mpsc_pbuf_put_word</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">);</span>
+<span class="n">mpsc_pbuf_put_word_ext</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="n">ptr</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="packet-consuming">
+<h3>消费数据包<a class="headerlink" href="#packet-consuming" title="链接到此标题。"></a></h3>
+<p>两步方法：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">foo_packet</span><span class="w"> </span><span class="o">*</span><span class="n">packet</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mpsc_pbuf_claim</span><span class="p">(</span><span class="n">buffer</span><span class="p">);</span>
+
+<span class="n">process</span><span class="p">(</span><span class="n">packet</span><span class="p">);</span>
+
+<span class="n">mpsc_pbuf_free</span><span class="p">(</span><span class="n">buffer</span><span class="p">,</span><span class="w"> </span><span class="n">packet</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 11月 14, 2023.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

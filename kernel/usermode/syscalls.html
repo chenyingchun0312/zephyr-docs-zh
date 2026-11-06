@@ -1,0 +1,617 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>系统调用 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/kernel/usermode/syscalls.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="MPU 栈对象" href="mpu_stack_objects.html" />
+    <link rel="prev" title="内核对象" href="kernelobjects.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">内核</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../services/index.html">内核服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../drivers/index.html">设备驱动模型</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">用户模式</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="overview.html">概述</a></li>
+<li class="toctree-l3"><a class="reference internal" href="memory_domain.html">内存保护设计</a></li>
+<li class="toctree-l3"><a class="reference internal" href="kernelobjects.html">内核对象</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">系统调用</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#components">组成部分</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#c-prototype">C 原型</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#invocation-context">调用上下文</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#implementation-details">实现细节</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation-function">实现函数</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#verification-function">校验函数</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#argument-validation">参数校验</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#verifier-definition">校验函数的定义</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#verification-memory-access-policies">校验时的内存访问策略</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#verification-return-value-policies">校验时的返回值策略</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#configuration-options">配置选项</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#apis">API</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="mpu_stack_objects.html">MPU 栈对象</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mpu_userspace.html">基于 MPU 的用户空间</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../memory_management/index.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data_structures/index.html">数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../timing_functions/index.html">计时函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../object_cores/index.html">对象核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../timeutil.html">时间工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../precision_timing.html">精密计时</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../util/index.html">实用工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../iterable_sections/index.html">可迭代段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../code-relocation.html">代码和数据重定位</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanup.html">基于作用域的清理辅助工具</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">内核</a> &raquo;</li>
+  
+     <li><a href="index.html">用户模式</a> &raquo;</li>
+  
+  <li>系统调用</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="system-calls">
+<span id="syscalls"></span><h1>系统调用<a class="headerlink" href="#system-calls" title="链接到此标题。"></a></h1>
+<p>用户线程运行时的特权比管理态线程少：某些 CPU 指令不能使用，并且只能访问内存映射中有限的一部分。系统调用（可以）让用户线程执行它们无法直接执行的操作。</p>
+<p>定义系统调用时，务必确保对 API 私有数据的访问只能通过系统调用接口进行。内核私有数据绝不能直接提供给用户模式线程。例如，<code class="docutils literal notranslate"><span class="pre">k_queue</span></code> API 有意没有开放给用户模式，因为它们把队列的簿记信息直接存放在用户模式可见的队列缓冲区中。</p>
+<p>允许用户注册在管理态模式下运行的回调函数的 API，绝不能作为系统调用开放。这类 API 应仅保留给管理态模式访问。</p>
+<p>本节介绍如何声明新的系统调用，并讨论与之相关的一些实现细节。</p>
+<section id="components">
+<h2>组成部分<a class="headerlink" href="#components" title="链接到此标题。"></a></h2>
+<p>所有系统调用都包含以下组成部分：</p>
+<ul class="simple">
+<li><p>API 的 <strong>C 原型</strong>，以 <code class="xref c c-macro docutils literal notranslate"><span class="pre">__syscall</span></code> 为前缀。它声明在 <code class="docutils literal notranslate"><span class="pre">include/</span></code> 下或其他 <code class="docutils literal notranslate"><span class="pre">SYSCALL_INCLUDE_DIRS</span></code> 目录下的某个头文件中。该原型从不手工实现，而是由 <a class="reference internal" href="../../build/cmake/index.html#gen-syscalls-py"><span class="std std-ref">scripts/build/gen_syscalls.py</span></a> 脚本生成。生成的是一个内联函数，它要么直接调用实现函数（从管理态模式调用时），要么经过特权提升和校验步骤（从用户模式调用时）。</p></li>
+<li><p><strong>实现函数</strong>，即系统调用的真正实现。如果从用户模式调用，实现函数可以假定所有传入的参数都已经过校验。</p></li>
+<li><p><strong>校验函数</strong>，它包装实现函数，并对所有传入的参数进行校验。</p></li>
+<li><p><strong>解组（unmarshalling）函数</strong>，这是自动生成的处理函数，必须被用户源代码包含。</p></li>
+</ul>
+</section>
+<section id="c-prototype">
+<h2>C 原型<a class="headerlink" href="#c-prototype" title="链接到此标题。"></a></h2>
+<p>C 原型表示从用户模式或管理态模式调用该 API 的方式。例如，初始化一个信号量：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">__syscall</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="n">k_sem_init</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">k_sem</span><span class="w"> </span><span class="o">*</span><span class="n">sem</span><span class="p">,</span><span class="w"> </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">initial_count</span><span class="p">,</span>
+<span class="w">                          </span><span class="kt">unsigned</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">limit</span><span class="p">);</span>
+</pre></div>
+</div>
+<p><code class="xref c c-macro docutils literal notranslate"><span class="pre">__syscall</span></code> 属性非常特殊。对 C 编译器而言，它只是展开为“static inline”。但对构建后脚本 <a class="reference internal" href="../../build/cmake/index.html#parse-syscalls-py"><span class="std std-ref">scripts/build/parse_syscalls.py</span></a> 而言，它表示该 API 是一个系统调用。<a class="reference internal" href="../../build/cmake/index.html#parse-syscalls-py"><span class="std std-ref">scripts/build/parse_syscalls.py</span></a> 脚本会对函数原型做一些解析，以确定其返回值和参数的数据类型，因此存在一些限制：</p>
+<ul class="simple">
+<li><p>数组参数必须以指针而不是数组的形式传入。例如，不允许写成 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">foo[]</span></code> 或 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">foo[12]</span></code>，而应写成 <code class="docutils literal notranslate"><span class="pre">int</span> <span class="pre">*foo</span></code>。</p></li>
+<li><p>函数指针会让这个简单的解析器彻底混乱。变通方法是先用 typedef 定义它们，然后在参数列表中使用该 typedef。</p></li>
+<li><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">__syscall</span></code> 必须位于原型的最前面。</p></li>
+</ul>
+<p>在确定要生成的系统调用集合时，有意不使用预处理器。但是，任何实际上没有定义校验函数的已生成系统调用（因为内核配置中未启用相关特性），都会改为指向一个专门用于未实现系统调用的校验函数。API 的数据类型定义不应对编译器有条件地可见。</p>
+<p>任何声明了系统调用的头文件，都必须在文件的最末尾包含一个特殊的生成头文件。该头文件遵循 <code class="docutils literal notranslate"><span class="pre">syscalls/&lt;name</span> <span class="pre">of</span> <span class="pre">header</span> <span class="pre">file&gt;</span></code> 的命名约定。例如，在 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/drivers/sensor.h">include/zephyr/drivers/sensor.h</a> 的末尾：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/syscalls/sensor.h&gt;</span>
+</pre></div>
+</div>
+<p>C 原型函数必须声明在 CMake 变量 <code class="docutils literal notranslate"><span class="pre">SYSCALL_INCLUDE_DIRS</span></code> 所列出的某个目录中。设置了 <code class="docutils literal notranslate"><span class="pre">CONFIG_APPLICATION_DEFINED_SYSCALL</span></code> 时，该列表总是包含 <code class="docutils literal notranslate"><span class="pre">APPLICATION_SOURCE_DIR</span></code>；设置了 <code class="docutils literal notranslate"><span class="pre">CONFIG_ZTEST</span></code> 时，总是包含 <code class="docutils literal notranslate"><span class="pre">${ZEPHYR_BASE}/subsys/testsuite/ztest/include</span></code>。可以通过 CMake 命令行，或在运行 <code class="docutils literal notranslate"><span class="pre">find_package(Zephyr</span> <span class="pre">...)</span></code> 之前执行的 CMake 代码中向该列表添加其他路径。<code class="docutils literal notranslate"><span class="pre">${ZEPHYR_BASE}/include</span></code> 总是会被扫描，以查找可能的系统调用原型。</p>
+<p>注意，并非所有系统调用都会被包含在最终的二进制文件中。CMake 函数 <code class="docutils literal notranslate"><span class="pre">zephyr_syscall_header</span></code> 和 <code class="docutils literal notranslate"><span class="pre">zephyr_syscall_header_ifdef</span></code> 用于指定哪些头文件包含必须出现在最终二进制文件中的系统调用原型。注意，CMake 变量 <code class="docutils literal notranslate"><span class="pre">SYSCALL_INCLUDE_DIRS</span></code> 所列目录中的头文件，其系统调用总是会出现在最终二进制文件中。要强制将所有系统调用包含在最终二进制文件中，请开启 <a class="reference internal" href="../../kconfig.html#CONFIG_EMIT_ALL_SYSCALLS" title="CONFIG_EMIT_ALL_SYSCALLS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_EMIT_ALL_SYSCALLS</span></code></a>。</p>
+<section id="invocation-context">
+<h3>调用上下文<a class="headerlink" href="#invocation-context" title="链接到此标题。"></a></h3>
+<p>如果已知某个 C 文件中的所有代码只在用户模式下运行，或只在管理态模式下运行，就可以让使用系统调用 API 的源代码更高效。系统会查找宏 <code class="xref c c-macro docutils literal notranslate"><span class="pre">__ZEPHYR_SUPERVISOR__</span></code> 或 <code class="xref c c-macro docutils literal notranslate"><span class="pre">__ZEPHYR_USER__</span></code> 的定义，这些宏通常由构建系统添加到相关文件的编译器标志中。</p>
+<ul class="simple">
+<li><p>如果未启用 <a class="reference internal" href="../../kconfig.html#CONFIG_USERSPACE" title="CONFIG_USERSPACE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USERSPACE</span></code></a>，所有 API 都直接调用实现函数。</p></li>
+<li><p>否则，默认做法是在运行时检查处理器当前是否运行在用户模式下，然后相应地发起系统调用或直接调用实现函数。</p></li>
+<li><p>如果定义了 <code class="xref c c-macro docutils literal notranslate"><span class="pre">__ZEPHYR_SUPERVISOR__</span></code>，则假定所有代码都运行在管理态模式下，所有 API 都直接调用实现函数。如果代码实际上运行在用户模式下，那么一旦它试图执行不被允许的操作，就会产生 CPU 异常。</p></li>
+<li><p>如果定义了 <code class="xref c c-macro docutils literal notranslate"><span class="pre">__ZEPHYR_USER__</span></code>，则假定所有代码都运行在用户模式下，并无条件地发起系统调用。</p></li>
+</ul>
+</section>
+<section id="implementation-details">
+<h3>实现细节<a class="headerlink" href="#implementation-details" title="链接到此标题。"></a></h3>
+<p>用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">__syscall</span></code> 声明 API 后，<a class="reference internal" href="../../build/cmake/index.html#gen-syscalls-py"><span class="std std-ref">scripts/build/gen_syscalls.py</span></a> 脚本会在 C 文件和头文件中生成一些代码，这些代码都位于项目输出目录的 <code class="docutils literal notranslate"><span class="pre">include/generated/</span></code> 下：</p>
+<ul class="simple">
+<li><p>该系统调用会被加入系统调用 ID 的枚举类型中，该枚举定义在 <code class="docutils literal notranslate"><span class="pre">include/generated/zephyr/syscall_list.h</span></code> 中。其名称是 API 名称的大写形式，并加上 <code class="docutils literal notranslate"><span class="pre">K_SYSCALL_</span></code> 前缀。</p></li>
+<li><p>在分派表 <code class="docutils literal notranslate"><span class="pre">_k_syscall_table</span></code> 中为该系统调用创建一个条目，该表定义在 <code class="docutils literal notranslate"><span class="pre">include/generated/zephyr/syscall_dispatch.c</span></code> 中</p>
+<ul>
+<li><p>启用 <a class="reference internal" href="../../kconfig.html#CONFIG_EMIT_ALL_SYSCALLS" title="CONFIG_EMIT_ALL_SYSCALLS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_EMIT_ALL_SYSCALLS</span></code></a> 时，该表只包含其对应原型声明在以下头文件中的系统调用：</p>
+<ul>
+<li><p>由 CMake 函数 <code class="docutils literal notranslate"><span class="pre">zephyr_syscall_header</span></code> 和 <code class="docutils literal notranslate"><span class="pre">zephyr_syscall_header_ifdef</span></code> 指定的头文件，或</p></li>
+<li><p>位于 CMake 变量 <code class="docutils literal notranslate"><span class="pre">SYSCALL_INCLUDE_DIRS</span></code> 所指定目录下的头文件。</p></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>声明一个弱校验函数，它只是“未实现系统调用”校验函数的别名。之所以需要它，是因为真正的校验函数可能会也可能不会被构建，取决于内核配置。例如，如果用户线程调用了传感器子系统的 API，但未启用传感器子系统，则会改为调用该弱校验函数。</p></li>
+<li><p>在 <code class="docutils literal notranslate"><span class="pre">include/generated/zephyr/syscalls/&lt;name&gt;_mrsh.c</span></code> 中定义一个解组函数</p></li>
+</ul>
+<p>API 的函数体在生成的系统头文件中创建。以 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_sem_init()</span></code> 为例，该 API 声明在 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/kernel.h">include/zephyr/kernel.h</a> 中。在 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/kernel.h">include/zephyr/kernel.h</a> 的末尾有:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>#include &lt;zephyr/syscalls/kernel.h&gt;
+</pre></div>
+</div>
+<p>该头文件中包含 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_sem_init()</span></code> 的函数体:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>static inline void k_sem_init(struct k_sem * sem, unsigned int initial_count, unsigned int limit)
+{
+#ifdef CONFIG_USERSPACE
+        if (z_syscall_trap()) {
+                arch_syscall_invoke3(*(uintptr_t *)&amp;sem, *(uintptr_t *)&amp;initial_count, *(uintptr_t *)&amp;limit, K_SYSCALL_K_SEM_INIT);
+                return;
+        }
+        compiler_barrier();
+#endif
+        z_impl_k_sem_init(sem, initial_count, limit);
+}
+</pre></div>
+</div>
+<p>这会生成一个接受三个参数、返回值为 void 的内联函数。根据上下文，它要么直接调用实现函数，要么经过系统调用的特权提升。实现函数的原型也会自动生成。</p>
+<p>最后一层是系统调用本身的调用。所有实现了系统调用的架构都必须实现从 <code class="xref c c-func docutils literal notranslate"><span class="pre">_arch_syscall_invoke0()</span></code> 到 <code class="xref c c-func docutils literal notranslate"><span class="pre">_arch_syscall_invoke6()</span></code> 这七个内联函数。这些函数把参数编组到指定的 CPU 寄存器中，并执行必要的特权提升。API 内联函数的参数在作为参数传给系统调用之前，会被 C 强制转换为与寄存器大小相同的 <code class="docutils literal notranslate"><span class="pre">uintptr_t</span></code>。例外情况是在 32 位系统上传递 64 位参数，此时 64 位参数会被拆分为低位和高位两部分，作为两个连续的参数传递。返回值总是 <code class="docutils literal notranslate"><span class="pre">uintptr_t</span></code> 类型，不需要时可以忽略。</p>
+<figure class="align-center" id="id1">
+<a class="reference internal image-reference" href="../../_images/syscall_flow.png"><img alt="系统调用的执行流程" src="../../_images/syscall_flow.png" style="width: 80%;" />
+</a>
+<figcaption>
+<p><span class="caption-text">系统调用的执行流程</span><a class="headerlink" href="#id1" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<p>有些系统调用可能有超过六个参数，但在所有架构上，通过寄存器传递的参数数量都限制为六个。额外的参数需要放在源内存空间中的一个数组里传递，校验函数需要把这块内存视为不可信内存。这些代码（打包、解包和校验）会根据需要自动生成在上述桩函数和解组函数中。</p>
+<p>系统调用返回 <code class="docutils literal notranslate"><span class="pre">uintptr_t</span></code> 类型的值，由包装函数通过 C 强制转换为 API 原型声明中的返回类型。这意味着在 32 位系统上，64 位值可能无法直接从系统调用返回给其包装函数。为了解决这个问题，自动生成的包装函数会在其栈上定义一个 64 位中间变量（被视为 <strong>不可信</strong> 缓冲区），并把指向该变量的指针作为最后一个参数传给系统调用。从系统调用返回后，包装函数会返回写入该缓冲区的值。能够直接返回 64 位值的 64 位系统不存在这个问题。</p>
+</section>
+</section>
+<section id="implementation-function">
+<h2>实现函数<a class="headerlink" href="#implementation-function" title="链接到此标题。"></a></h2>
+<p>实现函数是真正完成 API 工作的部分。Zephyr 通常很少甚至不对参数做错误检查，或者用断言来做这类检查。编写实现函数时，参数校验是可选的，并且应使用断言完成。</p>
+<p>所有实现函数都必须遵循命名约定，即在 API 名称前加上 <code class="docutils literal notranslate"><span class="pre">z_impl_</span></code> 前缀。实现函数可以作为 static inline 函数声明在与 API 相同的头文件中，也可以声明在某个 C 文件中。实现函数不需要原型，原型会自动生成。</p>
+</section>
+<section id="verification-function">
+<h2>校验函数<a class="headerlink" href="#verification-function" title="链接到此标题。"></a></h2>
+<p>当用户线程发起系统调用时，校验函数在内核侧运行。当用户线程触发软件中断以提升到管理态模式时，公共系统调用入口点会根据用户提供的系统调用 ID 查找该系统调用对应的解组函数并跳转执行，解组函数再调用校验函数。</p>
+<p>校验函数和解组函数仅在从用户模式调用系统调用 API 时运行。如果从管理态模式调用 API，则直接调用实现函数，不会产生软件陷阱。</p>
+<p>校验函数的作用是校验所有传入的参数，包括：</p>
+<ul class="simple">
+<li><p>所提供的任何内核对象指针。例如，信号量 API 必须确保传入的信号量对象是有效的信号量，并且调用线程对其拥有权限。</p></li>
+<li><p>从用户模式传入的任何内存缓冲区。必须检查调用线程对所提供的缓冲区具有读或写权限。</p></li>
+<li><p>其他任何有效值范围受限的参数。</p></li>
+</ul>
+<p>校验函数涉及大量样板代码，<a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/internal/syscall_handler.h">include/zephyr/internal/syscall_handler.h</a> 中的一些宏简化了这些代码。校验函数应使用这些宏来声明。</p>
+<section id="argument-validation">
+<h3>参数校验<a class="headerlink" href="#argument-validation" title="链接到此标题。"></a></h3>
+<p>有几个用于校验参数的宏：</p>
+<ul class="simple">
+<li><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_SYSCALL_OBJ()</span></code> 检查一个内存地址，断言它是预期类型的有效内核对象、调用线程对其拥有权限，并且该对象已初始化。</p></li>
+<li><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_SYSCALL_OBJ_INIT()</span></code> 与 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_SYSCALL_OBJ()</span></code> 相同，只是所提供的对象可以未初始化。这对对象初始化函数的校验函数很有用。</p></li>
+<li><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_SYSCALL_OBJ_NEVER_INIT()</span></code> 与 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_SYSCALL_OBJ()</span></code> 相同，只是所提供的对象必须未初始化。它用得不多，目前只用于 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_create()</span></code>。</p></li>
+<li><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_SYSCALL_MEMORY_READ()</span></code> 校验一个特定大小的内存缓冲区。调用线程必须对整个缓冲区拥有读权限。</p></li>
+<li><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_SYSCALL_MEMORY_WRITE()</span></code> 与 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_SYSCALL_MEMORY_READ()</span></code> 相同，但调用线程还必须拥有写权限。</p></li>
+<li><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_SYSCALL_MEMORY_ARRAY_READ()</span></code> 校验一个数组，其总大小由元素个数和元素大小两个独立参数表示。该宏在计算总大小时会正确处理乘法溢出。调用线程必须对整个大小范围拥有读权限。</p></li>
+<li><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_SYSCALL_MEMORY_ARRAY_WRITE()</span></code> 与 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_SYSCALL_MEMORY_ARRAY_READ()</span></code> 相同，但调用线程还必须拥有写权限。</p></li>
+<li><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_SYSCALL_VERIFY_MSG()</span></code> 在运行时检查某个布尔表达式，该表达式必须求值为真，否则检查失败。它有一个变体 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_SYSCALL_VERIFY</span></code>，不接受消息参数，而是在失败时打印所检查的表达式。后者只应用于最显而易见的检查。</p></li>
+<li><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_SYSCALL_DRIVER_OP()</span></code> 在运行时检查某个驱动实例是否能执行特定操作。虽然该宏可以单独使用，但它主要是为每个驱动子系统自动生成的宏的构建基础。例如，要校验 GPIO 驱动，可以使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_SYSCALL_DRIVER_GPIO()</span></code> 宏。</p></li>
+<li><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_SYSCALL_SPECIFIC_DRIVER()</span></code> 是一项运行时检查，用于验证所提供的指针是某个特定设备驱动的有效实例、调用线程对其拥有权限，并且该驱动已初始化。其做法是检查驱动实例中存储的 API 结构体指针，确保它与所提供的值相符，而该值应为该特定驱动的 API 结构体的地址。</p></li>
+</ul>
+<p>如果任何检查失败，这些宏会返回非零值。可以使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_OOPS()</span></code> 宏触发内核 oops，从而终止调用线程。之所以这样做而不是返回某种错误状态，是为了让从管理态模式调用时 API 保持一致。</p>
+</section>
+<section id="verifier-definition">
+<span id="syscall-verification"></span><h3>校验函数的定义<a class="headerlink" href="#verifier-definition" title="链接到此标题。"></a></h3>
+<p>所有系统调用都会被分派到一个校验函数，其名称是在系统调用名称前加上 <code class="docutils literal notranslate"><span class="pre">z_vrfy_</span></code> 前缀。它们的返回类型和参数类型与所包装的系统调用完全相同。它们的任务是在校验所有参数之后执行系统调用（通常是调用实现函数）。</p>
+<p>校验函数本身由一个自动生成的解组函数调用，解组函数负责从架构层解包寄存器参数，并将其转换为正确的类型。解组函数定义在一个必须由用户代码包含的头文件中，通常在翻译单元中校验函数的定义之后的某处包含（以便能够内联）。</p>
+<p>例如：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">z_vrfy_k_sem_take</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">k_sem</span><span class="w"> </span><span class="o">*</span><span class="n">sem</span><span class="p">,</span><span class="w"> </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">timeout</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">K_OOPS</span><span class="p">(</span><span class="n">K_SYSCALL_OBJ</span><span class="p">(</span><span class="n">sem</span><span class="p">,</span><span class="w"> </span><span class="n">K_OBJ_SEM</span><span class="p">));</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">z_impl_k_sem_take</span><span class="p">(</span><span class="n">sem</span><span class="p">,</span><span class="w"> </span><span class="n">timeout</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/syscalls/k_sem_take_mrsh.c&gt;</span>
+</pre></div>
+</div>
+</section>
+<section id="verification-memory-access-policies">
+<h3>校验时的内存访问策略<a class="headerlink" href="#verification-memory-access-policies" title="链接到此标题。"></a></h3>
+<p>通过引用传给系统调用的参数需要特殊处理，因为任何能访问该参数所指向内存的用户线程，都可以随时修改这些参数的值。如果内核根据这块内存的内容做出任何逻辑判断，即使做了检查，内核也可能受到攻击。这类漏洞利用称为 TOCTOU（检查时间到使用时间，Time Of Check to Time Of Use）。</p>
+<p>缓解这类攻击的正确做法是在校验函数中制作副本，并只对副本进行参数检查，用户线程永远无法访问这些副本。传给实现函数的是副本，而不是用户发送的原始数据。<code class="xref c c-func docutils literal notranslate"><span class="pre">k_usermode_to_copy()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_usermode_from_copy()</span></code> API 就是为此而提供的。</p>
+<p>从用户模式传入的 C 字符串也需要类似的处理，因为其长度事先未知，而且必须在不越过调用者可访问内存的前提下找到结尾的 <code class="docutils literal notranslate"><span class="pre">NUL</span></code>。<code class="xref c c-func docutils literal notranslate"><span class="pre">k_usermode_string_copy()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_usermode_string_alloc_copy()</span></code> 辅助函数可以在实现函数使用用户提供的字符串之前，安全地校验该字符串并将其复制到由内核控制的内存中。</p>
+<p>有一个例外，涉及大型数据缓冲区：这些缓冲区仅用于提供一块内存区域，要么只被写入，要么其内容从不用于任何校验或控制流。本节稍后会进一步讨论。</p>
+<p>第一个例子是一个用作某个整数值输出参数的参数：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">z_vrfy_some_syscall</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">out_param</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">local_out_param</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">z_impl_some_syscall</span><span class="p">(</span><span class="o">&amp;</span><span class="n">local_out_param</span><span class="p">);</span>
+<span class="w">    </span><span class="n">K_OOPS</span><span class="p">(</span><span class="n">k_usermode_to_copy</span><span class="p">(</span><span class="n">out_param</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">local_out_param</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="o">*</span><span class="n">out_param</span><span class="p">)));</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>这里我们在栈上分配了 <code class="docutils literal notranslate"><span class="pre">local_out_param</span></code>，把它的地址传给实现函数，然后使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_usermode_to_copy()</span></code> 填写调用者传入的内存。</p>
+<p>人们可能想写得更简洁一些：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">z_vrfy_some_syscall</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="o">*</span><span class="n">out_param</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">K_OOPS</span><span class="p">(</span><span class="n">K_SYSCALL_MEMORY_WRITE</span><span class="p">(</span><span class="n">out_param</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="o">*</span><span class="n">out_param</span><span class="p">)));</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">z_impl_some_syscall</span><span class="p">(</span><span class="n">out_param</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>但是，如果实现函数在其逻辑中读取过这块内存，这种写法就不安全。例如，它可能被用来存储某个计数值，而能访问这块内存的用户线程可以篡改它。对于小的整数值，像第一个例子那样进行复制是迄今为止最安全的做法。</p>
+<p>有些参数可能既是输入又是输出。例如，常见的 API 会传入一个指向某个 <code class="docutils literal notranslate"><span class="pre">size_t</span></code> 的指针，表示允许的最大大小，然后由实现函数更新该值，以反映实际处理的字节数。这种情况同样应使用栈上的副本：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">z_vrfy_in_out_syscall</span><span class="p">(</span><span class="kt">size_t</span><span class="w"> </span><span class="o">*</span><span class="n">size_ptr</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">size_t</span><span class="w"> </span><span class="n">size</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">K_OOPS</span><span class="p">(</span><span class="n">k_usermode_from_copy</span><span class="p">(</span><span class="o">&amp;</span><span class="n">size</span><span class="p">,</span><span class="w"> </span><span class="n">size_ptr</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">size</span><span class="p">));</span>
+<span class="w">    </span><span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">z_impl_in_out_syscall</span><span class="p">(</span><span class="o">&amp;</span><span class="n">size</span><span class="p">);</span>
+<span class="w">    </span><span class="n">K_OOPS</span><span class="p">(</span><span class="n">k_usermode_to_copy</span><span class="p">(</span><span class="n">size_ptr</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">size</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">size</span><span class="p">)));</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>许多系统调用会传入结构体，甚至是链式数据结构。所有这些都应被复制。通常的做法是在栈上分配副本：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">bar</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="p">};</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">foo</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">bar</span><span class="w"> </span><span class="o">*</span><span class="n">bar_left</span><span class="p">;</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">bar</span><span class="w"> </span><span class="o">*</span><span class="n">bar_right</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">z_vrfy_must_alloc</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">foo</span><span class="w"> </span><span class="o">*</span><span class="n">foo</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">foo</span><span class="w"> </span><span class="n">foo_copy</span><span class="p">;</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">bar</span><span class="w"> </span><span class="n">bar_right_copy</span><span class="p">;</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">bar</span><span class="w"> </span><span class="n">bar_left_copy</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">K_OOPS</span><span class="p">(</span><span class="n">k_usermode_from_copy</span><span class="p">(</span><span class="o">&amp;</span><span class="n">foo_copy</span><span class="p">,</span><span class="w"> </span><span class="n">foo</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="o">*</span><span class="n">foo</span><span class="p">)));</span>
+<span class="w">    </span><span class="n">K_OOPS</span><span class="p">(</span><span class="n">k_usermode_from_copy</span><span class="p">(</span><span class="o">&amp;</span><span class="n">bar_right_copy</span><span class="p">,</span><span class="w"> </span><span class="n">foo_copy</span><span class="p">.</span><span class="n">bar_right</span><span class="p">,</span>
+<span class="w">                            </span><span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">bar</span><span class="p">)));</span>
+<span class="w">    </span><span class="n">foo_copy</span><span class="p">.</span><span class="n">bar_right</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">bar_right_copy</span><span class="p">;</span>
+<span class="w">    </span><span class="n">K_OOPS</span><span class="p">(</span><span class="n">k_usermode_from_copy</span><span class="p">(</span><span class="o">&amp;</span><span class="n">bar_left_copy</span><span class="p">,</span><span class="w"> </span><span class="n">foo_copy</span><span class="p">.</span><span class="n">bar_left</span><span class="p">,</span>
+<span class="w">                            </span><span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">bar</span><span class="p">)));</span>
+<span class="w">    </span><span class="n">foo_copy</span><span class="p">.</span><span class="n">bar_left</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">&amp;</span><span class="n">bar_left_copy</span><span class="p">;</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">z_impl_must_alloc</span><span class="p">(</span><span class="o">&amp;</span><span class="n">foo_copy</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>在某些情况下，数据量在编译时未知，或者可能太大而无法在栈上分配。此时可能需要通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">z_thread_malloc()</span></code> 从调用者的资源池中获取内存。这应始终被视为最后的手段。功能安全编程指南强烈不建议使用堆，并且必须在文档中明确说明使用了资源池。任何分配问题都必须通过返回 <code class="docutils literal notranslate"><span class="pre">-ENOMEM</span></code> 报告给调用者。绝不能使用 <code class="docutils literal notranslate"><span class="pre">K_OOPS()</span></code> 来检查资源分配是否成功。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">bar</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="p">};</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">foo</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">size_t</span><span class="w"> </span><span class="n">count</span><span class="p">;</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">bar</span><span class="w"> </span><span class="o">*</span><span class="n">bar_list</span><span class="p">;</span><span class="w"> </span><span class="cm">/* array of struct bar of size count */</span>
+<span class="p">};</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">z_vrfy_must_alloc</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">foo</span><span class="w"> </span><span class="o">*</span><span class="n">foo</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">foo</span><span class="w"> </span><span class="n">foo_copy</span><span class="p">;</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">bar</span><span class="w"> </span><span class="o">*</span><span class="n">bar_list_copy</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">size_t</span><span class="w"> </span><span class="n">bar_list_bytes</span><span class="p">;</span>
+
+<span class="w">    </span><span class="cm">/* Safely copy foo into foo_copy */</span>
+<span class="w">    </span><span class="n">K_OOPS</span><span class="p">(</span><span class="n">k_usermode_from_copy</span><span class="p">(</span><span class="o">&amp;</span><span class="n">foo_copy</span><span class="p">,</span><span class="w"> </span><span class="n">foo</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="o">*</span><span class="n">foo</span><span class="p">)));</span>
+
+<span class="w">    </span><span class="cm">/* Bounds check the count member, in the copy we made */</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">foo_copy</span><span class="p">.</span><span class="n">count</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">32</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="o">-</span><span class="n">EINVAL</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/* Allocate RAM for the bar_list, replace the pointer in</span>
+<span class="cm">     * foo_copy */</span>
+<span class="w">    </span><span class="n">bar_list_bytes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">foo_copy</span><span class="p">.</span><span class="n">count</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">struct_bar</span><span class="p">);</span>
+<span class="w">    </span><span class="n">bar_list_copy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">z_thread_malloc</span><span class="p">(</span><span class="n">bar_list_bytes</span><span class="p">);</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">bar_list_copy</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="nb">NULL</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="o">-</span><span class="n">ENOMEM</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="n">K_OOPS</span><span class="p">(</span><span class="n">k_usermode_from_copy</span><span class="p">(</span><span class="n">bar_list_copy</span><span class="p">,</span><span class="w"> </span><span class="n">foo_copy</span><span class="p">.</span><span class="n">bar_list</span><span class="p">,</span>
+<span class="w">                            </span><span class="n">bar_list_bytes</span><span class="p">));</span>
+<span class="w">    </span><span class="n">foo_copy</span><span class="p">.</span><span class="n">bar_list</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">bar_list_copy</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">ret</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">z_impl_must_alloc</span><span class="p">(</span><span class="o">&amp;</span><span class="n">foo_copy</span><span class="p">);</span>
+
+<span class="w">    </span><span class="cm">/* All done with the memory, free it and return */</span>
+<span class="w">    </span><span class="n">k_free</span><span class="p">(</span><span class="n">foo_copy</span><span class="p">.</span><span class="n">bar_list_copy</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">ret</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>最后，我们必须考虑大型数据缓冲区。它们代表用户内存中的某些区域，数据要么从中复制出来，要么复制进去。允许把这些指针直接传给实现函数。但仍必须用 <code class="docutils literal notranslate"><span class="pre">K_SYSCALL_MEMORY</span></code> API 校验调用者对缓冲区的访问权限。需要满足以下约束：</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>如果实现函数用该缓冲区写入数据（例如从某个 MMIO 区域采集的数据），则实现函数只能写入这些数据，绝不能读取。</p></li>
+<li><p>如果实现函数用该缓冲区读取数据（例如要写入某个硬件目标的一块内存），则这些数据必须不经任何处理地读取。不能根据数据缓冲区的内容实现任何条件逻辑。如果需要这类逻辑，必须制作副本。</p></li>
+<li><p>该缓冲区只能在调用期间同步使用。实现函数绝不能保存缓冲区地址并在之后异步使用，例如在中断触发时使用。</p></li>
+</ul>
+</div></blockquote>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">z_vrfy_get_data_from_kernel</span><span class="p">(</span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">size</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">K_OOPS</span><span class="p">(</span><span class="n">K_SYSCALL_MEMORY_WRITE</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="p">));</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">z_impl_get_data_from_kernel</span><span class="p">(</span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="n">size</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="verification-return-value-policies">
+<h3>校验时的返回值策略<a class="headerlink" href="#verification-return-value-policies" title="链接到此标题。"></a></h3>
+<p>在校验系统调用时，需要注意哪些类型的校验失败应把返回值传回给调用者，哪些则应直接调用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_OOPS()</span></code> 终止调用线程。当前的约定如下：</p>
+<ol class="arabic simple">
+<li><p>对于已定义但未编译的系统调用，对这些缺失系统调用的调用会被路由到 <code class="xref c c-func docutils literal notranslate"><span class="pre">handler_no_syscall()</span></code>，该函数会调用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_OOPS()</span></code>。</p></li>
+<li><p>由 <code class="docutils literal notranslate"><span class="pre">K_SYSCALL_MEMORY</span></code> 系列 API、<code class="xref c c-func docutils literal notranslate"><span class="pre">k_usermode_from_copy()</span></code>、<code class="xref c c-func docutils literal notranslate"><span class="pre">k_usermode_to_copy()</span></code> 发现的任何非法内存访问，都应触发 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_OOPS</span></code>。当调用者对内存缓冲区没有相应权限，或者某个大小计算发生溢出时，就会出现这种情况。</p></li>
+<li><p>大多数系统调用都接受内核对象指针作为参数，并使用某个 <code class="docutils literal notranslate"><span class="pre">K_SYSCALL_OBJ</span></code> 函数、<code class="docutils literal notranslate"><span class="pre">K_SYSCALL_DRIVER_nnnnn</span></code> 或手动调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_object_validate()</span></code> 进行检查。这些检查可能因多种原因失败：缺少驱动 API、内核对象指针无效、内核对象类型错误或初始化状态不正确。这些问题都应调用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_OOPS()</span></code>。</p></li>
+<li><p>内存堆分配失败（通常是调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">z_thread_malloc()</span></code> 时）导致的任何错误，都应把 <code class="docutils literal notranslate"><span class="pre">-ENOMEM</span></code> 传回给调用者。</p></li>
+<li><p>一般性的参数检查应在实现函数中完成，大多数情况下使用 <code class="docutils literal notranslate"><span class="pre">CHECKIF()</span></code>。</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">CHECKIF()</span></code> 的行为取决于内核配置，但如果启用了用户模式，就会强制启用 <a class="reference internal" href="../../kconfig.html#CONFIG_RUNTIME_ERROR_CHECKS" title="CONFIG_RUNTIME_ERROR_CHECKS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_RUNTIME_ERROR_CHECKS</span></code></a>，从而保证会执行这些检查并传回返回值。</p></li>
+</ul>
+</li>
+<li><p>完全禁止从用户模式注册任何类型的内核模式回调函数。仅用于安装回调的 API 不得作为系统调用开放。有些驱动子系统 API 可能接受可选的回调函数指针。这些 API 的用户模式校验函数必须强制要求这些指针为 NULL，如果不是则应调用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_OOPS()</span></code>。</p></li>
+<li><p>有些参数检查只在用户模式下强制执行。这些检查应在校验函数中进行，并尽可能把返回值传回给调用者。</p></li>
+</ol>
+<p>目前 Zephyr 中有一些已知的、不符合上述策略的例外情况：</p>
+<ul class="simple">
+<li><p>如果线程对象未初始化，<code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_join()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_abort()</span></code> 不执行任何操作。这是因为对线程而言，初始化位还兼有指示线程是否正在运行的作用，线程退出时会被清除。参见 #23030。</p></li>
+<li><p>由于大量现有代码忽略返回值，<code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_create()</span></code> 在参数检查时会调用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_OOPS()</span></code>。这一问题也将由 #23030 解决。</p></li>
+<li><p>如果终止的是一个关键线程，<code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_abort()</span></code> 会调用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_OOPS()</span></code>，因为该函数没有返回值。</p></li>
+<li><p>与日志相关的多个系统调用在传入错误参数时会调用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_OOPS()</span></code>，因为它们不传回错误。</p></li>
+</ul>
+</section>
+</section>
+<section id="configuration-options">
+<h2>配置选项<a class="headerlink" href="#configuration-options" title="链接到此标题。"></a></h2>
+<p>相关配置选项：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_USERSPACE" title="CONFIG_USERSPACE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_USERSPACE</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_EMIT_ALL_SYSCALLS" title="CONFIG_EMIT_ALL_SYSCALLS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_EMIT_ALL_SYSCALLS</span></code></a></p></li>
+</ul>
+</section>
+<section id="apis">
+<h2>API<a class="headerlink" href="#apis" title="链接到此标题。"></a></h2>
+<p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/internal/syscall_handler.h">include/zephyr/internal/syscall_handler.h</a> 中提供了用于创建系统调用校验函数的辅助宏：</p>
+<ul class="simple">
+<li><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_SYSCALL_OBJ()</span></code></p></li>
+<li><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_SYSCALL_OBJ_INIT()</span></code></p></li>
+<li><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_SYSCALL_OBJ_NEVER_INIT()</span></code></p></li>
+<li><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_OOPS()</span></code></p></li>
+<li><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_SYSCALL_MEMORY_READ()</span></code></p></li>
+<li><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_SYSCALL_MEMORY_WRITE()</span></code></p></li>
+<li><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_SYSCALL_MEMORY_ARRAY_READ()</span></code></p></li>
+<li><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_SYSCALL_MEMORY_ARRAY_WRITE()</span></code></p></li>
+<li><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_SYSCALL_VERIFY_MSG()</span></code></p></li>
+<li><p><code class="xref c c-macro docutils literal notranslate"><span class="pre">K_SYSCALL_VERIFY</span></code></p></li>
+</ul>
+<p>用于调用系统调用的函数定义在 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/syscall.h">include/zephyr/syscall.h</a> 中：</p>
+<ul class="simple">
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">_arch_syscall_invoke0()</span></code></p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">_arch_syscall_invoke1()</span></code></p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">_arch_syscall_invoke2()</span></code></p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">_arch_syscall_invoke3()</span></code></p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">_arch_syscall_invoke4()</span></code></p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">_arch_syscall_invoke5()</span></code></p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">_arch_syscall_invoke6()</span></code></p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 6月 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

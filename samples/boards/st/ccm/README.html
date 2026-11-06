@@ -1,0 +1,571 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta content="在内核耦合存储器（CCM）中放置并使用变量。" name="description" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Core Coupled Memory (CCM) &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/samples/boards/st/ccm/README.html" />
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../../search.html" />
+    <link rel="next" title="Hardware Semaphore (HSEM) Inter-Processor Communication on STM32 H7" href="../h7_dual_core/README.html" />
+    <link rel="prev" title="STWIN.box sensors" href="../board_specific/steval_stwinbx1/sensors/README.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html">
+            
+              <img src="../../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">示例与演示</a><ul class="current">
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../application_development/application_development.html">Application Development</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../arch/index.html">Architecture-dependent Samples</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../basic/basic.html">Basic</a></li>
+<li class="toctree-l2"><a class="category-link reference internal" href="../../../bluetooth/bluetooth.html">Bluetooth</a></li>
+<li class="toctree-l2 current"><a class="category-link reference internal" href="../../boards.html">Boards</a><ul class="current">
+<li class="toctree-l3"><a class="category-link reference internal" href="../bluetooth/index.html">Bluetooth</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../board_specific/index.html">Board-specific STM32 samples</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../enjoydigital/index.html">EnjoyDigital</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../espressif/index.html">Espressif ESP32 boards</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../google/index.html">Google</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../infineon/index.html">Infineon</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../intel/index.html">Intel</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../microchip/index.html">Microchip</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../nxp/index.html">NXP</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../nordic/index.html">Nordic Semiconductor</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../phytec/index.html">PHYTEC</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../quicklogic/index.html">QuickLogic</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../raspberrypi/index.html">Raspberry Pi</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../renesas/index.html">Renesas</a></li>
+<li class="toctree-l3 current"><a class="category-link reference internal" href="../index.html">STMicroelectronics</a><ul class="current">
+<li class="toctree-l4"><a class="category-link reference internal" href="../pwm/index.html">PWM</a></li>
+<li class="toctree-l4"><a class="category-link reference internal" href="../power_mgmt/index.html">Power Management</a></li>
+<li class="toctree-l4"><a class="category-link reference internal" href="../uart/index.html">UART</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../backup_sram/README.html" title="使用备份 SRAM 存储一个在重新上电后仍能保留的变量。">Backup SRAM</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../bluetooth/interactive_gui/README.html" title="通过 UART 开放 ST BlueNRG Bluetooth 网络协处理器。">Bluetooth: ST Interactive GUI</a></li>
+<li class="toctree-l4 current"><a class="code-sample-link current reference internal" href="#" title="在内核耦合存储器（CCM）中放置并使用变量。">Core Coupled Memory (CCM)</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../h7_dual_core/README.html" title="使用硬件信号量（HSEM）从一个内核触发另一个内核上的 LED 闪烁。">Hardware Semaphore (HSEM) Inter-Processor Communication on STM32 H7</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../i2c_timing/README.html" title="在运行时获取 I2C V2 timing 值。">I2C V2 timings</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../mco/README.html" title="输出内部时钟，供应用程序在外部使用。">Master Clock Output (MCO)</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../board_specific/sensortile_box_pro/sensors-on-board/README.html" title="从 SensorTile.box Pro 的各个传感器读取数据。">SensorTile.box Pro sensors</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../board_specific/sensortile_box/sensors/README.html" title="从 SensorTile.box 的各个传感器读取数据。">SensorTile.box sensors</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../bluetooth/st_ble_sensor/README.html" title="通过 Bluetooth 提供厂商自定义的 GATT 服务。">ST Bluetooth LE Sensor Demo</a></li>
+<li class="toctree-l4"><a class="code-sample-link reference internal" href="../board_specific/steval_stwinbx1/sensors/README.html" title="从 STWIN SensorTile 无线工业节点的各个传感器读取数据。">STWIN.box sensors</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../board_specific/steval_stwinbx1/index.html">STWIN.box</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../board_specific/sensortile_box/index.html">SensorTile.box</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../board_specific/sensortile_box_pro/index.html">SensorTile.box Pro</a></li>
+<li class="toctree-l3"><a class="category-link reference internal" href="../../ti/index.html">Texas Instruments</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../adi/power_mgmt/gpio_wakeup/README.html" title="使用 GPIO 将系统从低功耗状态唤醒">ADI MAX32 GPIO Wakeup</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../adi/power_mgmt/power_modes/README.html" title="运行给定 SoC 的各种电源模式">ADI Power Modes</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../amd/xclk_wiz/README.html" title="使能、重新配置并读回 AXI Clocking Wizard 的输出时钟。">AXI Clocking Wizard</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../bbc/microbit/display/README.html" title="使用 BBC micro:bit 开发板上的 5x5 LED 点阵显示屏。">LED matrix display</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../bbc/microbit/line_follower_robot/README.html" title="使用 BBC micro:bit 开发板和机器人底盘实现一台循迹机器人。">Line following robot</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../96boards/argonkey/microphone/README.html" title="通过 ArgonKey 板载的 MP34DT05 麦克风采集音频。">Microphone</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../bbc/microbit/pong/README.html" title="单人玩乒乓球游戏，或在两台 micro:bit 设备之间通过蓝牙对战。">Pong game</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../96boards/argonkey/sensors/README.html" title="从 ArgonKey 开发板的板载传感器读取数据。">Sensors</a></li>
+<li class="toctree-l3"><a class="code-sample-link reference internal" href="../../bbc/microbit/sound/README.html" title="使用 BBC micro:bit 开发板上的压电蜂鸣器。">Sound</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cpp/cpp.html">C++</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../data_structures/data_structures.html">数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../drivers/drivers.html">驱动</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../hello_world/README.html">Hello World</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../kernel/index.html">内核与调度器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../modules/index.html">外部模块</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../net/net.html">网络</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../philosophers/README.html">Dining Philosophers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../psa/index.html">PSA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../regulator/index.html">稳压器</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../sensor/sensor.html"><span class="xref std std-ref">传感器</span></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../shields/shields.html">扩展板（shield）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../subsys/subsys.html">子系统</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../synchronization/README.html">Basic Synchronization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../sysbuild/sysbuild.html">Sysbuild</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tfm_integration/tfm_integration.html">TF-M 集成</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../userspace/index.html">用户空间</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../sample_definition_and_criteria.html">示例的定义与标准</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../../index.html">示例与演示</a> &raquo;</li>
+  
+     <li><a href="../../boards.html">开发板</a> &raquo;</li>
+  
+     <li><a href="../index.html">STMicroelectronics</a> &raquo;</li>
+  
+  <li>Core Coupled Memory (CCM)</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="stm32_ccm">
+<h1>Core Coupled Memory (CCM)<a class="headerlink" href="#stm32_ccm" title="链接到此标题。"></a></h1>
+<p>
+                <a href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0//samples\boards\st\ccm\README.rst/.." class="btn btn-info fa fa-github"
+                    target="_blank" style="text-align: center;">
+                    Browse source code on GitHub
+                </a>
+                </p>
+<section id="overview">
+<h2>概述<a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>展示多款 STM32 器件上提供的内核耦合存储器（CCM）的用法。它与普通 RAM 的一个非常重要的区别是 CCM 不能用于 DMA。</p>
+<p>本示例中，CCM 用于存储数据（即用作 DTCM）。在变量前加上 <code class="docutils literal notranslate"><span class="pre">__dtcm_data_section</span></code>、<code class="docutils literal notranslate"><span class="pre">__dtcm_bss_section</span></code> 或 <code class="docutils literal notranslate"><span class="pre">__dtcm_noinit_section</span></code> 前缀，即可将这些变量放入 CCM。</p>
+<p><code class="docutils literal notranslate"><span class="pre">__dtcm_data_section</span></code> 前缀应用于有初始值的变量。与普通 data 段一样，初始值会占用 Flash 镜像的空间。</p>
+<p><code class="docutils literal notranslate"><span class="pre">__dtcm_bss_section</span></code> 前缀应用于需要初始化为 0 的变量。与普通 bss 段一样，它们不占用 Flash 空间。</p>
+<p><code class="docutils literal notranslate"><span class="pre">__dtcm_noinit_section</span></code> 前缀应用于不需要确定初始值的变量（例如用于接收数据的缓冲区）。与 bss 或 data 段相比，内核无需初始化 noinit 段，因此启动会稍快一些。</p>
+<p>要为开发板添加 CCM 支持，请在开发板 DTS 文件的 <code class="docutils literal notranslate"><span class="pre">chosen</span></code> 部分添加以下一行：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">zephyr,dtcm = &amp;ccm0;</span>
+</pre></div>
+</div>
+<p>例如，olimex STM32 E407 的 DTS 文件如下所示：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span>/*
+<span class="linenos">  2</span> * Copyright (c) 2017, Erwin Rol &lt;erwin@erwinrol.com&gt;
+<span class="linenos">  3</span> *
+<span class="linenos">  4</span> * SPDX-License-Identifier: Apache-2.0
+<span class="linenos">  5</span> */
+<span class="linenos">  6</span>
+<span class="linenos">  7</span>/dts-v1/;
+<span class="linenos">  8</span>#include &lt;st/f4/stm32f407Xg.dtsi&gt;
+<span class="linenos">  9</span>#include &lt;st/f4/stm32f407z(e-g)tx-pinctrl.dtsi&gt;
+<span class="linenos"> 10</span>#include &lt;zephyr/dt-bindings/input/input-event-codes.h&gt;
+<span class="linenos"> 11</span>
+<span class="linenos"> 12</span>/ {
+<span class="linenos"> 13</span>	model = "Olimex STM32-E407 board";
+<span class="linenos"> 14</span>	compatible = "olimex,stm32-e407";
+<span class="linenos"> 15</span>
+<span class="linenos"> 16</span>	chosen {
+<span class="linenos"> 17</span>		zephyr,console = &amp;usart1;
+<span class="linenos"> 18</span>		zephyr,shell-uart = &amp;usart1;
+<span class="linenos"> 19</span>		zephyr,sram = &amp;sram0;
+<span class="linenos"> 20</span>		zephyr,flash = &amp;flash0;
+<span class="linenos"> 21</span>		zephyr,dtcm = &amp;ccm0;
+<span class="linenos"> 22</span>	};
+<span class="linenos"> 23</span>
+<span class="linenos"> 24</span>	leds {
+<span class="linenos"> 25</span>		compatible = "gpio-leds";
+<span class="linenos"> 26</span>
+<span class="linenos"> 27</span>		green_led_1: led_1 {
+<span class="linenos"> 28</span>			gpios = &lt;&amp;gpioc 13 GPIO_ACTIVE_HIGH&gt;;
+<span class="linenos"> 29</span>			label = "LED1";
+<span class="linenos"> 30</span>		};
+<span class="linenos"> 31</span>	};
+<span class="linenos"> 32</span>
+<span class="linenos"> 33</span>	gpio_keys {
+<span class="linenos"> 34</span>		compatible = "gpio-keys";
+<span class="linenos"> 35</span>
+<span class="linenos"> 36</span>		user_button: button {
+<span class="linenos"> 37</span>			label = "Key";
+<span class="linenos"> 38</span>			gpios = &lt;&amp;gpioa 0 GPIO_ACTIVE_LOW&gt;;
+<span class="linenos"> 39</span>			zephyr,code = &lt;INPUT_KEY_0&gt;;
+<span class="linenos"> 40</span>		};
+<span class="linenos"> 41</span>	};
+<span class="linenos"> 42</span>
+<span class="linenos"> 43</span>	aliases {
+<span class="linenos"> 44</span>		led0 = &amp;green_led_1;
+<span class="linenos"> 45</span>		sw0 = &amp;user_button;
+<span class="linenos"> 46</span>	};
+<span class="linenos"> 47</span>};
+<span class="linenos"> 48</span>
+<span class="linenos"> 49</span>&amp;clk_lsi {
+<span class="linenos"> 50</span>	status = "okay";
+<span class="linenos"> 51</span>};
+<span class="linenos"> 52</span>
+<span class="linenos"> 53</span>&amp;clk_hse {
+<span class="linenos"> 54</span>	clock-frequency = &lt;DT_FREQ_M(12)&gt;;
+<span class="linenos"> 55</span>	status = "okay";
+<span class="linenos"> 56</span>};
+<span class="linenos"> 57</span>
+<span class="linenos"> 58</span>&amp;pll {
+<span class="linenos"> 59</span>	div-m = &lt;12&gt;;
+<span class="linenos"> 60</span>	mul-n = &lt;336&gt;;
+<span class="linenos"> 61</span>	div-p = &lt;2&gt;;
+<span class="linenos"> 62</span>	div-q = &lt;7&gt;;
+<span class="linenos"> 63</span>	clocks = &lt;&amp;clk_hse&gt;;
+<span class="linenos"> 64</span>	status = "okay";
+<span class="linenos"> 65</span>};
+<span class="linenos"> 66</span>
+<span class="linenos"> 67</span>&amp;rcc {
+<span class="linenos"> 68</span>	clocks = &lt;&amp;pll&gt;;
+<span class="linenos"> 69</span>	clock-frequency = &lt;DT_FREQ_M(168)&gt;;
+<span class="linenos"> 70</span>	ahb-prescaler = &lt;1&gt;;
+<span class="linenos"> 71</span>	apb1-prescaler = &lt;4&gt;;
+<span class="linenos"> 72</span>	apb2-prescaler = &lt;2&gt;;
+<span class="linenos"> 73</span>};
+<span class="linenos"> 74</span>
+<span class="linenos"> 75</span>&amp;usart1 {
+<span class="linenos"> 76</span>	pinctrl-0 = &lt;&amp;usart1_tx_pb6 &amp;usart1_rx_pb7&gt;;
+<span class="linenos"> 77</span>	pinctrl-names = "default";
+<span class="linenos"> 78</span>	current-speed = &lt;115200&gt;;
+<span class="linenos"> 79</span>	status = "okay";
+<span class="linenos"> 80</span>};
+<span class="linenos"> 81</span>
+<span class="linenos"> 82</span>&amp;usart3 {
+<span class="linenos"> 83</span>	pinctrl-0 = &lt;&amp;usart3_tx_pb10 &amp;usart3_rx_pb11&gt;;
+<span class="linenos"> 84</span>	pinctrl-names = "default";
+<span class="linenos"> 85</span>	current-speed = &lt;115200&gt;;
+<span class="linenos"> 86</span>	status = "okay";
+<span class="linenos"> 87</span>};
+<span class="linenos"> 88</span>
+<span class="linenos"> 89</span>&amp;usart6 {
+<span class="linenos"> 90</span>	pinctrl-0 = &lt;&amp;usart6_tx_pc6 &amp;usart6_rx_pc7&gt;;
+<span class="linenos"> 91</span>	pinctrl-names = "default";
+<span class="linenos"> 92</span>	current-speed = &lt;115200&gt;;
+<span class="linenos"> 93</span>	status = "okay";
+<span class="linenos"> 94</span>};
+<span class="linenos"> 95</span>
+<span class="linenos"> 96</span>&amp;rtc {
+<span class="linenos"> 97</span>	clocks = &lt;&amp;rcc STM32_CLOCK(APB1, 28)&gt;,
+<span class="linenos"> 98</span>		 &lt;&amp;rcc STM32_SRC_LSI RTC_SEL(2)&gt;;
+<span class="linenos"> 99</span>	status = "okay";
+<span class="linenos">100</span>};
+<span class="linenos">101</span>
+<span class="linenos">102</span>&amp;rng {
+<span class="linenos">103</span>	status = "okay";
+<span class="linenos">104</span>};
+<span class="linenos">105</span>
+<span class="linenos">106</span>/* Only one interface should be enabled at a time: usbotg_fs or usbotg_hs */
+<span class="linenos">107</span>usb_otg1: &amp;usbotg_fs {
+<span class="linenos">108</span>	pinctrl-0 = &lt;&amp;usb_otg_fs_dm_pa11 &amp;usb_otg_fs_dp_pa12&gt;;
+<span class="linenos">109</span>	pinctrl-names = "default";
+<span class="linenos">110</span>	status = "disabled";
+<span class="linenos">111</span>};
+<span class="linenos">112</span>
+<span class="linenos">113</span>zephyr_udc0: &amp;usbotg_hs {
+<span class="linenos">114</span>	pinctrl-0 = &lt;&amp;usb_otg_hs_dm_pb14 &amp;usb_otg_hs_dp_pb15&gt;;
+<span class="linenos">115</span>	pinctrl-names = "default";
+<span class="linenos">116</span>	status = "okay";
+<span class="linenos">117</span>};
+<span class="linenos">118</span>
+<span class="linenos">119</span>&amp;mac {
+<span class="linenos">120</span>	status = "okay";
+<span class="linenos">121</span>	pinctrl-0 = &lt;&amp;eth_rxd0_pc4
+<span class="linenos">122</span>		     &amp;eth_rxd1_pc5
+<span class="linenos">123</span>		     &amp;eth_ref_clk_pa1
+<span class="linenos">124</span>		     &amp;eth_col_pa3
+<span class="linenos">125</span>		     &amp;eth_crs_dv_pa7
+<span class="linenos">126</span>		     &amp;eth_tx_en_pg11
+<span class="linenos">127</span>		     &amp;eth_txd0_pg13
+<span class="linenos">128</span>		     &amp;eth_txd1_pg14&gt;;
+<span class="linenos">129</span>	pinctrl-names = "default";
+<span class="linenos">130</span>	phy-connection-type = "rmii";
+<span class="linenos">131</span>	phy-handle = &lt;&amp;eth_phy&gt;;
+<span class="linenos">132</span>};
+<span class="linenos">133</span>
+<span class="linenos">134</span>&amp;mdio {
+<span class="linenos">135</span>	status = "okay";
+<span class="linenos">136</span>	pinctrl-0 = &lt;&amp;eth_mdio_pa2 &amp;eth_mdc_pc1&gt;;
+<span class="linenos">137</span>	pinctrl-names = "default";
+<span class="linenos">138</span>
+<span class="linenos">139</span>	eth_phy: ethernet-phy@0 {
+<span class="linenos">140</span>		compatible = "ethernet-phy";
+<span class="linenos">141</span>		reg = &lt;0x00&gt;;
+<span class="linenos">142</span>	};
+<span class="linenos">143</span>};
+</pre></div>
+</div>
+</section>
+<section id="building-and-running">
+<h2>构建与运行<a class="headerlink" href="#building-and-running" title="链接到此标题。"></a></h2>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>None<span class="w"> </span>samples/boards/st/ccm
+west<span class="w"> </span>flash
+</pre></div>
+</div>
+<p>上电后第一次运行本示例时，输出如下所示：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">***** BOOTING ZEPHYR OS v1.10.99 - BUILD: Jan 14 2018 09:32:46 *****</span>
+
+<span class="go">CCM (Core Coupled Memory) usage example</span>
+
+<span class="go">The total used CCM area   : [0x10000000, 0x10000021)</span>
+<span class="go">Zero initialized BSS area : [0x10000000, 0x10000007)</span>
+<span class="go">Uninitialized NOINIT area : [0x10000008, 0x10000013)</span>
+<span class="go">Initialised DATA area     : [0x10000014, 0x10000021)</span>
+<span class="go">Start of DATA in FLASH    : 0x08003940</span>
+
+<span class="go">Checking initial variable values: ... PASSED</span>
+
+<span class="go">Initial variable values:</span>
+<span class="go">ccm_data_var_8  addr: 0x10000014 value: 0x12</span>
+<span class="go">ccm_data_var_16 addr: 0x10000016 value: 0x3456</span>
+<span class="go">ccm_data_var_32 addr: 0x10000018 value: 0x789abcde</span>
+<span class="go">ccm_data_array  addr: 0x1000001c size: 5 value:</span>
+<span class="go">        0x11 0x22 0x33 0x44 0x55</span>
+<span class="go">ccm_bss_array addr: 0x10000000 size: 7 value:</span>
+<span class="go">        0x00 0x00 0x00 0x00 0x00 0x00 0x00</span>
+<span class="go">ccm_noinit_array addr: 0x10000008 size: 11 value:</span>
+<span class="go">        0xa9 0x99 0xba 0x90 0xe1 0x2a 0xba 0x93 0x4c 0xfe 0x4b</span>
+
+<span class="go">Variable values after writing:</span>
+<span class="go">ccm_data_var_8  addr: 0x10000014 value: 0xed</span>
+<span class="go">ccm_data_var_16 addr: 0x10000016 value: 0xcba9</span>
+<span class="go">ccm_data_var_32 addr: 0x10000018 value: 0x87654321</span>
+<span class="go">ccm_data_array  addr: 0x1000001c size: 5 value:</span>
+<span class="go">        0xaa 0xaa 0xaa 0xaa 0xaa</span>
+<span class="go">ccm_bss_array addr: 0x10000000 size: 7 value:</span>
+<span class="go">        0xbb 0xbb 0xbb 0xbb 0xbb 0xbb 0xbb</span>
+<span class="go">ccm_noinit_array addr: 0x10000008 size: 11 value:</span>
+<span class="go">        0xcc 0xcc 0xcc 0xcc 0xcc 0xcc 0xcc 0xcc 0xcc 0xcc 0xcc</span>
+
+<span class="go">Example end</span>
+</pre></div>
+</div>
+<p>首先列出每个 CCM 段的地址和大小，然后展示一些用法示例。注意，<code class="docutils literal notranslate"><span class="pre">noinit</span></code> 段中的变量保存的是未初始化的数据。写入这些变量后，它们都应保存上面显示的值。</p>
+<p>开发板复位（未重新上电）后，输出如下所示：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">***** BOOTING ZEPHYR OS v1.10.99 - BUILD: Jan 14 2018 09:32:46 *****</span>
+
+<span class="go">CCM (Core Coupled Memory) usage example</span>
+
+<span class="go">The total used CCM area   : [0x10000000, 0x10000021)</span>
+<span class="go">Zero initialized BSS area : [0x10000000, 0x10000007)</span>
+<span class="go">Uninitialized NOINIT area : [0x10000008, 0x10000013)</span>
+<span class="go">Initialised DATA area     : [0x10000014, 0x10000021)</span>
+<span class="go">Start of DATA in FLASH    : 0x08003940</span>
+
+<span class="go">Checking initial variable values: ... PASSED</span>
+
+<span class="go">Initial variable values:</span>
+<span class="go">ccm_data_var_8  addr: 0x10000014 value: 0x12</span>
+<span class="go">ccm_data_var_16 addr: 0x10000016 value: 0x3456</span>
+<span class="go">ccm_data_var_32 addr: 0x10000018 value: 0x789abcde</span>
+<span class="go">ccm_data_array  addr: 0x1000001c size: 5 value:</span>
+<span class="go">        0x11 0x22 0x33 0x44 0x55</span>
+<span class="go">ccm_bss_array addr: 0x10000000 size: 7 value:</span>
+<span class="go">        0x00 0x00 0x00 0x00 0x00 0x00 0x00</span>
+<span class="go">ccm_noinit_array addr: 0x10000008 size: 11 value:</span>
+<span class="go">        0xcc 0xcc 0xcc 0xcc 0xcc 0xcc 0xcc 0xcc 0xcc 0xcc 0xcc</span>
+
+<span class="go">Variable values after writing:</span>
+<span class="go">ccm_data_var_8  addr: 0x10000014 value: 0xed</span>
+<span class="go">ccm_data_var_16 addr: 0x10000016 value: 0xcba9</span>
+<span class="go">ccm_data_var_32 addr: 0x10000018 value: 0x87654321</span>
+<span class="go">ccm_data_array  addr: 0x1000001c size: 5 value:</span>
+<span class="go">        0xaa 0xaa 0xaa 0xaa 0xaa</span>
+<span class="go">ccm_bss_array addr: 0x10000000 size: 7 value:</span>
+<span class="go">        0xbb 0xbb 0xbb 0xbb 0xbb 0xbb 0xbb</span>
+<span class="go">ccm_noinit_array addr: 0x10000008 size: 11 value:</span>
+<span class="go">        0xcc 0xcc 0xcc 0xcc 0xcc 0xcc 0xcc 0xcc 0xcc 0xcc 0xcc</span>
+
+<span class="go">Example end</span>
+</pre></div>
+</div>
+<p>与第一次运行的区别在于，ccm_noinit 段仍保留着上一次写入的值。需要注意的是，这一点并不能保证，仍应将其视为未初始化的残留数据。</p>
+</section>
+</section>
+<script type="application/ld+json">
+                {"@context": "http://schema.org", "@type": "SoftwareSourceCode", "name": "Core Coupled Memory (CCM)", "description": "\u5728\u5185\u6838\u8026\u5408\u5b58\u50a8\u5668\uff08CCM\uff09\u4e2d\u653e\u7f6e\u5e76\u4f7f\u7528\u53d8\u91cf\u3002", "codeSampleType": "full", "codeRepository": "https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0//samples\\boards\\st\\ccm\\README.rst"}
+                </script>
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 12月 05, 2025.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

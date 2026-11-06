@@ -1,0 +1,28 @@
+var wisblock_io_slot_8h =
+[
+    [ "WISBLOCK_IO_AIN0", "group__wisblock-io-slot.html#gae45f636f59ca63c5735a444c4d2ff40e", null ],
+    [ "WISBLOCK_IO_AIN1", "group__wisblock-io-slot.html#gadc38a7c488480a5444f1b767679a80b9", null ],
+    [ "WISBLOCK_IO_I2C1_SCL", "group__wisblock-io-slot.html#ga25b47986a25855467112d00632d0ae00", null ],
+    [ "WISBLOCK_IO_I2C1_SDA", "group__wisblock-io-slot.html#ga7f87854690b71d3b16e502957a54940c", null ],
+    [ "WISBLOCK_IO_I2C2_SCL", "group__wisblock-io-slot.html#gaed675138e04d827fd0d33d263e0fee44", null ],
+    [ "WISBLOCK_IO_I2C2_SDA", "group__wisblock-io-slot.html#ga37e14b285c36c7530fd36166d549e6ee", null ],
+    [ "WISBLOCK_IO_IO1", "group__wisblock-io-slot.html#gaed1997d34383d4b627866605c6533c69", null ],
+    [ "WISBLOCK_IO_IO2", "group__wisblock-io-slot.html#ga32aee335ff96b08d3fd916d1925e52f7", null ],
+    [ "WISBLOCK_IO_IO3", "group__wisblock-io-slot.html#ga94cc339044680fc1eab735848cc855af", null ],
+    [ "WISBLOCK_IO_IO4", "group__wisblock-io-slot.html#ga94d626e6b185484ba1d4fa22413e5e9c", null ],
+    [ "WISBLOCK_IO_IO5", "group__wisblock-io-slot.html#gaa3ed2adedb3c39592b37e0fbb3d975b3", null ],
+    [ "WISBLOCK_IO_IO6", "group__wisblock-io-slot.html#ga08d262e36b8b4d33ed6b52c27c2b7c1f", null ],
+    [ "WISBLOCK_IO_IO7", "group__wisblock-io-slot.html#gad369693a1b14c1f285f8c19cc7fce9e4", null ],
+    [ "WISBLOCK_IO_LED1", "group__wisblock-io-slot.html#gaeb47ed056f293c3af1af140d0e83e2f0", null ],
+    [ "WISBLOCK_IO_LED2", "group__wisblock-io-slot.html#ga2d91a7fedbb6aaf97557a3a762a5966c", null ],
+    [ "WISBLOCK_IO_LED3", "group__wisblock-io-slot.html#gac9466845a4e3e1ccc6f3ad382f608197", null ],
+    [ "WISBLOCK_IO_RXD0", "group__wisblock-io-slot.html#ga61ff8daa9465e449398fa64b6518ea0a", null ],
+    [ "WISBLOCK_IO_RXD1", "group__wisblock-io-slot.html#ga85109755bea2ace4475f65b9a605fe39", null ],
+    [ "WISBLOCK_IO_SPI_CLK", "group__wisblock-io-slot.html#ga7991add3b5c7d08e8bc4053286af9d9d", null ],
+    [ "WISBLOCK_IO_SPI_CS", "group__wisblock-io-slot.html#ga46237ab4d1b762bdd32272a1cf58b6ac", null ],
+    [ "WISBLOCK_IO_SPI_MISO", "group__wisblock-io-slot.html#ga3163e1fa627535666c5426af649c46c1", null ],
+    [ "WISBLOCK_IO_SPI_MOSI", "group__wisblock-io-slot.html#ga925b6f4572ed370556d58139be2f34b7", null ],
+    [ "WISBLOCK_IO_SW1", "group__wisblock-io-slot.html#ga81ae1a0d2970827b58bf90ef39e8ba1b", null ],
+    [ "WISBLOCK_IO_TXD0", "group__wisblock-io-slot.html#gae4da8fe8a9b492a361ec5b4376bab7da", null ],
+    [ "WISBLOCK_IO_TXD1", "group__wisblock-io-slot.html#ga77dda9dbc3172c7a0492b720d0763ada", null ]
+];

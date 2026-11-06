@@ -1,0 +1,1645 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>测试运行器（Twister） &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/tabs.css?v=a5c4661c" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/develop/twister/index.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script src="../../_static/tabs.js?v=3030b3cb"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="命令行选项" href="commandline.html" />
+    <link rel="prev" title="不使用 west 使用 Zephyr" href="../west/without-west.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">使用 Zephyr 进行开发</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/index.html">入门指南</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beyond-GSG.html">入门指南之外</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../env_vars.html">环境变量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../application/index.html">应用程序开发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../debug/index.html">调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/index.html">API 状态与准则</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../languages/index.html">编程语言支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../optimizations/index.html">优化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../flash_debug/index.html">烧录与硬件调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html">模块（外部项目）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../west/index.html">West（Zephyr 的元工具）</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">测试运行器（Twister）</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="commandline.html">命令行选项</a></li>
+<li class="toctree-l3"><a class="reference internal" href="pytest.html">与 pytest 测试框架集成</a></li>
+<li class="toctree-l3"><a class="reference internal" href="twister_statuses.html">Twister 状态</a></li>
+<li class="toctree-l3"><a class="reference internal" href="twister_blackbox.html">Twister 黑盒测试</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#board-configuration">开发板配置</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#toolchain-selection">工具链选择</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tests">测试</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#expanding-paths-with-module-directory-variables">使用模块目录变量展开路径</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#managing-tests-timeouts">管理测试超时</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#devicetree-filtering-expressions">设备树过滤表达式</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#expressions">表达式</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#dt-compat-enabled-compat"><code class="docutils literal notranslate"><span class="pre">dt_compat_enabled(compat)</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#dt-alias-exists-alias"><code class="docutils literal notranslate"><span class="pre">dt_alias_exists(alias)</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#dt-enabled-alias-with-parent-compat-alias-compat"><code class="docutils literal notranslate"><span class="pre">dt_enabled_alias_with_parent_compat(alias,</span> <span class="pre">compat)</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#dt-label-with-parent-compat-enabled-label-compat"><code class="docutils literal notranslate"><span class="pre">dt_label_with_parent_compat_enabled(label,</span> <span class="pre">compat)</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#dt-label-compat-enabled-label-compat"><code class="docutils literal notranslate"><span class="pre">dt_label_compat_enabled(label,</span> <span class="pre">compat)</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#dt-chosen-enabled-chosen"><code class="docutils literal notranslate"><span class="pre">dt_chosen_enabled(chosen)</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#dt-nodelabel-enabled-label"><code class="docutils literal notranslate"><span class="pre">dt_nodelabel_enabled(label)</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#dt-nodelabel-prop-enabled-label-prop"><code class="docutils literal notranslate"><span class="pre">dt_nodelabel_prop_enabled(label,</span> <span class="pre">prop)</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#dt-node-has-prop-node-id-prop"><code class="docutils literal notranslate"><span class="pre">dt_node_has_prop(node_id,</span> <span class="pre">prop)</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#usage">用法</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#harnesses">Harness</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="harness/ctest.html">Ctest</a></li>
+<li class="toctree-l4"><a class="reference internal" href="harness/gtest.html">Gtest</a></li>
+<li class="toctree-l4"><a class="reference internal" href="harness/pytest.html">Pytest</a></li>
+<li class="toctree-l4"><a class="reference internal" href="harness/console.html">Console</a></li>
+<li class="toctree-l4"><a class="reference internal" href="harness/robot.html">Robot</a></li>
+<li class="toctree-l4"><a class="reference internal" href="harness/power.html">Power</a></li>
+<li class="toctree-l4"><a class="reference internal" href="harness/display_capture.html">显示捕获</a></li>
+<li class="toctree-l4"><a class="reference internal" href="harness/script.html">Script</a></li>
+<li class="toctree-l4"><a class="reference internal" href="harness/bsim.html">Bsim</a></li>
+<li class="toctree-l4"><a class="reference internal" href="harness/shell.html">Shell</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#sidecars">Sidecar</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#selecting-platform-scope">选择平台范围</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#running-in-integration-mode">以集成模式运行</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#running-tests-on-custom-emulator">在自定义模拟器上运行测试</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#running-tests-in-random-order">以随机顺序运行测试</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#running-tests-on-hardware">在硬件上运行测试</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#executing-tests-on-a-single-device">在单个设备上执行测试</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#executing-tests-on-multiple-devices">在多个设备上执行测试</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#fixtures">Fixture</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#notes">备注</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#overriding-board-identifier">覆盖开发板标识符</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#using-single-board-for-multiple-variants">用一块开发板测试多个变体</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#multi-core-testing-support">多核测试支持</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#multi-duts-testing-support">多 DUT 测试支持</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#quarantine">隔离</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#test-output-and-reports">测试输出与报告</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#top-level-reports">顶层报告</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#per-test-artifacts">每个测试的产物</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#live-run-monitoring">实时运行监控</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#twister-configuration-file">Twister 配置文件</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#platform-configuration">平台配置</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#test-level-configuration">测试级别配置</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#combined-configuration">组合配置</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../test/index.html">测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sca/index.html">静态代码分析（SCA）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../toolchains/index.html">工具链</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tools/index.html">工具与 IDE</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">使用 Zephyr 进行开发</a> &raquo;</li>
+  
+  <li>测试运行器（Twister）</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="test-runner-twister">
+<span id="twister-script"></span><h1>测试运行器（Twister）<a class="headerlink" href="#test-runner-twister" title="链接到此标题。"></a></h1>
+<p>Twister 会扫描 git 仓库中的测试应用程序集合并尝试执行它们。默认情况下，它会尝试在开发板定义文件中标记为默认的开发板上构建每个测试应用程序。</p>
+<p>使用默认选项时，Twister 会在一组指定的开发板上构建大部分测试应用程序；如果被测架构或配置有可用的仿真环境，还会在仿真环境中运行这些测试。</p>
+<p>由于测试执行的覆盖范围有限，twister 无法保证本地修改在完整构建环境中一定能成功。不过，它会针对不同开发板和不同配置构建示例和测试，进行足够的测试，帮助保持整个代码树可以成功构建。</p>
+<p>使用（至少）一个 <code class="docutils literal notranslate"><span class="pre">-v</span></code> 选项时，twister 的控制台输出会显示每个测试应用程序的运行方式（qemu、native_sim 等），或者只构建了二进制文件。测试最终的 <a class="reference internal" href="twister_statuses.html#twister-statuses"><span class="std std-ref">状态</span></a> 同样会记录在 <code class="docutils literal notranslate"><span class="pre">twister.json</span></code> 和其他报告文件中。twister 只构建而不运行测试的原因有以下几种：</p>
+<ul class="simple">
+<li><p>测试在其 <code class="docutils literal notranslate"><span class="pre">.yaml</span></code> 配置文件中标记为 <code class="docutils literal notranslate"><span class="pre">build_only:</span> <span class="pre">true</span></code>。</p></li>
+<li><p>测试配置中定义了 <code class="docutils literal notranslate"><span class="pre">harness</span></code>，但你没有该 harness 或尚未设置。</p></li>
+<li><p>目标设备未连接，无法进行烧录</p></li>
+<li><p>你或某个更高层的自动化流程在调用 twister 时使用了 <code class="docutils literal notranslate"><span class="pre">--build-only</span></code>。</p></li>
+</ul>
+<p>要在本地代码树中运行 Twister，请按照以下步骤操作：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>west<span class="w"> </span>twister
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>本文档中的示例以 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">twister</span></code> 的形式调用 Twister，即 <a class="reference internal" href="../west/index.html#west"><span class="std std-ref">west</span></a> 扩展命令，它在所有主机操作系统上的用法相同。以下调用方式是等价的：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">twister</span> <span class="pre">...</span></code>（推荐）。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">.\scripts\twister</span> <span class="pre">...</span></code>（Windows）：直接调用脚本。这需要先设置 Zephyr 环境（<code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">zephyr-env.sh</span></code> 或 <code class="docutils literal notranslate"><span class="pre">zephyr-env.cmd</span></code>）。</p></li>
+</ul>
+<p>所有形式都接受相同的命令行选项。</p>
+</div>
+<p>如果要在一个或多个特定平台上运行测试，可以使用 <code class="docutils literal notranslate"><span class="pre">--platform</span></code> 选项。它是测试的平台过滤器，使用该选项时，测试套件只会在指定的平台上构建/运行。该选项还支持同一开发板的不同版本，可以使用 <code class="docutils literal notranslate"><span class="pre">--platform</span> <span class="pre">board&#64;revision</span></code> 在特定版本上进行测试。</p>
+<p>twister 支持的命令行选项列表可以通过 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">twister</span> <span class="pre">--help</span></code> 查看。完整的选项请参见 <a class="reference internal" href="commandline.html#twister-commandline-options"><span class="std std-ref">命令行选项</span></a>。</p>
+<p>以下页面介绍了 Twister 的其他主题：</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="commandline.html">命令行选项</a></li>
+<li class="toctree-l1"><a class="reference internal" href="pytest.html">与 pytest 测试框架集成</a></li>
+<li class="toctree-l1"><a class="reference internal" href="twister_statuses.html">Twister 状态</a></li>
+<li class="toctree-l1"><a class="reference internal" href="twister_blackbox.html">Twister 黑盒测试</a></li>
+</ul>
+</div>
+<section id="board-configuration">
+<span id="twister-board-configuration"></span><h2>开发板配置<a class="headerlink" href="#board-configuration" title="链接到此标题。"></a></h2>
+<p>要为特定开发板构建测试，并在真实硬件或 QEMU 等仿真环境中执行部分测试，需要一个开发板配置文件。该文件足够通用，也可用于其他需要开发板清单的任务；这类清单包含开发板及其配置的详细信息，否则这些信息只有在构建时才能获得。</p>
+<p>开发板元数据文件位于开发板目录中，采用 YAML 标记语言编写。下面的示例展示了一块开发板，其中包含为该开发板实现最佳测试覆盖所需的数据：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">identifier</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">frdm_k64f</span>
+<span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">NXP FRDM-K64F</span>
+<span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mcu</span>
+<span class="nt">arch</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">arm</span>
+<span class="nt">toolchain</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">zephyr</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gnuarmemb</span>
+<span class="nt">supported</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">arduino_gpio</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">arduino_i2c</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">netif:eth</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">adc</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">i2c</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nvs</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">spi</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gpio</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">usb_device</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">watchdog</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">can</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pwm</span>
+<span class="nt">testing</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">default</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</pre></div>
+</div>
+<dl>
+<dt>identifier:</dt><dd><p>与构建系统中开发板定义方式相匹配的字符串。构建时也使用该字符串，例如调用 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> 或 <code class="docutils literal notranslate"><span class="pre">cmake</span></code> 时：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>with<span class="w"> </span>west
+<span class="go">west build -b reel_board</span>
+<span class="gp"># </span>with<span class="w"> </span>cmake
+<span class="go">cmake -DBOARD=reel_board ..</span>
+</pre></div>
+</div>
+</dd>
+<dt>name:</dt><dd><p>开发板在市场宣传材料中使用的实际名称。</p>
+</dd>
+<dt>vendor:</dt><dd><p>开发板厂商。供测试场景过滤器 <code class="docutils literal notranslate"><span class="pre">vendor_allow</span></code> 和 <code class="docutils literal notranslate"><span class="pre">vendor_exclude</span></code> 使用。</p>
+</dd>
+<dt>tier:</dt><dd><p>可选的整数，表示开发板的支持等级。用于报告，以及按支持程度对平台进行分组。</p>
+</dd>
+<dt>type:</dt><dd><p>开发板或配置的类型。取值为 <code class="docutils literal notranslate"><span class="pre">mcu</span></code>、<code class="docutils literal notranslate"><span class="pre">qemu</span></code>、<code class="docutils literal notranslate"><span class="pre">sim</span></code>、<code class="docutils literal notranslate"><span class="pre">unit</span></code> 或 <code class="docutils literal notranslate"><span class="pre">native</span></code> 之一。</p>
+</dd>
+<dt>simulation:</dt><dd><p>用于仿真该平台的模拟器，例如 qemu。</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">simulation</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qemu</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">armfvp</span>
+<span class="w">    </span><span class="nt">exec</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">FVP_Some_Platform</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">custom</span>
+<span class="w">    </span><span class="nt">exec</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">AnotherBinary</span>
+</pre></div>
+</div>
+<p>默认情况下，测试会使用 simulation 数组中的第一项执行。可以通过 <code class="docutils literal notranslate"><span class="pre">--simulation</span> <span class="pre">&lt;simulation_name&gt;</span></code> 选择其他仿真器。<code class="docutils literal notranslate"><span class="pre">exec</span></code> 属性是可选的：如果设置了该属性但所需的模拟器不可用，则只构建测试；如果未设置该属性且所需的模拟器不可用，则测试将无法运行。仿真名称必须与 <code class="docutils literal notranslate"><span class="pre">SUPPORTED_EMU_PLATFORMS</span></code> 中的某个元素一致。</p>
+</dd>
+<dt>arch:</dt><dd><p>开发板的架构</p>
+</dd>
+<dt>toolchain:</dt><dd><p>可以构建该开发板的受支持工具链列表。其取值应与在命令行构建时 <span class="target" id="index-8"></span><a class="reference internal" href="../env_vars.html#envvar-ZEPHYR_TOOLCHAIN_VARIANT"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">ZEPHYR_TOOLCHAIN_VARIANT</span></code></a> 所使用的某个值一致。除非指定了 <code class="docutils literal notranslate"><span class="pre">--force-toolchain</span></code>，否则 Twister 会过滤掉工具链不在该列表中的所有测试实例。该列表说明哪些工具链 <em>可以</em> 构建该开发板，但并不选定其中某一个；参见 <a class="reference internal" href="#twister-toolchain-selection"><span class="std std-ref">工具链选择</span></a>。</p>
+</dd>
+<dt>preferred_toolchain:</dt><dd><p>在没有其他方式选定工具链时，Twister 应为该平台使用的工具链。对于名义上可以用多种工具链构建、但应使用特定工具链进行测试的开发板，这个选项很有用。参见 <a class="reference internal" href="#twister-toolchain-selection"><span class="std std-ref">工具链选择</span></a>。</p>
+</dd>
+<dt>build_toolchains:</dt><dd><p>可选的工具链列表，分配给该平台的每个测试都应使用这些工具链进行构建。Twister 不会为该平台只选择一个工具链，而是为列表中的每个工具链各创建一个测试实例，每个实例使用各自的构建目录。例如，要在 <code class="docutils literal notranslate"><span class="pre">native_sim</span></code> 上同时使用 GCC 和 Clang 构建所有内容：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">build_toolchains</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">host/gnu</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">host/llvm</span>
+</pre></div>
+</div>
+<p>由于这会成倍增加构建时间，通常最好不要将其写入开发板定义，而是只在 CI 中通过 <a class="reference internal" href="#twister-test-config"><span class="std std-ref">Twister 配置文件</span></a> 的 <code class="docutils literal notranslate"><span class="pre">build_toolchains</span></code> 选项启用。参见 <a class="reference internal" href="#twister-toolchain-selection"><span class="std std-ref">工具链选择</span></a>。</p>
+</dd>
+<dt>ram:</dt><dd><p>开发板上可用的 RAM（单位为 KB）。用于匹配测试场景的要求。如果未指定，默认为 128KB。</p>
+</dd>
+<dt>flash:</dt><dd><p>开发板上可用的 Flash（单位为 KB）。用于匹配测试场景的要求。如果未指定，默认为 512KB。</p>
+</dd>
+<dt>sysbuild: [True|False]（默认 False）</dt><dd><p>如果为 true，则默认使用 <a class="reference internal" href="../../build/sysbuild/index.html#sysbuild"><span class="std std-ref">sysbuild</span></a> 构建该平台的应用程序。</p>
+</dd>
+<dt>twister: [True|False]（默认 True）</dt><dd><p>如果为 false，Twister 会完全忽略该平台，永远不会在其上构建或运行测试。</p>
+</dd>
+<dt>supported:</dt><dd><p>该开发板支持的功能列表。可以指定为单个单词的功能，也可以指定为某个功能类别的变体。例如：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">supported</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pci</span>
+</pre></div>
+</div>
+<p>这表示该开发板支持 PCI。你可以让某个测试场景只在这类开发板上构建或运行，或者：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">supported</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">netif:eth</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sensor:bmi16</span>
+</pre></div>
+</div>
+<p>测试场景可以依赖 'eth'，只测试以太网；也可以依赖 'netif'，从而在任何带有网络接口的开发板上运行。</p>
+</dd>
+<dt>testing:</dt><dd><p>与测试相关的关键字，用于为该开发板的功能提供最佳的测试覆盖。</p>
+<dl class="simple" id="twister-default-testing-board">
+<dt>binaries:</dt><dd><p>设备测试时需要保留的自定义二进制文件列表。</p>
+</dd>
+<dt>default: [True|False]:</dt><dd><p>表示这是一块默认开发板，它将以最高优先级进行测试，并且在不带任何额外参数调用简化版 twister 时也会被覆盖到。</p>
+</dd>
+<dt>ignore_tags:</dt><dd><p>不尝试构建（因而也不运行）带有该列表中标签的测试。</p>
+</dd>
+<dt>only_tags:</dt><dd><p>在特定平台上只执行带有该列表中标签的测试。</p>
+</dd>
+<dt>timeout_multiplier: &lt;float&gt;（默认 1）</dt><dd><p id="twister-board-timeout-multiplier">将每个测试场景的超时乘以指定的倍数。该选项可以只针对所需的平台调整超时，适用于本身运行较慢的平台，例如 CPU 功耗低但速度慢的硬件开发板，或者能够进行指令级精确仿真但速度较慢的仿真平台。</p>
+</dd>
+<dt>flash_before: [True|False]（默认 False）</dt><dd><p>在 pytest/shell harness 硬件测试中，先烧录设备再打开串口。这可以避免某些开发板（例如在烧录操作期间会复位的 USB CDC 设备）在烧录时出现串口断开的问题。</p>
+</dd>
+<dt>renode:</dt><dd><p>Renode 模拟器的配置。支持两个键：<code class="docutils literal notranslate"><span class="pre">uart</span></code> 表示 harness 所连接的 UART 外设（例如 <code class="docutils literal notranslate"><span class="pre">sysbus.uart0</span></code>），<code class="docutils literal notranslate"><span class="pre">resc</span></code> 表示用于设置仿真机器的 Renode 脚本（<code class="docutils literal notranslate"><span class="pre">.resc</span></code>）。</p>
+</dd>
+</dl>
+</dd>
+<dt>env:</dt><dd><p>环境变量列表。Twister 会检查这些环境变量是否都已设置，否则跳过该平台。这样用户就可以定义一个仅在某些所需软件或硬件存在时才使用的平台，并通过这些环境变量向 twister 表明其存在。</p>
+</dd>
+<dt>variants:</dt><dd><p>从开发板变体（限定符）名称到各变体覆盖配置的映射。每个条目本身就是一个平台定义，可以针对该变体覆盖上述任意键，其余值则继承自顶层定义。</p>
+</dd>
+</dl>
+</section>
+<section id="toolchain-selection">
+<span id="twister-toolchain-selection"></span><h2>工具链选择<a class="headerlink" href="#toolchain-selection" title="链接到此标题。"></a></h2>
+<p>有多个选项会影响测试使用哪个工具链构建。它们分为三类：<em>选择</em> 工具链的选项、<em>过滤</em> 掉工具链不可用的测试实例的选项，以及将一个测试 <em>扩展</em> 为多次构建的选项。</p>
+<p>Twister 首先调用 <code class="docutils literal notranslate"><span class="pre">cmake/verify-toolchain.cmake</span></code> 确定整个运行的默认工具链，该脚本会遵循 <span class="target" id="index-9"></span><a class="reference internal" href="../env_vars.html#envvar-ZEPHYR_TOOLCHAIN_VARIANT"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">ZEPHYR_TOOLCHAIN_VARIANT</span></code></a> 环境变量。该值会在运行开始时以 <code class="docutils literal notranslate"><span class="pre">Using</span> <span class="pre">'&lt;toolchain&gt;'</span> <span class="pre">toolchain</span> <span class="pre">variant.</span></code> 的形式报告。</p>
+<p>然后，对于每一对测试场景和平台，按以下顺序选用第一个适用的方式来选择工具链：</p>
+<ol class="arabic simple">
+<li><p>测试场景的 <code class="docutils literal notranslate"><span class="pre">integration_toolchains</span></code>（如果已设置）。测试会针对列出的每个工具链各构建一次。</p></li>
+<li><p>平台的 <code class="docutils literal notranslate"><span class="pre">build_toolchains</span></code>（如果已设置），可以在开发板配置中或 <a class="reference internal" href="#twister-test-config"><span class="std std-ref">Twister 配置文件</span></a> 中设置。测试会针对列出的每个工具链各构建一次。</p></li>
+<li><p>对于 <code class="docutils literal notranslate"><span class="pre">posix</span></code> 和 <code class="docutils literal notranslate"><span class="pre">unit</span></code> 平台：如果运行默认值为 <code class="docutils literal notranslate"><span class="pre">host/llvm</span></code>，则使用 <code class="docutils literal notranslate"><span class="pre">host/llvm</span></code>，否则使用 <code class="docutils literal notranslate"><span class="pre">host/gnu</span></code>。</p></li>
+<li><p>平台的 <code class="docutils literal notranslate"><span class="pre">preferred_toolchain</span></code>（如果已设置）。</p></li>
+<li><p>上文所述的运行默认值；如果无法确定，则使用 <code class="docutils literal notranslate"><span class="pre">zephyr</span></code>。</p></li>
+</ol>
+<p>注意，<span class="target" id="index-10"></span><a class="reference internal" href="../env_vars.html#envvar-ZEPHYR_TOOLCHAIN_VARIANT"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">ZEPHYR_TOOLCHAIN_VARIANT</span></code></a> 只会改变运行默认值，即该列表中的最后一项。它不会覆盖平台的 <code class="docutils literal notranslate"><span class="pre">preferred_toolchain</span></code> 或 <code class="docutils literal notranslate"><span class="pre">build_toolchains</span></code>，也不会覆盖场景的 <code class="docutils literal notranslate"><span class="pre">integration_toolchains</span></code>。</p>
+<p>选定工具链后，生成的测试实例仍可能被过滤掉：</p>
+<ul class="simple">
+<li><p>如果该工具链不在平台所支持工具链的 <code class="docutils literal notranslate"><span class="pre">toolchain</span></code> 列表中，该实例会被过滤掉。<code class="docutils literal notranslate"><span class="pre">--force-toolchain</span></code> 会禁用此项检查，并无条件使用所选的工具链。比较时只匹配 <code class="docutils literal notranslate"><span class="pre">/</span></code> 之前的部分也算成功，因此 <code class="docutils literal notranslate"><span class="pre">host/gnu</span></code> 与列出了 <code class="docutils literal notranslate"><span class="pre">host</span></code> 的平台相匹配。</p></li>
+<li><p>场景的 <code class="docutils literal notranslate"><span class="pre">toolchain_allow</span></code> 和 <code class="docutils literal notranslate"><span class="pre">toolchain_exclude</span></code> 选项按所选工具链过滤实例。</p></li>
+</ul>
+<p>由于 <code class="docutils literal notranslate"><span class="pre">integration_toolchains</span></code> 和 <code class="docutils literal notranslate"><span class="pre">build_toolchains</span></code> 会为每个工具链生成一个测试实例，它们会成倍增加构建时间。因此，<code class="docutils literal notranslate"><span class="pre">build_toolchains</span></code> 通常不写入开发板配置，而只在 CI 使用的配置文件中启用。</p>
+</section>
+<section id="tests">
+<span id="twister-tests-long-version"></span><h2>测试<a class="headerlink" href="#tests" title="链接到此标题。"></a></h2>
+<p>测试是通过应用程序项目目录中是否存在 <code class="docutils literal notranslate"><span class="pre">tests.yaml</span></code> 文件（对 <code class="docutils literal notranslate"><span class="pre">sample.yaml</span></code> 和 <code class="docutils literal notranslate"><span class="pre">testcase.yaml</span></code> 的支持已弃用）来检测的。该测试应用程序配置文件的 <code class="docutils literal notranslate"><span class="pre">tests:</span></code> 部分可以包含一个或多个条目，每个条目标识一个测试场景（Test Scenario）。</p>
+<figure class="align-center align-default" id="id1">
+<span id="twister-test-project-diagram"></span><img alt="Twister 与测试应用程序项目。" src="../../_images/twister_test_project.svg" />
+<figcaption>
+<p><span class="caption-text">Twister 与测试应用程序项目。</span><a class="headerlink" href="#id1" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<p>测试应用程序配置使用 YAML 语法编写，其结构与示例相同。</p>
+<p>测试场景是在测试场景条目中定义的一组条件和变量，一组测试套件会在这些条件和变量下构建和执行。</p>
+<p>测试套件是测试用例（Test Case）的集合，用于测试软件程序，确保其满足特定要求。测试套件中的测试用例要么彼此相关，要么需要一起执行。</p>
+<p>测试场景、测试套件和测试用例的名称必须遵循以下基本规则：</p>
+<ol class="arabic simple">
+<li><p>测试场景标识符的格式应为不含空格或特殊字符的字符串（允许的字符：字母数字和 [_=]），由多个以点（<code class="docutils literal notranslate"><span class="pre">.</span></code>）分隔的部分组成。</p></li>
+<li><p>每个测试场景标识符都应以一个部分名称开头，后跟以点（<code class="docutils literal notranslate"><span class="pre">.</span></code>）分隔的子部分名称。例如，覆盖内核信号量的测试场景应以 <code class="docutils literal notranslate"><span class="pre">kernel.semaphore</span></code> 开头。</p></li>
+<li><p>在 Twister 的执行范围内，所有测试场景名称都必须唯一。</p></li>
+<li><p>测试套件的完整规范名称为：<code class="docutils literal notranslate"><span class="pre">&lt;Test</span> <span class="pre">Application</span> <span class="pre">Project</span> <span class="pre">path&gt;/&lt;Test</span> <span class="pre">Scenario</span> <span class="pre">identifier&gt;</span></code></p></li>
+<li><p>根据测试套件的实现方式，其测试用例标识符由 <strong>至少三个</strong> 以点（<code class="docutils literal notranslate"><span class="pre">.</span></code>）分隔的部分组成：</p>
+<ul class="simple">
+<li><p><strong>Ztest 测试</strong>：对应 <code class="docutils literal notranslate"><span class="pre">testcase.yaml</span></code> 文件中的测试场景标识符、Ztest 套件名称和 Ztest 测试名称：<code class="docutils literal notranslate"><span class="pre">&lt;Test</span> <span class="pre">Scenario</span> <span class="pre">identifier&gt;.&lt;Ztest</span> <span class="pre">suite</span> <span class="pre">name&gt;.&lt;Ztest</span> <span class="pre">test</span> <span class="pre">name&gt;</span></code></p></li>
+<li><p><strong>独立测试和示例</strong>：对应 <code class="docutils literal notranslate"><span class="pre">tests.yaml</span></code> 文件中的测试场景标识符，其最后一部分表示独立测试用例的名称，例如：<code class="docutils literal notranslate"><span class="pre">debug.coredump.logging_backend</span></code>。</p></li>
+</ul>
+</li>
+</ol>
+<p>下面是一个测试配置示例，其中包含本文档中介绍的几个选项。</p>
+<blockquote>
+<div><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">tests</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">bluetooth.gatt</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">build_only</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">platform_allow</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qemu_cortex_m3</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qemu_x86</span>
+<span class="w">    </span><span class="nt">tags</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bluetooth</span>
+<span class="w">  </span><span class="nt">bluetooth.gatt.br</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">build_only</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">extra_args</span><span class="p">:</span>
+<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">-CONF_FILE="prj_br.conf"</span>
+<span class="w">    </span><span class="nt">filter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">not CONFIG_DEBUG</span>
+<span class="w">    </span><span class="nt">platform_exclude</span><span class="p">:</span>
+<span class="w">      </span><span class="l l-Scalar l-Scalar-Plain">-up_squared</span>
+<span class="w">    </span><span class="nt">platform_allow</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qemu_cortex_m3 qemu_x86</span>
+<span class="w">    </span><span class="nt">tags</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">bluetooth</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>带有测试的示例具有相同的结构，另外还包含与该示例及其演示内容相关的信息：</p>
+<blockquote>
+<div><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">sample</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hello world</span>
+<span class="w">  </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">Hello World sample, the simplest Zephyr application</span>
+<span class="nt">tests</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">sample.basic.hello_world</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">build_only</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">tags</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tests</span>
+<span class="w">    </span><span class="nt">min_ram</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">16</span>
+<span class="w">  </span><span class="nt">sample.basic.hello_world.singlethread</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">build_only</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">extra_args</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CONF_FILE=prj_single.conf</span>
+<span class="w">    </span><span class="nt">filter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">not CONFIG_BT</span>
+<span class="w">    </span><span class="nt">tags</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">tests</span>
+<span class="w">    </span><span class="nt">min_ram</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">16</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p><code class="docutils literal notranslate"><span class="pre">tests:</span></code> YAML 字典中的测试场景条目以其测试场景标识符作为键。</p>
+<p>测试应用程序配置中的每个测试场景条目都可以定义以下键/值对：</p>
+<dl id="test-config-args">
+<dt>tags: &lt;标签列表&gt;（必需）</dt><dd><p>测试场景的一组字符串标签。通常与功能领域相关，但也可以是任意内容。通过命令行调用该脚本时，可以根据标签过滤要运行的测试集合。</p>
+</dd>
+<dt>skip: &lt;True|False&gt;（默认 False）</dt><dd><p>无条件跳过测试场景。例如，可用于已损坏的测试。</p>
+</dd>
+<dt>slow: &lt;True|False&gt;（默认 False）</dt><dd><p>除非在命令行中传入了 <code class="docutils literal notranslate"><span class="pre">--enable-slow</span></code> 或 <code class="docutils literal notranslate"><span class="pre">--enable-slow-only</span></code>，否则不运行该测试场景。适用于只在特定情况下（例如每日构建）运行的耗时测试场景。这些测试场景仍然会被编译。</p>
+</dd>
+<dt>extra_args: &lt;额外参数列表&gt;</dt><dd><p>构建或运行测试场景时传递给构建工具的额外参数。</p>
+<p>借助命名空间，可以只对某些硬件应用 extra_args。目前支持架构/平台/仿真：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">common</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">tags</span><span class="p">:</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">drivers</span>
+<span class="w">   </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">adc</span>
+<span class="nt">tests</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">test</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">adc</span>
+<span class="w">  </span><span class="nt">test_async</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">extra_args</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">arch:x86:CONFIG_ADC_ASYNC=y</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">platform:qemu_x86:CONFIG_DEBUG=y</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">platform:mimxrt1060_evk:SHIELD=rk043fn66hs_ctg</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">simulation:qemu:CONFIG_MPU=y</span>
+</pre></div>
+</div>
+</dd>
+<dt>extra_configs: &lt;额外配置列表&gt;</dt><dd><p>构建或运行测试场景时，要与主 prj.conf 合并的额外配置选项。例如：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">common</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">tags</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">drivers</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">adc</span>
+<span class="nt">tests</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">test</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">adc</span>
+<span class="w">  </span><span class="nt">test_async</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">extra_configs</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">CONFIG_ADC_ASYNC=y</span>
+</pre></div>
+</div>
+<p>借助命名空间，可以只对某些硬件应用某项配置。目前支持架构和平台：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">common</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">tags</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">drivers</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">adc</span>
+<span class="nt">tests</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">test</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">adc</span>
+<span class="w">  </span><span class="nt">test_async</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">extra_configs</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">arch:x86:CONFIG_ADC_ASYNC=y</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">platform:qemu_x86:CONFIG_DEBUG=y</span>
+</pre></div>
+</div>
+</dd>
+<dt>extra_conf_files: &lt;配置文件列表&gt;</dt><dd><p>要合并到构建中的额外 Kconfig 片段文件，可以替代通过 <code class="docutils literal notranslate"><span class="pre">extra_args</span></code> 传递 <code class="docutils literal notranslate"><span class="pre">CONF_FILE=</span></code> 的方式。<code class="docutils literal notranslate"><span class="pre">common</span></code> 与测试场景中的条目会被串联起来。对于配置文件，应优先使用该字段而不是 <code class="docutils literal notranslate"><span class="pre">extra_args</span></code>。</p>
+</dd>
+<dt>extra_overlay_confs: &lt;覆盖配置文件列表&gt;</dt><dd><p>要合并到构建中的额外 Kconfig 覆盖片段，可以替代通过 <code class="docutils literal notranslate"><span class="pre">extra_args</span></code> 传递 <code class="docutils literal notranslate"><span class="pre">OVERLAY_CONFIG=</span></code> 的方式。<code class="docutils literal notranslate"><span class="pre">common</span></code> 与测试场景中的条目会被串联起来。</p>
+</dd>
+<dt>extra_dtc_overlay_files: &lt;设备树覆盖文件列表&gt;</dt><dd><p>要应用到构建中的额外设备树覆盖文件，可以替代通过 <code class="docutils literal notranslate"><span class="pre">extra_args</span></code> 传递 <code class="docutils literal notranslate"><span class="pre">DTC_OVERLAY_FILE=</span></code> 的方式。<code class="docutils literal notranslate"><span class="pre">common</span></code> 与测试场景中的条目会被串联起来。</p>
+</dd>
+<dt>build_only: &lt;True|False&gt;（默认 False）</dt><dd><p>如果为 true，即使测试可以在该平台上运行，twister 也不会尝试运行它。</p>
+<p>该关键字专用于检验某些代码能否成功构建的测试。<code class="docutils literal notranslate"><span class="pre">build_only</span></code> 测试不打算在任何环境中运行，也不应测试任何功能，它只验证代码能够构建。</p>
+<p>该选项常用于测试驱动（例如传感器驱动），检验它们在 Zephyr 中能被正确启用且代码可以构建。此类测试不应用于验证驱动的功能。</p>
+</dd>
+<dt>build_on_all: &lt;True|False&gt;（默认 False）</dt><dd><p>如果为 true，则尝试在所有可用平台上构建测试场景。这主要用于 CI 中以提高覆盖率。不要在新测试中使用该标志。</p>
+</dd>
+<dt>depends_on: &lt;功能列表&gt;</dt><dd><p>开发板或平台可以声明自己支持哪些功能，该选项只会在提供该功能的平台上启用测试。</p>
+</dd>
+<dt>levels: &lt;级别列表&gt;</dt><dd><p>该测试所属的测试级别。如果设置了某个级别，就可以通过命令行选项 <code class="docutils literal notranslate"><span class="pre">--level</span> <span class="pre">&lt;level</span> <span class="pre">name&gt;</span></code> 选中该测试。</p>
+</dd>
+<dt>min_ram: &lt;integer&gt;</dt><dd><p>构建和运行该测试所需的最小 RAM 估计值，单位为 KB。会与开发板元数据提供的信息进行比较。</p>
+</dd>
+<dt>min_flash: &lt;integer&gt;</dt><dd><p>构建和运行该测试所需的最小 ROM 估计值，单位为 KB。会与开发板元数据提供的信息进行比较。</p>
+</dd>
+</dl>
+<dl id="twister-test-case-timeout">
+<dt>timeout: &lt;秒数&gt;</dt><dd><p>测试运行多长时间后会被自动终止。默认为 60 秒。</p>
+</dd>
+<dt>arch_allow: &lt;架构列表，例如 x86、arm、arc&gt;</dt><dd><p>该测试场景只应在其上运行的架构集合。</p>
+</dd>
+<dt>arch_exclude: &lt;架构列表，例如 x86、arm、arc&gt;</dt><dd><p>该测试场景不应在其上运行的架构集合。</p>
+</dd>
+<dt>toolchain_allow: &lt;工具链变体列表&gt;</dt><dd><p>该测试场景只应针对其运行的工具链变体集合。这里的工具链是为本次运行配置的工具链（参见 <span class="target" id="index-11"></span><a class="reference internal" href="../env_vars.html#envvar-ZEPHYR_TOOLCHAIN_VARIANT"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">ZEPHYR_TOOLCHAIN_VARIANT</span></code></a>）。使用其他任何工具链构建的平台都会被过滤掉。</p>
+</dd>
+<dt>toolchain_exclude: &lt;工具链变体列表&gt;</dt><dd><p>该测试场景不应针对其运行的工具链变体集合。</p>
+</dd>
+<dt>vendor_allow: &lt;厂商列表&gt;</dt><dd><p>该测试场景只应在其上运行的平台厂商集合。厂商在开发板定义中指定。与这些厂商相关联的开发板会被包含在内，其他开发板（包括没有厂商的开发板）会被排除。</p>
+</dd>
+<dt>vendor_exclude: &lt;厂商列表&gt;</dt><dd><p>该测试场景不应在其上运行的平台厂商集合。厂商在开发板中指定。与这些厂商相关联的开发板会被排除。</p>
+</dd>
+<dt>platform_allow: &lt;平台列表&gt;</dt><dd><p>该测试场景只应在其上运行的平台集合。不要因为时间或资源限制而使用该选项来限制 CI 中的测试或构建；只有当测试或示例只能在允许的平台上运行、而不能在其他任何平台上运行时，才应使用该选项。</p>
+</dd>
+<dt>integration_platforms: &lt;平台/开发板的 YML 列表&gt;</dt><dd><p>当使用 <code class="docutils literal notranslate"><span class="pre">--integration</span></code> 选项调用 twister 时，该选项会将范围限制在列出的平台上。如果目的是因时间或资源限制而缩小范围，请使用该选项而不是 platform_allow。</p>
+</dd>
+<dt>integration_toolchains: &lt;工具链变体的 YML 列表&gt;</dt><dd><p>该选项会将范围扩展到列出的所有工具链变体，在需要时增加一个测试维度。默认情况下，测试配置是根据环境中配置的工具链生成的：</p>
+<p>test scenario -&gt; platforms1 -&gt; toolchain1
+test scenario -&gt; platforms2 -&gt; toolchain1</p>
+<p>如果某个平台支持多个在 twister 运行期间可用的工具链，就可以扩展测试配置，为每个工具链增加额外的测试。例如，如果某个平台支持 <code class="docutils literal notranslate"><span class="pre">toolchain1</span></code> 和 <code class="docutils literal notranslate"><span class="pre">toolchain2</span></code> 两个工具链，且测试场景包含：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">integration_toolchains</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">toolchain1</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">toolchain2</span>
+</pre></div>
+</div>
+<p>将生成以下配置：</p>
+<p>test scenario -&gt; platforms1 -&gt; toolchain1
+test scenario -&gt; platforms1 -&gt; toolchain2
+test scenario -&gt; platforms2 -&gt; toolchain1
+test scenario -&gt; platforms2 -&gt; toolchain2</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>该功能始终会被评估，并不局限于 <code class="docutils literal notranslate"><span class="pre">--integration</span></code> 选项。</p>
+</div>
+<p>该选项的优先级高于平台的 <code class="docutils literal notranslate"><span class="pre">build_toolchains</span></code>。如果要针对某个平台上的所有测试（而不是按测试场景）扩展工具链范围，请使用 <code class="docutils literal notranslate"><span class="pre">build_toolchains</span></code>。参见 <a class="reference internal" href="#twister-toolchain-selection"><span class="std std-ref">工具链选择</span></a>。</p>
+</dd>
+<dt>platform_exclude: &lt;平台列表&gt;</dt><dd><p>该测试场景不应在其上运行的平台集合。</p>
+</dd>
+<dt>platform_type: &lt;平台类型列表&gt;</dt><dd><p>将该测试场景限制在给定类型的平台上。平台的类型通过其开发板元数据中的 <code class="docutils literal notranslate"><span class="pre">type:</span></code> 键声明。支持的值有 <code class="docutils literal notranslate"><span class="pre">mcu</span></code>、<code class="docutils literal notranslate"><span class="pre">qemu</span></code>、<code class="docutils literal notranslate"><span class="pre">sim</span></code>、<code class="docutils literal notranslate"><span class="pre">unit</span></code> 和 <code class="docutils literal notranslate"><span class="pre">native</span></code>。类型不在该列表中的平台会被过滤掉。</p>
+</dd>
+<dt>simulation_exclude: &lt;模拟器列表&gt;</dt><dd><p>该测试场景不应在其上运行的模拟器集合。支持的值有 <code class="docutils literal notranslate"><span class="pre">qemu</span></code>、<code class="docutils literal notranslate"><span class="pre">simics</span></code>、<code class="docutils literal notranslate"><span class="pre">xt-sim</span></code>、<code class="docutils literal notranslate"><span class="pre">renode</span></code>、<code class="docutils literal notranslate"><span class="pre">nsim</span></code>、<code class="docutils literal notranslate"><span class="pre">mdb-nsim</span></code>、<code class="docutils literal notranslate"><span class="pre">tsim</span></code>、<code class="docutils literal notranslate"><span class="pre">armfvp</span></code>、<code class="docutils literal notranslate"><span class="pre">native</span></code> 和 <code class="docutils literal notranslate"><span class="pre">custom</span></code>。</p>
+</dd>
+<dt>extra_sections: &lt;额外二进制段列表&gt;</dt><dd><p>计算大小时，如果 twister 在 Zephyr 二进制文件中发现了额外的、意料之外的段，就会报告错误，除非这些段在此处列出。列出的段不会计入大小计算。</p>
+</dd>
+<dt>sysbuild: &lt;True|False&gt;（默认 False）</dt><dd><p>使用 sysbuild 基础设施构建项目。过滤测试时只使用主项目生成的设备树和 Kconfig。在设备上测试时，必须使用硬件映射或 west flash 将镜像加载到目标上。该选项不支持 west flash 的 <code class="docutils literal notranslate"><span class="pre">--erase</span></code> 选项。使用不受支持的选项会导致需要 sysbuild 支持的测试被跳过。</p>
+</dd>
+<dt>harness: &lt;string&gt;</dt><dd><p><code class="docutils literal notranslate"><span class="pre">testcase.yaml</span></code> 文件中的 harness 关键字用于指明成功运行测试所需的 Twister harness。harness 是 Twister 的一项功能，由 Twister 实现；有些 harness 只是作为占位符定义，尚未实现。</p>
+<p>可以把 harness 看作需要在 Twister 中实现的处理程序，用于评估测试是否满足通过标准。例如，需要键盘交互才能判定测试通过或失败的测试会设置 keyboard harness，但 Twister 目前尚未实现该 harness。</p>
+<p>支持的 harness：</p>
+<ul class="simple">
+<li><p>ztest</p></li>
+<li><p>test</p></li>
+<li><p>console</p></li>
+<li><p>pytest</p></li>
+<li><p>gtest</p></li>
+<li><p>robot</p></li>
+<li><p>ctest</p></li>
+<li><p>shell</p></li>
+<li><p>power</p></li>
+<li><p>display_capture</p></li>
+<li><p>script</p></li>
+<li><p>bsim</p></li>
+</ul>
+<p>更多信息请参见 <a class="reference internal" href="#twister-harnesses"><span class="std std-ref">Harness</span></a>。</p>
+</dd>
+<dt>platform_key: &lt;平台属性列表&gt;</dt><dd><p>很多时候，一个测试只需构建并运行一次即可判定为通过。设想有一个依赖于平台架构的代码库，对每种架构只要在一个平台上通过测试，就足以判定测试和代码通过。platform_key 属性正是用于实现这一点。</p>
+<p>例如，以 (arch, simulation) 作为键，确保测试对每种架构和仿真组合只运行一次（这是最常见的用法）：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">platform_key</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">arch</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">simulation</span>
+</pre></div>
+</div>
+<p>如果加入更多平台（开发板）属性，例如 SoC 名称、SoC 系列，或许还有实现各外设接口的 IP 模块集合，还能实现其他有趣的用法。例如，可以针对每种不同的 IP 模块只构建和运行一次 SPI 测试。</p>
+</dd>
+<dt>harness_config: &lt;harness 配置选项&gt;</dt><dd><p>额外的 harness 配置选项，用于选择开发板，和/或用于处理基于正则表达式匹配的通用 Console。配置可以声明其支持的功能。该选项会使测试只在满足这一外部依赖的平台上运行。</p>
+<dl class="simple">
+<dt>fixture: &lt;字符串或列表&gt;</dt><dd><p>指定测试场景对外部设备（例如传感器）的依赖，并标识满足该依赖的测试环境。在自动化环境中，它依赖于特定的测试环境和开发板选择逻辑，根据 <code class="docutils literal notranslate"><span class="pre">fixture</span></code> 关键字从多个满足依赖的开发板中挑选出特定的开发板。fixture 名称示例有 i2c_hts221、i2c_bme280、i2c_FRAM、ble_fw 和 gpio_loop。</p>
+</dd>
+<dt>ztest_suite_repeat: &lt;int&gt;（默认 1）</dt><dd><p>该参数指定整个测试套件应重复执行的次数。</p>
+</dd>
+<dt>ztest_test_repeat: &lt;int&gt;（默认 1）</dt><dd><p>该参数指定测试套件中每个测试应重复执行的次数。</p>
+</dd>
+<dt>ztest_test_shuffle: &lt;True|False&gt;（默认 False）</dt><dd><p>该参数表示是否打乱测试套件中各测试的执行顺序。设为 <code class="docutils literal notranslate"><span class="pre">true</span></code> 时，测试将以随机顺序执行。</p>
+</dd>
+</dl>
+<p>下面是一个包含 robot harness_config 选项的 yaml 文件示例。</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">tests</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">robot.example</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">harness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">robot</span>
+<span class="w">    </span><span class="nt">harness_config</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">robot_testsuite</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">robot file path</span><span class="p p-Indicator">]</span>
+</pre></div>
+</div>
+<p>可以使用列表指定多个测试套件。</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">tests</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">robot.example</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">harness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">robot</span>
+<span class="w">    </span><span class="nt">harness_config</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">robot_testsuite</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">robot file path 1</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">robot file path 2</span><span class="p p-Indicator">]</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">robot file path n</span><span class="p p-Indicator">]</span>
+</pre></div>
+</div>
+<p>可以向 robotframework 传递一个或多个选项。</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">tests</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">robot.example</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">harness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">robot</span>
+<span class="w">    </span><span class="nt">harness_config</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">robot_testsuite</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">robot file path</span><span class="p p-Indicator">]</span>
+<span class="w">      </span><span class="nt">robot_option</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">--exclude tag</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">--stop-on-error</span>
+</pre></div>
+</div>
+</dd>
+<dt>filter: &lt;expression&gt;</dt><dd><p>通过对包含以下值的环境求值表达式，来过滤是否应运行该测试场景：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{ ARCH : &lt;architecture&gt;,
+  PLATFORM : &lt;platform&gt;,
+  &lt;all CONFIG_* key/value pairs in the test's generated defconfig&gt;,
+  *&lt;env&gt;: any environment variable available
+}
+</pre></div>
+</div>
+<p>Twister 首先会对表达式求值，以确定能否进行一次“受限”的 cmake 调用，即使用 package_helper cmake 脚本。</p>
+<p>存在 &quot;dt_*&quot; 条目表示需要设备树。各种可用的设备树表达式的详细说明请参阅 <a class="reference internal" href="#twister-dt-filter-expressions"><span class="std std-ref">设备树过滤表达式</span></a>。</p>
+<p>存在 &quot;CONFIG*&quot; 条目表示需要 kconfig。如果表达式中没有其他类型的条目，则无需创建完整的构建系统即可完成过滤；如果有其他类型的条目，则需要完整运行 cmake。</p>
+<p>表达式语言的语法如下：</p>
+<div class="highlight-antlr notranslate"><div class="highlight"><pre><span></span><span class="nl">expression</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="s1">'and'</span><span class="w"> </span><span class="nv">expression</span>
+<span class="w">           </span><span class="o">|</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="s1">'or'</span><span class="w"> </span><span class="nv">expression</span>
+<span class="w">           </span><span class="o">|</span><span class="w"> </span><span class="s1">'not'</span><span class="w"> </span><span class="nv">expression</span>
+<span class="w">           </span><span class="o">|</span><span class="w"> </span><span class="s1">'('</span><span class="w"> </span><span class="nv">expression</span><span class="w"> </span><span class="s1">')'</span>
+<span class="w">           </span><span class="o">|</span><span class="w"> </span><span class="nv">symbol</span><span class="w"> </span><span class="s1">'=='</span><span class="w"> </span><span class="nv">constant</span>
+<span class="w">           </span><span class="o">|</span><span class="w"> </span><span class="nv">symbol</span><span class="w"> </span><span class="s1">'!='</span><span class="w"> </span><span class="nv">constant</span>
+<span class="w">           </span><span class="o">|</span><span class="w"> </span><span class="nv">symbol</span><span class="w"> </span><span class="s1">'&lt;'</span><span class="w"> </span><span class="no">NUMBER</span>
+<span class="w">           </span><span class="o">|</span><span class="w"> </span><span class="nv">symbol</span><span class="w"> </span><span class="s1">'&gt;'</span><span class="w"> </span><span class="no">NUMBER</span>
+<span class="w">           </span><span class="o">|</span><span class="w"> </span><span class="nv">symbol</span><span class="w"> </span><span class="s1">'&gt;='</span><span class="w"> </span><span class="no">NUMBER</span>
+<span class="w">           </span><span class="o">|</span><span class="w"> </span><span class="nv">symbol</span><span class="w"> </span><span class="s1">'&lt;='</span><span class="w"> </span><span class="no">NUMBER</span>
+<span class="w">           </span><span class="o">|</span><span class="w"> </span><span class="nv">symbol</span><span class="w"> </span><span class="s1">'in'</span><span class="w"> </span><span class="nv">list</span>
+<span class="w">           </span><span class="o">|</span><span class="w"> </span><span class="nv">symbol</span><span class="w"> </span><span class="s1">':'</span><span class="w"> </span><span class="no">STRING</span>
+<span class="w">           </span><span class="o">|</span><span class="w"> </span><span class="nv">symbol</span>
+<span class="w">           </span><span class="p">;</span>
+
+<span class="nl">list</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s1">'['</span><span class="w"> </span><span class="nv">list_contents</span><span class="w"> </span><span class="s1">']'</span><span class="p">;</span>
+
+<span class="nl">list_contents</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="nv">constant</span><span class="w"> </span><span class="o">(</span><span class="s1">','</span><span class="w"> </span><span class="nv">constant</span><span class="o">)*</span><span class="p">;</span>
+
+<span class="nl">constant</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="no">NUMBER</span><span class="w"> </span><span class="o">|</span><span class="w"> </span><span class="no">STRING</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>对于 <code class="docutils literal notranslate"><span class="pre">expression</span> <span class="pre">::=</span> <span class="pre">symbol</span></code> 的情况，如果该符号被定义为非空字符串，则求值结果为 <code class="docutils literal notranslate"><span class="pre">true</span></code>。</p>
+<p>运算符优先级，从低到高依次为：</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>or（左结合）</p></li>
+<li><p>and（左结合）</p></li>
+<li><p>not（右结合）</p></li>
+<li><p>所有比较运算符（不可结合）</p></li>
+</ul>
+</div></blockquote>
+<p><code class="docutils literal notranslate"><span class="pre">arch_allow</span></code>、<code class="docutils literal notranslate"><span class="pre">arch_exclude</span></code>、<code class="docutils literal notranslate"><span class="pre">platform_allow</span></code>、<code class="docutils literal notranslate"><span class="pre">platform_exclude</span></code> 都是这些表达式的语法糖。例如：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>arch_exclude = x86 arc
+</pre></div>
+</div>
+<p>等同于：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>filter = not ARCH in ["x86", "arc"]
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">:</span></code> 运算符会将字符串参数编译为正则表达式，只有当该符号在环境中的值与之匹配时才返回真值。例如，如果 <code class="docutils literal notranslate"><span class="pre">CONFIG_SOC=&quot;stm32f107xc&quot;</span></code>，那么</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>filter = CONFIG_SOC : "stm.*"
+</pre></div>
+</div>
+<p>就能与之匹配。</p>
+</dd>
+<dt>required_snippets: &lt;所需代码片段列表&gt;</dt><dd><p>twister 支持为需要 <a class="reference internal" href="../../build/snippets/index.html#snippets"><span class="std std-ref">代码片段（snippet）</span></a> 的测试场景使用代码片段。与普通应用程序一样，twister 支持在 zephyr 基础代码片段目录和测试应用程序目录中查找代码片段。列出的代码片段会过滤开发板所支持的测试（代码片段必须与开发板兼容，测试才能在该开发板上运行，这些代码片段不是可选的）。</p>
+<p>下面是一个包含 2 个所需代码片段的 yaml 文件示例。</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">tests</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">snippet.example</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">required_snippets</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">cdc-acm-console</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">user-snippet-example</span>
+</pre></div>
+</div>
+</dd>
+</dl>
+<dl id="required-applications">
+<dt>required_applications: &lt;所需应用程序列表&gt;（默认为空）</dt><dd><p>指定在当前测试运行之前必须构建的测试应用程序列表。这样可以在测试场景之间共享已构建的应用程序，使测试能够访问其他应用程序的构建产物。</p>
+<p>每个所需应用程序条目支持：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">application</span></code>：测试场景标识符（必需）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">name</span></code>：<code class="docutils literal notranslate"><span class="pre">application</span></code> 的已弃用别名（为保持向后兼容仍可使用，但新配置中应使用 <code class="docutils literal notranslate"><span class="pre">application</span></code>）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">platform</span></code>：目标平台（可选，默认为当前测试的平台）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">path</span></code>：Twister 搜索该应用程序的目录路径（可选）。可以是绝对路径，也可以是相对于测试 YAML 文件所在目录的路径。其中的环境变量和 Zephyr 模块目录变量会被展开（参见 <a class="reference internal" href="#twister-module-dir-vars"><span class="std std-ref">使用模块目录变量展开路径</span></a>）。如果未指定，Twister 会在引用方测试 YAML 文件所在的目录中搜索。</p></li>
+</ul>
+<p>所需应用程序会由 Twister 自动发现和构建。如果某个所需应用程序尚未加载，Twister 会在 <code class="docutils literal notranslate"><span class="pre">path</span></code> 指定的目录中搜索它；如果未设置 <code class="docutils literal notranslate"><span class="pre">path</span></code>，则在引用方测试 YAML 文件所在的目录中搜索。在复用构建目录时（例如使用 <code class="docutils literal notranslate"><span class="pre">--no-clean</span></code>），Twister 可以在当前构建目录中找到所需应用程序。</p>
+<p>工作原理：</p>
+<ul class="simple">
+<li><p>Twister 首先构建所需应用程序</p></li>
+<li><p>主测试应用程序等待所需应用程序完成</p></li>
+<li><p>所需应用程序的构建目录会提供给测试 harness</p></li>
+<li><p>对于 pytest harness，构建目录通过 <code class="docutils literal notranslate"><span class="pre">--required-build</span></code> 参数传递，并可通过 <code class="docutils literal notranslate"><span class="pre">required_build_dirs</span></code> fixture 访问</p></li>
+</ul>
+<p>与 <code class="docutils literal notranslate"><span class="pre">build:</span> <span class="pre">false</span></code> 结合使用时，当前测试场景会完全跳过自身的构建步骤，并使用第一个所需应用程序的构建产物作为其镜像。这适用于纯粹作为测试 harness、为别处构建的镜像执行测试的场景。</p>
+<p>配置示例：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">tests</span><span class="p">:</span>
+<span class="w">  </span><span class="c1"># Requires two applications, second one from a different path and with a fixed platform</span>
+<span class="w">  </span><span class="nt">sample.required_app_demo</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">harness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pytest</span>
+<span class="w">    </span><span class="nt">required_applications</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">application</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sample.shared_app</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">application</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">other.app</span>
+<span class="w">        </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">../other_app</span>
+<span class="w">        </span><span class="nt">platform</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">native_sim</span>
+<span class="w">  </span><span class="c1"># No self build, use the first required application as the test image</span>
+<span class="w">  </span><span class="nt">sample.no_self_build</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">build</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">    </span><span class="nt">harness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pytest</span>
+<span class="w">    </span><span class="nt">required_applications</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">application</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sample.basic.helloworld</span>
+<span class="w">        </span><span class="nt">path</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">$ZEPHYR_BASE/samples/hello_world</span>
+<span class="w">  </span><span class="nt">sample.shared_app</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">build_only</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</pre></div>
+</div>
+<p>限制：</p>
+<ul class="simple">
+<li><p>不支持与 <code class="docutils literal notranslate"><span class="pre">--runtime-artifact-cleanup</span></code> 一起使用，因为所需应用程序的构建产物必须保留，供主测试应用程序使用。</p></li>
+<li><p>不支持与 <code class="docutils literal notranslate"><span class="pre">--subset</span></code> 一起使用：所需应用程序和依赖它的测试可能被分配到不同的子集，导致执行测试时无法获得构建产物。</p></li>
+</ul>
+</dd>
+<dt>build: &lt;True|False&gt;（默认 True）</dt><dd><p>如果为 false，测试场景会跳过自身的构建步骤，并使用 <code class="docutils literal notranslate"><span class="pre">required_applications</span></code> 中第一个条目的构建产物作为其镜像。这适用于纯粹作为测试 harness、为另一个场景构建的镜像执行测试的场景。</p>
+<p>约束：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">required_applications</span></code> 不能为空。</p></li>
+<li><p>支持的 harness：基于 pytest 的 harness（例如 <code class="docutils literal notranslate"><span class="pre">pytest</span></code>、<code class="docutils literal notranslate"><span class="pre">shell</span></code>）以及 <code class="docutils literal notranslate"><span class="pre">bsim</span></code>。</p></li>
+<li><p>不支持 QEMU 平台。</p></li>
+</ul>
+</dd>
+<dt>expect_reboot: &lt;True|False&gt;（默认 False）</dt><dd><p>告知 twister 该测试场景在执行过程中预计会重启。启用后，twister 将不再对测试套件或测试用例意外多次运行发出警告。</p>
+</dd>
+<dt>modules: &lt;模块名称列表&gt;</dt><dd><p>仅当工作区中存在列出的所有 <a class="reference internal" href="../modules.html#modules"><span class="std std-ref">模块</span></a> 时，才构建和运行该测试场景。需要不可用模块的场景会被过滤掉。</p>
+</dd>
+<dt>type: &lt;string&gt;（默认为 integration）</dt><dd><p>场景的测试类型。对于为 <a class="reference internal" href="../test/ztest.html#unit-testing-board"><span class="std std-ref">unit_testing 开发板</span></a> 构建、无需完整 Zephyr 构建系统即可在主机上运行的单元测试，设为 <code class="docutils literal notranslate"><span class="pre">unit</span></code>。</p>
+</dd>
+<dt>testcases: &lt;测试用例名称列表&gt;</dt><dd><p>显式声明组成该场景的测试用例名称列表。这通常会被自动检测（例如从 ztest 源码中），只有对于无法自省的 harness 才需要设置。</p>
+</dd>
+<dt>ignore_faults: &lt;True|False&gt;（默认 False）</dt><dd><p>如果测试运行期间在输出中检测到故障，不将测试场景标记为失败。</p>
+</dd>
+<dt>ignore_qemu_crash: &lt;True|False&gt;（默认 False）</dt><dd><p>如果测试运行期间 QEMU 崩溃，不将测试场景标记为失败。</p>
+</dd>
+</dl>
+<p>实际运行的测试场景集合取决于测试场景文件中的指令以及命令行中传入的选项。如有疑问，可以使用 <code class="docutils literal notranslate"><span class="pre">-v</span></code> 运行，或查看 <a class="reference internal" href="#twister-output"><span class="std std-ref">测试计划</span></a>（<code class="file docutils literal notranslate"><span class="pre">testplan.json</span></code>），以了解特定测试场景被过滤掉的原因。</p>
+<p>要从文件加载参数，请在文件名前加上 <code class="docutils literal notranslate"><span class="pre">+</span></code>，例如 <code class="docutils literal notranslate"><span class="pre">+file_name</span></code>。文件内容必须是一个或多个有效参数，参数之间以换行符而不是空白字符分隔。</p>
+<p>大多数日常用户不带任何参数运行。</p>
+<section id="expanding-paths-with-module-directory-variables">
+<span id="twister-module-dir-vars"></span><h3>使用模块目录变量展开路径<a class="headerlink" href="#expanding-paths-with-module-directory-variables" title="链接到此标题。"></a></h3>
+<p>测试场景文件中的路径选项（例如 <code class="docutils literal notranslate"><span class="pre">required_applications</span></code>、<code class="docutils literal notranslate"><span class="pre">harness_config:</span> <span class="pre">pytest_root</span></code>）在使用前会被展开。除环境变量外，Twister 还会展开 Zephyr 模块目录变量，这些变量与为每个模块定义的 CMake 变量相对应：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">ZEPHYR_&lt;MODULE&gt;_MODULE_DIR</span></code> - 模块根目录的绝对路径。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">ZEPHYR_&lt;MODULE&gt;_MODULE_NAME</span></code> - 模块的名称。</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">&lt;MODULE&gt;</span></code> 会转换为大写，并将非字母数字字符替换为 <code class="docutils literal notranslate"><span class="pre">_</span></code>，与 CMake 的做法完全相同（例如 <code class="docutils literal notranslate"><span class="pre">hal_nordic</span></code> 模块对应 <code class="docutils literal notranslate"><span class="pre">$ZEPHYR_HAL_NORDIC_MODULE_DIR</span></code>）。未知的引用保持不变。</p>
+</section>
+<section id="managing-tests-timeouts">
+<h3>管理测试超时<a class="headerlink" href="#managing-tests-timeouts" title="链接到此标题。"></a></h3>
+<p>有多个参数在不同层面控制测试超时：</p>
+<ul class="simple">
+<li><p>每个测试场景中的 <code class="docutils literal notranslate"><span class="pre">timeout</span></code> 选项。详见 <a class="reference internal" href="#twister-test-case-timeout"><span class="std std-ref">此处</span></a>。</p></li>
+<li><p>开发板配置中的 <code class="docutils literal notranslate"><span class="pre">timeout_multiplier</span></code> 选项。详见 <a class="reference internal" href="#twister-board-timeout-multiplier"><span class="std std-ref">此处</span></a>。</p></li>
+<li><p>twister 选项 <code class="docutils literal notranslate"><span class="pre">--timeout-multiplier</span></code>，可用于调整某次 twister 运行中的超时。它适用于仿真平台等场合，因为仿真时间可能取决于主机的速度和负载，或者我们可能选择了不同的仿真方法（例如周期精确但较慢的方法）等。</p></li>
+</ul>
+<p>测试场景的总超时是这三个参数的乘积。</p>
+</section>
+<section id="devicetree-filtering-expressions">
+<span id="twister-dt-filter-expressions"></span><h3>设备树过滤表达式<a class="headerlink" href="#devicetree-filtering-expressions" title="链接到此标题。"></a></h3>
+<p>以 &quot;dt_*&quot; 开头的表达式用于在选择测试场景时，根据特定的设备树属性（例如 compatible、别名、节点标签、节点属性、chosen 节点等）过滤开发板。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>这些表达式的源代码位于 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/scripts/pylib/twister/expr_parser.py">scripts/pylib/twister/expr_parser.py</a>。</p>
+</div>
+<section id="expressions">
+<h4>表达式<a class="headerlink" href="#expressions" title="链接到此标题。"></a></h4>
+<section id="dt-compat-enabled-compat">
+<h5><code class="docutils literal notranslate"><span class="pre">dt_compat_enabled(compat)</span></code><a class="headerlink" href="#dt-compat-enabled-compat" title="链接到此标题。"></a></h5>
+<dl class="simple">
+<dt><strong>用途：</strong></dt><dd><p>检查是否有任何具有指定 compatible 字符串（<code class="docutils literal notranslate"><span class="pre">compat</span></code>）的设备树节点处于启用状态。</p>
+</dd>
+<dt><strong>参数：</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">compat</span></code>：要匹配的 compatible 字符串。</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="dt-alias-exists-alias">
+<h5><code class="docutils literal notranslate"><span class="pre">dt_alias_exists(alias)</span></code><a class="headerlink" href="#dt-alias-exists-alias" title="链接到此标题。"></a></h5>
+<dl class="simple">
+<dt><strong>用途：</strong></dt><dd><p>检查是否存在具有指定别名且处于启用状态的设备树节点。</p>
+</dd>
+<dt><strong>参数：</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">alias</span></code>：要匹配的别名（在 <code class="docutils literal notranslate"><span class="pre">aliases</span></code> 节点中定义）。</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="dt-enabled-alias-with-parent-compat-alias-compat">
+<h5><code class="docutils literal notranslate"><span class="pre">dt_enabled_alias_with_parent_compat(alias,</span> <span class="pre">compat)</span></code><a class="headerlink" href="#dt-enabled-alias-with-parent-compat-alias-compat" title="链接到此标题。"></a></h5>
+<dl class="simple">
+<dt><strong>用途：</strong></dt><dd><p>检查设备树中是否有一个已启用的别名节点，且其父节点具有指定的 compatible 字符串。适用于 <code class="docutils literal notranslate"><span class="pre">gpio-leds</span></code> 子节点这类可能没有自身 compatible 的节点。</p>
+</dd>
+<dt><strong>参数：</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">alias</span></code>：要匹配的别名（在 <code class="docutils literal notranslate"><span class="pre">aliases</span></code> 节点中定义）。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">compat</span></code>：要匹配的父节点 compatible 字符串。</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="dt-label-with-parent-compat-enabled-label-compat">
+<h5><code class="docutils literal notranslate"><span class="pre">dt_label_with_parent_compat_enabled(label,</span> <span class="pre">compat)</span></code><a class="headerlink" href="#dt-label-with-parent-compat-enabled-label-compat" title="链接到此标题。"></a></h5>
+<dl class="simple">
+<dt><strong>用途：</strong></dt><dd><p>检查是否存在具有指定标签的设备树节点，该节点处于启用状态，且其父节点具有指定的 compatible 字符串。</p>
+</dd>
+<dt><strong>参数：</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">label</span></code>：要匹配的节点标签。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">compat</span></code>：要匹配的父节点 compatible 字符串。</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="dt-label-compat-enabled-label-compat">
+<h5><code class="docutils literal notranslate"><span class="pre">dt_label_compat_enabled(label,</span> <span class="pre">compat)</span></code><a class="headerlink" href="#dt-label-compat-enabled-label-compat" title="链接到此标题。"></a></h5>
+<dl class="simple">
+<dt><strong>用途：</strong></dt><dd><p>检查是否存在具有指定标签的设备树节点，该节点处于启用状态，且具有指定的 compatible 字符串。</p>
+</dd>
+<dt><strong>参数：</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">label</span></code>：要匹配的节点标签。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">compat</span></code>：要匹配的节点 compatible 字符串。</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="dt-chosen-enabled-chosen">
+<h5><code class="docutils literal notranslate"><span class="pre">dt_chosen_enabled(chosen)</span></code><a class="headerlink" href="#dt-chosen-enabled-chosen" title="链接到此标题。"></a></h5>
+<dl class="simple">
+<dt><strong>用途：</strong></dt><dd><p>检查是否存在具有指定名称的设备树 chosen 属性，且分配给它的节点处于启用状态。</p>
+</dd>
+<dt><strong>参数：</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">chosen</span></code>：chosen 属性的名称。</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="dt-nodelabel-enabled-label">
+<h5><code class="docutils literal notranslate"><span class="pre">dt_nodelabel_enabled(label)</span></code><a class="headerlink" href="#dt-nodelabel-enabled-label" title="链接到此标题。"></a></h5>
+<dl class="simple">
+<dt><strong>用途：</strong></dt><dd><p>检查是否存在具有指定标签且处于启用状态的设备树节点。</p>
+</dd>
+<dt><strong>参数：</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">label</span></code>：要匹配的节点标签。</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="dt-nodelabel-prop-enabled-label-prop">
+<h5><code class="docutils literal notranslate"><span class="pre">dt_nodelabel_prop_enabled(label,</span> <span class="pre">prop)</span></code><a class="headerlink" href="#dt-nodelabel-prop-enabled-label-prop" title="链接到此标题。"></a></h5>
+<dl class="simple">
+<dt><strong>用途：</strong></dt><dd><p>检查是否存在具有指定标签的设备树节点，该节点处于启用状态，且具有值不为空的指定属性。</p>
+</dd>
+<dt><strong>参数：</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">label</span></code>：要匹配的节点标签。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">prop</span></code>：要检查的节点属性。</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+<section id="dt-node-has-prop-node-id-prop">
+<h5><code class="docutils literal notranslate"><span class="pre">dt_node_has_prop(node_id,</span> <span class="pre">prop)</span></code><a class="headerlink" href="#dt-node-has-prop-node-id-prop" title="链接到此标题。"></a></h5>
+<dl class="simple">
+<dt><strong>用途：</strong></dt><dd><p>检查某个设备树节点（通过别名或路径指定）是否具有指定的属性，而不考虑其状态。适用于 <code class="docutils literal notranslate"><span class="pre">zephyr,user</span></code> 这类没有 status 的节点。</p>
+</dd>
+<dt><strong>参数：</strong></dt><dd><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">node_id</span></code>：要匹配的节点别名（在 <code class="docutils literal notranslate"><span class="pre">aliases</span></code> 节点中定义）或节点路径。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">prop</span></code>：要检查的节点属性。</p></li>
+</ul>
+</dd>
+</dl>
+</section>
+</section>
+<section id="usage">
+<h4>用法<a class="headerlink" href="#usage" title="链接到此标题。"></a></h4>
+<p>这些表达式用于 Twister 的测试场景过滤逻辑，以选出满足特定设备树条件的开发板。例如：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">tests</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">test</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my_test</span>
+<span class="w">    </span><span class="nt">filter</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">dt_compat_enabled("my-compat-string")</span>
+</pre></div>
+</div>
+<p>测试场景 <code class="docutils literal notranslate"><span class="pre">my_test</span></code> 只会为启用了具有 <code class="docutils literal notranslate"><span class="pre">my-compat-string</span></code> 的设备树节点的开发板构建。</p>
+</section>
+</section>
+</section>
+<section id="harnesses">
+<span id="twister-harnesses"></span><h2>Harness<a class="headerlink" href="#harnesses" title="链接到此标题。"></a></h2>
+<p><em>harness</em> 是 Twister 用来运行测试并判定测试通过或失败的机制。测试镜像构建完成并在目标（真实硬件、模拟器或主机）上启动后，harness 负责与正在运行的镜像进行交互（提供输入、捕获输出，或将执行交给外部测试运行器），并解析结果，为每个测试用例分配一个 <a class="reference internal" href="twister_statuses.html#twister-statuses"><span class="std std-ref">状态</span></a>。</p>
+<p>测试场景通过其 <code class="docutils literal notranslate"><span class="pre">tests.yaml</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">harness:</span></code> 条目选择 harness，并通过 <code class="docutils literal notranslate"><span class="pre">harness_config</span></code> 调整其行为。如果未指定 harness，则使用默认的 <code class="docutils literal notranslate"><span class="pre">test</span></code> harness。不同的 harness 满足不同的需求：有些将设备的控制台输出与预期模式进行比对，有些则将执行委托给 pytest、Robot Framework 或 ctest 等外部框架。下方链接的页面介绍了每种受支持的 harness 及其 <code class="docutils literal notranslate"><span class="pre">harness_config</span></code> 选项。</p>
+<p><code class="docutils literal notranslate"><span class="pre">ztest</span></code>、<code class="docutils literal notranslate"><span class="pre">gtest</span></code> 和 <code class="docutils literal notranslate"><span class="pre">console</span></code> harness 基于对输出的解析和对特定短语的匹配。<code class="docutils literal notranslate"><span class="pre">ztest</span></code> 和 <code class="docutils literal notranslate"><span class="pre">gtest</span></code> harness 会查找这两个框架中定义的通过/失败等格式的输出。</p>
+<p>一些广泛使用但尚未支持的 harness：</p>
+<ul class="simple">
+<li><p>keyboard</p></li>
+<li><p>net</p></li>
+<li><p>bluetooth</p></li>
+</ul>
+<p>下面是一个包含若干 harness_config 选项的 yaml 文件示例。</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">sample</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">HTS221 Temperature and Humidity Monitor</span>
+<span class="nt">common</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">tags</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sensor</span>
+<span class="w">  </span><span class="nt">harness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">console</span>
+<span class="w">  </span><span class="nt">harness_config</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">type</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">multi_line</span>
+<span class="w">    </span><span class="nt">ordered</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">    </span><span class="nt">regex</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Temperature:(.*)C"</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="s">"Relative</span><span class="nv"> </span><span class="s">Humidity:(.*)%"</span>
+<span class="w">    </span><span class="nt">fixture</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">i2c_hts221</span>
+<span class="nt">tests</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">test</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">tags</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sensors</span>
+<span class="w">    </span><span class="nt">depends_on</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">i2c</span>
+</pre></div>
+</div>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="harness/ctest.html">Ctest</a></li>
+<li class="toctree-l1"><a class="reference internal" href="harness/gtest.html">Gtest</a></li>
+<li class="toctree-l1"><a class="reference internal" href="harness/pytest.html">Pytest</a></li>
+<li class="toctree-l1"><a class="reference internal" href="harness/console.html">Console</a></li>
+<li class="toctree-l1"><a class="reference internal" href="harness/robot.html">Robot</a></li>
+<li class="toctree-l1"><a class="reference internal" href="harness/power.html">Power</a></li>
+<li class="toctree-l1"><a class="reference internal" href="harness/display_capture.html">显示捕获</a></li>
+<li class="toctree-l1"><a class="reference internal" href="harness/script.html">Script</a></li>
+<li class="toctree-l1"><a class="reference internal" href="harness/bsim.html">Bsim</a></li>
+<li class="toctree-l1"><a class="reference internal" href="harness/shell.html">Shell</a></li>
+</ul>
+</div>
+</section>
+<section id="sidecars">
+<span id="twister-sidecars"></span><h2>Sidecar<a class="headerlink" href="#sidecars" title="链接到此标题。"></a></h2>
+<p>有些测试需要在整个运行期间存在某种主机端资源：仿真客户机与之通信的守护进程、主机在运行结束后读回的共享内存区域，或者客户机所连接的网络接口。<em>sidecar</em> 就是对此进行建模的机制。它通过测试场景 <code class="file docutils literal notranslate"><span class="pre">tests.yaml</span></code> 中的 <code class="docutils literal notranslate"><span class="pre">sidecar:</span></code> 条目选择，与 harness 相互独立：harness 解析客户机的输出，而 sidecar 在运行前后准备主机端资源。因此，任何 harness（示例使用的 <code class="docutils literal notranslate"><span class="pre">console</span></code>、测试使用的 <code class="docutils literal notranslate"><span class="pre">ztest</span></code> 等）都可以与任何 sidecar 搭配使用。</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">tests</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">some.test</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">harness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">ztest</span>
+<span class="w">    </span><span class="nt">sidecar</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;name&gt;</span>
+</pre></div>
+</div>
+<p>sidecar 有一个简单的生命周期，由 Twister 针对每个测试实例驱动：</p>
+<ol class="arabic simple">
+<li><p><strong>configure</strong>：在准备任何资源之前，sidecar 从实例及其 <code class="docutils literal notranslate"><span class="pre">sidecar_config</span></code> 块中读取所需信息。</p></li>
+<li><p><strong>host check</strong>：在制定测试计划时，sidecar 报告主机是否提供了它所需的内容（例如是否安装了所需的守护进程二进制文件）。如果没有，该测试将 <em>只构建</em> 而不执行，这与未安装模拟器的平台完全相同。</p></li>
+<li><p><strong>setup</strong>：在处理程序运行测试镜像之前调用，用于启动主机资源（启动守护进程、创建接口等）。如果主机端仍然不可用（例如启动该资源需要的权限不具备），setup 会报告这一情况，Twister 将 <em>跳过</em> 执行，而不是使测试失败。</p></li>
+<li><p><strong>teardown</strong>：在处理程序返回后于 <code class="docutils literal notranslate"><span class="pre">finally</span></code> 块中调用，因此即使测试失败或超时也总会执行。它负责释放资源，还可以收集客户机留下的数据（例如将共享内存区域读回到构建目录中）。</p></li>
+</ol>
+<p>由于资源准备与输出处理相互解耦，Twister 还可以自行为实例附加 sidecar，而无需测试主动启用。例如，对于没有其他主机传输通道的客户机，可以借此将覆盖率数据导出。</p>
+<p>每个 sidecar 在 <code class="docutils literal notranslate"><span class="pre">sidecar_config</span></code> 下以该 sidecar 命名的块中定义自己的配置键。按 sidecar 名称划分命名空间可以使各 sidecar 的键相互独立，因此只有与场景的 <code class="docutils literal notranslate"><span class="pre">sidecar:</span></code> 值相匹配的块才会被使用。例如，<code class="docutils literal notranslate"><span class="pre">virtiofs</span></code> sidecar 会共享一个从模板初始化的主机目录，配置如下：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">tests</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">some.test</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">harness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">console</span>
+<span class="w">    </span><span class="nt">sidecar</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">virtiofs</span>
+<span class="w">    </span><span class="nt">sidecar_config</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">virtiofs</span><span class="p">:</span>
+<span class="w">        </span><span class="nt">shared</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">shared</span>
+</pre></div>
+</div>
+</section>
+<section id="selecting-platform-scope">
+<h2>选择平台范围<a class="headerlink" href="#selecting-platform-scope" title="链接到此标题。"></a></h2>
+<p>Twister 的关键功能之一是能够决定给定的测试场景应在哪些平台上运行。这种行为源于 Twister 最初是作为 Zephyr CI 的测试运行器而开发的。面对数百个可用平台和数千个测试，测试工具应当能够调整范围，选出相关的内容并过滤掉无关的内容。</p>
+<p>Twister 总是会根据命令行参数和 <a class="reference internal" href="#test-config-args"><span class="std std-ref">测试的配置</span></a>，为给定的测试准备一份范围内的初始平台列表。然后，不满足配置 yaml 中所要求条件（例如最小 RAM）的平台会被从范围中过滤掉。使用 <code class="docutils literal notranslate"><span class="pre">--force-platform</span></code> 可以覆盖由测试配置文件中 <code class="docutils literal notranslate"><span class="pre">platform_allow</span></code>、<code class="docutils literal notranslate"><span class="pre">platform_exclude</span></code>、<code class="docutils literal notranslate"><span class="pre">arch_allow</span></code> 和 <code class="docutils literal notranslate"><span class="pre">arch_exclude</span></code> 键导致的过滤。</p>
+<p>命令行参数按以下方式定义初始范围：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-p/--platform</span> <span class="pre">&lt;platform_name&gt;</span></code>（可多次使用）：只包含通过该参数传入的平台；</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-l/--all</span></code>：所有可用平台；</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-G/--integration</span></code>：给定测试配置文件中 <code class="docutils literal notranslate"><span class="pre">integration_platforms</span></code> 列表里的所有平台。如果测试没有 <code class="docutils literal notranslate"><span class="pre">integration_platforms</span></code>，则会进行 <em>“范围推定”</em>；</p></li>
+<li><p>未指定范围参数：会进行 <em>“范围推定”</em>。</p></li>
+</ul>
+<p><em>“范围推定”</em>：使用 Twister 的 <a class="reference internal" href="#twister-default-testing-board"><span class="std std-ref">默认平台</span></a> 列表作为初始列表。如果过滤后没有剩下任何平台，则使用 <code class="docutils literal notranslate"><span class="pre">platform_allow</span></code> 列表作为初始范围。</p>
+</section>
+<section id="running-in-integration-mode">
+<h2>以集成模式运行<a class="headerlink" href="#running-in-integration-mode" title="链接到此标题。"></a></h2>
+<p>该模式用于持续集成（CI）和其他自动化环境，以便快速向开发者反馈修改的结果。可以使用 twister 的 <code class="docutils literal notranslate"><span class="pre">--integration</span></code> 选项激活该模式；如果适用，它会将构建和测试的范围缩小到测试配置文件（<code class="docutils literal notranslate"><span class="pre">tests.yaml</span></code>）中 integration 关键字下定义的平台。</p>
+</section>
+<section id="running-tests-on-custom-emulator">
+<h2>在自定义模拟器上运行测试<a class="headerlink" href="#running-tests-on-custom-emulator" title="链接到此标题。"></a></h2>
+<p>除了已支持的 QEMU 和其他仿真环境外，Twister 还支持运行在开发板 <code class="file docutils literal notranslate"><span class="pre">board.cmake</span></code> 中定义的任何树外自定义模拟器。要使用这类仿真，请在 <code class="file docutils literal notranslate"><span class="pre">custom_board/custom_board.yaml</span></code> 中添加以下属性：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">simulation</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">custom</span>
+<span class="w">    </span><span class="nt">exec</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">&lt;name_of_emu_binary&gt;</span>
+</pre></div>
+</div>
+<p>这会告诉 Twister，该开发板使用名为 <code class="docutils literal notranslate"><span class="pre">&lt;name_of_emu_binary&gt;</span></code> 的自定义模拟器，请确保该二进制文件在 PATH 中。</p>
+<p>然后，在 <code class="file docutils literal notranslate"><span class="pre">custom_board/board.cmake</span></code> 中将支持的仿真平台设为 <code class="docutils literal notranslate"><span class="pre">custom</span></code>：</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nf">set(</span><span class="no">SUPPORTED_EMU_PLATFORMS</span><span class="w"> </span><span class="nb">custom</span><span class="nf">)</span>
+</pre></div>
+</div>
+<p>最后，在 <code class="file docutils literal notranslate"><span class="pre">custom_board/board.cmake</span></code> 中实现 <code class="docutils literal notranslate"><span class="pre">run_custom</span></code> 目标，大致如下：</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nf">add_custom_target(</span><span class="nb">run_custom</span>
+<span class="w">  </span><span class="no">COMMAND</span>
+<span class="w">  </span><span class="nv">&lt;name_of_emu_binary to invoke during 'run'&gt;</span>
+<span class="w">  </span><span class="nv">&lt;any args to be passed to the command, i.e. ${BOARD}, ${APPLICATION_BINARY_DIR}/zephyr/zephyr.elf&gt;</span>
+<span class="w">  </span><span class="no">WORKING_DIRECTORY</span><span class="w"> </span><span class="o">${</span><span class="nt">APPLICATION_BINARY_DIR</span><span class="o">}</span>
+<span class="w">  </span><span class="no">DEPENDS</span><span class="w"> </span><span class="o">${</span><span class="nt">logical_target_for_zephyr_elf</span><span class="o">}</span>
+<span class="w">  </span><span class="no">USES_TERMINAL</span>
+<span class="w">  </span><span class="nf">)</span>
+</pre></div>
+</div>
+</section>
+<section id="running-tests-in-random-order">
+<h2>以随机顺序运行测试<a class="headerlink" href="#running-tests-in-random-order" title="链接到此标题。"></a></h2>
+<p>启用 ZTEST 框架的 <a class="reference internal" href="../../kconfig.html#CONFIG_ZTEST_SHUFFLE" title="CONFIG_ZTEST_SHUFFLE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ZTEST_SHUFFLE</span></code></a> 配置选项，即可以随机顺序运行测试。这有助于发现测试用例之间的依赖关系。对于 native_sim 平台，可以向 twister 传递参数 <code class="docutils literal notranslate"><span class="pre">--seed=value</span></code>，为随机数生成器提供种子。详情请参见 <a class="reference internal" href="../test/ztest.html#ztest-shuffle"><span class="std std-ref">打乱测试顺序</span></a>。</p>
+</section>
+<section id="running-tests-on-hardware">
+<h2>在硬件上运行测试<a class="headerlink" href="#running-tests-on-hardware" title="链接到此标题。"></a></h2>
+<p>除了能在 QEMU 和其他仿真环境中运行测试外，twister 还支持在真实设备上运行大多数测试，并为每次运行生成包含详细 FAIL/PASS 结果的报告。</p>
+<section id="executing-tests-on-a-single-device">
+<h3>在单个设备上执行测试<a class="headerlink" href="#executing-tests-on-a-single-device" title="链接到此标题。"></a></h3>
+<p>要在单个已连接的设备上使用此功能，请使用以下新选项运行 twister：</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-TGludXg=" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-0-TGludXg=" name="TGludXg=" role="tab" tabindex="0">Linux</button><button aria-controls="panel-0-V2luZG93cw==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-V2luZG93cw==" name="V2luZG93cw==" role="tab" tabindex="-1">Windows</button></div><div aria-labelledby="tab-0-TGludXg=" class="sphinx-tabs-panel group-tab" id="panel-0-TGludXg=" name="TGludXg=" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>twister<span class="w"> </span>--device-testing<span class="w"> </span>--device-serial<span class="w"> </span>/dev/ttyACM0<span class="w"> </span><span class="se">\</span>
+--device-serial-baud<span class="w"> </span><span class="m">115200</span><span class="w"> </span>-p<span class="w"> </span>frdm_k64f<span class="w">  </span>-T<span class="w"> </span>tests/kernel
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-V2luZG93cw==" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-V2luZG93cw==" name="V2luZG93cw==" role="tabpanel" tabindex="0"><div class="highlight-bat notranslate"><div class="highlight"><pre><span></span>west twister --device-testing --device-serial COM1 \
+--device-serial-baud 115200 -p frdm_k64f  -T tests/kernel
+</pre></div>
+</div>
+</div></div>
+<p><code class="docutils literal notranslate"><span class="pre">--device-serial</span></code> 选项表示开发板所连接的串口设备。运行 twister 的用户需要具有该设备的访问权限。一次只能在一块开发板上运行，开发板通过 <code class="docutils literal notranslate"><span class="pre">--platform</span></code> 选项指定。如果平台支持多个串口，可以多次提供 <code class="docutils literal notranslate"><span class="pre">--device-serial</span></code>，这些串口会被传递给 pytest harness。也可以使用硬件映射，详情请参见 <a class="reference internal" href="#twister-multi-core-testing"><span class="std std-ref">多核测试</span></a></p>
+<p>只有当设备的波特率不是 115200 时，才需要使用 <code class="docutils literal notranslate"><span class="pre">--device-serial-baud</span></code> 选项。</p>
+<p>要支持没有物理串口的设备，请使用 <code class="docutils literal notranslate"><span class="pre">--device-serial-pty</span></code> 选项。这种情况下，日志消息需要通过其他方式（例如使用脚本）捕获。此时可以使用以下选项运行 twister：</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-TGludXg=" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-1-TGludXg=" name="TGludXg=" role="tab" tabindex="0">Linux</button><button aria-controls="panel-1-V2luZG93cw==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-1-V2luZG93cw==" name="V2luZG93cw==" role="tab" tabindex="-1">Windows</button></div><div aria-labelledby="tab-1-TGludXg=" class="sphinx-tabs-panel group-tab" id="panel-1-TGludXg=" name="TGludXg=" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>twister<span class="w"> </span>--device-testing<span class="w"> </span>--device-serial-pty<span class="w"> </span><span class="s2">"script.py"</span><span class="w"> </span><span class="se">\</span>
+-p<span class="w"> </span>intel_adsp/cavs25<span class="w"> </span>-T<span class="w"> </span>tests/kernel
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-1-V2luZG93cw==" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-1-V2luZG93cw==" name="V2luZG93cw==" role="tabpanel" tabindex="0"><div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>Windows 操作系统不支持</p>
+</div>
+</div></div>
+<p>该脚本由用户定义，负责传递消息，twister 可利用这些消息判定测试的执行状态。</p>
+<p><code class="docutils literal notranslate"><span class="pre">--device-flash-timeout</span></code> 选项用于为设备烧录操作设置明确的超时，例如当设备烧录耗时很长时。</p>
+<p><code class="docutils literal notranslate"><span class="pre">--device-flash-with-test</span></code> 选项表示在该平台上烧录操作同时会执行测试场景，因此烧录超时会加上测试场景的超时。</p>
+</section>
+<section id="executing-tests-on-multiple-devices">
+<h3>在多个设备上执行测试<a class="headerlink" href="#executing-tests-on-multiple-devices" title="链接到此标题。"></a></h3>
+<p>要在连接到主机 PC 的多个设备上构建和执行测试，需要创建一个硬件映射，其中包含所有已连接的设备及其详细信息，例如串口设备、波特率以及设备 ID（如果有）。运行以下命令生成硬件映射：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>west<span class="w"> </span>twister<span class="w"> </span>--generate-hardware-map<span class="w"> </span>map.yml
+</pre></div>
+</div>
+<p>生成的硬件映射文件（map.yml）会列出已连接的设备，例如：</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-2-TGludXg=" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-2-TGludXg=" name="TGludXg=" role="tab" tabindex="0">Linux</button><button aria-controls="panel-2-V2luZG93cw==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-2-V2luZG93cw==" name="V2luZG93cw==" role="tab" tabindex="-1">Windows</button></div><div aria-labelledby="tab-2-TGludXg=" class="sphinx-tabs-panel group-tab" id="panel-2-TGludXg=" name="TGludXg=" role="tabpanel" tabindex="0"><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">connected</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">"OSHW000032254e4500128002ab98002784d1000097969900"</span>
+<span class="w">  </span><span class="nt">platform</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unknown</span>
+<span class="w">  </span><span class="nt">product</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DAPLink CMSIS-DAP</span>
+<span class="w">  </span><span class="nt">runner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pyocd</span>
+<span class="w">  </span><span class="nt">serial</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/dev/cu.usbmodem146114202</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">connected</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">"000683759358"</span>
+<span class="w">  </span><span class="nt">platform</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unknown</span>
+<span class="w">  </span><span class="nt">product</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">J-Link</span>
+<span class="w">  </span><span class="nt">runner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unknown</span>
+<span class="w">  </span><span class="nt">serial</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/dev/cu.usbmodem0006837593581</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-2-V2luZG93cw==" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-2-V2luZG93cw==" name="V2luZG93cw==" role="tabpanel" tabindex="0"><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">connected</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">"OSHW000032254e4500128002ab98002784d1000097969900"</span>
+<span class="w">  </span><span class="nt">platform</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unknown</span>
+<span class="w">  </span><span class="nt">product</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unknown</span>
+<span class="w">  </span><span class="nt">runner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unknown</span>
+<span class="w">  </span><span class="nt">serial</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">COM1</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">connected</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">"000683759358"</span>
+<span class="w">  </span><span class="nt">platform</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unknown</span>
+<span class="w">  </span><span class="nt">product</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unknown</span>
+<span class="w">  </span><span class="nt">runner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unknown</span>
+<span class="w">  </span><span class="nt">serial</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">COM2</span>
+</pre></div>
+</div>
+</div></div>
+<p>所有标记为 <code class="docutils literal notranslate"><span class="pre">unknown</span></code> 的选项都需要修改并设置为正确的值。在上面的示例中，平台名称、产品和运行器需要替换为与所连接硬件对应的正确值。本例中使用的是 reel_board 和 nrf52840dk/nrf52840：</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-3-TGludXg=" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-3-TGludXg=" name="TGludXg=" role="tab" tabindex="0">Linux</button><button aria-controls="panel-3-V2luZG93cw==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-3-V2luZG93cw==" name="V2luZG93cw==" role="tab" tabindex="-1">Windows</button></div><div aria-labelledby="tab-3-TGludXg=" class="sphinx-tabs-panel group-tab" id="panel-3-TGludXg=" name="TGludXg=" role="tabpanel" tabindex="0"><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">connected</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">"OSHW000032254e4500128002ab98002784d1000097969900"</span>
+<span class="w">  </span><span class="nt">platform</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reel_board</span>
+<span class="w">  </span><span class="nt">product</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DAPLink CMSIS-DAP</span>
+<span class="w">  </span><span class="nt">runner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pyocd</span>
+<span class="w">  </span><span class="nt">serial</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/dev/cu.usbmodem146114202</span>
+<span class="w">  </span><span class="nt">baud</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9600</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">connected</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">"000683759358"</span>
+<span class="w">  </span><span class="nt">platform</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nrf52840dk/nrf52840</span>
+<span class="w">  </span><span class="nt">product</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">J-Link</span>
+<span class="w">  </span><span class="nt">runner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nrfjprog</span>
+<span class="w">  </span><span class="nt">serial</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/dev/cu.usbmodem0006837593581</span>
+<span class="w">  </span><span class="nt">baud</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9600</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-3-V2luZG93cw==" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-3-V2luZG93cw==" name="V2luZG93cw==" role="tabpanel" tabindex="0"><div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">connected</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">"OSHW000032254e4500128002ab98002784d1000097969900"</span>
+<span class="w">  </span><span class="nt">platform</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">reel_board</span>
+<span class="w">  </span><span class="nt">product</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DAPLink CMSIS-DAP</span>
+<span class="w">  </span><span class="nt">runner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pyocd</span>
+<span class="w">  </span><span class="nt">serial</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">COM1</span>
+<span class="w">  </span><span class="nt">baud</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9600</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">connected</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">"000683759358"</span>
+<span class="w">  </span><span class="nt">platform</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nrf52840dk/nrf52840</span>
+<span class="w">  </span><span class="nt">product</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">J-Link</span>
+<span class="w">  </span><span class="nt">runner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nrfjprog</span>
+<span class="w">  </span><span class="nt">serial</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">COM2</span>
+<span class="w">  </span><span class="nt">baud</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">9600</span>
+</pre></div>
+</div>
+</div></div>
+<p>只有当波特率不是 115200 时，才需要 baud 条目。</p>
+<p>如果映射文件已经存在，则会添加新条目并更新现有条目。这样就可以只使用一个主硬件映射，并在每次运行时更新它，以获得正确的串口设备和设备状态。</p>
+<p>硬件映射准备好后，就可以指定该映射来运行任意测试</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-4-TGludXg=" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-4-TGludXg=" name="TGludXg=" role="tab" tabindex="0">Linux</button><button aria-controls="panel-4-V2luZG93cw==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-4-V2luZG93cw==" name="V2luZG93cw==" role="tab" tabindex="-1">Windows</button></div><div aria-labelledby="tab-4-TGludXg=" class="sphinx-tabs-panel group-tab" id="panel-4-TGludXg=" name="TGludXg=" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>twister<span class="w"> </span>--device-testing<span class="w"> </span>--hardware-map<span class="w"> </span>map.yml<span class="w"> </span>-T<span class="w"> </span>samples/hello_world/
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-4-V2luZG93cw==" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-4-V2luZG93cw==" name="V2luZG93cw==" role="tabpanel" tabindex="0"><div class="highlight-bat notranslate"><div class="highlight"><pre><span></span>west twister --device-testing --hardware-map map.yml -T samples\hello_world
+</pre></div>
+</div>
+</div></div>
+<p>上述命令会使 twister 为硬件映射中定义的平台构建测试，然后在这些平台上烧录并运行测试。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>目前，硬件映射功能只支持使用 pyocd、nrfjprog、jlink、openocd 或 dediprog 的开发板。需要其他运行器来烧录 Zephyr 二进制文件的开发板仍在开发中。</p>
+</div>
+<p>硬件映射允许分别通过 <code class="docutils literal notranslate"><span class="pre">flash-timeout</span></code> 和 <code class="docutils literal notranslate"><span class="pre">flash-with-test</span></code> 字段设置 <code class="docutils literal notranslate"><span class="pre">--device-flash-timeout</span></code> 和 <code class="docutils literal notranslate"><span class="pre">--device-flash-with-test</span></code> 命令行选项。对于特定平台，这些硬件映射值会覆盖命令行选项。</p>
+<p>使用 <code class="docutils literal notranslate"><span class="pre">--device-serial-pty</span></code> 的串口 PTY 支持也可以在硬件映射中使用：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">connected</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">None</span>
+<span class="w">  </span><span class="nt">platform</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">intel_adsp/cavs25</span>
+<span class="w">  </span><span class="nt">product</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">None</span>
+<span class="w">  </span><span class="nt">runner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">intel_adsp</span>
+<span class="w">  </span><span class="nt">serial_pty</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">path/to/script.py</span>
+<span class="w">  </span><span class="nt">runner_params</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">--remote-host=remote_host_ip_addr</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">--key=/path/to/key.pem</span>
+</pre></div>
+</div>
+<p>runner_params 字段表示要传递给 west 运行器的参数。对于某些开发板，west 运行器需要一些额外参数才能工作。它等同于以下 west 和 twister 命令。</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-5-TGludXg=" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-5-TGludXg=" name="TGludXg=" role="tab" tabindex="0">Linux</button><button aria-controls="panel-5-V2luZG93cw==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-5-V2luZG93cw==" name="V2luZG93cw==" role="tab" tabindex="-1">Windows</button></div><div aria-labelledby="tab-5-TGludXg=" class="sphinx-tabs-panel group-tab" id="panel-5-TGludXg=" name="TGludXg=" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>flash<span class="w"> </span>--remote-host<span class="w"> </span>remote_host_ip_addr<span class="w"> </span>--key<span class="w"> </span>/path/to/key.pem
+
+west<span class="w"> </span>twister<span class="w"> </span>-p<span class="w"> </span>intel_adsp/cavs25<span class="w"> </span>--device-testing<span class="w"> </span>--device-serial-pty<span class="w"> </span>script.py
+--west-flash<span class="o">=</span><span class="s2">"--remote-host=remote_host_ip_addr,--key=/path/to/key.pem"</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-5-V2luZG93cw==" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-5-V2luZG93cw==" name="V2luZG93cw==" role="tabpanel" tabindex="0"><div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>Windows 操作系统不支持</p>
+</div>
+</div></div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>对于串口 PTY，&quot;--generate-hardware-map&quot; 选项无法扫描到它，也无法自动生成正确的硬件映射，必须按照上面的示例手动编辑。这是因为 PTY 的串口不是固定的，而是在运行时由系统分配的。</p>
+</div>
+<p>如果 west 不可用，或者不知道如何烧录你的系统，可以使用 <code class="docutils literal notranslate"><span class="pre">flash-command</span></code> 标志指定自定义烧录命令。调用该脚本时会传入带有当前构建路径的 <code class="docutils literal notranslate"><span class="pre">--build-dir</span></code>，以及 <code class="docutils literal notranslate"><span class="pre">--board-id</span></code> 标志，用于在硬件映射中有多个设备时识别特定设备。</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-6-TGludXg=" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-6-TGludXg=" name="TGludXg=" role="tab" tabindex="0">Linux</button><button aria-controls="panel-6-V2luZG93cw==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-6-V2luZG93cw==" name="V2luZG93cw==" role="tab" tabindex="-1">Windows</button></div><div aria-labelledby="tab-6-TGludXg=" class="sphinx-tabs-panel group-tab" id="panel-6-TGludXg=" name="TGludXg=" role="tabpanel" tabindex="0"><div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>twister<span class="w"> </span>-p<span class="w"> </span>npcx9m6f_evb<span class="w"> </span>--device-testing<span class="w"> </span>--device-serial<span class="w"> </span>/dev/ttyACM0
+--flash-command<span class="w"> </span><span class="s1">'./custom_flash_script.py,--flag,"complex, argument"'</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-6-V2luZG93cw==" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-6-V2luZG93cw==" name="V2luZG93cw==" role="tabpanel" tabindex="0"><div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>west twister -p npcx9m6f_evb --device-testing
+--device-serial COM1
+--flash-command 'custom_flash_script.py,--flag,&quot;complex, argument&quot;'</p>
+</div>
+</div></div>
+<p>将会调用 <code class="docutils literal notranslate"><span class="pre">./custom_flash_script.py</span> <span class="pre">--build-dir</span> <span class="pre">&lt;build</span> <span class="pre">directory&gt;</span> <span class="pre">--board-id</span> <span class="pre">&lt;board</span> <span class="pre">identification&gt;</span> <span class="pre">--flag</span> <span class="pre">&quot;complex,</span> <span class="pre">argument&quot;</span></code>。</p>
+<section id="fixtures">
+<span id="twister-fixtures"></span><h4>Fixture<a class="headerlink" href="#fixtures" title="链接到此标题。"></a></h4>
+<p>有些测试需要针对该测试的额外设置或特殊接线。在缺少这些设置或测试夹具（fixture）的情况下运行测试可能会失败。测试场景可以指定所需的 fixture，然后通过命令行或硬件映射文件，将其与开发板的硬件能力及其支持的 fixture 进行匹配。</p>
+<p>fixture 在硬件映射文件中以列表形式定义：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">connected</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">fixtures</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gpio_loopback</span>
+<span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">"0240000026334e450015400f5e0e000b4eb1000097969900"</span>
+<span class="w">  </span><span class="nt">platform</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">frdm_k64f</span>
+<span class="w">  </span><span class="nt">product</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DAPLink CMSIS-DAP</span>
+<span class="w">  </span><span class="nt">runner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pyocd</span>
+<span class="w">  </span><span class="nt">serial</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/dev/ttyACM9</span>
+</pre></div>
+</div>
+<p>使用 <code class="docutils literal notranslate"><span class="pre">--device-testing</span></code> 运行 <code class="docutils literal notranslate"><span class="pre">twister</span></code> 时，硬件映射文件中配置的 fixture 会与请求相同 fixture 的测试场景进行匹配，这些测试将在提供该 fixture 的开发板上执行。</p>
+<p>要为依赖 fixture 的测试预留开发板，请将 <code class="docutils literal notranslate"><span class="pre">run_with_fixture_only</span></code> 设为 <code class="docutils literal notranslate"><span class="pre">true</span></code>。这样 Twister 只会为请求了匹配 fixture 的测试场景选择该开发板，而不会为没有 fixture 要求的场景选择它。</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">connected</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">fixtures</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gpio_loopback</span>
+<span class="w">  </span><span class="nt">run_with_fixture_only</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0240000026334e450015400f5e0e000b4eb1000097969900</span>
+<span class="w">  </span><span class="nt">platform</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">frdm_k64f</span>
+</pre></div>
+</div>
+<figure class="align-center align-default">
+<img alt="../../_images/fixtures.svg" src="../../_images/fixtures.svg" />
+</figure>
+<p>也可以通过 twister 命令选项 <code class="docutils literal notranslate"><span class="pre">--fixture</span></code> 提供 fixture。该选项可以多次使用，所有给出的 fixture 会被追加到一个列表中。给出的 fixture 会分配给所有开发板，这意味着当前 twister 命令所设置的所有开发板都可以运行请求了这些 fixture 的测试场景。</p>
+<p>有些 fixture 允许追加配置字符串，配置字符串与 fixture 名称之间以 <code class="docutils literal notranslate"><span class="pre">:</span></code> 分隔。与测试场景所请求的 fixture 进行匹配时，只比较 fixture 名称。</p>
+</section>
+<section id="notes">
+<h4>备注<a class="headerlink" href="#notes" title="链接到此标题。"></a></h4>
+<p>在硬件映射文件中为开发板描述添加附加信息可能会很有用，可以使用 <code class="docutils literal notranslate"><span class="pre">notes</span></code> 关键字实现。例如：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">connected</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="nt">fixtures</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">gpio_loopback</span>
+<span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">"000683290670"</span>
+<span class="w">  </span><span class="nt">notes</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">An nrf5340dk/nrf5340 is detected as an nrf52840dk/nrf52840 with no serial</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">port, and three serial ports with an unknown platform.  The board id of the serial</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">ports is not the same as the board id of the development kit.  If you regenerate</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">this file you will need to update serial to reference the third port, and platform</span>
+<span class="w">    </span><span class="l l-Scalar l-Scalar-Plain">to nrf5340dk/nrf5340/cpuapp or another supported board target.</span>
+<span class="w">  </span><span class="nt">platform</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nrf52840dk/nrf52840</span>
+<span class="w">  </span><span class="nt">product</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">J-Link</span>
+<span class="w">  </span><span class="nt">runner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jlink</span>
+<span class="w">  </span><span class="nt">serial</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
+</pre></div>
+</div>
+</section>
+<section id="overriding-board-identifier">
+<h4>覆盖开发板标识符<a class="headerlink" href="#overriding-board-identifier" title="链接到此标题。"></a></h4>
+<p>（重新）生成的硬件映射文件会包含一个 <code class="docutils literal notranslate"><span class="pre">id</span></code> 关键字，在烧录时作为 <code class="docutils literal notranslate"><span class="pre">--board-id</span></code> 的参数。在某些情况下，检测到的 ID 并不是应该使用的 ID，例如使用外部 J-Link 探针时。为此可以使用 <code class="docutils literal notranslate"><span class="pre">probe_id</span></code> 关键字覆盖 <code class="docutils literal notranslate"><span class="pre">id</span></code> 关键字。例如：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">connected</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">"0229000005d9ebc600000000000000000000000097969905"</span>
+<span class="w">  </span><span class="nt">platform</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">mimxrt1060_evk</span>
+<span class="w">  </span><span class="nt">probe_id</span><span class="p">:</span><span class="w"> </span><span class="s">"000609301751"</span>
+<span class="w">  </span><span class="nt">product</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">DAPLink CMSIS-DAP</span>
+<span class="w">  </span><span class="nt">runner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">jlink</span>
+<span class="w">  </span><span class="nt">serial</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
+</pre></div>
+</div>
+</section>
+<section id="using-single-board-for-multiple-variants">
+<h4>用一块开发板测试多个变体<a class="headerlink" href="#using-single-board-for-multiple-variants" title="链接到此标题。"></a></h4>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">platform</span></code> 属性可以是名称列表，也可以是以空格分隔名称的字符串。这样就可以在同一块物理开发板上运行不同平台变体的测试，而无需为每个变体重新配置硬件映射文件。例如：</p>
+</div></blockquote>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">connected</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">"001234567890"</span>
+<span class="w">  </span><span class="nt">platform</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nrf5340dk/nrf5340/cpuapp</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nrf5340dk/nrf5340/cpuapp/ns</span>
+<span class="w">  </span><span class="nt">product</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">J-Link</span>
+<span class="w">  </span><span class="nt">runner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nrfjprog</span>
+<span class="w">  </span><span class="nt">serial</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/dev/ttyACM1</span>
+</pre></div>
+</div>
+</section>
+<section id="multi-core-testing-support">
+<span id="twister-multi-core-testing"></span><h4>多核测试支持<a class="headerlink" href="#multi-core-testing-support" title="链接到此标题。"></a></h4>
+<p>Twister 支持测试不同核使用独立 UART 接口的多核应用程序。该功能只适用于 pytest harness（<code class="docutils literal notranslate"><span class="pre">harness:</span> <span class="pre">pytest</span></code>）。生成的硬件映射应为同一物理设备包含多个条目，每个条目代表一个不同核的连接。例如：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">connected</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">"001234567890"</span>
+<span class="w">  </span><span class="nt">serial</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/dev/ttyACM0</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">connected</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">"001234567890"</span>
+<span class="w">  </span><span class="nt">platform</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nrf54l15dk/nrf54l15/cpuapp</span>
+<span class="w">  </span><span class="nt">product</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">J-Link</span>
+<span class="w">  </span><span class="nt">runner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nrfutil</span>
+<span class="w">  </span><span class="nt">serial</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/dev/ttyACM1</span>
+</pre></div>
+</div>
+<p>这两个实例共享相同的设备 ID，但使用不同的串口，使测试可以同时与多个核交互。每个连接都独立处理，并使用各自的日志文件。</p>
+</section>
+<section id="multi-duts-testing-support">
+<span id="twister-multi-duts-testing"></span><h4>多 DUT 测试支持<a class="headerlink" href="#multi-duts-testing-support" title="链接到此标题。"></a></h4>
+<p>Twister 支持需要多台设备的测试场景。该功能只适用于 pytest harness（<code class="docutils literal notranslate"><span class="pre">harness:</span> <span class="pre">pytest</span></code>）。支持硬件和 <code class="docutils literal notranslate"><span class="pre">native_sim</span></code> 执行环境。</p>
+<p>要声明某个测试需要额外的设备，请在测试 YAML 文件的 <code class="docutils literal notranslate"><span class="pre">harness_config</span></code> 下添加 <code class="docutils literal notranslate"><span class="pre">required_devices</span></code>。列表中的每个条目描述一台额外的 DUT。空条目 <code class="docutils literal notranslate"><span class="pre">{}</span></code> 会预留第二台设备，其平台和应用程序与主 DUT 相同。所有可用选项请参见 <a class="reference internal" href="harness/pytest.html#required-devices"><span class="std std-ref">required_devices</span></a>。</p>
+<p>测试配置示例：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">tests</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">multidut.basic</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">harness</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">pytest</span>
+<span class="w">    </span><span class="nt">harness_config</span><span class="p">:</span>
+<span class="w">      </span><span class="nt">required_devices</span><span class="p">:</span>
+<span class="w">        </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="p p-Indicator">{}</span>
+</pre></div>
+</div>
+<p>硬件映射中必须为每台所需设备至少包含一个条目。每个条目都需要匹配的平台和串口连接：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">connected</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">"01"</span>
+<span class="w">  </span><span class="nt">platform</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nrf52840dk/nrf52840</span>
+<span class="w">  </span><span class="nt">serial</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/dev/ttyACM0</span>
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">connected</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">id</span><span class="p">:</span><span class="w"> </span><span class="s">"02"</span>
+<span class="w">  </span><span class="nt">platform</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">nrf52840dk/nrf52840</span>
+<span class="w">  </span><span class="nt">serial</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/dev/ttyACM1</span>
+</pre></div>
+</div>
+<p>在硬件上运行测试：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>west<span class="w"> </span>twister<span class="w"> </span>-vv<span class="w"> </span>-ll<span class="w"> </span>debug<span class="w"> </span>-T<span class="w"> </span>tests/subsys/testsuite/multidut<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>--device-testing<span class="w"> </span>--hardware-map<span class="w"> </span>map.yaml
+</pre></div>
+</div>
+<p>在 <code class="docutils literal notranslate"><span class="pre">native_sim</span></code> 上运行测试（无需硬件映射）：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>west<span class="w"> </span>twister<span class="w"> </span>-vv<span class="w"> </span>-ll<span class="w"> </span>debug<span class="w"> </span>-T<span class="w"> </span>tests/subsys/testsuite/multidut<span class="w"> </span>-p<span class="w"> </span>native_sim
+</pre></div>
+</div>
+<p>Twister 会预留所有所需的设备（如果使用 <code class="docutils literal notranslate"><span class="pre">native_sim</span></code>，则创建占位条目），然后将这些设备连同所有必要信息（平台、串口连接、要烧录的构建产物等）传递给 pytest，使测试能够与所有设备交互。</p>
+<p>多 DUT 测试示例位于 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/tests/subsys/testsuite/multidut">tests/subsys/testsuite/multidut</a>。</p>
+</section>
+<section id="quarantine">
+<h4>隔离<a class="headerlink" href="#quarantine" title="链接到此标题。"></a></h4>
+<p>Twister 允许用户提供配置文件，定义一份需要隔离的测试或平台列表。这些测试将被跳过，并在输出报告中作相应标记。该功能在运行较大的测试套件时尤其有用，因为一个测试的失败可能影响其他测试的执行（例如使物理开发板处于损坏状态）。</p>
+<p>要使用隔离功能，需要在调用 twister 时添加参数 <code class="docutils literal notranslate"><span class="pre">--quarantine-list</span> <span class="pre">&lt;PATH_TO_QUARANTINE_YAML&gt;</span></code>。可以使用多个隔离文件。在上述参数之外再添加 <code class="docutils literal notranslate"><span class="pre">--quarantine-verify</span></code>，还可以验证隔离列表中测试的当前状态，此时 twister 会跳过所有不在给定列表中的测试。</p>
+<p>隔离 yaml 是一个字典序列。每个字典必须至少包含以下键之一：<code class="docutils literal notranslate"><span class="pre">scenarios</span></code>、<code class="docutils literal notranslate"><span class="pre">platforms</span></code>、<code class="docutils literal notranslate"><span class="pre">architectures</span></code> 或 <code class="docutils literal notranslate"><span class="pre">simulations</span></code>，也允许组合使用这些条目。可以使用可选的 <code class="docutils literal notranslate"><span class="pre">comment</span></code> 条目提供更多细节（例如指向已报告 issue 的链接），这些注释也会被添加到输出报告中。</p>
+<p>当需要隔离一类测试或单个测试套件中的许多场景，或者需要处理某个子系统中的多个问题时，可以使用正则表达式，例如 <strong>kernel.*</strong> 会隔离所有内核测试。</p>
+<p>隔离 yaml 中的条目示例：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">scenarios</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">sample.basic.helloworld</span>
+<span class="w">  </span><span class="nt">comment</span><span class="p">:</span><span class="w"> </span><span class="s">"Link</span><span class="nv"> </span><span class="s">to</span><span class="nv"> </span><span class="s">the</span><span class="nv"> </span><span class="s">issue:</span><span class="nv"> </span><span class="s">https://github.com/zephyrproject-rtos/zephyr/pull/33287"</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">scenarios</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kernel.common</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kernel.common.(misra|tls)</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kernel.common.nano64</span>
+<span class="w">  </span><span class="nt">platforms</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">.*_cortex_.*</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">native_sim</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">platforms</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qemu_x86</span>
+<span class="w">  </span><span class="nt">comment</span><span class="p">:</span><span class="w"> </span><span class="s">"filter</span><span class="nv"> </span><span class="s">out</span><span class="nv"> </span><span class="s">qemu_x86"</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">architectures</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">riscv</span>
+
+<span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">simulations</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">armfvp</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+<section id="test-output-and-reports">
+<span id="twister-output"></span><h2>测试输出与报告<a class="headerlink" href="#test-output-and-reports" title="链接到此标题。"></a></h2>
+<p>默认情况下，Twister 会将所有输出写入在当前工作目录中创建的 <code class="file docutils literal notranslate"><span class="pre">twister-out</span></code> 目录。使用 <code class="docutils literal notranslate"><span class="pre">-O</span></code>/<code class="docutils literal notranslate"><span class="pre">--outdir</span></code> 可以选择其他位置。每次运行时都会清理该目录，除非指定了 <code class="docutils literal notranslate"><span class="pre">--no-clean</span></code>；<code class="docutils literal notranslate"><span class="pre">--clobber-output</span></code> 控制清理的具体行为。</p>
+<section id="top-level-reports">
+<h3>顶层报告<a class="headerlink" href="#top-level-reports" title="链接到此标题。"></a></h3>
+<p>以下文件写入输出目录的根目录：</p>
+<dl class="simple">
+<dt><code class="file docutils literal notranslate"><span class="pre">twister.json</span></code></dt><dd><p>主要的机器可读报告。其中为每个选中的测试套件和测试用例各包含一个条目，记录其 <a class="reference internal" href="twister_statuses.html#twister-statuses"><span class="std std-ref">状态</span></a>、目标平台、执行时间、内存占用、所有 <a class="reference internal" href="harness/console.html#twister-console-harness"><span class="std std-ref">记录的数据</span></a>，以及本次运行使用的环境和选项。</p>
+</dd>
+<dt><code class="file docutils literal notranslate"><span class="pre">testplan.json</span></code></dt><dd><p>解析后的测试计划：包含 Twister 考虑过的每个测试实例（测试场景与平台的组合），包括被过滤掉的实例及其原因。要了解某个场景为何运行或未运行，应检查此文件。可以通过 <code class="docutils literal notranslate"><span class="pre">--load-tests</span></code> 复用该文件，重放同样的选择。</p>
+</dd>
+<dt><code class="file docutils literal notranslate"><span class="pre">twister.xml</span></code></dt><dd><p>适用于 CI 系统的 JUnit XML 摘要。</p>
+</dd>
+<dt><code class="file docutils literal notranslate"><span class="pre">twister_report.xml</span></code></dt><dd><p>包含所有测试用例（而不仅是摘要）的 JUnit XML 报告。</p>
+</dd>
+<dt><code class="file docutils literal notranslate"><span class="pre">twister_suite_report.xml</span></code></dt><dd><p>按测试套件分组的 JUnit XML 报告。</p>
+</dd>
+<dt><code class="file docutils literal notranslate"><span class="pre">twister.log</span></code></dt><dd><p>整个运行过程的人类可读日志。</p>
+</dd>
+<dt><code class="file docutils literal notranslate"><span class="pre">twister_footprint.json</span></code></dt><dd><p>ROM/RAM 占用报告。只有在使用 <code class="docutils literal notranslate"><span class="pre">--footprint-report</span></code> 时才会生成。</p>
+</dd>
+</dl>
+<p>可以使用 <code class="docutils literal notranslate"><span class="pre">--report-name</span></code> 更改报告的基本名称（<code class="docutils literal notranslate"><span class="pre">twister</span></code>），<code class="docutils literal notranslate"><span class="pre">--report-suffix</span></code> 会为所有生成的文件名追加后缀（例如版本号或提交 ID）。使用 <code class="docutils literal notranslate"><span class="pre">-o</span></code>/<code class="docutils literal notranslate"><span class="pre">--report-dir</span></code> 可以将报告写入输出目录以外的目录，使用 <code class="docutils literal notranslate"><span class="pre">--platform-reports</span></code> 还会额外为每个平台生成 <code class="file docutils literal notranslate"><span class="pre">&lt;platform&gt;.json</span></code> 和 <code class="file docutils literal notranslate"><span class="pre">&lt;platform&gt;.xml</span></code>。<code class="docutils literal notranslate"><span class="pre">--report-summary</span></code> 会打印最近一次运行的失败摘要，而不重新构建。</p>
+</section>
+<section id="per-test-artifacts">
+<h3>每个测试的产物<a class="headerlink" href="#per-test-artifacts" title="链接到此标题。"></a></h3>
+<p>每个测试实例在输出目录下都有自己的构建目录，按平台和测试命名：<code class="file docutils literal notranslate"><span class="pre">twister-out/&lt;platform&gt;/&lt;test</span> <span class="pre">path&gt;/&lt;scenario&gt;/</span></code>。除了常规的 Zephyr 构建产物（例如 <code class="file docutils literal notranslate"><span class="pre">zephyr/zephyr.elf</span></code>）外，其中还可能包含：</p>
+<dl class="simple">
+<dt><code class="file docutils literal notranslate"><span class="pre">build.log</span></code></dt><dd><p>该实例的构建输出。</p>
+</dd>
+<dt><code class="file docutils literal notranslate"><span class="pre">handler.log</span></code></dt><dd><p>运行测试时从设备或模拟器捕获的控制台输出。</p>
+</dd>
+<dt><code class="file docutils literal notranslate"><span class="pre">twister_harness.log</span></code></dt><dd><p>基于 pytest 的 harness（例如 <code class="docutils literal notranslate"><span class="pre">pytest</span></code> 和 <code class="docutils literal notranslate"><span class="pre">shell</span></code>）产生的日志。</p>
+</dd>
+<dt><code class="file docutils literal notranslate"><span class="pre">recording.csv</span></code></dt><dd><p>配置了 <a class="reference internal" href="harness/console.html#twister-console-harness"><span class="std std-ref">console harness</span></a> 的 <code class="docutils literal notranslate"><span class="pre">record</span></code> 选项时，由该选项捕获的数据字段。</p>
+</dd>
+</dl>
+</section>
+</section>
+<section id="live-run-monitoring">
+<span id="twister-console-monitor"></span><h2>实时运行监控<a class="headerlink" href="#live-run-monitoring" title="链接到此标题。"></a></h2>
+<p>对于长时间运行，很难从滚动的控制台输出中看出 twister 实际在做什么：哪些在排队、每个作业当前正在构建或运行什么，以及哪些测试已经失败及其原因。<code class="docutils literal notranslate"><span class="pre">--console-monitor</span></code> 选项会在运行期间用终端中的实时全屏仪表盘替代常规输出：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>west<span class="w"> </span>twister<span class="w"> </span>-T<span class="w"> </span>tests/kernel<span class="w"> </span>--console-monitor
+</pre></div>
+</div>
+<p>仪表盘会显示整体进度（按通过/失败/错误/已过滤分类）和预计完成时间、当前 <em>正在执行</em> 的测试实例集合及其各自所处的流水线阶段（<code class="docutils literal notranslate"><span class="pre">cmake</span></code>、<code class="docutils literal notranslate"><span class="pre">build</span></code>、<code class="docutils literal notranslate"><span class="pre">run</span></code> 等），以及一个可滚动的表格，列出计划中的每个测试实例（包括被静态过滤的实例）。在此期间，常规日志输出会写入 <code class="file docutils literal notranslate"><span class="pre">twister.log</span></code>。</p>
+<p>导航：<kbd class="kbd docutils literal notranslate">Tab</kbd> 在表格过滤器（all/active/failures/passed/queued/filtered）之间循环切换，<kbd class="kbd docutils literal notranslate">f</kbd> 直接跳转到失败视图，<kbd class="kbd docutils literal notranslate">/</kbd> 开始在实例名称和失败原因中进行增量文本搜索（<kbd class="kbd docutils literal notranslate">Esc</kbd> 清除搜索）。使用方向键或 <kbd class="kbd docutils literal notranslate">j</kbd>/<kbd class="kbd docutils literal notranslate">k</kbd> 移动选择项，按 <kbd class="kbd docutils literal notranslate">Enter</kbd> 打开某个实例的详情视图，其中包括其流水线阶段时间线、失败测试用例列表及其原因，以及其日志文件的末尾部分（<kbd class="kbd docutils literal notranslate">l</kbd> 在可用日志之间切换，<kbd class="kbd docutils literal notranslate">j</kbd>/<kbd class="kbd docutils literal notranslate">k</kbd> 或方向键滚动，<kbd class="kbd docutils literal notranslate">g</kbd>/<kbd class="kbd docutils literal notranslate">G</kbd> 跳转到顶部/末尾，视图固定在末尾时会跟随新的输出）。在其余测试继续运行的同时检查失败时，这一功能尤其有用。</p>
+<p>运行结束后，仪表盘会继续显示，以便检查失败；按 <kbd class="kbd docutils literal notranslate">q</kbd> 退出仪表盘后，twister 会写入报告并照常退出。如果在运行仍在进行时按 <kbd class="kbd docutils literal notranslate">q</kbd>，会提前退出仪表盘并恢复常规的控制台输出。该选项需要交互式终端，否则会被忽略（例如在 CI 中）。</p>
+<p>监控器只观察运行而不影响运行：监控事件以尽力而为的方式传递，宁可丢弃也绝不会拖慢构建/运行流水线。</p>
+</section>
+<section id="twister-configuration-file">
+<span id="twister-test-config"></span><h2>Twister 配置文件<a class="headerlink" href="#twister-configuration-file" title="链接到此标题。"></a></h2>
+<p>Twister 配置文件（<code class="docutils literal notranslate"><span class="pre">test_config.yaml</span></code>，通过 <code class="docutils literal notranslate"><span class="pre">--test-config</span></code> 传入）可用于定制 twister 的各个方面以及默认启用的选项和功能。这样可以根据环境调整过滤能力，并在面向不同平台集合时调整和提高覆盖率。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>该文件（通过 <code class="docutils literal notranslate"><span class="pre">--test-config</span></code> 选择）用于配置整个 Twister 运行。它不同于 <code class="docutils literal notranslate"><span class="pre">tests.yaml</span></code> 中针对单个应用程序的测试配置，后者描述的是各个 <a class="reference internal" href="#twister-tests-long-version"><span class="std std-ref">测试场景</span></a>。</p>
+</div>
+<p>Twister 配置文件还增加了对测试级别的支持，并能够将特定测试分配到一个或多个级别。之后就可以使用 twister 的命令行选项选择某个级别，只执行该级别包含的测试。</p>
+<p>此外，配置文件还允许定义级别之间的依赖关系；如果测试本身尚未包含级别信息，还可以将其额外纳入特定级别。</p>
+<p>在配置文件中，可以使用正则表达式纳入整个组件，还可以指定从同一文件中导入哪个测试级别，从而简化级别的管理。</p>
+<p>为了便于在上游 CI 基础设施之外进行测试，配置文件中还提供了额外的选项，配置文件可以存放在本地。目前提供以下选项：</p>
+<ul class="simple">
+<li><p>能够忽略开发板定义中定义的默认平台（这些平台大多是在上游 CI 中运行测试所用的仿真平台）</p></li>
+<li><p>可以指定自己的默认平台列表，覆盖上游的定义。</p></li>
+<li><p>能够覆盖部分测试场景中使用的 <code class="docutils literal notranslate"><span class="pre">build_on_all</span></code> 选项。这样，这些测试或示例会与其他测试一样，只为配置文件或命令行中指定的默认平台构建。</p></li>
+<li><p>在默认平台不在范围内时，忽略 twister 中用于扩展平台覆盖范围的部分逻辑。</p></li>
+</ul>
+<section id="platform-configuration">
+<h3>平台配置<a class="headerlink" href="#platform-configuration" title="链接到此标题。"></a></h3>
+<p>以下选项控制 twister 中的平台过滤：</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">override_default_platforms</span></code>：覆盖平台在开发板配置中设置的 default 键，改为使用配置文件中提供的平台列表作为默认平台列表。该选项默认为 False。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">increased_platform_scope</span></code>：该选项默认为 True。禁用后，twister 不会自动扩大平台覆盖范围，只会在指定的平台上构建和运行测试。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">default_platforms</span></code>：要添加的额外默认平台列表。根据 <code class="docutils literal notranslate"><span class="pre">override_default_platforms</span></code> 的值，该列表可以替换现有的默认平台，也可以对其进行扩展。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">build_toolchains</span></code>：从平台名称到工具链列表的映射，分配给该平台的每个测试都应使用这些工具链构建。Twister 会为每个工具链创建一个测试实例，每个实例使用各自的构建目录。该选项会设置或覆盖开发板定义中的 <code class="docutils literal notranslate"><span class="pre">build_toolchains</span></code> 选项；对于请求了多工具链构建的平台，空列表会禁用多工具链构建。由于这会成倍增加构建时间，通常只在 CI 使用的配置文件（<code class="docutils literal notranslate"><span class="pre">tests/test_config_ci.yaml</span></code>）中启用，使本地运行时每个测试仍只构建一次。参见 <a class="reference internal" href="#twister-toolchain-selection"><span class="std std-ref">工具链选择</span></a>。</p></li>
+</ul>
+<p>平台配置示例：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">platforms</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">override_default_platforms</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">increased_platform_scope</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
+<span class="w">  </span><span class="nt">default_platforms</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">qemu_x86</span>
+<span class="w">  </span><span class="nt">build_toolchains</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">native_sim</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">host/gnu</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">host/llvm</span>
+</pre></div>
+</div>
+</section>
+<section id="test-level-configuration">
+<h3>测试级别配置<a class="headerlink" href="#test-level-configuration" title="链接到此标题。"></a></h3>
+<p>测试配置允许定义测试级别、级别之间的依赖关系；如果测试本身尚未包含级别信息，还可以将其额外纳入特定测试级别。</p>
+<p>在配置文件中，可以使用正则表达式纳入整个组件，还可以指定从同一文件中导入哪个测试级别，从而简化级别的管理。</p>
+<p>测试级别配置示例：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">levels</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">my-test-level</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
+<span class="w">      </span><span class="no">my custom test level</span>
+<span class="w">    </span><span class="nt">adds</span><span class="p">:</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kernel.threads.*</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">kernel.timer.behavior</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">arch.interrupt</span>
+<span class="w">      </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">boards.*</span>
+</pre></div>
+</div>
+</section>
+<section id="combined-configuration">
+<h3>组合配置<a class="headerlink" href="#combined-configuration" title="链接到此标题。"></a></h3>
+<p>要组合使用平台配置和级别配置，可以参考以下示例：</p>
+<p>平台加级别的配置示例：</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="nt">platforms</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">override_default_platforms</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">  </span><span class="nt">default_platforms</span><span class="p">:</span>
+<span class="w">    </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">frdm_k64f</span>
+<span class="nt">levels</span><span class="p">:</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">smoke</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
+<span class="w">        </span><span class="no">A plan to be used verifying basic zephyr features.</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">unit</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
+<span class="w">        </span><span class="no">A plan to be used verifying unit test.</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">integration</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
+<span class="w">        </span><span class="no">A plan to be used verifying integration.</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">acceptance</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
+<span class="w">        </span><span class="no">A plan to be used verifying acceptance.</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">system</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
+<span class="w">        </span><span class="no">A plan to be used verifying system.</span>
+<span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">name</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">regression</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">&gt;</span>
+<span class="w">        </span><span class="no">A plan to be used verifying regression.</span>
+</pre></div>
+</div>
+<p>使用上述 test_config.yaml 文件运行时，只会在 default_platforms 上运行属于给定测试级别的测试场景。</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>west<span class="w"> </span>twister<span class="w"> </span>--test-config<span class="o">=</span>&lt;path<span class="w"> </span>to&gt;/test_config.yaml<span class="w"> </span>-T<span class="w"> </span>tests<span class="w"> </span>--level<span class="o">=</span><span class="s2">"smoke"</span>
+</pre></div>
+</div>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 8月 21, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

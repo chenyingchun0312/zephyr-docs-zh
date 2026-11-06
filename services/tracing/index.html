@@ -1,0 +1,975 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>跟踪 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/tracing/index.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="调试" href="../debugging/index.html" />
+    <link rel="prev" title="使用 ARM Coresight STM 进行多域日志记录" href="../logging/cs_stm.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">服务</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../connectivity/index.html">连接</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../messaging.html">进程间通信</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../observability.html">日志、跟踪与调试</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../logging/index.html">日志</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">跟踪</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">概述</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#named-trace-events">命名跟踪事件</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#serialization-formats">序列化格式</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#common-trace-format-ctf-support">通用跟踪格式（CTF）支持</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#a-generic-interface">通用接口</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#ctf-top-layer-example">CTF 顶层示例</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#tracing-tools">跟踪工具</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#percepio-tracealyzer-support">Percepio Tracealyzer 支持</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#percepio-tracerecorder-and-stream-ports">Percepio TraceRecorder 与流端口</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#tracealyzer-snapshot-tracing-ring-buffer">Tracealyzer 快照跟踪（Ring Buffer）</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#tracealyzer-streaming-with-segger-rtt">使用 SEGGER RTT 进行 Tracealyzer 流式传输</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#tracealyzer-streaming-with-arm-itm">使用 Arm ITM 进行 Tracealyzer 流式传输</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#tracealyzer-streaming-from-qemu-semihost">从 QEMU 进行 Tracealyzer 流式传输（Semihost）</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#recorder-start-mode">记录器启动模式</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#custom-stream-ports-for-tracealyzer">Tracealyzer 的自定义流端口</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#learning-more">了解更多</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#percepio-view-for-zephyr">Percepio View for Zephyr</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#segger-systemview-support">SEGGER SystemView 支持</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#tracecompass">TraceCompass</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#perfetto">Perfetto</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#user-defined-tracing">用户自定义跟踪</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#out-of-tree-tracing-formats">树外跟踪格式</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#transport-backends">传输后端</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#using-tracing">使用跟踪</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#using-ram-backend">使用 RAM 后端</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#future-lttng-inspiration">未来借鉴 LTTng</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#i-o-taxonomy">I/O 分类</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#object-tracking">对象跟踪</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api">API</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#common">通用</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#threads">线程</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#work-queues">工作队列</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#poll">轮询</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#semaphore">信号量</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#mutex">互斥量</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#condition-variables">条件变量</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#queues">队列</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#fifo">FIFO</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#lifo">LIFO</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#stacks">栈</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#message-queues">消息队列</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#mailbox">邮箱</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#pipes">管道</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#heaps">堆</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#memory-slabs">内存块（slab）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#timers">定时器</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#syscalls">系统调用</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#network-tracing">网络跟踪</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#network-socket-tracing">网络套接字跟踪</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../debugging/index.html">调试</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../profiling/index.html">性能剖析</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../instrumentation/index.html">插桩</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cpu_load/index.html">CPU 负载</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../shell/index.html">Shell</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../task_wdt/index.html">任务看门狗</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../observability.html">日志、跟踪与调试</a> &raquo;</li>
+  
+  <li>跟踪</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="tracing">
+<span id="id1"></span><h1>跟踪<a class="headerlink" href="#tracing" title="链接到此标题。"></a></h1>
+<section id="overview">
+<h2>概述<a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>跟踪功能提供了一组钩子，让你可以从应用程序中收集数据，并让主机上运行的 <a class="reference internal" href="#tools"><span class="std std-ref">跟踪工具</span></a> 可视化内核及各子系统的内部工作情况。</p>
+<p>每个系统都有需要跟踪输出的应用程序特定事件。以往这意味着：</p>
+<ol class="arabic simple">
+<li><p>确定应用程序特定的有效载荷，</p></li>
+<li><p>选择合适的序列化格式，</p></li>
+<li><p>编写目标端的序列化代码，</p></li>
+<li><p>确定并编写 I/O 传输机制，</p></li>
+<li><p>编写 PC 端的反序列化器/解析器，</p></li>
+<li><p>为过滤和展示编写专门的定制工具。</p></li>
+</ol>
+<p>应用程序可以使用现有格式之一，也可以通过覆盖 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/tracing/tracing.h">include/zephyr/tracing/tracing.h</a> 中声明的宏来定义自定义格式。</p>
+<p>Zephyr 支持多种格式、传输方式和主机工具。</p>
+<p>实际上，不同系统的 I/O 差别很大。因此，当我们必须确保有效载荷/格式（顶层）与传输机制（底层）之间的接口足够通用和高效、能够对这些 I/O 建模时，对 I/O 类型进行分类很有指导意义。请参阅下文的 <em>I/O 分类</em> 一节。</p>
+</section>
+<section id="named-trace-events">
+<h2>命名跟踪事件<a class="headerlink" href="#named-trace-events" title="链接到此标题。"></a></h2>
+<p>尽管用户可以扩展任何受支持的序列化格式，以启用更多跟踪函数（或提供自己的后端），Zephyr 也提供了一个通用的命名跟踪函数，一方面是为了方便，另一方面也用来演示如何扩展跟踪框架。</p>
+<p>用户可以调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">sys_trace_named_event()</span></code> 生成自定义跟踪事件，该函数接受一个事件名称以及两个任意的 4 字节参数。如果提供的事件名称对于跟踪后端所支持的序列化格式来说太长，后端可能会将其截断。</p>
+</section>
+<section id="serialization-formats">
+<h2>序列化格式<a class="headerlink" href="#serialization-formats" title="链接到此标题。"></a></h2>
+<section id="common-trace-format-ctf-support">
+<span id="ctf"></span><h3>通用跟踪格式（CTF）支持<a class="headerlink" href="#common-trace-format-ctf-support" title="链接到此标题。"></a></h3>
+<p>通用跟踪格式（Common Trace Format，CTF）是一种用于描述跟踪格式的开放格式和语言。它使工具可以复用，目前已有文本行形式（babeltrace）和图形化（TraceCompass）的工具。</p>
+<p>C 程序员会觉得 CTF 很眼熟，但它增加了更强的类型约束。请参阅 <a class="reference external" href="https://diamon.org/ctf/">CTF - A Flexible, High-performance Binary Trace Format</a>。</p>
+<p>CTF 让我们可以形式化地描述应用程序特定的有效载荷和序列化格式，从而为主机工具和解析器以及过滤和展示工具提供通用的基础设施。</p>
+<section id="a-generic-interface">
+<h4>通用接口<a class="headerlink" href="#a-generic-interface" title="链接到此标题。"></a></h4>
+<p>在 CTF 中，一个事件被序列化为包含一个或多个字段的数据包。如下文 <em>I/O 分类</em> 一节所示，底层可以：</p>
+<ul class="simple">
+<li><p>在事务开始时执行操作（例如锁定互斥量），</p></li>
+<li><p>以某种方式处理每个字段（例如同步推送发出、拼接、加入与线程绑定的 FIFO），</p></li>
+<li><p>在事务结束时执行操作（例如释放互斥量、发出拼接缓冲区）。</p></li>
+</ul>
+</section>
+<section id="ctf-top-layer-example">
+<h4>CTF 顶层示例<a class="headerlink" href="#ctf-top-layer-example" title="链接到此标题。"></a></h4>
+<p>CTF_EVENT 宏会把每个参数序列化为一个字段:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>/* Example for illustration */
+static inline void ctf_top_foo(uint32_t thread_id, ctf_bounded_string_t name)
+{
+  CTF_EVENT(
+    CTF_LITERAL(uint8_t, 42),
+    thread_id,
+    name,
+    "hello, I was emitted from function: ",
+    __func__  /* __func__ is standard since C99 */
+  );
+}
+</pre></div>
+</div>
+<p>如何序列化和发出字段以及如何处理对齐，可以在底层内部于编译时静态完成。</p>
+<p>CTF 顶层通过配置选项 <a class="reference internal" href="../../kconfig.html#CONFIG_TRACING_CTF" title="CONFIG_TRACING_CTF"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TRACING_CTF</span></code></a> 启用，可以与不同的传输后端一起以同步和异步模式使用。</p>
+</section>
+</section>
+</section>
+<section id="tracing-tools">
+<span id="tools"></span><h2>跟踪工具<a class="headerlink" href="#tracing-tools" title="链接到此标题。"></a></h2>
+<p>Zephyr 支持多种流行的跟踪工具，下面按字母顺序介绍。</p>
+<section id="percepio-tracealyzer-support">
+<h3>Percepio Tracealyzer 支持<a class="headerlink" href="#percepio-tracealyzer-support" title="链接到此标题。"></a></h3>
+<p>Zephyr 支持 <a class="reference external" href="https://percepio.com/tracealyzer">Percepio Tracealyzer</a>，它提供跟踪可视化以简化分析，还提供报告生成和其他分析功能。Tracealyzer 支持通过多种接口进行跟踪流式传输，也支持快照跟踪，即将事件保存在 RAM 缓冲区中。</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../../_images/percepio_tracealyzer.png"><img alt="Percepio Tracealyzer" src="../../_images/percepio_tracealyzer.png" style="width: 80%;" />
+</a>
+</figure>
+<p>启用 Tracealyzer 跟踪后，Zephyr 内核事件会被自动捕获。Tracealyzer 还对应用程序日志提供了广泛的支持，你可以在应用程序代码中调用跟踪库。这样就能把内核事件和应用程序事件放在一起可视化，例如以数据曲线或状态图的形式展示记录的变量。更多内容请参阅应用程序随附的 Tracealyzer 用户手册。</p>
+<section id="percepio-tracerecorder-and-stream-ports">
+<h4>Percepio TraceRecorder 与流端口<a class="headerlink" href="#percepio-tracerecorder-and-stream-ports" title="链接到此标题。"></a></h4>
+<p>Tracealyzer 的跟踪库（TraceRecorder）已包含在 Zephyr 清单（manifest）中，并以相同的许可证（Apache 2.0）提供。在 prj.conf 中添加以下配置选项即可启用：</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">CONFIG_TRACING</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_PERCEPIO_TRACERECORDER</span><span class="o">=</span><span class="s">y</span>
+</pre></div>
+</div>
+<p>或者使用 menuconfig：</p>
+<ul class="simple">
+<li><p>启用 <span class="menuselection">Subsystems and OS Services ‣ Tracing Support</span></p></li>
+<li><p>在 <span class="menuselection">Subsystems and OS Services ‣ Tracing Support ‣ Tracing Format</span> 下选择 <span class="guilabel">Percepio Tracealyzer</span></p></li>
+</ul>
+<p>配置 TraceRecorder 还需要一些额外的设置。最重要的配置是选择正确的“流端口（stream port）”，它指定如何输出跟踪数据。截至 2024 年 7 月，Zephyr 配置系统中提供以下流端口：</p>
+<ul class="simple">
+<li><p><strong>Ring Buffer</strong>：跟踪数据保存在 RAM 环形缓冲区中。</p></li>
+<li><p><strong>RTT</strong>：在 J-Link 调试探针上通过 Segger RTT 进行跟踪流式传输。</p></li>
+<li><p><strong>ITM</strong>：在 Arm Cortex-M 设备上通过 ITM 功能进行跟踪流式传输。</p></li>
+<li><p><strong>Semihost</strong>：用于在 QEMU 上跟踪，将跟踪数据流式写入主机文件。</p></li>
+</ul>
+<p>在 menuconfig 中的 <span class="menuselection">Modules ‣ percepio ‣ TraceRecorder ‣ Stream Port</span> 下选择流端口。</p>
+<p>或者直接在 prj.conf 中添加以下选项之一：</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">CONFIG_PERCEPIO_TRC_CFG_STREAM_PORT_RINGBUFFER</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_PERCEPIO_TRC_CFG_STREAM_PORT_RTT</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_PERCEPIO_TRC_CFG_STREAM_PORT_ITM</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_PERCEPIO_TRC_CFG_STREAM_PORT_ZEPHYR_SEMIHOST</span><span class="o">=</span><span class="s">y</span>
+</pre></div>
+</div>
+<p>确保只包含这些配置选项中的一个。</p>
+<p>各流端口模块有各自的配置选项。在 menuconfig 中，它们位于 <span class="menuselection">Modules ‣ percepio ‣ TraceRecorder ‣ (Stream Port) Config</span> 下。下面介绍每个流端口最重要的选项。</p>
+</section>
+<section id="tracealyzer-snapshot-tracing-ring-buffer">
+<h4>Tracealyzer 快照跟踪（Ring Buffer）<a class="headerlink" href="#tracealyzer-snapshot-tracing-ring-buffer" title="链接到此标题。"></a></h4>
+<p>“Ring Buffer”流端口将跟踪数据保存在设备上的 RAM 缓冲区中。默认情况下这是一个环形缓冲区，即总是包含最新的数据。它用于转储跟踪数据的“快照”，例如通过调试器转储。除非你有数兆字节的空闲 RAM，否则通常只能得到较短的跟踪，因此不适合用于性能剖析。不过，它与断点结合用于调试时非常有用。例如，如果在错误处理程序中设置断点，快照跟踪可以显示导致该错误的事件序列。快照跟踪也很容易上手，因为它不依赖任何特定的调试探针或其他开发工具。</p>
+<p>要使用 Ring Buffer 选项，请确保 prj.cnf 中有以下配置选项：</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">CONFIG_TRACING</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_PERCEPIO_TRACERECORDER</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_PERCEPIO_TRC_START_MODE_START</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_PERCEPIO_TRC_CFG_STREAM_PORT_RINGBUFFER</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_PERCEPIO_TRC_CFG_STREAM_PORT_RINGBUFFER_SIZE</span><span class="o">=</span><span class="s">&lt;size in bytes&gt;</span>
+</pre></div>
+</div>
+<p>或者使用 menuconfig：</p>
+<ul class="simple">
+<li><p>启用 <span class="menuselection">Subsystems and OS Services ‣ Tracing Support</span></p></li>
+<li><p>在 <span class="menuselection">Subsystems and OS Services ‣ Tracing Support ‣ Tracing Format</span> 下选择 <span class="guilabel">Percepio Tracealyzer</span></p></li>
+<li><p>在 <span class="menuselection">Modules ‣ percepio ‣ TraceRecorder ‣ Recorder Start Mode</span> 下选择 <span class="guilabel">Start</span></p></li>
+<li><p>在 <span class="menuselection">Modules ‣ percepio ‣ TraceRecorder ‣ Stream Port</span> 下选择 <span class="guilabel">Ring Buffer</span></p></li>
+<li><p>在 <span class="menuselection">Modules ‣ percepio ‣ TraceRecorder ‣ Ring Buffer Config ‣ Buffer Size</span> 下设置缓冲区大小（以字节为单位）。</p></li>
+</ul>
+<p>如果 RAM 紧张，可以减小默认的缓冲区大小；如果有富余的 RAM 并希望获得更长的跟踪，则可以增大它。也可以优化跟踪配置设置，过滤掉不太重要的事件，以获得更长的跟踪。在 menuconfig 中，请参阅 <span class="menuselection">Subsystems and OS Services ‣ Tracing Support ‣ Tracing Configuration</span>。</p>
+<p>查看跟踪数据最简单的方法是启动调试器（west debug），然后运行以下 GDB 命令:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>dump binary value trace.bin *RecorderDataPtr
+</pre></div>
+</div>
+<p>除非指定了其他路径，生成的文件通常位于构建目录的根目录下。在 Tracealyzer 中选择 <span class="menuselection">File ‣ Open ‣ Open File</span> 打开该文件。</p>
+</section>
+<section id="tracealyzer-streaming-with-segger-rtt">
+<h4>使用 SEGGER RTT 进行 Tracealyzer 流式传输<a class="headerlink" href="#tracealyzer-streaming-with-segger-rtt" title="链接到此标题。"></a></h4>
+<p>Tracealyzer 内置对 SEGGER RTT 的支持，可以使用 J-Link 探针接收跟踪数据，从而记录非常长的跟踪。要将 Zephyr 配置为通过 RTT 向 Tracealyzer 流式传输，请在 prj.cnf 中添加以下配置选项：</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">CONFIG_TRACING</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_PERCEPIO_TRACERECORDER</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_PERCEPIO_TRC_START_MODE_START_FROM_HOST</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_PERCEPIO_TRC_CFG_STREAM_PORT_RTT</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_PERCEPIO_TRC_CFG_STREAM_PORT_RTT_UP_BUFFER_SIZE</span><span class="o">=</span><span class="s">&lt;size in bytes&gt;</span>
+</pre></div>
+</div>
+<p>或者使用 menuconfig：</p>
+<ul class="simple">
+<li><p>启用 <span class="menuselection">Subsystems and OS Services ‣ Tracing Support</span></p></li>
+<li><p>在 <span class="menuselection">Subsystems and OS Services ‣ Tracing Support ‣ Tracing Format</span> 下选择 <span class="guilabel">Percepio Tracealyzer</span></p></li>
+<li><p>在 <span class="menuselection">Modules ‣ percepio ‣ TraceRecorder ‣ Recorder Start Mode</span> 下选择 <span class="guilabel">Start From Host</span></p></li>
+<li><p>在 <span class="menuselection">Modules ‣ percepio ‣ TraceRecorder ‣ Stream Port</span> 下选择 <span class="guilabel">RTT</span></p></li>
+<li><p>在 <span class="menuselection">Modules ‣ percepio ‣ TraceRecorder ‣ RTT Config</span> 下设置 RTT “up”缓冲区的大小（以字节为单位）。</p></li>
+</ul>
+<p><span class="guilabel">RTT buffer size up</span> 设置 RTT 发送缓冲区的大小，这对吞吐量很重要。默认情况下该缓冲区相当大（5000 字节），以便在板载 J-Link 调试器上也能获得不错的性能（板载调试器没有独立探针快）。如果 RAM 紧张，可以考虑减小这一设置。如果使用常规的 J-Link 探针，通常使用小得多的缓冲区（例如 1 KB 或更小）就足够了。</p>
+<p>有关 RTT 流式传输的更多内容，请参阅 Tracealyzer 用户手册中的 Creating and Loading Traces -&gt; Percepio TraceRecorder -&gt; Using TraceRecorder v4.6 or later -&gt; Stream ports（或搜索 RTT）。</p>
+</section>
+<section id="tracealyzer-streaming-with-arm-itm">
+<h4>使用 Arm ITM 进行 Tracealyzer 流式传输<a class="headerlink" href="#tracealyzer-streaming-with-arm-itm" title="链接到此标题。"></a></h4>
+<p>此流端口适用于带有 ITM 单元的 Arm Cortex-M 设备。建议使用支持 10 MHz 或更高 SWO 速率的高速调试探针。要使用此流端口，请应用以下配置选项：</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">CONFIG_TRACING</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_PERCEPIO_TRACERECORDER</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_PERCEPIO_TRC_START_MODE_START</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_PERCEPIO_TRC_CFG_STREAM_PORT_ITM</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_PERCEPIO_TRC_CFG_STREAM_PORT_ITM_PORT</span><span class="o">=</span><span class="s">1</span>
+</pre></div>
+</div>
+<p>或者使用 menuconfig：</p>
+<ul class="simple">
+<li><p>启用 <span class="menuselection">Subsystems and OS Services ‣ Tracing Support</span></p></li>
+<li><p>在 <span class="menuselection">Subsystems and OS Services ‣ Tracing Support ‣ Tracing Format</span> 下选择 <span class="guilabel">Percepio Tracealyzer</span></p></li>
+<li><p>在 <span class="menuselection">Modules ‣ percepio ‣ TraceRecorder ‣ Recorder Start Mode</span> 下选择 <span class="guilabel">Start</span></p></li>
+<li><p>在 <span class="menuselection">Modules ‣ percepio ‣ TraceRecorder ‣ Stream Port</span> 下选择 <span class="guilabel">ITM</span></p></li>
+<li><p>在 <span class="menuselection">Modules ‣ percepio ‣ TraceRecorder ‣ ITM Config</span> 下将 ITM 端口设为 1。</p></li>
+</ul>
+<p>ITM 流端口的主要设置是 ITM 端口（0-31）。Tracealyzer 需要一个专用通道。端口 0 通常保留给 printf 日志，因此默认使用通道 1。</p>
+<p><span class="guilabel">Use internal buffer</span> 选项通常应保持禁用。它会在发送之前把数据缓冲在 RAM 中，并将数据发送推迟到周期运行的 TzCtrl 线程中进行。</p>
+<p>主机端的设置取决于所用的调试探针。更多内容请参阅 Tracealyzer 用户手册中的 <span class="menuselection">Creating and Loading Traces ‣ Percepio TraceRecorder ‣ Using TraceRecorder v4.6 or later ‣ Stream ports (or search for ITM)</span>。</p>
+</section>
+<section id="tracealyzer-streaming-from-qemu-semihost">
+<h4>从 QEMU 进行 Tracealyzer 流式传输（Semihost）<a class="headerlink" href="#tracealyzer-streaming-from-qemu-semihost" title="链接到此标题。"></a></h4>
+<p>此流端口专为在 QEMU 中跟踪 Zephyr 而设计。这是一种入门跟踪的简便方法，无需高速调试探针即可尝试流式跟踪。数据通过半主机（semihosting）流式写入主机文件。要使用此选项，请应用以下配置选项：</p>
+<div class="highlight-cfg notranslate"><div class="highlight"><pre><span></span><span class="na">CONFIG_SEMIHOST</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_TRACING</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_PERCEPIO_TRACERECORDER</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_PERCEPIO_TRC_START_MODE_START</span><span class="o">=</span><span class="s">y</span>
+<span class="na">CONFIG_PERCEPIO_TRC_CFG_STREAM_PORT_ZEPHYR_SEMIHOST</span><span class="o">=</span><span class="s">y</span>
+</pre></div>
+</div>
+<p>使用 menuconfig</p>
+<ul class="simple">
+<li><p>启用 <span class="menuselection">General Architecture Options ‣ Semihosting support for Arm and RISC-V targets</span></p></li>
+<li><p>启用 <span class="menuselection">Subsystems and OS Services ‣ Tracing Support</span></p></li>
+<li><p>在 <span class="menuselection">Subsystems and OS Services ‣ Tracing Support ‣ Tracing Format</span> 下选择 <span class="guilabel">Percepio Tracealyzer</span></p></li>
+<li><p>在 <span class="menuselection">Modules ‣ percepio ‣ TraceRecorder ‣ Recorder Start Mode</span> 下选择 <span class="guilabel">Start</span></p></li>
+<li><p>在 <span class="menuselection">Modules ‣ percepio ‣ TraceRecorder ‣ Stream Port</span> 下选择 <span class="guilabel">Semihost</span></p></li>
+</ul>
+<p>除非指定了其他路径，生成的跟踪文件默认位于构建目录根目录下的 <code class="file docutils literal notranslate"><span class="pre">./trace.psf</span></code>。在 <a class="reference external" href="https://percepio.com/tracealyzer">Percepio Tracealyzer</a> 中选择 <span class="menuselection">File ‣ Open ‣ Open File</span> 打开该文件。</p>
+</section>
+<section id="recorder-start-mode">
+<h4>记录器启动模式<a class="headerlink" href="#recorder-start-mode" title="链接到此标题。"></a></h4>
+<p>你可能已经注意到上面 Tracealyzer 示例中的 <span class="guilabel">Recorder Start Mode</span> 选项。它决定跟踪何时开始。选择 <span class="guilabel">Start</span> 时，跟踪在启动时、TraceRecorder 库初始化完成后立即开始。使用 Ring Buffer 和 Semihost 流端口时推荐这种方式。</p>
+<p>通过 RTT 或 ITM 流式传输时，也可以使用 <span class="guilabel">Start From Host</span> 或 <span class="guilabel">Start Await Host</span>。二者都会监听来自 Tracealyzer 应用程序的启动命令。后者 <span class="guilabel">Start Await Host</span> 会使 TraceRecorder 初始化阻塞，直到收到来自 Tracealyzer 应用程序的启动命令。</p>
+</section>
+<section id="custom-stream-ports-for-tracealyzer">
+<h4>Tracealyzer 的自定义流端口<a class="headerlink" href="#custom-stream-ports-for-tracealyzer" title="链接到此标题。"></a></h4>
+<p>流端口是 TraceRecorder 中的小模块，定义了输出跟踪数据时调用哪些函数，以及（可选）如何从 Tracealyzer 读取启动/停止命令。编写自定义流端口来实现自己的数据传输相当容易，Tracealyzer 可以通过多种接口接收跟踪流，包括文件、套接字、COM 端口、命名管道等。注意，TraceRecorder 仓库中还提供了其他流端口模块（例如 lwIP），但可能需要修改才能在 Zephyr 上使用。</p>
+</section>
+<section id="learning-more">
+<h4>了解更多<a class="headerlink" href="#learning-more" title="链接到此标题。"></a></h4>
+<p>有关如何入门的更多内容，请参阅 <a class="reference external" href="https://percepio.com/tracealyzer/gettingstarted/">Tracealyzer Getting Started Guides</a>。</p>
+</section>
+</section>
+<section id="percepio-view-for-zephyr">
+<h3>Percepio View for Zephyr<a class="headerlink" href="#percepio-view-for-zephyr" title="链接到此标题。"></a></h3>
+<p>Percepio View 是一款基于 <a class="reference external" href="https://percepio.com/tracealyzer">Percepio Tracealyzer</a> 的免费跟踪工具，用于调试和验证 Zephyr 应用程序。</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../../_images/percepio_view.webp"><img alt="Percepio View" src="../../_images/percepio_view.webp" style="width: 80%;" />
+</a>
+</figure>
+<p>Percepio View 可以与传统调试器配合使用，它可视化线程、ISR、系统调用以及你自己的“用户事件（User Events）”的实时执行情况，是对调试器的补充。</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../../_images/percepio_view_user_event.webp"><img alt="Percepio View 用户事件" src="../../_images/percepio_view_user_event.webp" style="width: 80%;" />
+</a>
+</figure>
+<p>要进一步了解 Percepio View、如何入门以及升级选项，请访问 <a class="reference external" href="https://traceviewer.io/get-view/?target=zephyr">Percepio 的产品页面</a>。</p>
+<p>Percepio View 提供快照跟踪，即数据存储在目标 RAM 中的环形缓冲区里，并通过常规调试器连接保存到主机。如需跟踪流式传输支持，Percepio 提供（付费）升级到 Percepio Profile 或 Percepio Tracealyzer。无需修改 Zephyr 源代码，只需在 Kconfig 中启用 TraceRecorder 库。Percepio View 可在 Windows 和 Linux 主机上运行。</p>
+</section>
+<section id="segger-systemview-support">
+<h3>SEGGER SystemView 支持<a class="headerlink" href="#segger-systemview-support" title="链接到此标题。"></a></h3>
+<p>Zephyr 内置对 <a class="reference external" href="https://www.segger.com/products/development-tools/systemview/">SEGGER SystemView</a> 的支持，对于具备所需硬件支持的平台，任何应用程序都可以启用它。</p>
+<p>SystemView 所用的有效载荷和格式是应用程序定制的，并依赖 RTT 作为传输方式。较新版本的 SystemView 支持其他传输方式，例如 UART 或快照模式（Zephyr 目前都还不支持）。</p>
+<p>要启用 <a class="reference external" href="https://www.segger.com/products/development-tools/systemview/">SEGGER SystemView</a> 跟踪支持，请在构建命令中加入 <a class="reference internal" href="../../snippets/rtt-tracing/README.html#snippet-rtt-tracing"><span class="std std-ref">SystemView RTT 跟踪代码片段（rtt-tracing）</span></a>：</p>
+<blockquote>
+<div><div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>&lt;board&gt;<span class="w"> </span>-S<span class="w"> </span>rtt-tracing<span class="w"> </span>samples/synchronization
+</pre></div>
+</div>
+</div></blockquote>
+<p>SystemView 也可以用于事后（post-mortem）跟踪，可通过 <a class="reference internal" href="../../kconfig.html#CONFIG_SEGGER_SYSVIEW_POST_MORTEM_MODE" title="CONFIG_SEGGER_SYSVIEW_POST_MORTEM_MODE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SEGGER_SYSVIEW_POST_MORTEM_MODE</span></code></a> 启用。在这种模式下，系统崩溃后可以使用 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">attach</span></code> 连接调试器，然后将内部 RAM 缓冲区中的最新数据加载到 SystemView 中。</p>
+<figure class="align-center">
+<a class="reference internal image-reference" href="../../_images/segger_systemview.png"><img alt="SEGGER SystemView" src="../../_images/segger_systemview.png" style="width: 80%;" />
+</a>
+</figure>
+<p>较新版本的 <a class="reference external" href="https://www.segger.com/products/development-tools/systemview/">SEGGER SystemView</a> 附带了一个 Zephyr 的 API 转换表，但该表不完整，与 Zephyr 当前的支持程度也不一致。要使用最新的 Zephyr API 描述表，请把树中提供的文件复制到本地配置目录，以覆盖内置的表:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># On Linux and MacOS
+cp $ZEPHYR_BASE/subsys/tracing/sysview/SYSVIEW_Zephyr.txt ~/.config/SEGGER/
+</pre></div>
+</div>
+</section>
+<section id="tracecompass">
+<h3>TraceCompass<a class="headerlink" href="#tracecompass" title="链接到此标题。"></a></h3>
+<p>TraceCompass 是一个开源工具，用于可视化线程调度和中断等 CTF 事件，有助于发现复杂系统中意外的交互和资源冲突。</p>
+<p>另请参阅 Ericsson 的演讲 <a class="reference external" href="https://wiki.eclipse.org/images/0/0e/TechTalkOnlineDemoFeb2017_v1.pdf">Advanced Trouble-shooting Of Real-time Systems</a>。</p>
+</section>
+<section id="perfetto">
+<h3>Perfetto<a class="headerlink" href="#perfetto" title="链接到此标题。"></a></h3>
+<p><a class="reference external" href="https://perfetto.dev/">Perfetto</a> 是一个用于 Chrome <a class="reference external" href="https://docs.google.com/document/d/1CvAClvFfyA5R-PhYUmn5OOQtYMH4h6I0nSsKchNAySU">Trace Event Format</a> 的网页版跟踪查看器。它显示的调度和中断活动与 TraceCompass 相同，而且无需安装任何工具：<a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/scripts/tracing/ctf2perfetto.py">scripts/tracing/ctf2perfetto.py</a> 只需 Python 3 即可把 CTF 跟踪转换为该格式:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ZEPHYR_BASE/scripts/tracing/ctf2perfetto.py &lt;trace file&gt; -o trace.json
+</pre></div>
+</div>
+<p>在 <a class="reference external" href="https://ui.perfetto.dev">https://ui.perfetto.dev</a> 加载 <code class="docutils literal notranslate"><span class="pre">trace.json</span></code> 后，会得到一条时间线，每个线程一条泳道，另外还有 ISR 以及信号量、互斥量、定时器等内核对象的泳道。</p>
+<p><a class="reference internal" href="../instrumentation/index.html#instrumentation"><span class="std std-ref">插桩</span></a> 子系统根据函数调用跟踪写出相同的格式，因此同一次构建可以用两种方式在同一个查看器中查看。</p>
+<p>与 babeltrace2 的预期一致，TSDL <code class="docutils literal notranslate"><span class="pre">metadata</span></code> 从跟踪文件旁边读取，除非 <code class="docutils literal notranslate"><span class="pre">--metadata</span></code> 指向其他位置。请使用生成该跟踪的那次构建所产生的元数据：CTF 记录不带长度，因此无法跳过元数据中未描述的记录，此时转换器会停止并给出该记录的事件 id，而不是写出不完整的跟踪。</p>
+</section>
+<section id="user-defined-tracing">
+<h3>用户自定义跟踪<a class="headerlink" href="#user-defined-tracing" title="链接到此标题。"></a></h3>
+<p>这种跟踪格式让应用程序可以定义在每个钩子上运行的普通 C 函数，无需编写或派生跟踪头文件。每个 <code class="docutils literal notranslate"><span class="pre">sys_port_trace_*</span></code> 钩子都被路由到一个名为 <code class="docutils literal notranslate"><span class="pre">sys_trace_&lt;event&gt;_user()</span></code> 的 <code class="docutils literal notranslate"><span class="pre">__weak</span></code> 回调；应用程序只需覆盖它关心的回调，未定义的回调都是空操作。</p>
+<p>示例包括：</p>
+<ul class="simple">
+<li><p>简单地翻转 GPIO，以便用外部示波器跟踪，同时尽量减少额外的 CPU 负载</p></li>
+<li><p>以其他跟踪系统无法支持的非标准或专有格式生成/输出跟踪数据</p></li>
+</ul>
+<p>这些回调涵盖线程/调度器、ISR、空闲、系统初始化和睡眠事件、GPIO、定时器、RTIO 以及内核对象（信号量、互斥量、条件变量、消息队列、邮箱、事件、轮询、内存块（slab）和工作队列）。权威列表及确切签名见 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/subsys/tracing/user/tracing_user.h">subsys/tracing/user/tracing_user.h</a> 中的 <code class="docutils literal notranslate"><span class="pre">sys_trace_*_user</span></code> 声明。下面是一个有代表性的子集：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">sys_trace_thread_create_user</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">k_thread</span><span class="w"> </span><span class="o">*</span><span class="kr">thread</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">sys_trace_thread_switched_in_user</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">sys_trace_thread_switched_out_user</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">sys_trace_isr_enter_user</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">sys_trace_isr_exit_user</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">sys_trace_idle_user</span><span class="p">(</span><span class="kt">void</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">sys_trace_k_sem_give_enter_user</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">k_sem</span><span class="w"> </span><span class="o">*</span><span class="n">sem</span><span class="p">);</span>
+<span class="kt">void</span><span class="w"> </span><span class="nf">sys_trace_k_mutex_lock_enter_user</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">k_mutex</span><span class="w"> </span><span class="o">*</span><span class="n">mutex</span><span class="p">,</span><span class="w"> </span><span class="n">k_timeout_t</span><span class="w"> </span><span class="n">timeout</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>使用 <a class="reference internal" href="../../kconfig.html#CONFIG_TRACING_USER" title="CONFIG_TRACING_USER"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TRACING_USER</span></code></a> 选项启用这种格式。<a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/tests/subsys/tracing/tracing_user_callbacks">tests/subsys/tracing/tracing_user_callbacks</a> 展示了一个覆盖对象回调的应用程序。</p>
+</section>
+<section id="out-of-tree-tracing-formats">
+<h3>树外跟踪格式<a class="headerlink" href="#out-of-tree-tracing-formats" title="链接到此标题。"></a></h3>
+<p>下游模块无需修改 Zephyr 树即可提供自己的跟踪格式。将 <a class="reference internal" href="../../kconfig.html#CONFIG_TRACING_FORMAT_HEADER" title="CONFIG_TRACING_FORMAT_HEADER"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TRACING_FORMAT_HEADER</span></code></a>（一个没有提示的 Kconfig 字符串，在模块的 <code class="docutils literal notranslate"><span class="pre">Kconfig</span></code> 中通过 <code class="docutils literal notranslate"><span class="pre">default</span></code> 赋值）设为包含路径上某个头文件的名称；当未选择任何树内格式时，<a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/tracing/tracing.h">include/zephyr/tracing/tracing.h</a> 会通过计算得到的 <code class="docutils literal notranslate"><span class="pre">#include</span></code> 引入它。</p>
+<p>格式头文件定义它要记录的 <code class="docutils literal notranslate"><span class="pre">sys_port_trace_*</span></code> 钩子，并以如下内容结尾：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* default no-ops for the scheduler/idle/init/named function layer */</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/tracing/tracing_default_hooks.h&gt;</span>
+<span class="cm">/* no-op for every sys_port_trace_* hook this header does not define */</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/tracing/tracing_hooks.h&gt;</span>
+</pre></div>
+</div>
+<p>因此一种格式只需实现它关心的钩子。跟踪传输方式通过 <code class="docutils literal notranslate"><span class="pre">TRACING_BACKEND_DEFINE()</span></code> 独立添加（参见 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/subsys/tracing/include/tracing_backend.h">subsys/tracing/include/tracing_backend.h</a>），因此无论自定义格式还是自定义后端都不需要修改核心树。<a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/tests/subsys/tracing/tracing_format_module">tests/subsys/tracing/tracing_format_module</a> 是一个完整的示例。</p>
+</section>
+</section>
+<section id="transport-backends">
+<h2>传输后端<a class="headerlink" href="#transport-backends" title="链接到此标题。"></a></h2>
+<p>目前支持以下后端：</p>
+<ul class="simple">
+<li><p>UART</p></li>
+<li><p>USB</p></li>
+<li><p>文件（在基于 POSIX 架构的目标上使用 native 移植）</p></li>
+<li><p>RTT（配合 SystemView）</p></li>
+<li><p>RAM（由调试器取回缓冲区）</p></li>
+</ul>
+</section>
+<section id="using-tracing">
+<h2>使用跟踪<a class="headerlink" href="#using-tracing" title="链接到此标题。"></a></h2>
+<p>示例 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/samples/subsys/tracing">samples/subsys/tracing</a> 演示了使用不同格式和后端进行跟踪。</p>
+<p>最简单的入门方法是在 <a class="reference internal" href="../../boards/native/native_sim/doc/index.html#native_sim"><span class="xref zephyr zephyr-board">native_sim</span></a> 移植上使用 CTF 格式，按如下方式构建该示例：</p>
+<p>使用 west：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+west<span class="w"> </span>build<span class="w"> </span>-b<span class="w"> </span>native_sim<span class="w"> </span>samples/subsys/tracing<span class="w"> </span>--<span class="w"> </span>-DCONF_FILE<span class="o">=</span>prj_native_ctf.conf
+</pre></div>
+</div>
+<p>使用 CMake 和 ninja：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span><span class="c1"># From the root of the zephyr repository</span>
+<span class="c1"># Use cmake to configure a Ninja-based buildsystem:</span>
+cmake<span class="w"> </span>-Bbuild<span class="w"> </span>-GNinja<span class="w"> </span>-DBOARD<span class="o">=</span>native_sim<span class="w"> </span>-DCONF_FILE<span class="o">=</span>prj_native_ctf.conf<span class="w"> </span>samples/subsys/tracing
+
+<span class="c1"># Now run the build tool on the generated build system:</span>
+ninja<span class="w"> </span>-Cbuild
+</pre></div>
+</div>
+<p>然后可以使用 <code class="docutils literal notranslate"><span class="pre">-trace-file</span></code> 选项运行生成的二进制文件，以生成跟踪数据:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>mkdir data
+cp $ZEPHYR_BASE/subsys/tracing/ctf/tsdl/metadata data/
+./build/zephyr/zephyr.exe -trace-file=data/channel0_0
+</pre></div>
+</div>
+<p>将 babeltrace 或 TraceCompass 指向包含元数据和跟踪文件的 <code class="docutils literal notranslate"><span class="pre">data</span></code> 目录，即可可视化生成的 CTF 输出。</p>
+<section id="using-ram-backend">
+<h3>使用 RAM 后端<a class="headerlink" href="#using-ram-backend" title="链接到此标题。"></a></h3>
+<p>对于没有可用于跟踪的 I/O（例如 USB 或 UART）、但有足够 RAM 来收集跟踪数据的设备，可以通过配置 <a class="reference internal" href="../../kconfig.html#CONFIG_TRACING_BACKEND_RAM" title="CONFIG_TRACING_BACKEND_RAM"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TRACING_BACKEND_RAM</span></code></a> 启用 RAM 后端。调整 <a class="reference internal" href="../../kconfig.html#CONFIG_RAM_TRACING_BUFFER_SIZE" title="CONFIG_RAM_TRACING_BUFFER_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_RAM_TRACING_BUFFER_SIZE</span></code></a>，使其能够记录满足需要的跟踪量。然后借助 gdb 之类的运行时调试器，就可以把该缓冲区从目标取回到主机:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>(gdb) dump binary memory data/channel0_0 &lt;ram_tracing_start&gt; &lt;ram_tracing_end&gt;
+</pre></div>
+</div>
+<p>与其他后端一样，生成的 channel0_0 文件必须与 <code class="docutils literal notranslate"><span class="pre">metadata</span></code> 文件放在同一目录中。</p>
+</section>
+</section>
+<section id="future-lttng-inspiration">
+<h2>未来借鉴 LTTng<a class="headerlink" href="#future-lttng-inspiration" title="链接到此标题。"></a></h2>
+<p>目前这里提供的顶层相当简单、简陋，而且是从 Zephyr 的 Segger SystemView 调试模块中不必要地复制过来的。</p>
+<p>对于像 Zephyr 这样的操作系统，借鉴 Linux 的 LTTng 并把顶层改为序列化成相同格式是合理的。这样就能直接复用 TraceCompass 中针对 Linux 的现成分析。或者，也可以针对 Zephyr 定制 TraceCompass 中的 LTTng 分析。以与目标无关的开源方式让 TraceCompass 能够分析 Zephyr，这项工作正在进行中。</p>
+<section id="i-o-taxonomy">
+<h3>I/O 分类<a class="headerlink" href="#i-o-taxonomy" title="链接到此标题。"></a></h3>
+<ul>
+<li><p>原子推送/生产/写入/入队：</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>同步：</dt><dd><p>表示调用返回时数据传输已经完成。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>异步：</dt><dd><p>表示调用返回时数据传输仍在等待或进行中。通常使用中断/回调/信号或轮询来判断是否完成。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>缓冲：</dt><dd><p>表示多次数据传输被复制并合并成更大的传输。通常用于分摊开销（突发出队）或减轻抖动（平稳出队）。</p>
+</dd>
+</dl>
+</li>
+</ul>
+<dl class="simple">
+<dt>示例：</dt><dd><ul class="simple">
+<li><dl class="simple">
+<dt>同步、无缓冲</dt><dd><p>例如通过 GPIO 进行的 PIO，数据流平稳，无需额外的 FIFO 内存。抖动低，但效率可能较低（无法分摊写操作的开销）。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>同步、有缓冲</dt><dd><p>例如 <code class="docutils literal notranslate"><span class="pre">fwrite()</span></code> 或加入 FIFO。当缓冲区水位超过阈值时，以阻塞方式突发清空 FIFO。突发造成的抖动可能导致错过截止时间。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>异步、无缓冲</dt><dd><p>例如 DMA，或共享内存中的零拷贝。要小心数据冒险、竞态条件等问题！</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>异步、有缓冲</dt><dd><p>例如加入 FIFO。</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p>原子拉取/消费/读取/出队：</p>
+<ul class="simple">
+<li><dl class="simple">
+<dt>同步：</dt><dd><p>表示调用返回时数据接收已经完成。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>异步：</dt><dd><p>表示调用返回时数据接收仍在等待或进行中。通常使用中断/回调/信号或轮询来判断是否完成。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>缓冲：</dt><dd><p>表示以比请求大小更大的块复制数据。通常用于分摊等待时间。</p>
+</dd>
+</dl>
+</li>
+</ul>
+<dl class="simple">
+<dt>示例：</dt><dd><ul class="simple">
+<li><dl class="simple">
+<dt>同步、无缓冲</dt><dd><p>例如阻塞式读调用、<code class="docutils literal notranslate"><span class="pre">fread()</span></code> 或 SPI 读取、共享内存中的零拷贝。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>同步、有缓冲</dt><dd><p>例如带缓存的阻塞式读调用。如果读取模式具有空间局部性，这样做是合理的。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>异步、无缓冲</dt><dd><p>例如共享内存中的零拷贝。要小心数据冒险、竞态条件等问题！</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>异步、有缓冲</dt><dd><p>例如 <code class="docutils literal notranslate"><span class="pre">aio_read()</span></code> 或 DMA。</p>
+</dd>
+</dl>
+</li>
+</ul>
+</dd>
+</dl>
+</li>
+</ul>
+<p>遗憾的是，I/O 可能不是原子的，因此可能需要加锁。如果有多个独立的通道可用，则可能不需要加锁。</p>
+<blockquote>
+<div><ul>
+<li><dl>
+<dt>系统的写操作非原子，且只有一个共享通道</dt><dd><p>例如 UART。需要加锁。</p>
+<p><code class="docutils literal notranslate"><span class="pre">lock();</span> <span class="pre">emit(a);</span> <span class="pre">emit(b);</span> <span class="pre">emit(c);</span> <span class="pre">release();</span></code></p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>系统的写操作非原子，但有多个通道</dt><dd><p>例如多路 UART。如果底层把每个 Zephyr 线程+ISR 映射到各自的通道，就可以无锁，因为每个线程自身是顺序一致的，从而缓解了竞争。</p>
+<p><code class="docutils literal notranslate"><span class="pre">emit(a,thread_id);</span> <span class="pre">emit(b,thread_id);</span> <span class="pre">emit(c,thread_id);</span></code></p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>系统的写操作是原子的，但只有一个共享通道</dt><dd><p>例如 <code class="docutils literal notranslate"><span class="pre">native_sim</span></code> 或带 DMA 的开发板。可能需要也可能不需要加锁。</p>
+<p><code class="docutils literal notranslate"><span class="pre">emit(a</span> <span class="pre">##</span> <span class="pre">b</span> <span class="pre">##</span> <span class="pre">c);</span> <span class="pre">/*</span> <span class="pre">Concat</span> <span class="pre">to</span> <span class="pre">buffer</span> <span class="pre">*/</span></code></p>
+<p><code class="docutils literal notranslate"><span class="pre">lock();</span> <span class="pre">emit(a);</span> <span class="pre">emit(b);</span> <span class="pre">emit(c);</span> <span class="pre">release();</span> <span class="pre">/*</span> <span class="pre">No</span> <span class="pre">extra</span> <span class="pre">mem</span> <span class="pre">*/</span></code></p>
+</dd>
+</dl>
+</li>
+<li><dl>
+<dt>系统的写操作是原子的，且有多个通道</dt><dd><p>例如 native_sim 或带多通道 DMA 的开发板。无锁。</p>
+<p><code class="docutils literal notranslate"><span class="pre">emit(a</span> <span class="pre">##</span> <span class="pre">b</span> <span class="pre">##</span> <span class="pre">c,</span> <span class="pre">thread_id);</span></code></p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</section>
+</section>
+<section id="object-tracking">
+<h2>对象跟踪<a class="headerlink" href="#object-tracking" title="链接到此标题。"></a></h2>
+<p>内核还可以跟踪系统中的内核对象。启用 <a class="reference internal" href="../../kconfig.html#CONFIG_TRACING_OBJECT_TRACKING" title="CONFIG_TRACING_OBJECT_TRACKING"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TRACING_OBJECT_TRACKING</span></code></a> 会启用 <a class="reference internal" href="../../kernel/object_cores/index.html#object-cores-api"><span class="std std-ref">对象核心框架</span></a>，它可以枚举每种内核对象类型的对象。例如，要遍历每个互斥量，可以这样写:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>static int visit_mutex(struct k_obj_core *obj_core, void *data)
+{
+    struct k_mutex *mutex = CONTAINER_OF(obj_core, struct k_mutex, obj_core);
+
+    /* Do something */
+
+    return 0;
+}
+
+k_obj_type_walk_locked(k_obj_type_find(K_OBJ_TYPE_MUTEX_ID), visit_mutex, NULL);
+</pre></div>
+</div>
+<p>每种对象类型都可以通过各自的 <code class="docutils literal notranslate"><span class="pre">CONFIG_OBJ_CORE_*</span></code> 选项排除。<a class="reference internal" href="../../samples/kernel/object_cores/README.html#object_cores" title="枚举运行中系统的内核对象并查询其统计信息。">Object cores</a> 示例可以在启用对象跟踪的情况下构建。</p>
+</section>
+<section id="api">
+<h2>API<a class="headerlink" href="#api" title="链接到此标题。"></a></h2>
+<section id="common">
+<h3>通用<a class="headerlink" href="#common" title="链接到此标题。"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">subsys_tracing_apis</span></dt>
+</dl>
+
+</section>
+<section id="threads">
+<h3>线程<a class="headerlink" href="#threads" title="链接到此标题。"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">subsys_tracing_apis_thread</span></dt>
+</dl>
+
+</section>
+<section id="work-queues">
+<h3>工作队列<a class="headerlink" href="#work-queues" title="链接到此标题。"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">subsys_tracing_apis_work</span></dt>
+</dl>
+
+</section>
+<section id="poll">
+<h3>轮询<a class="headerlink" href="#poll" title="链接到此标题。"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">subsys_tracing_apis_poll</span></dt>
+</dl>
+
+</section>
+<section id="semaphore">
+<h3>信号量<a class="headerlink" href="#semaphore" title="链接到此标题。"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">subsys_tracing_apis_sem</span></dt>
+</dl>
+
+</section>
+<section id="mutex">
+<h3>互斥量<a class="headerlink" href="#mutex" title="链接到此标题。"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">subsys_tracing_apis_mutex</span></dt>
+</dl>
+
+</section>
+<section id="condition-variables">
+<h3>条件变量<a class="headerlink" href="#condition-variables" title="链接到此标题。"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">subsys_tracing_apis_condvar</span></dt>
+</dl>
+
+</section>
+<section id="queues">
+<h3>队列<a class="headerlink" href="#queues" title="链接到此标题。"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">subsys_tracing_apis_queue</span></dt>
+</dl>
+
+</section>
+<section id="fifo">
+<h3>FIFO<a class="headerlink" href="#fifo" title="链接到此标题。"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">subsys_tracing_apis_fifo</span></dt>
+</dl>
+
+</section>
+<section id="lifo">
+<h3>LIFO<a class="headerlink" href="#lifo" title="链接到此标题。"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">subsys_tracing_apis_lifo</span></dt>
+</dl>
+
+</section>
+<section id="stacks">
+<h3>栈<a class="headerlink" href="#stacks" title="链接到此标题。"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">subsys_tracing_apis_stack</span></dt>
+</dl>
+
+</section>
+<section id="message-queues">
+<h3>消息队列<a class="headerlink" href="#message-queues" title="链接到此标题。"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">subsys_tracing_apis_msgq</span></dt>
+</dl>
+
+</section>
+<section id="mailbox">
+<h3>邮箱<a class="headerlink" href="#mailbox" title="链接到此标题。"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">subsys_tracing_apis_mbox</span></dt>
+</dl>
+
+</section>
+<section id="pipes">
+<h3>管道<a class="headerlink" href="#pipes" title="链接到此标题。"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">subsys_tracing_apis_pipe</span></dt>
+</dl>
+
+</section>
+<section id="heaps">
+<h3>堆<a class="headerlink" href="#heaps" title="链接到此标题。"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">subsys_tracing_apis_heap</span></dt>
+</dl>
+
+</section>
+<section id="memory-slabs">
+<h3>内存块（slab）<a class="headerlink" href="#memory-slabs" title="链接到此标题。"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">subsys_tracing_apis_mslab</span></dt>
+</dl>
+
+</section>
+<section id="timers">
+<h3>定时器<a class="headerlink" href="#timers" title="链接到此标题。"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">subsys_tracing_apis_timer</span></dt>
+</dl>
+
+</section>
+<section id="syscalls">
+<h3>系统调用<a class="headerlink" href="#syscalls" title="链接到此标题。"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">subsys_tracing_apis_syscall</span></dt>
+</dl>
+
+</section>
+<section id="network-tracing">
+<h3>网络跟踪<a class="headerlink" href="#network-tracing" title="链接到此标题。"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">subsys_tracing_apis_net</span></dt>
+</dl>
+
+</section>
+<section id="network-socket-tracing">
+<h3>网络套接字跟踪<a class="headerlink" href="#network-socket-tracing" title="链接到此标题。"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">subsys_tracing_apis_socket</span></dt>
+</dl>
+
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 9月 14, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

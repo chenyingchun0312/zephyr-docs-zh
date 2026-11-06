@@ -1,0 +1,429 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>内核计时 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/kernel/services/timing/clocks.html" />
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../search.html" />
+    <link rel="next" title="定时器" href="timers.html" />
+    <link rel="prev" title="管道" href="../data_passing/pipes.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html">
+            
+              <img src="../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">内核</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">内核服务</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../index.html#scheduling-interrupts-and-synchronization">调度、中断与同步</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#data-passing">数据传递</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#memory-management">内存管理</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html#timing">计时</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">内核计时</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#time-units">时间单位</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#runtime-system-timer-frequency">运行时系统定时器频率</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#conversion">换算</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#uptime">运行时间</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#timeouts">超时</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#timing-internals">计时的内部实现</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#timeout-queue">超时队列</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#timer-drivers">定时器驱动</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#time-slicing">时间片</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#subsystems-that-keep-millisecond-apis">保留毫秒 API 的子系统</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#subsystems-using-k-timeout-t">使用 <code class="docutils literal notranslate"><span class="pre">k_timeout_t</span></code> 的子系统</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="timers.html">定时器</a></li>
+<li class="toctree-l4"><a class="reference internal" href="system_timer_drivers.html">系统定时器驱动</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#other">其他</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../drivers/index.html">设备驱动模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../usermode/index.html">用户模式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../memory_management/index.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../data_structures/index.html">数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../timing_functions/index.html">计时函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../object_cores/index.html">对象核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../timeutil.html">时间工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../precision_timing.html">精密计时</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../util/index.html">实用工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../iterable_sections/index.html">可迭代段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../code-relocation.html">代码和数据重定位</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../cleanup.html">基于作用域的清理辅助工具</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../index.html">内核</a> &raquo;</li>
+  
+     <li><a href="../index.html">内核服务</a> &raquo;</li>
+  
+  <li>内核计时</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="kernel-timing">
+<span id="id1"></span><h1>内核计时<a class="headerlink" href="#kernel-timing" title="链接到此标题。"></a></h1>
+<p>Zephyr 提供了一套健壮且可扩展的计时框架，能够基于任意精度的硬件计时源报告和跟踪定时事件。</p>
+<section id="time-units">
+<h2>时间单位<a class="headerlink" href="#time-units" title="链接到此标题。"></a></h2>
+<p>内核使用多种时间单位跟踪时间，各自用于不同的目的。</p>
+<p>实际时间值通常以毫秒或微秒为单位指定，是向应用程序代码呈现时间的默认方式。它们的优点是普遍可移植、易于理解，但可能无法与底层硬件的精度完全匹配。</p>
+<p>内核通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_cycle_get_32()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_cycle_get_64()</span></code> API 提供“周期”（cycle）计数。其设计意图是：该计数器代表操作系统能够向用户提供的最快的周期计数器（例如 CPU 周期计数器），并且读取操作非常快。对时间非常敏感的应用程序代码可以用轮询的方式使用它，以获得最高的精度。该计数器的频率可以通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">sys_clock_hw_cycles_per_sec()</span></code> 获取。在大多数平台上，这是一个运行时常量，其值为 <a class="reference internal" href="../../../kconfig.html#CONFIG_SYS_CLOCK_HW_CYCLES_PER_SEC" title="CONFIG_SYS_CLOCK_HW_CYCLES_PER_SEC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SYS_CLOCK_HW_CYCLES_PER_SEC</span></code></a>，并在系统整个生命周期内保持不变。在系统定时器频率不固定的平台上，<code class="xref c c-func docutils literal notranslate"><span class="pre">sys_clock_hw_cycles_per_sec()</span></code> 返回运行时的值，应用程序代码不得假定频率是单一且不变的。</p>
+<section id="runtime-system-timer-frequency">
+<h3>运行时系统定时器频率<a class="headerlink" href="#runtime-system-timer-frequency" title="链接到此标题。"></a></h3>
+<p>有些平台需要在运行时获取系统定时器频率，原因可能是定时器驱动从硬件中探测时钟频率，也可能是定时器时钟频率在启动后会发生变化。</p>
+<p>能够在运行时更改当前系统定时器频率的平台必须启用 <a class="reference internal" href="../../../kconfig.html#CONFIG_SYSTEM_CLOCK_HW_CYCLES_PER_SEC_RUNTIME_UPDATE" title="CONFIG_SYSTEM_CLOCK_HW_CYCLES_PER_SEC_RUNTIME_UPDATE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SYSTEM_CLOCK_HW_CYCLES_PER_SEC_RUNTIME_UPDATE</span></code></a>，并且：</p>
+<ul class="simple">
+<li><p>在应用时钟变更后调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">z_sys_clock_hw_cycles_per_sec_update()</span></code>。</p></li>
+<li><p>如果系统定时器驱动缓存了派生常量（例如每个节拍的周期数），或者需要在时钟变化时重新配置硬件，则需要在定时器驱动中提供 <code class="xref c c-func docutils literal notranslate"><span class="pre">z_sys_clock_hw_cycles_per_sec_update()</span></code> 的覆盖实现。</p></li>
+</ul>
+<p><code class="xref c c-func docutils literal notranslate"><span class="pre">z_sys_clock_hw_cycles_per_sec_update()</span></code> 的默认实现只更新所存储的频率值。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p><a class="reference internal" href="../../../kconfig.html#CONFIG_SYSTEM_CLOCK_HW_CYCLES_PER_SEC_RUNTIME_UPDATE" title="CONFIG_SYSTEM_CLOCK_HW_CYCLES_PER_SEC_RUNTIME_UPDATE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SYSTEM_CLOCK_HW_CYCLES_PER_SEC_RUNTIME_UPDATE</span></code></a> 将系统定时器频率作为单个 <strong>全局</strong> 值进行跟踪。它与按 CPU 调频的配置不兼容，因为在这类配置中，不同 CPU 可能观察到不同的系统定时器频率。</p>
+<p>启用该选项后，<code class="xref c c-func docutils literal notranslate"><span class="pre">sys_clock_hw_cycles_per_sec()</span></code> 和时间单位换算都会遵循当前的运行时值。</p>
+</div>
+<p>为了进行异步计时，内核定义了“节拍”（tick）的概念。“节拍”是内核进行所有内部运行时间和超时记账时使用的内部计数单位。中断应尽可能在节拍边界上产生，内核不跟踪不足一个节拍的部分。节拍频率可以通过 <a class="reference internal" href="../../../kconfig.html#CONFIG_SYS_CLOCK_TICKS_PER_SEC" title="CONFIG_SYS_CLOCK_TICKS_PER_SEC"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SYS_CLOCK_TICKS_PER_SEC</span></code></a> 配置。在大多数硬件平台上（即支持设置任意中断超时的平台），默认值预计在 10 kHz 左右，而软件仿真平台和旧式驱动则使用更传统的 100 Hz。</p>
+</section>
+<section id="conversion">
+<h3>换算<a class="headerlink" href="#conversion" title="链接到此标题。"></a></h3>
+<p>Zephyr 提供了一个列举全面、可控制舍入方式的换算库，覆盖所有时间单位。&quot;ms&quot;（毫秒）、&quot;us&quot;（微秒）、&quot;tick&quot;（节拍）或 &quot;cyc&quot;（周期）中的任何单位都可以换算为其他任何单位。舍入方式可控，每种换算都提供 &quot;floor&quot;（向下舍入到最接近的输出单位）、&quot;ceil&quot;（向上舍入）和 &quot;near&quot;（舍入到最接近值）三种形式。此外，输出精度可以指定为 32 位或 64 位。</p>
+<p>例如：<code class="xref c c-func docutils literal notranslate"><span class="pre">k_ms_to_ticks_ceil32()</span></code> 会把以毫秒为单位的输入值换算为向上取整的节拍数，并返回截断为 32 位精度的结果；<code class="xref c c-func docutils literal notranslate"><span class="pre">k_cyc_to_us_floor64()</span></code> 会以完整的 64 位精度把测得的周期计数换算为经过的微秒数。换算例程的完整列表请参阅参考文档。</p>
+<p>在大多数平台上，各计数器频率互为整数倍，且输出可以容纳在单个字中，这些换算会展开为 2 到 4 个操作的序列，只在确实需要并且被请求时才使用完整精度。</p>
+</section>
+</section>
+<section id="uptime">
+<span id="kernel-timing-uptime"></span><h2>运行时间<a class="headerlink" href="#uptime" title="链接到此标题。"></a></h2>
+<p>内核代表应用程序跟踪系统运行时间（uptime）计数。随时可以通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_uptime_get()</span></code> 获取该值，它返回自系统启动以来的运行时间，单位为毫秒。大多数可移植的应用程序代码应使用这个函数。</p>
+<p>不过，内核内部是以 64 位整数节拍计数进行跟踪的。有精确计时需求的应用程序（并且愿意自行换算为可移植的实际时间单位）可以通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_uptime_ticks()</span></code> 访问该计数。</p>
+<p><code class="xref c c-func docutils literal notranslate"><span class="pre">k_uptime_delta()</span></code> 可用于获取某个参考时间与当前时间之间经过的时间。参考时间会被更新为当前运行时间，以便方便地计算下一次经过的时间。</p>
+</section>
+<section id="timeouts">
+<h2>超时<a class="headerlink" href="#timeouts" title="链接到此标题。"></a></h2>
+<p>Zephyr 内核提供了许多带有“超时”参数的 API。从概念上讲，它表示某个事件将发生的时间。例如：</p>
+<ul class="simple">
+<li><p>诸如 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_sem_take()</span></code> 或 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_queue_get()</span></code> 之类的内核阻塞操作可以指定一个超时，超时到期时若仍无数据可用，例程将返回错误码。</p></li>
+<li><p>内核 <code class="xref c c-struct docutils literal notranslate"><span class="pre">k_timer</span></code> 对象必须为其持续时间和周期指定延迟。</p></li>
+<li><p>内核 <code class="xref c c-struct docutils literal notranslate"><span class="pre">k_work_delayable</span></code> API 提供了一个超时参数，指明工作队列项何时被添加到系统队列中。</p></li>
+</ul>
+<p>所有这些值都使用 <code class="xref c c-type docutils literal notranslate"><span class="pre">k_timeout_t</span></code> 值指定。这是一个不透明的结构体类型，必须使用一系列内核超时宏之一进行初始化。最常用的 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_MSEC</span></code> 定义相对于当前时间的若干毫秒之后的时间。</p>
+<p>对于相对超时，“当前时间”的含义取决于上下文：</p>
+<ul class="simple">
+<li><p>在超时回调中调度相对超时时（例如在传给 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_timer_init()</span></code> 的到期函数中，或在传给 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_work_init_delayable()</span></code> 的工作处理函数中），“当前时间”是当前正在触发的超时最初被调度的确切时间，即使“实际时间”已经向前推进。这是为了确保在另一个定时器回调中调度的定时器，始终以相对于正在触发的定时器的精确偏移来计算。这样就可以按固定间隔触发，而不会随时间累积系统性的时钟漂移。</p></li>
+<li><p>在应用程序上下文中调度超时时，“当前时间”是指内核收到超时值时 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_uptime_ticks()</span></code> 所返回的值。</p></li>
+</ul>
+<p>其他超时初始化方式遵循上述单位约定：<code class="xref c c-macro docutils literal notranslate"><span class="pre">K_NSEC()</span></code>、<code class="xref c c-macro docutils literal notranslate"><span class="pre">K_USEC</span></code>、<code class="xref c c-macro docutils literal notranslate"><span class="pre">K_TICKS</span></code> 和 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_CYC()</span></code> 分别指定在给定的纳秒数、微秒数、节拍数和周期数之后到期的超时值。</p>
+<p><code class="xref c c-type docutils literal notranslate"><span class="pre">k_timeout_t</span></code> 值的精度可配置，默认为 32 位。以非节拍单位表示的较大运行时间计数会遇到复杂的回绕语义，因此长时间运行且对时间敏感的应用程序应配置为使用 64 位超时类型。</p>
+<p>最后，还可以将超时指定为自系统启动以来的绝对时间。使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_TIMEOUT_ABS_MS</span></code> 初始化的超时会在系统运行时间达到指定值后到期。该 API 同样有纳秒、微秒、周期和节拍版本。</p>
+</section>
+<section id="timing-internals">
+<h2>计时的内部实现<a class="headerlink" href="#timing-internals" title="链接到此标题。"></a></h2>
+<section id="timeout-queue">
+<h3>超时队列<a class="headerlink" href="#timeout-queue" title="链接到此标题。"></a></h3>
+<p>使用上述 API 指定的所有 Zephyr <code class="xref c c-type docutils literal notranslate"><span class="pre">k_timeout_t</span></code> 事件都在一个全局事件队列中管理。事件发生时要执行的操作由请求该事件的子系统以回调函数指针的形式提供，同时提供一个 <code class="xref c c-struct docutils literal notranslate"><span class="pre">_timeout</span></code> 跟踪结构体，该结构体通常嵌入在子系统定义的数据结构中（例如 <code class="xref c c-struct docutils literal notranslate"><span class="pre">wait_q</span></code> 结构体，或 <code class="xref c c-type docutils literal notranslate"><span class="pre">k_tid_t</span></code> 线程结构体）。</p>
+<p>注意，通过 <code class="xref c c-type docutils literal notranslate"><span class="pre">k_timeout_t</span></code> 传入的各种单位，在插入队列时都只换算一次为节拍。内核内部不存在多次换算的步骤，因此无论有多少事件、超时有多长，精度都能保证在节拍级别。</p>
+<p>保存该队列的数据结构在构建时通过 <a class="reference internal" href="../../../kconfig.html#CONFIG_TIMEOUT_BACKEND" title="CONFIG_TIMEOUT_BACKEND"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TIMEOUT_BACKEND</span></code></a> 选项组选择。各后端之间只共享前端（通告路径、SMP 重入处理，以及相对超时与绝对超时的规则）；队列本身由各后端提供，因此集成者可以根据工作负载选择合适的数据结构，而无需修改公共代码。</p>
+<p>默认后端 <a class="reference internal" href="../../../kconfig.html#CONFIG_TIMEOUT_BACKEND_DLIST" title="CONFIG_TIMEOUT_BACKEND_DLIST"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TIMEOUT_BACKEND_DLIST</span></code></a> 将事件存放在按到期时间排序的双向链表中，每个事件保存相对于其前一个事件的节拍差值。插入操作相对于挂起超时的数量为 O(N)：对于典型系统中挂起的少量超时来说开销很小，但当大量超时同时存在时，扩展性很差。另外四种后端目前都处于实验阶段，它们以额外的内存或行为差异为代价，换取大规模场景下更快的插入速度：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_TIMEOUT_BACKEND_MINHEAP" title="CONFIG_TIMEOUT_BACKEND_MINHEAP"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TIMEOUT_BACKEND_MINHEAP</span></code></a> 将事件保存在以绝对到期时间为键的二叉最小堆中，使插入和删除的复杂度为 O(log N)。它要求使用 64 位节拍（<a class="reference internal" href="../../../kconfig.html#CONFIG_TIMEOUT_64BIT" title="CONFIG_TIMEOUT_64BIT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TIMEOUT_64BIT</span></code></a>）和固定容量的堆（<a class="reference internal" href="../../../kconfig.html#CONFIG_TIMEOUT_HEAP_MAX_ENTRIES" title="CONFIG_TIMEOUT_HEAP_MAX_ENTRIES"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TIMEOUT_HEAP_MAX_ENTRIES</span></code></a>，溢出会导致致命错误），并且不保证在同一节拍到期的超时的触发顺序。</p></li>
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_TIMEOUT_BACKEND_WHEEL" title="CONFIG_TIMEOUT_BACKEND_WHEEL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TIMEOUT_BACKEND_WHEEL</span></code></a> 是一个分层时间轮，对近期的超时提供 O(1) 的插入和删除，超出范围的超时则放入一个有序溢出链表。它的单事件占用和静态占用都是最大的，不保证同一节拍的触发顺序，并且由于其下一个超时的估计值受时间轮周期限制，会周期性地唤醒处于无节拍空闲状态的 CPU（其他后端没有这一功耗开销）。</p></li>
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_TIMEOUT_BACKEND_BUCKET" title="CONFIG_TIMEOUT_BACKEND_BUCKET"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TIMEOUT_BACKEND_BUCKET</span></code></a> 是一个单级分桶差值链表，是时间轮的简化版本。它在一个可调的近期窗口（<a class="reference internal" href="../../../kconfig.html#CONFIG_TIMEOUT_BUCKET_LISTS" title="CONFIG_TIMEOUT_BUCKET_LISTS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TIMEOUT_BUCKET_LISTS</span></code></a>）内提供 O(1) 插入，超出窗口时退回到有序溢出链表。它同样要求使用 64 位节拍，但与时间轮不同，它保证同一节拍的触发顺序，并且不会增加空闲唤醒开销。</p></li>
+<li><p><a class="reference internal" href="../../../kconfig.html#CONFIG_TIMEOUT_BACKEND_SKIPLIST" title="CONFIG_TIMEOUT_BACKEND_SKIPLIST"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TIMEOUT_BACKEND_SKIPLIST</span></code></a> 是以绝对到期时间为键的 Pugh 跳表。插入和删除的期望复杂度为 O(log N)，没有容量限制，同一节拍的触发顺序为 FIFO。它要求使用 64 位节拍。每个事件存储 <a class="reference internal" href="../../../kconfig.html#CONFIG_TIMEOUT_SKIPLIST_MAX_LEVEL" title="CONFIG_TIMEOUT_SKIPLIST_MAX_LEVEL"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_TIMEOUT_SKIPLIST_MAX_LEVEL</span></code></a> 个前向指针，因此单事件占用的 RAM 高于差值链表或最小堆。</p></li>
+</ul>
+<p>非默认后端面向同时持有大量超时的系统，尤其是超时集中在近期的系统。对大多数应用程序而言，差值链表仍是合适的默认选择。</p>
+</section>
+<section id="timer-drivers">
+<h3>定时器驱动<a class="headerlink" href="#timer-drivers" title="链接到此标题。"></a></h3>
+<p>节拍级别的内核计时由定时器驱动驱动。该接口及其运行时所处的加锁环境在 <a class="reference internal" href="system_timer_drivers.html#system-timer-drivers"><span class="std std-ref">系统定时器驱动</span></a> 中介绍。</p>
+</section>
+<section id="time-slicing">
+<h3>时间片<a class="headerlink" href="#time-slicing" title="链接到此标题。"></a></h3>
+<p>计时子系统的另一项辅助工作，是向调度器提供节拍计数器，以实现线程的时间片轮转。线程的时间片不能用超时值表示，因为它反映的不是全局的到期时间，而是一个按 CPU 计算的值，在 SMP 环境中需要在每个 CPU 上独立跟踪。</p>
+<p>由于可能没有其他硬件可用于驱动时间片轮转，Zephyr 复用了现有的定时器驱动。这意味着，当当前调度的是启用时间片的线程时，传给 <code class="xref c c-func docutils literal notranslate"><span class="pre">sys_clock_set_timeout()</span></code> 的值可能会被限制为小于当前下一个超时的值。</p>
+</section>
+<section id="subsystems-that-keep-millisecond-apis">
+<h3>保留毫秒 API 的子系统<a class="headerlink" href="#subsystems-that-keep-millisecond-apis" title="链接到此标题。"></a></h3>
+<p>一般来说，这类代码的移植方式与应用程序代码相同。来自用户的毫秒值可以按子系统希望的任何方式处理，然后在交给内核时使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_MSEC()</span></code> 转换为内核超时。</p>
+<p>当然，这样做的代价是无法使用新特性，例如更高精度的超时构造器或绝对超时。但对于许多需求简单的子系统来说，这可能是可以接受的。</p>
+<p>一个复杂之处是 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_FOREVER</span></code>。过去可能能够在其毫秒 API 中接受该值的子系统现在不能再这样做了，因为它已不再是整数类型。这类代码需要使用另一个整数值的标记来表示“永久”。当然，<code class="xref c c-macro docutils literal notranslate"><span class="pre">K_NO_WAIT</span></code> 也存在同样的类型安全问题，但由于它（一直以来）只是数值零，因此有一条自然的移植途径。</p>
+</section>
+<section id="subsystems-using-k-timeout-t">
+<h3>使用 <code class="docutils literal notranslate"><span class="pre">k_timeout_t</span></code> 的子系统<a class="headerlink" href="#subsystems-using-k-timeout-t" title="链接到此标题。"></a></h3>
+<p>理想情况下，接受“超时”参数以指定等待时间的代码应尽可能使用内核原生的抽象。但 <code class="xref c c-type docutils literal notranslate"><span class="pre">k_timeout_t</span></code> 是不透明的，应用程序需要先对其进行转换才能检查其值。</p>
+<p>有些转换很简单。需要检测 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_FOREVER</span></code> 的代码，只需使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_TIMEOUT_EQ()</span></code> 宏比较不透明结构体是否相等，并进行特殊处理即可。</p>
+<p>更复杂的情况是：子系统需要接受一个超时并循环等待其结束，同时执行一些可能需要对底层内核代码进行多次阻塞操作的处理。例如，考虑以下设计：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">my_wait_for_event</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">my_subsys</span><span class="w"> </span><span class="o">*</span><span class="n">obj</span><span class="p">,</span><span class="w"> </span><span class="kt">int32_t</span><span class="w"> </span><span class="n">timeout_in_ms</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="nb">true</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">start</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">k_uptime_get_32</span><span class="p">();</span>
+
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">is_event_complete</span><span class="p">(</span><span class="n">obj</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="cm">/* Wait for notification of state change */</span>
+<span class="w">        </span><span class="n">k_sem_take</span><span class="p">(</span><span class="n">obj</span><span class="o">-&gt;</span><span class="n">sem</span><span class="p">,</span><span class="w"> </span><span class="n">timeout_in_ms</span><span class="p">);</span>
+
+<span class="w">        </span><span class="cm">/* Subtract elapsed time */</span>
+<span class="w">        </span><span class="n">timeout_in_ms</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="p">(</span><span class="n">k_uptime_get_32</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="n">start</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>这段代码需要检查超时值，而这已不再可行。针对这类情况，新 API 提供了内部例程 <code class="xref c c-func docutils literal notranslate"><span class="pre">sys_timepoint_calc()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">sys_timepoint_timeout()</span></code>，用于在任意超时与时间点值之间相互转换，时间点值基于超时到期时的运行时间节拍。因此，这样的循环可以写成：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">my_wait_for_event</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">my_subsys</span><span class="w"> </span><span class="o">*</span><span class="n">obj</span><span class="p">,</span><span class="w"> </span><span class="n">k_timeout_t</span><span class="w"> </span><span class="n">timeout</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="cm">/* Compute the end time from the timeout */</span>
+<span class="w">    </span><span class="n">k_timepoint_t</span><span class="w"> </span><span class="n">end</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sys_timepoint_calc</span><span class="p">(</span><span class="n">timeout</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">do</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">is_event_complete</span><span class="p">(</span><span class="n">obj</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">return</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="cm">/* Update timeout with remaining time */</span>
+<span class="w">        </span><span class="n">timeout</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">sys_timepoint_timeout</span><span class="p">(</span><span class="n">end</span><span class="p">);</span>
+
+<span class="w">        </span><span class="cm">/* Wait for notification of state change */</span>
+<span class="w">        </span><span class="n">k_sem_take</span><span class="p">(</span><span class="n">obj</span><span class="o">-&gt;</span><span class="n">sem</span><span class="p">,</span><span class="w"> </span><span class="n">timeout</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="o">!</span><span class="n">K_TIMEOUT_EQ</span><span class="p">(</span><span class="n">timeout</span><span class="p">,</span><span class="w"> </span><span class="n">K_NO_WAIT</span><span class="p">));</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>注意，<code class="xref c c-func docutils literal notranslate"><span class="pre">sys_timepoint_calc()</span></code> 接受特殊值 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_FOREVER</span></code> 和 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_NO_WAIT</span></code>，并且对绝对超时和普通超时的处理方式完全相同。反过来，如果创建时间点时使用的是 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_FOREVER</span></code> 或 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_NO_WAIT</span></code>，<code class="xref c c-func docutils literal notranslate"><span class="pre">sys_timepoint_timeout()</span></code> 可能会返回这两个值；如果时间点已经过去，也会返回后者。对于简单的情况，也可以使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">sys_timepoint_expired()</span></code>。</p>
+<p>但使用这些例程的子系统仍需小心。注意，相对超时需要相对于“当前时间”来解释，而这个时间显然是调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">sys_timepoint_calc()</span></code> 的时间。但用户期望的是他们把超时传给你的那个时间。因此必须注意只调用该函数一次，并尽可能与用户代码中创建超时的时刻同步。它不应作用于“已存储”的超时值，也绝不应在循环中反复调用。</p>
+<section id="api-reference">
+<h4>API 参考<a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h4>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">clock_apis</span></dt>
+</dl>
+
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 8月 26, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

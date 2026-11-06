@@ -1,0 +1,491 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>使用 ARM Coresight STM 进行多域日志记录 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/logging/cs_stm.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="跟踪" href="../tracing/index.html" />
+    <link rel="prev" title="日志" href="index.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">服务</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../connectivity/index.html">连接</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../messaging.html">进程间通信</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../observability.html">日志、跟踪与调试</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="index.html">日志</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="index.html#global-kconfig-options">全局 Kconfig 选项</a></li>
+<li class="toctree-l4"><a class="reference internal" href="index.html#usage">用法</a></li>
+<li class="toctree-l4"><a class="reference internal" href="index.html#rate-limited-logging">限速日志</a></li>
+<li class="toctree-l4"><a class="reference internal" href="index.html#logging-panic">日志 panic</a></li>
+<li class="toctree-l4"><a class="reference internal" href="index.html#printk">Printk</a></li>
+<li class="toctree-l4"><a class="reference internal" href="index.html#architecture">架构</a></li>
+<li class="toctree-l4"><a class="reference internal" href="index.html#recommendations-and-limitations">建议与限制</a></li>
+<li class="toctree-l4"><a class="reference internal" href="index.html#benchmark">基准测试</a></li>
+<li class="toctree-l4"><a class="reference internal" href="index.html#stack-usage">栈使用量</a></li>
+<li class="toctree-l4"><a class="reference internal" href="index.html#logging-using-arm-coresight-stm">使用 ARM Coresight STM 记录日志</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="index.html#api-reference">API 参考</a><ul class="current">
+<li class="toctree-l5 current"><a class="current reference internal" href="#">使用 ARM Coresight STM 进行多域日志记录</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#stm-extended-stimulus-port-stmesp">STM 扩展激励端口（STMESP）</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#arm-coresight-embedded-trace-router-etr">ARM Coresight 嵌入式跟踪路由器（ETR）</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#stmesp-logging-frontend">STMESP 日志前端</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#logging-using-stm">使用 STM 记录日志</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../tracing/index.html">跟踪</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../debugging/index.html">调试</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../profiling/index.html">性能剖析</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../instrumentation/index.html">插桩</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../cpu_load/index.html">CPU 负载</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../shell/index.html">Shell</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../task_wdt/index.html">任务看门狗</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../observability.html">日志、跟踪与调试</a> &raquo;</li>
+  
+     <li><a href="index.html">日志</a> &raquo;</li>
+  
+  <li>使用 ARM Coresight STM 进行多域日志记录</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="multi-domain-logging-using-arm-coresight-stm">
+<span id="logging-cs-stm"></span><h1>使用 ARM Coresight STM 进行多域日志记录<a class="headerlink" href="#multi-domain-logging-using-arm-coresight-stm" title="链接到此标题。"></a></h1>
+<p>Arm CoreSight SoC-400 是一套全面的组件库，用于在系统中构建调试和跟踪功能。STM（System Trace Macrocell，系统跟踪宏单元）是集成在 CoreSight 系统中的一种跟踪源，主要用于对嵌入软件中的插桩进行高带宽跟踪。这种插桩由对 STMESP（STM Extended Stimulus Port，STM 扩展激励端口）外设寄存器的内存映射写操作组成。多个内核可以共享并直接访问 STM，彼此无需感知对方。每个内核有 65536 个激励端口（寄存器组完全相同），可以独立访问，因此不同上下文需要记录数据时无需加锁。</p>
+<section id="stm-extended-stimulus-port-stmesp">
+<h2>STM 扩展激励端口（STMESP）<a class="headerlink" href="#stm-extended-stimulus-port-stmesp" title="链接到此标题。"></a></h2>
+<p>本地域（每个内核）可以访问自己的一组 STMESP 外设。每组外设都有用于写入数据（可带或不带时间戳、可带或不带标记）和写入标志的寄存器。每次写 STMESP 寄存器，用户数据都会被编码为 MIPI System Trace Protocol v2（STPv2）格式。硬件在必要时向数据流中加入 Major 和 Channel 操作码，从而对来自不同 STMESP 寄存器组和不同内核的数据进行复用。时间戳（来自所有内核共用的时间源）和同步操作码由 STM 自动加入。</p>
+<p>STM 生成的数据流可以送往不同的接收端（sink）。例如，可以直接发送到 TPIU（Trace Port Interface Unit，跟踪端口接口单元），或保存到称为 ETR（Embedded Trace Router，嵌入式跟踪路由器）的 RAM 环形缓冲区中。TPIU 是一个 5 引脚接口（4 个数据引脚和时钟），需要外部工具（例如 J-Trace PRO）来捕获数据。使用 ETR 时，由系统中的某一个内核负责处理这些数据，例如通过 UART 将其转储到主机。</p>
+</section>
+<section id="arm-coresight-embedded-trace-router-etr">
+<h2>ARM Coresight 嵌入式跟踪路由器（ETR）<a class="headerlink" href="#arm-coresight-embedded-trace-router-etr" title="链接到此标题。"></a></h2>
+<p>ETR 是一个保存跟踪数据的 RAM 环形缓冲区。由于其中可能包含来自不同源的数据，需要使用额外的封装协议对这些数据进行复用，所用的是 <code class="docutils literal notranslate"><span class="pre">Coresight</span> <span class="pre">Trace</span> <span class="pre">Formatter</span></code>。数据被编码为 16 字节的帧，每帧最多容纳 15 字节数据。RAM 环形缓冲区的大小限制为 4k，因此存在数据溢出的风险。发生溢出时数据会丢失，但由于 STPv2 数据流中有同步操作码，可以恢复同步。</p>
+<p>ETR 中的数据在设备上处理。数据可以原样转发到主机（例如通过 UART），由主机工具解码；也可以在片上解码，以人类可读的格式输出。</p>
+<p>Nordic Semiconductor NRF54H20 的实现没有使用 ETR 外设来获取缓冲区占用情况，而是使用自己的封装：Trace Buffer Monitor（TBM，跟踪缓冲区监视器）。</p>
+</section>
+<section id="stmesp-logging-frontend">
+<h2>STMESP 日志前端<a class="headerlink" href="#stmesp-logging-frontend" title="链接到此标题。"></a></h2>
+<p>这里实现了 <a class="reference internal" href="index.html#log-frontend"><span class="std std-ref">自定义前端</span></a> API。该自定义前端假定所有必需的操作都在日志宏调用的上下文中执行，并假定由前端提供时间戳。前端利用了存在多组 STMESP 寄存器这一点，使用多组寄存器来避免锁定上下文。通过原子递增的通道计数器选取一组唯一的 STMESP，整条消息都写入该 STMESP。前端只使用有限的一组寄存器池，把大多数通道留作其他用途。</p>
+<section id="early-logging">
+<h3>早期日志<a class="headerlink" href="#early-logging" title="链接到此标题。"></a></h3>
+<p>在 STM 或 ETR/TPIU 设置好之前无法使用 STMESP。为了支持早期日志，在基础设施就绪之前，数据会写入一个专用的 RAM 缓冲区。当收到 STM 基础设施就绪的通知（<code class="xref c c-func docutils literal notranslate"><span class="pre">log_frontend_stmesp_etr_ready()</span></code>）后，RAM 缓冲区的内容会写入 STMESP。早期日志仅适用于拥有并配置 Coresight 基础设施的内核（例如在 NRF54H20 上是 Secure 内核）。</p>
+</section>
+<section id="trace-points">
+<h3>跟踪点<a class="headerlink" href="#trace-points" title="链接到此标题。"></a></h3>
+<p>某些情况下日志记录仍然太慢（尽管它已经非常快）。针对这类情况，新增了专门的 <code class="docutils literal notranslate"><span class="pre">trace</span> <span class="pre">point</span></code> API。它极快，因为只需对一个 STMESP 寄存器进行一次写操作。该 API 有 2 个函数：</p>
+<ul class="simple">
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">log_frontend_stmesp_tp()</span></code> ——接受单个参数：索引。索引范围为 0 到 65280。</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">log_frontend_stmesp_tp_d32()</span></code> ——接受两个参数：索引和用户数据。索引范围为 0 到 65280。用户数据是一个 32 位字。</p></li>
+</ul>
+<p>在 NRF54H20 上记录一个跟踪点只需不到 100 ns，大约比最快的日志消息快 7 倍。</p>
+</section>
+</section>
+<section id="logging-using-stm">
+<h2>使用 STM 记录日志<a class="headerlink" href="#logging-using-stm" title="链接到此标题。"></a></h2>
+<p>STM 日志有 2 种工作模式：</p>
+<ul class="simple">
+<li><p>基于字典——一种辅助模式，使用基于字典的日志。在这种模式下，日志字符串可以从二进制文件中移除，因为只有解码时才需要它们，而解码由主机工具完成。这种模式占用内存更少，速度更快（快 2-3 倍）。写入的数据更少，因此 ETR 缓冲区发生数据溢出的可能性也更小。</p></li>
+<li><p>独立——数据在片上解码并打印人类可读的字符串。这种模式需要更多的设备资源和处理能力。</p></li>
+</ul>
+<p>下图展示了使用 ARM Coresight STM 的多域日志记录。</p>
+<figure class="align-default">
+<img alt="../../_images/coresight_architecture.png" src="../../_images/coresight_architecture.png" />
+</figure>
+<p>每个内核（本地域）都使用日志前端，将日志数据写入 STMESP 寄存器。</p>
+<p>如果使用 TPIU 作为输出，则不再需要其他软件组件。STPv2 数据流由 STM 组合并通过 TPIU 发送。</p>
+<p>如果使用 ETR RAM 缓冲区，则由拥有缓冲区的内核（<code class="docutils literal notranslate"><span class="pre">proxy</span></code>）负责处理这些数据。如果使用基于字典的日志，proxy 只需通过 UART 原样发送数据。如果使用独立日志，proxy 会使用 <a class="reference internal" href="../debugging/cs_trace_defmt.html#cs-trace-defmt"><span class="std std-ref">ARM Coresight 跟踪解格式化器</span></a> 和 <a class="reference internal" href="../debugging/mipi_stp_decoder.html#mipi-stp-decoder"><span class="std std-ref">MIPI STP 解码器</span></a> 对数据进行解码并对消息解复用。消息由日志 <a class="reference internal" href="index.html#log-output"><span class="std std-ref">消息格式化</span></a> 格式化为人类可读的字符串。</p>
+<section id="dictionary-based-logging">
+<h3>基于字典的日志<a class="headerlink" href="#dictionary-based-logging" title="链接到此标题。"></a></h3>
+<p>辅助式多核日志使用基于字典的日志向 STM 发送不含冗余字符串的消息，它基于 Zephyr 日志 API 提供的 <a class="reference internal" href="index.html#logging-guide-dictionary"><span class="std std-ref">基于字典的日志</span></a> 功能。日志消息中不包含格式字符串，而是记录字符串所在的地址（消息 ID），从而减小日志子系统的体积。如果数据写入 ETR 缓冲区，proxy 内核负责转储这些数据。装有解码工具的主机 PC 使用构建过程中生成的 JSON 数据库，把这些地址翻译回人类可读的文本。</p>
+<p>使用日志时，这种方法有以下优点：</p>
+<ul class="simple">
+<li><p>它减小了二进制文件的体积，因为日志消息中使用的字符串并不存储在二进制文件中。日志基础设施也非常精简：在本地域上只有前端，甚至不需要字符串格式化函数。</p></li>
+<li><p>它减少了需要发送到应用核并由应用核处理的数据量，因为字符串格式化工作被转移到了主机端。</p></li>
+<li><p>日志记录速度快。在 NRF54H20 上记录一条简单消息（最多 2 个参数）只需不到 1 us。</p></li>
+</ul>
+<p>proxy 内核使用 Nordic 专有的外设（TBM）获取 ETR 缓冲区的占用情况，并通过 UART 发送数据。Nordic 专用的 ETR 缓冲区驱动位于 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/drivers/debug/debug_nrf_etr.c">drivers/debug/debug_nrf_etr.c</a>。</p>
+<section id="configuration">
+<h4>配置<a class="headerlink" href="#configuration" title="链接到此标题。"></a></h4>
+<p>对于 Nordic SoC，应使用专用的代码片段（snippet）（<a class="reference internal" href="../../snippets/nordic/nordic-log-stm-dict/README.html#nordic-log-stm-dict"><span class="std std-ref">Nordic 基于字典的 STM 日志代码片段（nordic-log-stm-dict）</span></a>）来启用日志。每个内核都应使用该代码片段构建。只要有任何内核要使用它，应用核也必须启用它，因为应用核充当 proxy（处理 ETR 缓冲区）。所有内核必须使用相同的日志配置。</p>
+</section>
+<section id="reading-the-logs">
+<h4>读取日志<a class="headerlink" href="#reading-the-logs" title="链接到此标题。"></a></h4>
+<p>要读取基于字典的 STM 日志输出，请执行以下操作：</p>
+<ol class="arabic">
+<li><p>设置日志捕获。</p>
+<p>使用 <code class="docutils literal notranslate"><span class="pre">nrfutil</span> <span class="pre">trace</span> <span class="pre">stm</span></code> 命令开始从设备捕获日志，并为每个域 ID 指定数据库配置，以及串口、波特率和输出文件名:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>nrfutil trace stm --database-config 34:build/zephyr/log_dictionary.json,35:build_rad/zephyr/log_dictionary.json --input-serialport /dev/ttyACM1 --baudrate 115200 --output-ascii out.txt
+</pre></div>
+</div>
+</li>
+<li><p>捕获并解码日志。</p>
+<p>nrfutil 会从指定的 UART 端口捕获日志数据，并使用提供的字典数据库将日志解码为人类可读的格式。解码后的日志保存在指定的输出文件中（上例中为 <code class="file docutils literal notranslate"><span class="pre">out.txt</span></code> 文件）。</p>
+</li>
+<li><p>打开输出文件，查看解码后的日志消息。</p>
+<p>该文件包含时间戳以及人类可读格式的日志消息。</p>
+</li>
+</ol>
+<p>如果日志捕获找不到同步点，请重新运行捕获过程。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>重新运行该过程时，可能会出现解码伪影或时间戳不正确的情况。</p>
+</div>
+<p>每行日志在日志级别和模块名之间都带有一个与域或内核相关的前缀，表示生成该日志条目的内核。各内核使用的前缀如下：</p>
+<table class="docutils align-default" id="id3">
+<caption><span class="caption-text">nRF54H20 日志前缀</span><a class="headerlink" href="#id3" title="链接到此表格。"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>内核</p></th>
+<th class="head"><p>前缀</p></th>
+<th class="head"><p>ID</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>安全域（Secure Domain）</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sec</span></code></p></td>
+<td><p>0x21</p></td>
+</tr>
+<tr class="row-odd"><td><p>应用核</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">app</span></code></p></td>
+<td><p>0x22</p></td>
+</tr>
+<tr class="row-even"><td><p>无线电核</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">rad</span></code></p></td>
+<td><p>0x23</p></td>
+</tr>
+<tr class="row-odd"><td><p>系统控制器（SysCtrl）</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sys</span></code></p></td>
+<td><p>0x2c</p></td>
+</tr>
+<tr class="row-even"><td><p>快速轻量处理器（FLPR）</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">flpr</span></code></p></td>
+<td><p>0x2d</p></td>
+</tr>
+<tr class="row-odd"><td><p>外设处理器（PPR）</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ppr</span></code></p></td>
+<td><p>0x2e</p></td>
+</tr>
+<tr class="row-even"><td></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mod</span></code></p></td>
+<td><p>0x24</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="stand-alone-logging">
+<h3>独立日志<a class="headerlink" href="#stand-alone-logging" title="链接到此标题。"></a></h3>
+<p>前端写入 STMESP 寄存器。消息格式与 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/subsys/logging/frontends/log_frontend_stmesp_demux.c">subsys/logging/frontends/log_frontend_stmesp_demux.c</a> 中的片上解码器保持一致。</p>
+<p><code class="docutils literal notranslate"><span class="pre">Proxy</span></code> 使用 Nordic 专有的外设（TBM）获取 ETR 缓冲区的占用情况，读取并解码数据，然后通过 UART 发送人类可读的数据。Nordic 专用的 ETR 缓冲区驱动位于 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/drivers/debug/debug_nrf_etr.c">drivers/debug/debug_nrf_etr.c</a>。它使用 <a class="reference internal" href="../debugging/cs_trace_defmt.html#cs-trace-defmt"><span class="std std-ref">ARM Coresight 跟踪解格式化器</span></a>、<a class="reference internal" href="../debugging/mipi_stp_decoder.html#mipi-stp-decoder"><span class="std std-ref">MIPI STP 解码器</span></a> 以及上述解复用器来解码消息。</p>
+<p>日志消息中包含日志宏所用的只读格式字符串，因此这些字符串无法从二进制文件中移除。这种模式占用更多的只读内存，吞吐量也更低，因为消息更长，处理也更耗时。与基于字典的模式相比，日志记录要慢 2-3 倍。</p>
+<section id="id1">
+<h4>配置<a class="headerlink" href="#id1" title="链接到此标题。"></a></h4>
+<p>对于 Nordic SoC，应使用专用的代码片段（snippet）（<a class="reference internal" href="../../snippets/nordic/nordic-log-stm/README.html#nordic-log-stm"><span class="std std-ref">Nordic 独立 STM 日志代码片段（nordic-log-stm）</span></a>）来启用日志。每个内核都应使用该代码片段构建。只要有任何内核要使用它，应用核也必须启用它，因为应用核充当 proxy（处理 ETR 缓冲区）。所有内核必须使用相同的日志配置。</p>
+</section>
+<section id="id2">
+<h4>读取日志<a class="headerlink" href="#id2" title="链接到此标题。"></a></h4>
+<p>日志通过控制台 UART 打印。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>要在应用程序中使用 UART，必须在设备树中描述该 UART 的节点。详情请参阅 <a class="reference internal" href="../../build/dts/intro.html#devicetree-intro"><span class="std std-ref">设备树简介</span></a>。</p>
+</div>
+<p>以下是一个日志输出示例:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[00:00:00.154,790] &lt;inf&gt; app/spsc_pbuf: alloc in 0x2f0df800
+[00:00:00.163,319] &lt;inf&gt; app/spsc_pbuf: alloc 0x2f0df800 wr_idx:20
+[00:00:00.181,112] &lt;inf&gt; app/spsc_pbuf: commit in 0x2f0df800
+[00:00:00.189,090] &lt;inf&gt; app/spsc_pbuf: commit 0x2f0df800, len:20 wr_idx: 44
+[00:00:00.202,577] &lt;inf&gt; rad/icmsg: mbox_callback
+[00:00:00.214,750] &lt;inf&gt; rad/spsc_pbuf: claim 0x2f0df800 rd_idx:20
+[00:00:00.235,823] &lt;inf&gt; rad/spsc_pbuf: free 0x2f0df800 len:20 rd_idx: 44
+[00:00:00.244,507] &lt;inf&gt; rad/spsc_pbuf: read done 0x2f0df800 len:20
+[00:00:00.272,444] &lt;inf&gt; rad/host: ep recv 0x330021f0, len:20
+[00:00:00.283,939] &lt;inf&gt; rad/host: rx:00 exp:00
+[00:00:00.292,200] &lt;inf&gt; rad/icmsg: read 0
+[00:00:05.077,026] &lt;inf&gt; rad/spsc_pbuf: alloc in 0x2f0df000
+[00:00:05.077,068] &lt;inf&gt; rad/spsc_pbuf: alloc 0x2f0df000 wr_idx:44
+[00:00:05.077,098] &lt;inf&gt; rad/spsc_pbuf: commit in 0x2f0df000
+[00:00:05.077,134] &lt;inf&gt; rad/spsc_pbuf: commit 0x2f0df000, len:20 wr_idx
+</pre></div>
+</div>
+<p>每行日志在日志级别和模块名之间都带有一个与域或内核相关的前缀，表示生成该日志条目的内核。各内核使用的前缀如下：</p>
+<table class="docutils align-default" id="id4">
+<caption><span class="caption-text">nRF54H20 日志前缀</span><a class="headerlink" href="#id4" title="链接到此表格。"></a></caption>
+<thead>
+<tr class="row-odd"><th class="head"><p>内核</p></th>
+<th class="head"><p>前缀</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>安全域（Secure Domain）</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sec</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>应用核</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">app</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>无线电核</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">rad</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>系统控制器（SysCtrl）</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sys</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>快速轻量处理器（FLPR）</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">flpr</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>外设处理器（PPR）</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ppr</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="additional-considerations">
+<h3>其他注意事项<a class="headerlink" href="#additional-considerations" title="链接到此标题。"></a></h3>
+<p>使用 STM 日志时，请注意以下几点：</p>
+<ul class="simple">
+<li><p>使用经过优化的日志宏（最多带 2 个字长的数值参数，例如 <code class="docutils literal notranslate"><span class="pre">LOG_INF(&quot;%d</span> <span class="pre">%c&quot;,</span> <span class="pre">(int)x,</span> <span class="pre">(char)y)</span></code>），以减小日志的体积并提高日志速度。</p></li>
+<li><p>对于内存受限的应用程序（例如运行在 PPR 内核上时），请在项目配置中将 <a class="reference internal" href="../../kconfig.html#CONFIG_PRINTK" title="CONFIG_PRINTK"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_PRINTK</span></code></a> 和 <a class="reference internal" href="../../kconfig.html#CONFIG_BOOT_BANNER" title="CONFIG_BOOT_BANNER"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BOOT_BANNER</span></code></a> 这两个 Kconfig 选项都设为 <code class="docutils literal notranslate"><span class="pre">n</span></code>，以禁用 <code class="docutils literal notranslate"><span class="pre">printk()</span></code> 函数。</p></li>
+<li><p>使用多个域（例如无线电核和应用核）时，请确保每个数据库都以正确的域 ID 作为前缀。</p></li>
+<li><p>由于存储 STM 日志的 RAM 缓冲区大小有限，部分日志消息可能会被丢弃。</p></li>
+</ul>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 10月 03, 2025.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

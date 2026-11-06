@@ -1,0 +1,1519 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>构建、烧录和调试 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/develop/west/build-flash-debug.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="签名二进制文件" href="sign.html" />
+    <link rel="prev" title="扩展" href="extensions.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">使用 Zephyr 进行开发</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/index.html">入门指南</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beyond-GSG.html">入门指南之外</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../env_vars.html">环境变量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../application/index.html">应用程序开发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../debug/index.html">调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/index.html">API 状态与准则</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../languages/index.html">编程语言支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../optimizations/index.html">优化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../flash_debug/index.html">烧录与硬件调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html">模块（外部项目）</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">West（Zephyr 的元工具）</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="install.html">安装 west</a></li>
+<li class="toctree-l3"><a class="reference internal" href="release-notes.html">West 发布说明</a></li>
+<li class="toctree-l3"><a class="reference internal" href="troubleshooting.html">West 故障排除</a></li>
+<li class="toctree-l3"><a class="reference internal" href="basics.html">基础知识</a></li>
+<li class="toctree-l3"><a class="reference internal" href="built-in.html">内置命令</a></li>
+<li class="toctree-l3"><a class="reference internal" href="workspaces.html">工作区</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest.html">West 清单</a></li>
+<li class="toctree-l3"><a class="reference internal" href="config.html">配置</a></li>
+<li class="toctree-l3"><a class="reference internal" href="alias.html">West 别名</a></li>
+<li class="toctree-l3"><a class="reference internal" href="extensions.html">扩展</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">构建、烧录和调试</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#building-west-build">构建：<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#basics">基础</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#sysbuild-multi-domain-builds">Sysbuild（多域构建）</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#examples">示例</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#forcing-cmake-to-run-again">强制 CMake 重新运行</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#setting-a-default-board">设置默认开发板</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#setting-source-and-build-directories">设置源代码目录和构建目录</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#setting-the-build-system-target">设置构建系统目标</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#pristine-builds">全新构建</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#verbose-builds">详细构建</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#one-time-cmake-arguments">一次性 CMake 参数</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#permanent-cmake-arguments">永久 CMake 参数</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#build-tool-arguments">构建工具参数</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#build-parallelism">构建并行度</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#build-a-single-domain">构建单个域</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#use-a-snippet">使用代码片段（snippet）</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#configuration-options">配置选项</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#flashing-west-flash">烧录：<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">flash</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#id2">基础</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#choosing-a-runner">选择运行器</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#configuration-overrides">配置覆盖</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#runner-specific-overrides">运行器专用覆盖</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#multi-domain-flashing">多域烧录</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#west-debugging">配置选项</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#debugging-west-debug-west-debugserver">调试：<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">debug</span></code>、<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">debugserver</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#id4">基础</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#id5">选择运行器</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#id6">配置覆盖</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#id7">运行器专用覆盖</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#multi-domain-debugging">多域调试</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#west-runner">配置选项</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#flash-and-debug-runners">烧录和调试运行器</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#running-robot-framework-tests-west-robot">运行 Robot Framework 测试：<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">robot</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#id9">基础</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#id10">运行器专用覆盖</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#simulating-a-board-with-west-simulate">模拟开发板：<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">simulate</span></code></a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#id11">基础</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#id12">运行器专用覆盖</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#out-of-tree-runners">树外运行器</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#hacking">深入开发</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#runners.core.BuildConfiguration"><code class="docutils literal notranslate"><span class="pre">BuildConfiguration</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.BuildConfiguration.edt"><code class="docutils literal notranslate"><span class="pre">BuildConfiguration.edt</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.BuildConfiguration.getboolean"><code class="docutils literal notranslate"><span class="pre">BuildConfiguration.getboolean()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#runners.core.DeprecatedAction"><code class="docutils literal notranslate"><span class="pre">DeprecatedAction</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#runners.core.FileType"><code class="docutils literal notranslate"><span class="pre">FileType</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#runners.core.MissingProgram"><code class="docutils literal notranslate"><span class="pre">MissingProgram</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#runners.core.NetworkPortHelper"><code class="docutils literal notranslate"><span class="pre">NetworkPortHelper</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.NetworkPortHelper.get_unused_ports"><code class="docutils literal notranslate"><span class="pre">NetworkPortHelper.get_unused_ports()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#runners.core.RunnerCaps"><code class="docutils literal notranslate"><span class="pre">RunnerCaps</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#runners.core.RunnerConfig"><code class="docutils literal notranslate"><span class="pre">RunnerConfig</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.RunnerConfig.bin_file"><code class="docutils literal notranslate"><span class="pre">RunnerConfig.bin_file</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.RunnerConfig.board_dir"><code class="docutils literal notranslate"><span class="pre">RunnerConfig.board_dir</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.RunnerConfig.build_dir"><code class="docutils literal notranslate"><span class="pre">RunnerConfig.build_dir</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.RunnerConfig.elf_file"><code class="docutils literal notranslate"><span class="pre">RunnerConfig.elf_file</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.RunnerConfig.exe_file"><code class="docutils literal notranslate"><span class="pre">RunnerConfig.exe_file</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.RunnerConfig.file"><code class="docutils literal notranslate"><span class="pre">RunnerConfig.file</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.RunnerConfig.file_type"><code class="docutils literal notranslate"><span class="pre">RunnerConfig.file_type</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.RunnerConfig.gdb"><code class="docutils literal notranslate"><span class="pre">RunnerConfig.gdb</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.RunnerConfig.hex_file"><code class="docutils literal notranslate"><span class="pre">RunnerConfig.hex_file</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.RunnerConfig.mot_file"><code class="docutils literal notranslate"><span class="pre">RunnerConfig.mot_file</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.RunnerConfig.openocd"><code class="docutils literal notranslate"><span class="pre">RunnerConfig.openocd</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.RunnerConfig.openocd_search"><code class="docutils literal notranslate"><span class="pre">RunnerConfig.openocd_search</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.RunnerConfig.rtt_address"><code class="docutils literal notranslate"><span class="pre">RunnerConfig.rtt_address</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.RunnerConfig.uf2_file"><code class="docutils literal notranslate"><span class="pre">RunnerConfig.uf2_file</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#runners.core.SysbuildConfiguration"><code class="docutils literal notranslate"><span class="pre">SysbuildConfiguration</span></code></a></li>
+<li class="toctree-l5"><a class="reference internal" href="#runners.core.ZephyrBinaryRunner"><code class="docutils literal notranslate"><span class="pre">ZephyrBinaryRunner</span></code></a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.ZephyrBinaryRunner.add_parser"><code class="docutils literal notranslate"><span class="pre">ZephyrBinaryRunner.add_parser()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.ZephyrBinaryRunner.args_from_previous_runner"><code class="docutils literal notranslate"><span class="pre">ZephyrBinaryRunner.args_from_previous_runner()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.ZephyrBinaryRunner.build_conf"><code class="docutils literal notranslate"><span class="pre">ZephyrBinaryRunner.build_conf</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.ZephyrBinaryRunner.call"><code class="docutils literal notranslate"><span class="pre">ZephyrBinaryRunner.call()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.ZephyrBinaryRunner.capabilities"><code class="docutils literal notranslate"><span class="pre">ZephyrBinaryRunner.capabilities()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.ZephyrBinaryRunner.cfg"><code class="docutils literal notranslate"><span class="pre">ZephyrBinaryRunner.cfg</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.ZephyrBinaryRunner.check_call"><code class="docutils literal notranslate"><span class="pre">ZephyrBinaryRunner.check_call()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.ZephyrBinaryRunner.check_call_ignore_sigint"><code class="docutils literal notranslate"><span class="pre">ZephyrBinaryRunner.check_call_ignore_sigint()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.ZephyrBinaryRunner.check_output"><code class="docutils literal notranslate"><span class="pre">ZephyrBinaryRunner.check_output()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.ZephyrBinaryRunner.create"><code class="docutils literal notranslate"><span class="pre">ZephyrBinaryRunner.create()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.ZephyrBinaryRunner.dev_id_help"><code class="docutils literal notranslate"><span class="pre">ZephyrBinaryRunner.dev_id_help()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.ZephyrBinaryRunner.do_add_parser"><code class="docutils literal notranslate"><span class="pre">ZephyrBinaryRunner.do_add_parser()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.ZephyrBinaryRunner.do_create"><code class="docutils literal notranslate"><span class="pre">ZephyrBinaryRunner.do_create()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.ZephyrBinaryRunner.do_run"><code class="docutils literal notranslate"><span class="pre">ZephyrBinaryRunner.do_run()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.ZephyrBinaryRunner.dry_run"><code class="docutils literal notranslate"><span class="pre">ZephyrBinaryRunner.dry_run</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.ZephyrBinaryRunner.ensure_output"><code class="docutils literal notranslate"><span class="pre">ZephyrBinaryRunner.ensure_output()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.ZephyrBinaryRunner.extload_help"><code class="docutils literal notranslate"><span class="pre">ZephyrBinaryRunner.extload_help()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.ZephyrBinaryRunner.flash_address_from_build_conf"><code class="docutils literal notranslate"><span class="pre">ZephyrBinaryRunner.flash_address_from_build_conf()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.ZephyrBinaryRunner.gdb_ex_args"><code class="docutils literal notranslate"><span class="pre">ZephyrBinaryRunner.gdb_ex_args()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.ZephyrBinaryRunner.get_flash_address"><code class="docutils literal notranslate"><span class="pre">ZephyrBinaryRunner.get_flash_address()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.ZephyrBinaryRunner.get_rtt_address"><code class="docutils literal notranslate"><span class="pre">ZephyrBinaryRunner.get_rtt_address()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.ZephyrBinaryRunner.get_runners"><code class="docutils literal notranslate"><span class="pre">ZephyrBinaryRunner.get_runners()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.ZephyrBinaryRunner.logger"><code class="docutils literal notranslate"><span class="pre">ZephyrBinaryRunner.logger</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.ZephyrBinaryRunner.name"><code class="docutils literal notranslate"><span class="pre">ZephyrBinaryRunner.name()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.ZephyrBinaryRunner.normalize_chip"><code class="docutils literal notranslate"><span class="pre">ZephyrBinaryRunner.normalize_chip()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.ZephyrBinaryRunner.popen_ignore_int"><code class="docutils literal notranslate"><span class="pre">ZephyrBinaryRunner.popen_ignore_int()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.ZephyrBinaryRunner.require"><code class="docutils literal notranslate"><span class="pre">ZephyrBinaryRunner.require()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.ZephyrBinaryRunner.resolve_port_by_chip"><code class="docutils literal notranslate"><span class="pre">ZephyrBinaryRunner.resolve_port_by_chip()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.ZephyrBinaryRunner.run"><code class="docutils literal notranslate"><span class="pre">ZephyrBinaryRunner.run()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.ZephyrBinaryRunner.run_server_and_client"><code class="docutils literal notranslate"><span class="pre">ZephyrBinaryRunner.run_server_and_client()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.ZephyrBinaryRunner.run_telnet_client"><code class="docutils literal notranslate"><span class="pre">ZephyrBinaryRunner.run_telnet_client()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.ZephyrBinaryRunner.sram_address_from_build_conf"><code class="docutils literal notranslate"><span class="pre">ZephyrBinaryRunner.sram_address_from_build_conf()</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.ZephyrBinaryRunner.sysbuild_conf"><code class="docutils literal notranslate"><span class="pre">ZephyrBinaryRunner.sysbuild_conf</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.ZephyrBinaryRunner.thread_info_enabled"><code class="docutils literal notranslate"><span class="pre">ZephyrBinaryRunner.thread_info_enabled</span></code></a></li>
+<li class="toctree-l6"><a class="reference internal" href="#runners.core.ZephyrBinaryRunner.tool_opt_help"><code class="docutils literal notranslate"><span class="pre">ZephyrBinaryRunner.tool_opt_help()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#doing-it-by-hand">手动操作</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="sign.html">签名二进制文件</a></li>
+<li class="toctree-l3"><a class="reference internal" href="zephyr-cmds.html">其他 Zephyr 扩展命令</a></li>
+<li class="toctree-l3"><a class="reference internal" href="why.html">历史与动机</a></li>
+<li class="toctree-l3"><a class="reference internal" href="without-west.html">不使用 west 使用 Zephyr</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../twister/index.html">测试运行器（Twister）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../test/index.html">测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sca/index.html">静态代码分析（SCA）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../toolchains/index.html">工具链</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tools/index.html">工具与 IDE</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">使用 Zephyr 进行开发</a> &raquo;</li>
+  
+     <li><a href="index.html">West（Zephyr 的元工具）</a> &raquo;</li>
+  
+  <li>构建、烧录和调试</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="building-flashing-and-debugging">
+<span id="west-build-flash-debug"></span><h1>构建、烧录和调试<a class="headerlink" href="#building-flashing-and-debugging" title="链接到此标题。"></a></h1>
+<p>Zephyr 提供了若干 <a class="reference internal" href="extensions.html#west-extensions"><span class="std std-ref">west 扩展命令</span></a>，用于构建、烧录以及与开发板上运行的 Zephyr 程序进行交互：<code class="docutils literal notranslate"><span class="pre">build</span></code>、<code class="docutils literal notranslate"><span class="pre">flash</span></code>、<code class="docutils literal notranslate"><span class="pre">debug</span></code>、<code class="docutils literal notranslate"><span class="pre">debugserver</span></code>、<code class="docutils literal notranslate"><span class="pre">rtt</span></code> 和 <code class="docutils literal notranslate"><span class="pre">attach</span></code>。</p>
+<p>有关为烧录和调试命令添加开发板支持的信息，请参阅开发板移植指南中的 <a class="reference internal" href="../../hardware/porting/board_porting.html#flash-and-debug-support"><span class="std std-ref">烧录和调试支持</span></a>。</p>
+<nav class="contents local" id="id1">
+<ul class="simple">
+<li><p><a class="reference internal" href="#building-west-build" id="id13">构建：<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code></a></p>
+<ul>
+<li><p><a class="reference internal" href="#basics" id="id14">基础</a></p></li>
+<li><p><a class="reference internal" href="#sysbuild-multi-domain-builds" id="id15">Sysbuild（多域构建）</a></p></li>
+<li><p><a class="reference internal" href="#examples" id="id16">示例</a></p>
+<ul>
+<li><p><a class="reference internal" href="#forcing-cmake-to-run-again" id="id17">强制 CMake 重新运行</a></p></li>
+<li><p><a class="reference internal" href="#setting-a-default-board" id="id18">设置默认开发板</a></p></li>
+<li><p><a class="reference internal" href="#setting-source-and-build-directories" id="id19">设置源代码目录和构建目录</a></p></li>
+<li><p><a class="reference internal" href="#setting-the-build-system-target" id="id20">设置构建系统目标</a></p></li>
+<li><p><a class="reference internal" href="#pristine-builds" id="id21">全新构建</a></p></li>
+<li><p><a class="reference internal" href="#verbose-builds" id="id22">详细构建</a></p></li>
+<li><p><a class="reference internal" href="#one-time-cmake-arguments" id="id23">一次性 CMake 参数</a></p></li>
+<li><p><a class="reference internal" href="#permanent-cmake-arguments" id="id24">永久 CMake 参数</a></p></li>
+<li><p><a class="reference internal" href="#build-tool-arguments" id="id25">构建工具参数</a></p></li>
+<li><p><a class="reference internal" href="#build-parallelism" id="id26">构建并行度</a></p></li>
+<li><p><a class="reference internal" href="#build-a-single-domain" id="id27">构建单个域</a></p></li>
+<li><p><a class="reference internal" href="#use-a-snippet" id="id28">使用代码片段（snippet）</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#configuration-options" id="id29">配置选项</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#flashing-west-flash" id="id30">烧录：<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">flash</span></code></a></p>
+<ul>
+<li><p><a class="reference internal" href="#id2" id="id31">基础</a></p></li>
+<li><p><a class="reference internal" href="#choosing-a-runner" id="id32">选择运行器</a></p></li>
+<li><p><a class="reference internal" href="#configuration-overrides" id="id33">配置覆盖</a></p></li>
+<li><p><a class="reference internal" href="#runner-specific-overrides" id="id34">运行器专用覆盖</a></p></li>
+<li><p><a class="reference internal" href="#multi-domain-flashing" id="id35">多域烧录</a></p></li>
+<li><p><a class="reference internal" href="#west-debugging" id="id36">配置选项</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#debugging-west-debug-west-debugserver" id="id37">调试：<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">debug</span></code>、<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">debugserver</span></code></a></p>
+<ul>
+<li><p><a class="reference internal" href="#id4" id="id38">基础</a></p></li>
+<li><p><a class="reference internal" href="#id5" id="id39">选择运行器</a></p></li>
+<li><p><a class="reference internal" href="#id6" id="id40">配置覆盖</a></p></li>
+<li><p><a class="reference internal" href="#id7" id="id41">运行器专用覆盖</a></p></li>
+<li><p><a class="reference internal" href="#multi-domain-debugging" id="id42">多域调试</a></p></li>
+<li><p><a class="reference internal" href="#west-runner" id="id43">配置选项</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#flash-and-debug-runners" id="id44">烧录和调试运行器</a></p></li>
+<li><p><a class="reference internal" href="#running-robot-framework-tests-west-robot" id="id45">运行 Robot Framework 测试：<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">robot</span></code></a></p>
+<ul>
+<li><p><a class="reference internal" href="#id9" id="id46">基础</a></p></li>
+<li><p><a class="reference internal" href="#id10" id="id47">运行器专用覆盖</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#simulating-a-board-with-west-simulate" id="id48">模拟开发板：<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">simulate</span></code></a></p>
+<ul>
+<li><p><a class="reference internal" href="#id11" id="id49">基础</a></p></li>
+<li><p><a class="reference internal" href="#id12" id="id50">运行器专用覆盖</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#out-of-tree-runners" id="id51">树外运行器</a></p></li>
+<li><p><a class="reference internal" href="#hacking" id="id52">深入开发</a></p></li>
+<li><p><a class="reference internal" href="#doing-it-by-hand" id="id53">手动操作</a></p></li>
+</ul>
+</nav>
+<section id="building-west-build">
+<span id="west-building"></span><h2><a class="toc-backref" href="#id13" role="doc-backlink">构建：<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code></a><a class="headerlink" href="#building-west-build" title="链接到此标题。"></a></h2>
+<div class="admonition tip">
+<p class="admonition-title">小技巧</p>
+<p>运行 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span> <span class="pre">-h</span></code> 可快速了解概况。</p>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">build</span></code> 命令可帮助你从源代码构建 Zephyr 应用程序。可以使用 <a class="reference internal" href="config.html#west-config-cmd"><span class="std std-ref">west config</span></a> 配置其行为。</p>
+<p>其默认行为会尽量“按你的意图行事”：</p>
+<ul class="simple">
+<li><p>如果当前工作目录中有一个名为 <code class="file docutils literal notranslate"><span class="pre">build</span></code> 的 Zephyr 构建目录，则对其进行增量重新编译。如果在某个 Zephyr 构建目录中运行 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code>，也是如此。</p></li>
+<li><p>否则，如果在 Zephyr 应用程序的源代码目录中运行 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> 且未找到构建目录，则会创建一个新的构建目录，并在其中编译该应用程序。</p></li>
+</ul>
+<section id="basics">
+<h3><a class="toc-backref" href="#id14" role="doc-backlink">基础</a><a class="headerlink" href="#basics" title="链接到此标题。"></a></h3>
+<p>使用 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> 最简单的方法是进入应用程序的根目录（即包含应用程序 <code class="file docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> 的文件夹），然后运行：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west build -b &lt;BOARD&gt;
+</pre></div>
+</div>
+<p>其中 <code class="docutils literal notranslate"><span class="pre">&lt;BOARD&gt;</span></code> 是要为其构建的开发板名称。它与直接调用 CMake 时所提供的名称完全相同：<code class="docutils literal notranslate"><span class="pre">cmake</span> <span class="pre">-DBOARD=&lt;BOARD&gt;</span></code>。</p>
+<div class="admonition tip">
+<p class="admonition-title">小技巧</p>
+<p>可以使用 <a class="reference internal" href="zephyr-cmds.html#west-boards"><span class="std std-ref">west boards</span></a> 命令列出所有支持的开发板。</p>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> 会创建一个名为 <code class="file docutils literal notranslate"><span class="pre">build</span></code> 的构建目录，运行 CMake 在该目录中生成构建系统，然后在其中编译应用程序。如果 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> 找到已有的构建目录，则在其中对应用程序进行增量重新编译，而不重新运行 CMake。可以使用 <code class="docutils literal notranslate"><span class="pre">--cmake</span></code> 强制 CMake 重新运行。</p>
+<p>如果已经有一个构建目录，就不需要使用 <code class="docutils literal notranslate"><span class="pre">--board</span></code> 选项；<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> 可以从 CMake 缓存中推断出开发板。对于新的构建，会（按顺序）检查 <code class="docutils literal notranslate"><span class="pre">--board</span></code> 选项、<span class="target" id="index-2"></span><a class="reference internal" href="../env_vars.html#envvar-BOARD"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">BOARD</span></code></a> 环境变量或 <code class="docutils literal notranslate"><span class="pre">build.board</span></code> 配置选项。</p>
+</section>
+<section id="sysbuild-multi-domain-builds">
+<span id="west-multi-domain-builds"></span><h3><a class="toc-backref" href="#id15" role="doc-backlink">Sysbuild（多域构建）</a><a class="headerlink" href="#sysbuild-multi-domain-builds" title="链接到此标题。"></a></h3>
+<p><a class="reference internal" href="../../build/sysbuild/index.html#sysbuild"><span class="std std-ref">Sysbuild（系统构建）</span></a> 可用于创建多域构建系统，为单个或多个开发板组合多个镜像。</p>
+<p>在 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> 中使用 <code class="docutils literal notranslate"><span class="pre">--sysbuild</span></code> 选择 <a class="reference internal" href="../../build/sysbuild/index.html#sysbuild"><span class="std std-ref">Sysbuild（系统构建）</span></a> 构建基础设施，以构建多个域。</p>
+<p>有关使用 sysbuild 的更多详细信息，请参阅 <a class="reference internal" href="../../build/sysbuild/index.html#sysbuild"><span class="std std-ref">Sysbuild（系统构建）</span></a> 指南。</p>
+<div class="admonition tip">
+<p class="admonition-title">小技巧</p>
+<p>可以启用 <code class="docutils literal notranslate"><span class="pre">build.sysbuild</span></code> 配置选项，让 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> 默认使用 sysbuild 进行构建。可以使用 <code class="docutils literal notranslate"><span class="pre">--no-sysbuild</span></code> 为某次构建禁用 sysbuild。</p>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> 会通过 sysbuild 所指定各个域的顶层构建文件夹构建所有域。</p>
+<p>可以使用 <code class="docutils literal notranslate"><span class="pre">--domain</span></code> 参数构建多域项目中的单个域。</p>
+</section>
+<section id="examples">
+<h3><a class="toc-backref" href="#id16" role="doc-backlink">示例</a><a class="headerlink" href="#examples" title="链接到此标题。"></a></h3>
+<p>下面是一些 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> 用法示例，按领域分组。</p>
+<section id="forcing-cmake-to-run-again">
+<h4><a class="toc-backref" href="#id17" role="doc-backlink">强制 CMake 重新运行</a><a class="headerlink" href="#forcing-cmake-to-run-again" title="链接到此标题。"></a></h4>
+<p>要强制重新运行 CMake，请使用 <code class="docutils literal notranslate"><span class="pre">--cmake</span></code> （或 <code class="docutils literal notranslate"><span class="pre">-c</span></code>）选项：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west build -c
+</pre></div>
+</div>
+</section>
+<section id="setting-a-default-board">
+<h4><a class="toc-backref" href="#id18" role="doc-backlink">设置默认开发板</a><a class="headerlink" href="#setting-a-default-board" title="链接到此标题。"></a></h4>
+<p>要将 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> 配置为默认为 <code class="docutils literal notranslate"><span class="pre">reel_board</span></code> 构建：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west config build.board reel_board
+</pre></div>
+</div>
+<p>（此处可以使用 Zephyr 支持的任何其他开发板，不一定是 <code class="docutils literal notranslate"><span class="pre">reel_board</span></code>。）</p>
+</section>
+<section id="setting-source-and-build-directories">
+<span id="west-building-dirs"></span><h4><a class="toc-backref" href="#id19" role="doc-backlink">设置源代码目录和构建目录</a><a class="headerlink" href="#setting-source-and-build-directories" title="链接到此标题。"></a></h4>
+<p>要显式设置应用程序源代码目录，请将其路径作为位置参数给出：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west build -b &lt;BOARD&gt; path/to/source/directory
+</pre></div>
+</div>
+<p>要显式设置构建目录，请使用 <code class="docutils literal notranslate"><span class="pre">--build-dir</span></code> （或 <code class="docutils literal notranslate"><span class="pre">-d</span></code>）：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west build -b &lt;BOARD&gt; --build-dir path/to/build/directory
+</pre></div>
+</div>
+<p>要更改默认的构建目录 <code class="file docutils literal notranslate"><span class="pre">build</span></code>，请使用 <code class="docutils literal notranslate"><span class="pre">build.dir-fmt</span></code> 配置选项。这样就可以使用格式字符串为构建目录命名，例如：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west config build.dir-fmt "build/{board}/{app}"
+</pre></div>
+</div>
+<p>如上设置后，运行 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span> <span class="pre">-b</span> <span class="pre">reel_board</span> <span class="pre">samples/hello_world</span></code> 将使用构建目录 <code class="file docutils literal notranslate"><span class="pre">build/reel_board/hello_world</span></code>。有关此选项的更多细节，请参阅 <a class="reference internal" href="#west-building-config"><span class="std std-ref">配置选项</span></a>。</p>
+</section>
+<section id="setting-the-build-system-target">
+<h4><a class="toc-backref" href="#id20" role="doc-backlink">设置构建系统目标</a><a class="headerlink" href="#setting-the-build-system-target" title="链接到此标题。"></a></h4>
+<p>要指定要运行的构建系统目标，请使用 <code class="docutils literal notranslate"><span class="pre">--target</span></code> （或 <code class="docutils literal notranslate"><span class="pre">-t</span></code>）。</p>
+<p>例如，在带有 QEMU 的主机平台上，可以使用 <code class="docutils literal notranslate"><span class="pre">run</span></code> 目标，通过一条命令为模拟的 <a class="reference internal" href="../../boards/qemu/x86/doc/index.html#qemu_x86"><span class="xref zephyr zephyr-board">qemu_x86</span></a> 开发板构建并运行 <a class="reference internal" href="../../samples/hello_world/README.html#hello_world" title="向控制台打印 &quot;Hello World&quot;。">Hello World</a> 示例：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west build -b qemu_x86 -t run samples/hello_world
+</pre></div>
+</div>
+<p>再举一个例子，使用 <code class="docutils literal notranslate"><span class="pre">-t</span></code> 列出所有构建系统目标：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west build -t help
+</pre></div>
+</div>
+<p>最后一个例子，使用 <code class="docutils literal notranslate"><span class="pre">-t</span></code> 运行 <code class="docutils literal notranslate"><span class="pre">pristine</span></code> 目标，它会删除构建目录中的所有文件：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west build -t pristine
+</pre></div>
+</div>
+</section>
+<section id="pristine-builds">
+<span id="west-building-pristine"></span><h4><a class="toc-backref" href="#id21" role="doc-backlink">全新构建</a><a class="headerlink" href="#pristine-builds" title="链接到此标题。"></a></h4>
+<p><em>全新（pristine）</em> 构建目录本质上就是一个新的构建目录，以前构建产生的所有副产物都已被删除。</p>
+<p>要强制 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> 在重新运行 CMake 生成构建系统之前将构建目录恢复为全新状态，请使用 <code class="docutils literal notranslate"><span class="pre">--pristine=always</span></code> （或 <code class="docutils literal notranslate"><span class="pre">-p=always</span></code>）选项。</p>
+<p>给出不带值的 <code class="docutils literal notranslate"><span class="pre">--pristine</span></code> 或 <code class="docutils literal notranslate"><span class="pre">-p</span></code>，与给出值 <code class="docutils literal notranslate"><span class="pre">always</span></code> 的效果相同。例如，以下命令是等价的：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west build -p -b reel_board samples/hello_world
+west build -p=always -b reel_board samples/hello_world
+</pre></div>
+</div>
+<p>默认情况下，<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> 不会尝试检测构建目录是否需要恢复为全新状态。如果你尝试将某个构建目录重用于不同的 <code class="docutils literal notranslate"><span class="pre">--board</span></code> 之类的操作，就可能导致错误。</p>
+<p>使用 <code class="docutils literal notranslate"><span class="pre">--pristine=auto</span></code> 可以让 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> 检测其中的一些情况，并在尝试构建之前将构建目录恢复为全新状态。</p>
+<div class="admonition tip">
+<p class="admonition-title">小技巧</p>
+<p>可以运行 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">config</span> <span class="pre">build.pristine</span> <span class="pre">always</span></code> 以始终进行全新构建，或者运行 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">config</span> <span class="pre">build.pristine</span> <span class="pre">never</span></code> 禁用这种启发式检测。详情请参阅 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> 的 <a class="reference internal" href="#west-building-config"><span class="std std-ref">配置选项</span></a>。</p>
+</div>
+</section>
+<section id="verbose-builds">
+<span id="west-building-verbose"></span><h4><a class="toc-backref" href="#id22" role="doc-backlink">详细构建</a><a class="headerlink" href="#verbose-builds" title="链接到此标题。"></a></h4>
+<p>要打印 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> 所运行的 CMake 和编译器命令，请使用全局 west 详细程度选项 <code class="docutils literal notranslate"><span class="pre">-v</span></code>：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west -v build -b reel_board samples/hello_world
+</pre></div>
+</div>
+</section>
+<section id="one-time-cmake-arguments">
+<span id="west-building-cmake-args"></span><span id="west-building-generator"></span><h4><a class="toc-backref" href="#id23" role="doc-backlink">一次性 CMake 参数</a><a class="headerlink" href="#one-time-cmake-arguments" title="链接到此标题。"></a></h4>
+<p>要向 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> 执行的 CMake 调用传递额外参数，请将它们放在命令行末尾的 <code class="docutils literal notranslate"><span class="pre">--</span></code> 之后。</p>
+<div class="admonition important">
+<p class="admonition-title">重要</p>
+<p>像这样传递额外的 CMake 参数，会强制 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> 重新运行 CMake 构建配置步骤，即使已经生成了构建系统也是如此。这会使增量构建变慢（但仍然比从头构建快得多）。</p>
+<p>使用一次 <code class="docutils literal notranslate"><span class="pre">--</span></code> 生成构建目录之后，在后续运行中使用 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span> <span class="pre">-d</span> <span class="pre">&lt;build-dir&gt;</span></code> 进行增量构建。</p>
+<p>或者，按照下一节所述将 CMake 参数设为永久参数；这样不会减慢增量构建。</p>
+</div>
+<p>例如，要使用 Unix Makefiles CMake 生成器代替 Ninja（<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> 默认使用 Ninja），请运行：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west build -b reel_board -- -G'Unix Makefiles'
+</pre></div>
+</div>
+<p>要使用 Unix Makefiles 并将 <a class="reference external" href="https://cmake.org/cmake/help/latest/variable/CMAKE_VERBOSE_MAKEFILE.html">CMAKE_VERBOSE_MAKEFILE</a> 设置为 <code class="docutils literal notranslate"><span class="pre">ON</span></code>：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west build -b reel_board -- -G'Unix Makefiles' -DCMAKE_VERBOSE_MAKEFILE=ON
+</pre></div>
+</div>
+<p>注意，尽管给出了多个 CMake 参数，<code class="docutils literal notranslate"><span class="pre">--</span></code> 只出现一次。<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> 命令行中 <code class="docutils literal notranslate"><span class="pre">--</span></code> 之后的所有参数都会传递给 CMake。</p>
+<p id="west-building-dtc-overlay-file">要将 <a class="reference internal" href="../application/index.html#important-build-vars"><span class="std std-ref">DTC_OVERLAY_FILE</span></a> 设置为 <code class="file docutils literal notranslate"><span class="pre">enable-modem.overlay</span></code>，从而将该文件用作 <a class="reference internal" href="../../build/dts/index.html#dt-guide"><span class="std std-ref">设备树覆盖文件（overlay）</span></a>：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west build -b reel_board -- -DDTC_OVERLAY_FILE=enable-modem.overlay
+</pre></div>
+</div>
+<p>要将 Kconfig 片段 <code class="file docutils literal notranslate"><span class="pre">file.conf</span></code> 合并到构建的 <code class="file docutils literal notranslate"><span class="pre">.config</span></code> 中：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west build -- -DEXTRA_CONF_FILE=file.conf
+</pre></div>
+</div>
+</section>
+<section id="permanent-cmake-arguments">
+<span id="west-building-cmake-config"></span><h4><a class="toc-backref" href="#id24" role="doc-backlink">永久 CMake 参数</a><a class="headerlink" href="#permanent-cmake-arguments" title="链接到此标题。"></a></h4>
+<p>上一节介绍了如何为单条 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> 命令添加 CMake 参数。如果希望保存 CMake 参数，让 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> 每次生成新的构建系统时都使用它们，应当使用 <code class="docutils literal notranslate"><span class="pre">build.cmake-args</span></code> 配置选项。每当 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> 运行 CMake 生成构建系统时，都会按照 shell 规则拆分此选项的值，并将结果加入 <code class="docutils literal notranslate"><span class="pre">cmake</span></code> 命令行中。</p>
+<p>请记住，默认情况下，如果构建目录中已存在构建系统，<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> <strong>会尽量避免生成新的构建系统</strong>。因此，设置 <code class="docutils literal notranslate"><span class="pre">build.cmake-args</span></code> 之后，需要删除所有已有的构建目录，或者执行 <a class="reference internal" href="#west-building-pristine"><span class="std std-ref">全新构建</span></a>，以确保设置生效。</p>
+<p>例如，要始终启用 <strong class="makevar">CMAKE_EXPORT_COMPILE_COMMANDS</strong>，可以运行：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west config build.cmake-args -- -DCMAKE_EXPORT_COMPILE_COMMANDS=ON
+</pre></div>
+</div>
+<p>（额外的 <code class="docutils literal notranslate"><span class="pre">--</span></code> 用于强制将命令的其余部分视为位置参数。如果没有它，<a class="reference internal" href="config.html#west-config-cmd"><span class="std std-ref">west config</span></a> 会把 <code class="docutils literal notranslate"><span class="pre">-DVAR=VAL</span></code> 语法视为对其 <code class="docutils literal notranslate"><span class="pre">-D</span></code> 选项的使用。）</p>
+<p>要启用 <strong class="makevar">CMAKE_VERBOSE_MAKEFILE</strong>，使 CMake 始终生成详细输出的构建系统：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west config build.cmake-args -- -DCMAKE_VERBOSE_MAKEFILE=ON
+</pre></div>
+</div>
+<p>要在 <code class="docutils literal notranslate"><span class="pre">build.cmake-args</span></code> 中保存多个参数，请使用一个其值可以拆分为不同参数的字符串（<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> 在内部使用 Python 函数 <a class="reference external" href="https://docs.python.org/3/library/shlex.html#shlex.split">shlex.split()</a> 拆分该值）。</p>
+<p>例如，要同时启用 <strong class="makevar">CMAKE_EXPORT_COMPILE_COMMANDS</strong> 和 <strong class="makevar">CMAKE_VERBOSE_MAKEFILE</strong>：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west config build.cmake-args -- "-DCMAKE_EXPORT_COMPILE_COMMANDS=ON -DCMAKE_VERBOSE_MAKEFILE=ON"
+</pre></div>
+</div>
+<p>如果希望将 CMake 参数保存在单独的文件中，可以将 CMake 的 <code class="docutils literal notranslate"><span class="pre">-C</span> <span class="pre">&lt;initial-cache&gt;</span></code> 选项与 <code class="docutils literal notranslate"><span class="pre">build.cmake-args</span></code> 结合使用。例如，设置上例所用选项的另一种方法是创建一个名为 <code class="file docutils literal notranslate"><span class="pre">~/my-cache.cmake</span></code> 的文件，内容如下：</p>
+<div class="highlight-cmake notranslate"><div class="highlight"><pre><span></span><span class="nf">set(</span><span class="no">CMAKE_EXPORT_COMPILE_COMMANDS</span><span class="w"> </span><span class="no">ON</span><span class="w"> </span><span class="no">CACHE</span><span class="w"> </span><span class="no">BOOL</span><span class="w"> </span><span class="s">""</span><span class="nf">)</span>
+<span class="nf">set(</span><span class="no">CMAKE_VERBOSE_MAKEFILE</span><span class="w"> </span><span class="no">ON</span><span class="w"> </span><span class="no">CACHE</span><span class="w"> </span><span class="no">BOOL</span><span class="w"> </span><span class="s">""</span><span class="nf">)</span>
+</pre></div>
+</div>
+<p>然后运行：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west config build.cmake-args "-C ~/my-cache.cmake"
+</pre></div>
+</div>
+<p>更多细节请参阅 <a class="reference external" href="https://cmake.org/cmake/help/latest/manual/cmake.1.html">cmake(1) manual page</a> 和 <a class="reference external" href="https://cmake.org/cmake/help/latest/command/set.html">set() command</a> 文档。</p>
+</section>
+<section id="build-tool-arguments">
+<h4><a class="toc-backref" href="#id25" role="doc-backlink">构建工具参数</a><a class="headerlink" href="#build-tool-arguments" title="链接到此标题。"></a></h4>
+<p>使用 <code class="docutils literal notranslate"><span class="pre">-o</span></code> 向底层构建工具传递选项。</p>
+<p>这同时适用于基于 <code class="docutils literal notranslate"><span class="pre">ninja</span></code> （<a class="reference internal" href="#west-building-generator"><span class="std std-ref">默认</span></a>）和基于 <code class="docutils literal notranslate"><span class="pre">make</span></code> 的构建系统。</p>
+<p>例如，要向 <code class="docutils literal notranslate"><span class="pre">ninja</span></code> 传递 <code class="docutils literal notranslate"><span class="pre">-dexplain</span></code>：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west build -o=-dexplain
+</pre></div>
+</div>
+<p>再举一个例子，要向 <code class="docutils literal notranslate"><span class="pre">make</span></code> 传递 <code class="docutils literal notranslate"><span class="pre">--keep-going</span></code>：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west build -o=--keep-going
+</pre></div>
+</div>
+<p>注意，必须使用 <code class="docutils literal notranslate"><span class="pre">-o=--foo</span></code> 而不是 <code class="docutils literal notranslate"><span class="pre">-o</span> <span class="pre">--foo</span></code>，以防止 <code class="docutils literal notranslate"><span class="pre">--foo</span></code> 被当作 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> 的选项。</p>
+</section>
+<section id="build-parallelism">
+<h4><a class="toc-backref" href="#id26" role="doc-backlink">构建并行度</a><a class="headerlink" href="#build-parallelism" title="链接到此标题。"></a></h4>
+<p>默认情况下，<code class="docutils literal notranslate"><span class="pre">ninja</span></code> 使用所有核心进行构建，而 <code class="docutils literal notranslate"><span class="pre">make</span></code> 只使用一个核心。可以使用这两个工具都支持的 <code class="docutils literal notranslate"><span class="pre">-j</span></code> 选项显式控制并行度。</p>
+<p>例如，使用 4 个核心进行构建：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west build -o=-j4
+</pre></div>
+</div>
+<p>上一节对 <code class="docutils literal notranslate"><span class="pre">-o</span></code> 选项有进一步的说明。</p>
+</section>
+<section id="build-a-single-domain">
+<h4><a class="toc-backref" href="#id27" role="doc-backlink">构建单个域</a><a class="headerlink" href="#build-a-single-domain" title="链接到此标题。"></a></h4>
+<p>在包含 <a class="reference internal" href="../../samples/hello_world/README.html#hello_world" title="向控制台打印 &quot;Hello World&quot;。">Hello World</a> 和 <a class="reference external" href="https://mcuboot.com/">MCUboot</a> 的多域构建中，可以使用 <code class="docutils literal notranslate"><span class="pre">--domain</span> <span class="pre">hello_world</span></code> 只构建该域：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west build --sysbuild --domain hello_world
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">--domain</span></code> 参数可以与 <code class="docutils literal notranslate"><span class="pre">--target</span></code> 参数结合使用，为该域构建特定的目标，例如：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west build --sysbuild --domain hello_world --target help
+</pre></div>
+</div>
+</section>
+<section id="use-a-snippet">
+<h4><a class="toc-backref" href="#id28" role="doc-backlink">使用代码片段（snippet）</a><a class="headerlink" href="#use-a-snippet" title="链接到此标题。"></a></h4>
+<p>请参阅 <a class="reference internal" href="../../build/snippets/using.html#using-snippets"><span class="std std-ref">使用代码片段</span></a>。</p>
+</section>
+</section>
+<section id="configuration-options">
+<span id="west-building-config"></span><h3><a class="toc-backref" href="#id29" role="doc-backlink">配置选项</a><a class="headerlink" href="#configuration-options" title="链接到此标题。"></a></h3>
+<p>可以使用以下选项 <a class="reference internal" href="config.html#west-config-cmd"><span class="std std-ref">配置</span></a> <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code>。</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25.0%" />
+<col style="width: 75.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>选项</p></th>
+<th class="head"><p>说明</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">build.board</span></code></p></td>
+<td><p>字符串。如果给出，则当未给出 <code class="docutils literal notranslate"><span class="pre">--board</span></code> 且环境中未设置 <code class="docutils literal notranslate"><span class="pre">BOARD</span></code> 时，<a class="reference internal" href="#west-building"><span class="std std-ref">west build</span></a> 使用该开发板。</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">build.board_warn</span></code></p></td>
+<td><p>布尔值，默认为 <code class="docutils literal notranslate"><span class="pre">true</span></code>。如果为 <code class="docutils literal notranslate"><span class="pre">false</span></code>，则在 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> 无法确定目标开发板时不显示警告。</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">build.cmake-args</span></code></p></td>
+<td><p>字符串。如果存在，每当生成新的构建系统时，都会按照 shell 规则拆分该值并传递给 CMake。请参阅 <a class="reference internal" href="#west-building-cmake-config"><span class="std std-ref">永久 CMake 参数</span></a>。</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">build.dir-fmt</span></code></p></td>
+<td><p>字符串，默认为 <code class="docutils literal notranslate"><span class="pre">build</span></code>。构建文件夹格式字符串，每当 west 需要创建或定位构建文件夹时都会使用它。目前可用的参数有：</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">west_topdir</span></code>：west 工作区的绝对路径，即 <code class="docutils literal notranslate"><span class="pre">west_topdir</span></code> 命令所返回的路径</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">board</span></code>：开发板名称</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">source_dir</span></code>：CMake 源代码目录相对于当前工作目录的路径。如果当前工作目录位于源代码目录内，则为空字符串；在 Windows 上，如果源代码目录位于另一个驱动器上，与当前目录之间不存在相对路径，也是如此。如果未指定源代码目录，则默认为当前工作目录。例如，如果在 <code class="docutils literal notranslate"><span class="pre">&lt;west_topdir&gt;/app1</span></code> 中运行 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span> <span class="pre">../app</span></code>，则 <code class="docutils literal notranslate"><span class="pre">source_dir</span></code> 解析为 <code class="docutils literal notranslate"><span class="pre">../app</span></code> （即相对于当前工作目录的路径）。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">source_dir_workspace</span></code>：源代码目录相对于 <code class="docutils literal notranslate"><span class="pre">west_topdir</span></code> 的路径（如果源代码目录位于工作区内）。否则，它相对于文件系统根目录（在 Unix 上为 <code class="docutils literal notranslate"><span class="pre">/</span></code>，在 Windows 上为 <code class="docutils literal notranslate"><span class="pre">C:/</span></code>）。例如，如果在 <code class="docutils literal notranslate"><span class="pre">&lt;west_topdir&gt;/app1</span></code> 中运行 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span> <span class="pre">../app</span></code>，则 <code class="docutils literal notranslate"><span class="pre">source_dir</span></code> 解析为 <code class="docutils literal notranslate"><span class="pre">app</span></code> （即相对于 west 工作区目录的路径）。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">app</span></code>：源代码目录的名称。</p></li>
+</ul>
+</div></blockquote>
+</td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">build.generator</span></code></p></td>
+<td><p>字符串，默认为 <code class="docutils literal notranslate"><span class="pre">Ninja</span></code>。用于创建构建系统的 <a class="reference external" href="https://cmake.org/cmake/help/latest/manual/cmake-generators.7.html">CMake Generator</a>。（要为单次构建设置生成器，请参阅 <a class="reference internal" href="#west-building-generator"><span class="std std-ref">上面的示例</span></a>）</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">build.guess-dir</span></code></p></td>
+<td><p>字符串，指示在使用 <code class="docutils literal notranslate"><span class="pre">build.dir-fmt</span></code> 且没有足够信息来解析构建文件夹名称时，west 是否应尝试猜测要使用的构建文件夹。可以取以下值：</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">never</span></code> （默认）：从不尝试猜测，而是退出并要求用户使用 <code class="docutils literal notranslate"><span class="pre">-d</span></code> 提供构建文件夹。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">runners</span></code>：在使用任何“运行器（runner）”命令时尝试猜测文件夹。这些命令通常是所有调用外部工具的命令，例如 <code class="docutils literal notranslate"><span class="pre">flash</span></code> 和 <code class="docutils literal notranslate"><span class="pre">debug</span></code>。</p></li>
+</ul>
+</div></blockquote>
+</td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">build.pristine</span></code></p></td>
+<td><p>字符串。控制 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> 在构建之前清理构建文件夹的方式。可以取以下值：</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">never</span></code> （默认）：从不自动将构建文件夹恢复为全新状态。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">auto</span></code>：如果存在构建系统，并且不清理就会导致构建失败（例如用户指定的开发板或应用程序与之前创建该构建目录时所用的不同），<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">build</span></code> 会在构建之前自动将构建文件夹恢复为全新状态。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">always</span></code>：如果存在构建系统，则总是在构建之前将构建文件夹恢复为全新状态。</p></li>
+</ul>
+</div></blockquote>
+</td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">build.sysbuild</span></code></p></td>
+<td><p>布尔值，默认为 <code class="docutils literal notranslate"><span class="pre">false</span></code>。如果为 <code class="docutils literal notranslate"><span class="pre">true</span></code>，则使用 sysbuild 基础设施构建应用程序。</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="flashing-west-flash">
+<span id="west-flashing"></span><h2><a class="toc-backref" href="#id30" role="doc-backlink">烧录：<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">flash</span></code></a><a class="headerlink" href="#flashing-west-flash" title="链接到此标题。"></a></h2>
+<div class="admonition tip">
+<p class="admonition-title">小技巧</p>
+<p>运行 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">flash</span> <span class="pre">-h</span></code> 获取更多帮助。</p>
+</div>
+<section id="id2">
+<h3><a class="toc-backref" href="#id31" role="doc-backlink">基础</a><a class="headerlink" href="#id2" title="链接到此标题。"></a></h3>
+<p>在 Zephyr 构建目录中，重新构建二进制文件并将其烧录到开发板：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west flash
+</pre></div>
+</div>
+<p>要指定构建目录，请使用 <code class="docutils literal notranslate"><span class="pre">--build-dir</span></code> （或 <code class="docutils literal notranslate"><span class="pre">-d</span></code>）：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west flash --build-dir path/to/build/directory
+</pre></div>
+</div>
+<p>如果未指定构建目录，<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">flash</span></code> 会先在 <code class="file docutils literal notranslate"><span class="pre">build</span></code> 中查找，然后在当前工作目录中查找。如果设置了 <code class="docutils literal notranslate"><span class="pre">build.dir-fmt</span></code> 配置选项（请参阅 <a class="reference internal" href="#west-building-dirs"><span class="std std-ref">设置源代码目录和构建目录</span></a>），<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">flash</span></code> 会在该位置而不是 <code class="file docutils literal notranslate"><span class="pre">build</span></code> 中查找。</p>
+</section>
+<section id="choosing-a-runner">
+<h3><a class="toc-backref" href="#id32" role="doc-backlink">选择运行器</a><a class="headerlink" href="#choosing-a-runner" title="链接到此标题。"></a></h3>
+<p>如果开发板的 Zephyr 集成支持使用多个程序进行烧录，可以使用 <code class="docutils literal notranslate"><span class="pre">--runner</span></code> （或 <code class="docutils literal notranslate"><span class="pre">-r</span></code>）选项指定要使用哪一个。例如，如果 West 默认使用 <code class="docutils literal notranslate"><span class="pre">nrfjprog</span></code> 烧录你的开发板，但开发板也支持 JLink，可以这样覆盖默认值：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west flash --runner jlink
+</pre></div>
+</div>
+<p>可以在构建时使用 CMake 变量 <code class="docutils literal notranslate"><span class="pre">BOARD_FLASH_RUNNER</span></code> 覆盖默认的烧录运行器，使用 <code class="docutils literal notranslate"><span class="pre">BOARD_DEBUG_RUNNER</span></code> 覆盖默认的调试运行器。</p>
+<p>例如：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span># Set the default runner to "jlink", overriding the board's
+# usual default.
+west build [...] -- -DBOARD_FLASH_RUNNER=jlink
+</pre></div>
+</div>
+<p>有关设置 CMake 参数的更多信息，请参阅 <a class="reference internal" href="#west-building-cmake-args"><span class="std std-ref">一次性 CMake 参数</span></a> 和 <a class="reference internal" href="#west-building-cmake-config"><span class="std std-ref">永久 CMake 参数</span></a>。</p>
+<p>有关 West 所用 <code class="docutils literal notranslate"><span class="pre">runner</span></code> 库的更多信息，请参阅下文的 <a class="reference internal" href="#west-runner"><span class="std std-ref">配置选项</span></a>。可以使用 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">flash</span> <span class="pre">-H</span></code> 获取支持烧录的运行器列表；如果在构建目录中运行或带有 <code class="docutils literal notranslate"><span class="pre">--build-dir</span></code>，该命令还会打印你的开发板可用运行器的更多信息。</p>
+</section>
+<section id="configuration-overrides">
+<h3><a class="toc-backref" href="#id33" role="doc-backlink">配置覆盖</a><a class="headerlink" href="#configuration-overrides" title="链接到此标题。"></a></h3>
+<p>CMake 缓存中包含 West 在烧录时使用的默认值，例如开发板目录在文件系统中的位置、要烧录的多种格式的 zephyr 二进制文件的路径等。可以在运行时使用附加选项覆盖其中任何配置。</p>
+<p>例如，要覆盖包含待烧录 Zephyr 镜像的 HEX 文件（假设你的运行器需要 HEX 文件），而其他烧录配置保持默认值：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west flash --hex-file path/to/some/other.hex
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">flash</span> <span class="pre">-h</span></code> 的输出中包含所有运行器支持的覆盖项的完整列表。</p>
+</section>
+<section id="runner-specific-overrides">
+<h3><a class="toc-backref" href="#id34" role="doc-backlink">运行器专用覆盖</a><a class="headerlink" href="#runner-specific-overrides" title="链接到此标题。"></a></h3>
+<p>每个运行器都可能支持与烧录相关的附加选项。例如，有些运行器支持 <code class="docutils literal notranslate"><span class="pre">--erase</span></code> 标志，它会在烧录 Zephyr 镜像之前对开发板上的 Flash 存储进行整片擦除。</p>
+<p>要查看开发板所支持的运行器的所有可用选项及其用法信息，请使用 <code class="docutils literal notranslate"><span class="pre">--context</span></code> （或 <code class="docutils literal notranslate"><span class="pre">-H</span></code>）：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west flash --context
+</pre></div>
+</div>
+<div class="admonition important">
+<p class="admonition-title">重要</p>
+<p>注意短选项名称中的 H 是大写的。该命令会重新运行构建，以确保所显示的信息是最新的！</p>
+</div>
+<p>在构建目录之外运行 West 时，<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">flash</span> <span class="pre">-H</span></code> 只会打印运行器列表。可以使用 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">flash</span> <span class="pre">-H</span> <span class="pre">-r</span> <span class="pre">&lt;runner-name&gt;</span></code> 打印该运行器所支持选项的用法信息。</p>
+<p>例如，要打印 <code class="docutils literal notranslate"><span class="pre">jlink</span></code> 运行器的用法信息：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west flash -H -r jlink
+</pre></div>
+</div>
+</section>
+<section id="multi-domain-flashing">
+<span id="west-multi-domain-flashing"></span><h3><a class="toc-backref" href="#id35" role="doc-backlink">多域烧录</a><a class="headerlink" href="#multi-domain-flashing" title="链接到此标题。"></a></h3>
+<p>检测到 <a class="reference internal" href="#west-multi-domain-builds"><span class="std std-ref">Sysbuild（多域构建）</span></a> 文件夹时，<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">flash</span></code> 会按照 sysbuild 定义的顺序烧录所有域。</p>
+<p>可以使用 <code class="docutils literal notranslate"><span class="pre">--domain</span></code> 只烧录多域项目中某一个域的镜像。</p>
+<p>例如，在包含 <a class="reference internal" href="../../samples/hello_world/README.html#hello_world" title="向控制台打印 &quot;Hello World&quot;。">Hello World</a> 和 <a class="reference external" href="https://mcuboot.com/">MCUboot</a> 的多域构建中，可以使用 <code class="docutils literal notranslate"><span class="pre">--domain</span> <span class="pre">hello_world</span></code> 只烧录该域的镜像：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west flash --domain hello_world
+</pre></div>
+</div>
+</section>
+<section id="west-debugging">
+<span id="id3"></span><h3><a class="toc-backref" href="#id36" role="doc-backlink">配置选项</a><a class="headerlink" href="#west-debugging" title="链接到此标题。"></a></h3>
+<p>可以使用以下选项 <a class="reference internal" href="config.html#west-config-cmd"><span class="std std-ref">配置</span></a> <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">flash</span></code>。</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25.0%" />
+<col style="width: 75.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>选项</p></th>
+<th class="head"><p>说明</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">flash.rebuild</span></code></p></td>
+<td><p>布尔值，默认为 <code class="docutils literal notranslate"><span class="pre">true</span></code>。如果为 <code class="docutils literal notranslate"><span class="pre">false</span></code>，则运行 west flash 时不重新构建。</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="debugging-west-debug-west-debugserver">
+<h2><a class="toc-backref" href="#id37" role="doc-backlink">调试：<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">debug</span></code>、<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">debugserver</span></code></a><a class="headerlink" href="#debugging-west-debug-west-debugserver" title="链接到此标题。"></a></h2>
+<div class="admonition tip">
+<p class="admonition-title">小技巧</p>
+<p>运行 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">debug</span> <span class="pre">-h</span></code> 或 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">debugserver</span> <span class="pre">-h</span></code> 获取更多帮助。</p>
+</div>
+<section id="id4">
+<h3><a class="toc-backref" href="#id38" role="doc-backlink">基础</a><a class="headerlink" href="#id4" title="链接到此标题。"></a></h3>
+<p>在 Zephyr 构建目录中，将调试器连接到开发板并打开调试控制台（例如 GDB 会话）：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west debug
+</pre></div>
+</div>
+<p>将调试器连接到开发板，并打开一个本地网络端口，以便其他调试器（例如 IDE 调试器）连接：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west debugserver
+</pre></div>
+</div>
+<p>要指定构建目录，请使用 <code class="docutils literal notranslate"><span class="pre">--build-dir</span></code> （或 <code class="docutils literal notranslate"><span class="pre">-d</span></code>）：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west debug --build-dir path/to/build/directory
+west debugserver --build-dir path/to/build/directory
+</pre></div>
+</div>
+<p>如果未指定构建目录，这些命令会先在 <code class="file docutils literal notranslate"><span class="pre">build</span></code> 中查找，然后在当前工作目录中查找。如果设置了 <code class="docutils literal notranslate"><span class="pre">build.dir-fmt</span></code> 配置选项（请参阅 <a class="reference internal" href="#west-building-dirs"><span class="std std-ref">设置源代码目录和构建目录</span></a>），<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">debug</span></code> 会在该位置而不是 <code class="file docutils literal notranslate"><span class="pre">build</span></code> 中查找。</p>
+</section>
+<section id="id5">
+<h3><a class="toc-backref" href="#id39" role="doc-backlink">选择运行器</a><a class="headerlink" href="#id5" title="链接到此标题。"></a></h3>
+<p>如果开发板的 Zephyr 集成支持使用多个程序进行调试，可以使用 <code class="docutils literal notranslate"><span class="pre">--runner</span></code> （或 <code class="docutils literal notranslate"><span class="pre">-r</span></code>）选项指定要使用哪一个。例如，如果 West 默认使用 <code class="docutils literal notranslate"><span class="pre">pyocd-gdbserver</span></code> 调试你的开发板，但开发板也支持 JLink，可以这样覆盖默认值：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west debug --runner jlink
+west debugserver --runner jlink
+</pre></div>
+</div>
+<p>有关 West 所用 <code class="docutils literal notranslate"><span class="pre">runner</span></code> 库的更多信息，请参阅下文的 <a class="reference internal" href="#west-runner"><span class="std std-ref">配置选项</span></a>。可以使用 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">debug</span> <span class="pre">-H</span></code> 获取支持调试的运行器列表；如果在构建目录中运行或带有 <code class="docutils literal notranslate"><span class="pre">--build-dir</span></code>，该命令还会打印你的开发板可用运行器的更多信息。</p>
+</section>
+<section id="id6">
+<h3><a class="toc-backref" href="#id40" role="doc-backlink">配置覆盖</a><a class="headerlink" href="#id6" title="链接到此标题。"></a></h3>
+<p>CMake 缓存中包含 West 在调试时使用的默认值，例如开发板目录在文件系统中的位置、包含符号表的 zephyr 二进制文件的路径等。可以在运行时使用附加选项覆盖其中任何配置。</p>
+<p>例如，要覆盖包含 Zephyr 二进制代码和符号表的 ELF 文件（假设你的运行器需要 ELF 文件），而其他调试配置保持默认值：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west debug --elf-file path/to/some/other.elf
+west debugserver --elf-file path/to/some/other.elf
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">debug</span> <span class="pre">-h</span></code> 的输出中包含所有运行器支持的覆盖项的完整列表。</p>
+</section>
+<section id="id7">
+<h3><a class="toc-backref" href="#id41" role="doc-backlink">运行器专用覆盖</a><a class="headerlink" href="#id7" title="链接到此标题。"></a></h3>
+<p>每个运行器都可能支持与调试相关的附加选项。例如，有些运行器支持用于设置调试服务器所用网络端口的标志。</p>
+<p>要查看开发板所支持的运行器的所有可用选项及其用法信息，请使用 <code class="docutils literal notranslate"><span class="pre">--context</span></code> （或 <code class="docutils literal notranslate"><span class="pre">-H</span></code>）：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west debug --context
+</pre></div>
+</div>
+<p>（命令 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">debugserver</span> <span class="pre">--context</span></code> 会打印相同的输出。）</p>
+<div class="admonition important">
+<p class="admonition-title">重要</p>
+<p>注意短选项名称中的 H 是大写的。该命令会重新运行构建，以确保所显示的信息是最新的！</p>
+</div>
+<p>在构建目录之外运行 West 时，<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">debug</span> <span class="pre">-H</span></code> 只会打印运行器列表。可以使用 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">debug</span> <span class="pre">-H</span> <span class="pre">-r</span> <span class="pre">&lt;runner-name&gt;</span></code> 打印该运行器所支持选项的用法信息。</p>
+<p>例如，要打印 <code class="docutils literal notranslate"><span class="pre">jlink</span></code> 运行器的用法信息：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west debug -H -r jlink
+</pre></div>
+</div>
+</section>
+<section id="multi-domain-debugging">
+<span id="west-multi-domain-debugging"></span><h3><a class="toc-backref" href="#id42" role="doc-backlink">多域调试</a><a class="headerlink" href="#multi-domain-debugging" title="链接到此标题。"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">debug</span></code> 一次只能调试一个域。检测到 <a class="reference internal" href="#west-multi-domain-builds"><span class="std std-ref">Sysbuild（多域构建）</span></a> 文件夹时，<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">debug</span></code> 会调试 sysbuild 指定的 <code class="docutils literal notranslate"><span class="pre">default</span></code> 域。</p>
+<p>默认域就是作为源代码目录给出的应用程序。请看下面的示例：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west build --sysbuild path/to/source/directory
+</pre></div>
+</div>
+<p>例如，使用 sysbuild 构建带 <a class="reference external" href="https://mcuboot.com/">MCUboot</a> 的 <code class="docutils literal notranslate"><span class="pre">hello_world</span></code> 时，<code class="docutils literal notranslate"><span class="pre">hello_world</span></code> 会成为默认域：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west build --sysbuild samples/hello_world
+</pre></div>
+</div>
+<p>因此，要调试 <code class="docutils literal notranslate"><span class="pre">hello_world</span></code>，可以执行：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west debug
+</pre></div>
+</div>
+<p>或者：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west debug --domain hello_world
+</pre></div>
+</div>
+<p>如果要调试 MCUboot，必须显式指定 MCUboot 作为要调试的域：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west debug --domain mcuboot
+</pre></div>
+</div>
+</section>
+<section id="west-runner">
+<span id="id8"></span><h3><a class="toc-backref" href="#id43" role="doc-backlink">配置选项</a><a class="headerlink" href="#west-runner" title="链接到此标题。"></a></h3>
+<p>可以使用以下选项 <a class="reference internal" href="config.html#west-config-cmd"><span class="std std-ref">配置</span></a> <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">debug</span></code> 和 <a class="reference internal" href="config.html#west-config-cmd"><span class="std std-ref">配置</span></a> <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">debugserver</span></code>。</p>
+<table class="docutils align-default">
+<colgroup>
+<col style="width: 25.0%" />
+<col style="width: 75.0%" />
+</colgroup>
+<thead>
+<tr class="row-odd"><th class="head"><p>选项</p></th>
+<th class="head"><p>说明</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">debug.rebuild</span></code></p></td>
+<td><p>布尔值，默认为 <code class="docutils literal notranslate"><span class="pre">true</span></code>。如果为 <code class="docutils literal notranslate"><span class="pre">false</span></code>，则运行 west debug 时不重新构建。</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">debugserver.rebuild</span></code></p></td>
+<td><p>布尔值，默认为 <code class="docutils literal notranslate"><span class="pre">true</span></code>。如果为 <code class="docutils literal notranslate"><span class="pre">false</span></code>，则运行 west debugserver 时不重新构建。</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="flash-and-debug-runners">
+<h2><a class="toc-backref" href="#id44" role="doc-backlink">烧录和调试运行器</a><a class="headerlink" href="#flash-and-debug-runners" title="链接到此标题。"></a></h2>
+<p>烧录和调试命令使用 Python 包装器来封装各种 <a class="reference internal" href="../flash_debug/host-tools.html#flash-debug-host-tools"><span class="std std-ref">烧录与调试主机工具</span></a>。这些包装器都定义在位于 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/scripts/west_commands/runners">scripts/west_commands/runners</a> 的一个 Python 库中。每个包装器称为一个 <em>运行器（runner）</em>。运行器可以烧录和/或调试 Zephyr 程序。</p>
+<p>该库的核心抽象是 <code class="docutils literal notranslate"><span class="pre">ZephyrBinaryRunner</span></code>，它是一个表示运行器的抽象类。可用运行器的集合由已导入的 <code class="docutils literal notranslate"><span class="pre">ZephyrBinaryRunner</span></code> 子类决定。<code class="docutils literal notranslate"><span class="pre">ZephyrBinaryRunner</span></code> 位于 <code class="docutils literal notranslate"><span class="pre">runners.core</span></code> 模块中；各个运行器的实现位于其他子模块中，例如 <code class="docutils literal notranslate"><span class="pre">runners.nrfjprog</span></code>、<code class="docutils literal notranslate"><span class="pre">runners.openocd</span></code> 等。</p>
+</section>
+<section id="running-robot-framework-tests-west-robot">
+<h2><a class="toc-backref" href="#id45" role="doc-backlink">运行 Robot Framework 测试：<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">robot</span></code></a><a class="headerlink" href="#running-robot-framework-tests-west-robot" title="链接到此标题。"></a></h2>
+<div class="admonition tip">
+<p class="admonition-title">小技巧</p>
+<p>运行 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">robot</span> <span class="pre">-h</span></code> 获取更多帮助。</p>
+</div>
+<section id="id9">
+<h3><a class="toc-backref" href="#id46" role="doc-backlink">基础</a><a class="headerlink" href="#id9" title="链接到此标题。"></a></h3>
+<p>目前该命令只支持一个使用 <code class="docutils literal notranslate"><span class="pre">renode-test</span></code> 的运行器（它本质上是在 Renode 中运行 Robot 测试的包装器），但可以通过添加其他运行器轻松扩展。</p>
+<p>在 Zephyr 构建目录中运行 Robot 测试套件：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west robot --runner=renode-robot --testsuite path/to/testsuite.robot
+</pre></div>
+</div>
+<p>这会运行 testsuite.robot 中的所有测试，并打印 Robot Framework 提供的输出。</p>
+<p>要向 Renode 传递附加参数，请使用 <code class="docutils literal notranslate"><span class="pre">--renode-robot-args</span></code> 开关。例如，在 Robot Framework 的输出之外还显示 Renode 日志：</p>
+<blockquote>
+<div><p>west robot --runner=renode-robot --testsuite path/to/testsuite.robot --renode-robot-arg=&quot;--show-log&quot;</p>
+</div></blockquote>
+</section>
+<section id="id10">
+<h3><a class="toc-backref" href="#id47" role="doc-backlink">运行器专用覆盖</a><a class="headerlink" href="#id10" title="链接到此标题。"></a></h3>
+<p>要查看开发板所支持的 Robot 运行器的所有可用选项及其用法信息，请使用 <code class="docutils literal notranslate"><span class="pre">--context</span></code> （或 <code class="docutils literal notranslate"><span class="pre">-H</span></code>）：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west robot --runner=renode-robot --context
+</pre></div>
+</div>
+<p>要查看“renode-test”运行器支持的所有可用选项，请使用：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west robot --runner=renode-robot --renode-robot-help
+</pre></div>
+</div>
+</section>
+</section>
+<section id="simulating-a-board-with-west-simulate">
+<h2><a class="toc-backref" href="#id48" role="doc-backlink">模拟开发板：<code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">simulate</span></code></a><a class="headerlink" href="#simulating-a-board-with-west-simulate" title="链接到此标题。"></a></h2>
+<section id="id11">
+<h3><a class="toc-backref" href="#id49" role="doc-backlink">基础</a><a class="headerlink" href="#id11" title="链接到此标题。"></a></h3>
+<p>目前该命令只支持一个使用 Renode 的运行器，但可以通过添加其他运行器轻松扩展。</p>
+<p>在 Zephyr 构建目录中运行构建出的二进制文件：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west simulate --runner=renode
+</pre></div>
+</div>
+<p>这会启动 Renode，并根据当前平台的默认 <code class="docutils literal notranslate"><span class="pre">.resc</span></code> 脚本配置模拟，默认加载 zephyr.elf 文件。然后可以在 Renode 的 Monitor 中输入“start”或“s”开始模拟。也可以使用运行器提供的参数向 Renode 传递命令来完成这一操作：</p>
+<blockquote>
+<div><p>west simulate --runner=renode --renode-command start</p>
+</div></blockquote>
+<p>要向 Renode 本身传递参数，例如以控制台模式而不是在单独的窗口中启动 Renode：</p>
+<blockquote>
+<div><p>west simulate --runner=renode --renode-arg=&quot;--console&quot;</p>
+</div></blockquote>
+<p>此后，可以在控制台模式和窗口模式下正常使用 Renode。有关使用 Renode 的详细信息，请参阅 <a class="reference external" href="https://docs.renode.io">Renode - documentation</a>。</p>
+</section>
+<section id="id12">
+<h3><a class="toc-backref" href="#id50" role="doc-backlink">运行器专用覆盖</a><a class="headerlink" href="#id12" title="链接到此标题。"></a></h3>
+<p>要查看运行器支持的所有可用选项及其用法信息，请使用 <code class="docutils literal notranslate"><span class="pre">--context</span></code> （或 <code class="docutils literal notranslate"><span class="pre">-H</span></code>）：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west simulate --runner=renode --context
+</pre></div>
+</div>
+<p>要查看 Renode 支持的所有可用选项，请使用：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west simulate --runner=renode --renode-help
+</pre></div>
+</div>
+</section>
+</section>
+<section id="out-of-tree-runners">
+<h2><a class="toc-backref" href="#id51" role="doc-backlink">树外运行器</a><a class="headerlink" href="#out-of-tree-runners" title="链接到此标题。"></a></h2>
+<p><a class="reference internal" href="../modules.html#modules"><span class="std std-ref">Zephyr 模块</span></a> 可以通过在其 <a class="reference internal" href="../modules.html#modules-runners"><span class="std std-ref">module.yml</span></a> 中添加 python 文件来提供可被发现的外部运行器。通过继承 <code class="docutils literal notranslate"><span class="pre">ZephyrBinaryRunner</span></code> 并实现所有抽象方法来创建外部运行器类。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>由于支持自定义树外运行器，<code class="docutils literal notranslate"><span class="pre">runners.core</span></code> 模块成为公共 API 的一部分，不向后兼容的更改需要经过 <a class="reference internal" href="../api/api_lifecycle.html#breaking-api-changes"><span class="std std-ref">弃用流程</span></a>。</p>
+</div>
+</section>
+<section id="hacking">
+<h2><a class="toc-backref" href="#id52" role="doc-backlink">深入开发</a><a class="headerlink" href="#hacking" title="链接到此标题。"></a></h2>
+<p>本节介绍烧录和调试命令所使用的 <code class="docutils literal notranslate"><span class="pre">runners.core</span></code> 模块。它是实现这些功能支持所用的核心抽象。</p>
+<p>开发者可以通过实现更多运行器，添加对烧录和调试 Zephyr 程序新方式的支持。要将这种支持纳入上游 Zephyr，应将运行器添加到新的或已有的 <code class="docutils literal notranslate"><span class="pre">runners</span></code> 模块中，并从 <code class="file docutils literal notranslate"><span class="pre">runners/__init__.py</span></code> 导入。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/scripts/west_commands/tests">scripts/west_commands/tests</a> 中的测试用例为 runners 包和各个运行器类提供单元测试覆盖。</p>
+<p>添加新运行器时请尽量添加测试。注意，如果你的更改破坏了现有测试用例，上游 PR（拉取请求）的 CI 测试将会失败。</p>
+</div>
+<p id="module-runners.core">Zephyr 二进制运行器核心接口</p>
+<p>提供供公开使用的核心 ZephyrBinaryRunner 类，以及其他一些供具体运行器类使用的辅助工具。</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="runners.core.BuildConfiguration">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">runners.core.</span></span><span class="sig-name descname"><span class="pre">BuildConfiguration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">build_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#runners.core.BuildConfiguration" title="链接到此定义。"></a></dt>
+<dd><p>该辅助类提供对构建期配置的访问。</p>
+<p>可以像使用 dict 一样读取配置选项，即 object['CONFIG_FOO'] 或 object.get('CONFIG_FOO')。</p>
+<p>可以获取 Kconfig 配置值（从 .config 解析）。</p>
+<p>可以通过 object.edt 使用 edtlib API 获取设备树配置。</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="runners.core.BuildConfiguration.edt">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">edt</span></span><a class="headerlink" href="#runners.core.BuildConfiguration.edt" title="链接到此定义。"></a></dt>
+<dd><p>获取表示设备树的 EDT。EDT 在首次访问时延迟加载，并缓存以供后续访问使用。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="runners.core.BuildConfiguration.getboolean">
+<span class="sig-name descname"><span class="pre">getboolean</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">option</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#runners.core.BuildConfiguration.getboolean" title="链接到此定义。"></a></dt>
+<dd><p>如果某个布尔选项被显式设置为 y 或 n，则返回其值。否则，回退为 False。</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="runners.core.DeprecatedAction">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">runners.core.</span></span><span class="sig-name descname"><span class="pre">DeprecatedAction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">option_strings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dest</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nargs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">const</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">choices</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">required</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">help</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metavar</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">deprecated</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#runners.core.DeprecatedAction" title="链接到此定义。"></a></dt>
+<dd></dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="runners.core.FileType">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">runners.core.</span></span><span class="sig-name descname"><span class="pre">FileType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">values</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#runners.core.FileType" title="链接到此定义。"></a></dt>
+<dd></dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="runners.core.MissingProgram">
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">runners.core.</span></span><span class="sig-name descname"><span class="pre">MissingProgram</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">program</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#runners.core.MissingProgram" title="链接到此定义。"></a></dt>
+<dd><p>用于表示缺少程序依赖的 FileNotFoundError 子类。</p>
+<p>与父类 FileNotFoundError 相比没有重大变化；它的作用是明确表示所涉及的文件是某个类继续执行所需的程序。</p>
+<p>filename 属性包含缺失的程序。</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="runners.core.NetworkPortHelper">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">runners.core.</span></span><span class="sig-name descname"><span class="pre">NetworkPortHelper</span></span><a class="headerlink" href="#runners.core.NetworkPortHelper" title="链接到此定义。"></a></dt>
+<dd><p>用于处理本地 IP 网络端口的辅助类。</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="runners.core.NetworkPortHelper.get_unused_ports">
+<span class="sig-name descname"><span class="pre">get_unused_ports</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">starting_from</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#runners.core.NetworkPortHelper.get_unused_ports" title="链接到此定义。"></a></dt>
+<dd><p>从给定值开始查找未使用的网络端口。</p>
+<p>starting_from 是调用者希望使用的端口的可迭代对象。</p>
+<p>返回值是一个端口的可迭代对象，顺序与输入相同：如果给定的值未被使用，则使用该值，否则使用下一个按顺序可用的未使用端口。</p>
+<p>在此调用进行检查与实际使用之间，端口可能会被绑定，因此调用者仍需处理与返回端口相关的错误。</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="runners.core.RunnerCaps">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">runners.core.</span></span><span class="sig-name descname"><span class="pre">RunnerCaps</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">commands</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">set</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">&lt;factory&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dev_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mult_dev_ids</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flash_addr</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">erase</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reset_types</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reset_types_supported</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extload</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tool_opt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gdb_init</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hide_load_files</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rtt</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dry_run</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skip_load</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">batch_debug</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#runners.core.RunnerCaps" title="链接到此定义。"></a></dt>
+<dd><p>此类表示一个运行器类的能力。</p>
+<p>每项能力都表示为一个同名属性。标志属性的值为 True 或 False。</p>
+<p>可用的能力：</p>
+<ul class="simple">
+<li><p>commands：支持的命令集合；默认为 {'flash', 'debug', 'debugserver', 'attach', 'simulate', 'robot', 'rtt'}。</p></li>
+<li><p>dev_id：运行器是否支持以 -i、--dev-id 选项形式给出的设备标识符。当用户在一台计算机上连接了多个调试器时，这可用于选择所给命令要使用哪一个调试器。</p></li>
+<li><p>mult_dev_ids：运行器是否支持在单次操作中使用多个设备标识符，从而批量烧录设备。</p></li>
+<li><p>flash_addr：运行器是否支持烧录到任意地址。默认为 False。如果为 true，运行器必须遵循 --dt-flash 选项。</p></li>
+<li><p>erase：运行器是否支持 --erase 选项，该选项会在烧录之前对目标上整个可寻址 Flash 进行整片擦除。在多核 SoC 上，这可能只擦除实际目标核专用的那部分 Flash。（此选项可用于清除旧的设置值或其他可能影响 zephyr 镜像行为的子系统状态等。某些 SoC 带有类似 Flash 的区域，底层工具在烧录前无法按扇区擦除这些区域，此时也需要该选项；nRF SoC 上的 UICR 就是一个例子。）</p></li>
+<li><p>reset：运行器是否支持 --reset 选项，该选项会在烧录操作完成后复位设备。</p></li>
+<li><p>reset_types：运行器是否支持 --reset-type=x 选项，该选项指定一个运行器专用的值，用于选择复位设备时要使用的特定复位类型。</p></li>
+<li><p>reset_types_supported：允许通过 --reset-type 选项传递的值的列表。如果支持的复位类型列表是动态的或与设备相关，则应省略此项，从而允许设置任意值并直接传递给底层工具。除此之外，每个运行器实现都必须始终能够以运行器特定的方式接受 <cite>None</cite>。为了方便用户，建议将行为与 <cite>None</cite> 相同或最接近的值放在列表首位。</p></li>
+<li><p>extload：运行器是否支持 --extload 选项，该选项必须给出一次，并传递给运行器所包装的底层工具。</p></li>
+<li><p>tool_opt：运行器是否支持 --tool-opt（-O）选项，该选项可以给出多次，并传递给运行器所包装的底层工具。</p></li>
+<li><p>gdb_init：运行器是否支持 --gdb-init 选项，该选项可以给出多次，并按给出的顺序将命令追加到 GDB 客户端调用中，位于运行器自身发出的命令之后。</p></li>
+<li><p>file：运行器是否支持 --file 选项，该选项精确指定用于烧录的文件，覆盖在构建目录中发现的任何默认文件。</p></li>
+<li><p>hide_load_files：是否应隐藏 elf/hex/bin 文件参数。</p></li>
+<li><p>rtt：运行器是否支持 SEGGER RTT。这会添加一个 --rtt-address 选项。</p></li>
+<li><p>skip_load：运行器是否支持 --load/--no-load 选项，该选项允许在启动调试会话之前跳过将镜像加载到目标上（此选项只影响 'debug' 命令）</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="runners.core.RunnerConfig">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">runners.core.</span></span><span class="sig-name descname"><span class="pre">RunnerConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">build_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">board_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">elf_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exe_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hex_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bin_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">uf2_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mot_file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#runners.core.FileType" title="runners.core.FileType"><span class="pre">FileType</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">FileType.OTHER</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gdb</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">openocd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">openocd_search</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rtt_address</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#runners.core.RunnerConfig" title="链接到此定义。"></a></dt>
+<dd><p>运行器执行期配置。</p>
+<p>这是所有运行器共享的公共对象。各个运行器可以通过其 do_add_parser() 钩子注册特定的配置选项。</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="runners.core.RunnerConfig.bin_file">
+<span class="sig-name descname"><span class="pre">bin_file</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#runners.core.RunnerConfig.bin_file" title="链接到此定义。"></a></dt>
+<dd><p>字段 5 的别名</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="runners.core.RunnerConfig.board_dir">
+<span class="sig-name descname"><span class="pre">board_dir</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#runners.core.RunnerConfig.board_dir" title="链接到此定义。"></a></dt>
+<dd><p>字段 1 的别名</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="runners.core.RunnerConfig.build_dir">
+<span class="sig-name descname"><span class="pre">build_dir</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><a class="headerlink" href="#runners.core.RunnerConfig.build_dir" title="链接到此定义。"></a></dt>
+<dd><p>字段 0 的别名</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="runners.core.RunnerConfig.elf_file">
+<span class="sig-name descname"><span class="pre">elf_file</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#runners.core.RunnerConfig.elf_file" title="链接到此定义。"></a></dt>
+<dd><p>字段 2 的别名</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="runners.core.RunnerConfig.exe_file">
+<span class="sig-name descname"><span class="pre">exe_file</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#runners.core.RunnerConfig.exe_file" title="链接到此定义。"></a></dt>
+<dd><p>字段 3 的别名</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="runners.core.RunnerConfig.file">
+<span class="sig-name descname"><span class="pre">file</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#runners.core.RunnerConfig.file" title="链接到此定义。"></a></dt>
+<dd><p>字段 8 的别名</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="runners.core.RunnerConfig.file_type">
+<span class="sig-name descname"><span class="pre">file_type</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#runners.core.FileType" title="runners.core.FileType"><span class="pre">FileType</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#runners.core.RunnerConfig.file_type" title="链接到此定义。"></a></dt>
+<dd><p>字段 9 的别名</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="runners.core.RunnerConfig.gdb">
+<span class="sig-name descname"><span class="pre">gdb</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#runners.core.RunnerConfig.gdb" title="链接到此定义。"></a></dt>
+<dd><p>字段 10 的别名</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="runners.core.RunnerConfig.hex_file">
+<span class="sig-name descname"><span class="pre">hex_file</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#runners.core.RunnerConfig.hex_file" title="链接到此定义。"></a></dt>
+<dd><p>字段 4 的别名</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="runners.core.RunnerConfig.mot_file">
+<span class="sig-name descname"><span class="pre">mot_file</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#runners.core.RunnerConfig.mot_file" title="链接到此定义。"></a></dt>
+<dd><p>字段 7 的别名</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="runners.core.RunnerConfig.openocd">
+<span class="sig-name descname"><span class="pre">openocd</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#runners.core.RunnerConfig.openocd" title="链接到此定义。"></a></dt>
+<dd><p>字段 11 的别名</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="runners.core.RunnerConfig.openocd_search">
+<span class="sig-name descname"><span class="pre">openocd_search</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><a class="headerlink" href="#runners.core.RunnerConfig.openocd_search" title="链接到此定义。"></a></dt>
+<dd><p>字段 12 的别名</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="runners.core.RunnerConfig.rtt_address">
+<span class="sig-name descname"><span class="pre">rtt_address</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#runners.core.RunnerConfig.rtt_address" title="链接到此定义。"></a></dt>
+<dd><p>字段 13 的别名</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="runners.core.RunnerConfig.uf2_file">
+<span class="sig-name descname"><span class="pre">uf2_file</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><a class="headerlink" href="#runners.core.RunnerConfig.uf2_file" title="链接到此定义。"></a></dt>
+<dd><p>字段 6 的别名</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="runners.core.SysbuildConfiguration">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">runners.core.</span></span><span class="sig-name descname"><span class="pre">SysbuildConfiguration</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">build_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#runners.core.SysbuildConfiguration" title="链接到此定义。"></a></dt>
+<dd><p>该辅助类提供对 sysbuild 期配置的访问。</p>
+<p>可以像使用 dict 一样读取配置选项，即 object['SB_CONFIG_FOO'] 或 object.get('SB_CONFIG_FOO')。</p>
+<p>可以获取 Kconfig 配置值（从 .config 解析）。</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="runners.core.ZephyrBinaryRunner">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">runners.core.</span></span><span class="sig-name descname"><span class="pre">ZephyrBinaryRunner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#runners.core.RunnerConfig" title="runners.core.RunnerConfig"><span class="pre">RunnerConfig</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#runners.core.ZephyrBinaryRunner" title="链接到此定义。"></a></dt>
+<dd><p>二进制运行器（烧录器、调试器）的抽象超类。</p>
+<p><strong>注意</strong>：此类的 API 自添加以来很少变化，但它不被视为稳定的 Zephyr API，可能会在不另行通知的情况下更改。</p>
+<p>除少数例外，Zephyr 支持的开发板必须提供通用的方式来进行烧录（将 Zephyr 固件二进制文件永久安装到设备上以便运行）和调试（在主机工作站上通过断点调试器和程序加载器连接到正在运行的目标）。</p>
+<p>这通过由 Zephyr 构建系统管理的四个顶层命令来支持：</p>
+<ul class="simple">
+<li><p>'flash'：将之前配置好的二进制文件烧录到开发板，在目标上开始执行，然后返回。</p></li>
+<li><p>'debug'：通过调试协议连接到开发板，对 Flash 进行编程，然后将用户带入一个已从当前二进制文件加载符号表的调试器界面，并阻塞直到其退出。</p></li>
+<li><p>'debugserver'：通过开发板专用的调试协议连接，然后复位并暂停目标。确保用户此时能够连接到一个已从二进制文件加载符号表的调试服务器。</p></li>
+<li><p>'attach'：通过调试协议连接到开发板，然后将用户带入一个已从当前二进制文件加载符号表的调试器界面，并阻塞直到其退出。与 'debug' 不同，此命令不会对 Flash 进行编程。</p></li>
+</ul>
+<p>此类为这些命令提供 API。每个子类简称为一个“运行器（runner）”。每个运行器都有一个名称（例如 'pyocd'），并声明它能处理的命令（例如 'flash'）。开发板（例如 'nrf52dk/nrf52832'）向 Zephyr 构建系统声明哪些运行器与其兼容，以及如何配置运行器以配合该开发板工作。</p>
+<p>随后，构建系统会在构建目录中放入足够的信息，以便使用此类的 create() 方法创建和使用运行器，该方法提供了命令行参数解析 API。也可以直接实例化子类来创建运行器。</p>
+<p>要定义自己的运行器，需要：</p>
+<ol class="arabic simple">
+<li><p>定义一个 ZephyrBinaryRunner 子类，并实现其抽象方法。可能需要覆盖 capabilities()。</p></li>
+<li><p>确保定义运行器类的 Python 模块被导入，例如通过编辑本包的 __init__.py（否则 get_runners() 将无法工作）。</p></li>
+<li><p>在开发板的 board.cmake 中将运行器名称告知 Zephyr 构建系统。</p></li>
+</ol>
+<p>其他建议：</p>
+<ul class="simple">
+<li><p>如果需要导入任何非标准库模块，请确保捕获 ImportError，并在缺少模块时将报错推迟为 RuntimeError。这样可以避免影响不需要你的运行器的用户，同时也能让需要该运行器但未安装必要模块的用户清楚地知道出了什么问题。</p></li>
+<li><p>如果需要向用户询问某些内容（例如使用 input()），请在 create() 类方法中进行，而不是在 do_run() 中。这样可以确保 __init__() 确实拥有调用 do_run() 所需的一切，并且在非命令行应用程序中实例化时也能避免调用 input()。</p></li>
+<li><p>使用 self.logger 通过标准库的 logging API 记录消息；你的 logger 名为 &quot;runner.&lt;your-runner-name()&gt;&quot;</p></li>
+</ul>
+<p>为了供 Zephyr 构建系统通过命令行调用，运行器通过公共的 add_parser()（以及它所委托的运行器专用 do_add_parser()）定义自己基于 argparse 的接口，并通过 create() 提供一种根据 RunnerConfig 和已解析的运行器专用参数创建自身实例的方法。</p>
+<p>运行器会使用各种主机工具和配置值，此类对它们的用户接口进行了抽象。每个运行器子类都应在其构造函数中接收执行这些命令之一所需的全部值。实际的命令执行在 run() 方法中处理。</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="runners.core.ZephyrBinaryRunner.add_parser">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">add_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#runners.core.ZephyrBinaryRunner.add_parser" title="链接到此定义。"></a></dt>
+<dd><p>为此运行器添加一个子命令解析器。</p>
+<p>给定的对象 parser 是来自 argparse 模块的子命令解析器。更多细节请参阅 argparse.ArgumentParser.add_subparsers() 的文档。</p>
+<p>唯一的公共可选参数是：</p>
+<ul class="simple">
+<li><p>--dt-flash（如果运行器能力包含 flash_addr）</p></li>
+</ul>
+<p>运行器专用选项通过 do_add_parser() 钩子添加。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="runners.core.ZephyrBinaryRunner.args_from_previous_runner">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">args_from_previous_runner</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">previous_runner</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Namespace</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#runners.core.ZephyrBinaryRunner.args_from_previous_runner" title="链接到此定义。"></a></dt>
+<dd><p>根据之前创建的运行器更新参数。</p>
+<p>其用途是在同一运行器的多次运行之间传递相关的用户响应，例如 JTAG 序列号。</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="runners.core.ZephyrBinaryRunner.build_conf">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">build_conf</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#runners.core.BuildConfiguration" title="runners.core.BuildConfiguration"><span class="pre">BuildConfiguration</span></a></span><a class="headerlink" href="#runners.core.ZephyrBinaryRunner.build_conf" title="链接到此定义。"></a></dt>
+<dd><p>获取构建目录的 BuildConfiguration。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="runners.core.ZephyrBinaryRunner.call">
+<span class="sig-name descname"><span class="pre">call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#runners.core.ZephyrBinaryRunner.call" title="链接到此定义。"></a></dt>
+<dd><p>供子类使用的 subprocess.call() 包装器。</p>
+<p>子类应使用此方法在子进程中运行命令并获取其返回码，而不是直接使用 subprocess，以保持调试日志准确。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="runners.core.ZephyrBinaryRunner.capabilities">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">capabilities</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#runners.core.RunnerCaps" title="runners.core.RunnerCaps"><span class="pre">RunnerCaps</span></a></span></span><a class="headerlink" href="#runners.core.ZephyrBinaryRunner.capabilities" title="链接到此定义。"></a></dt>
+<dd><p>返回表示此运行器能力的 RunnerCaps。</p>
+<p>此实现返回默认能力。</p>
+<p>如有需要，子类应适当覆盖此方法。</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="runners.core.ZephyrBinaryRunner.cfg">
+<span class="sig-name descname"><span class="pre">cfg</span></span><a class="headerlink" href="#runners.core.ZephyrBinaryRunner.cfg" title="链接到此定义。"></a></dt>
+<dd><p>此实例的 RunnerConfig。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="runners.core.ZephyrBinaryRunner.check_call">
+<span class="sig-name descname"><span class="pre">check_call</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#runners.core.ZephyrBinaryRunner.check_call" title="链接到此定义。"></a></dt>
+<dd><p>供子类使用的 subprocess.check_call() 包装器。</p>
+<p>子类应使用此方法在子进程中运行命令并检查其是否正确执行，而不是直接使用 subprocess，以保持调试日志准确。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="runners.core.ZephyrBinaryRunner.check_call_ignore_sigint">
+<span class="sig-name descname"><span class="pre">check_call_ignore_sigint</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">client</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#runners.core.ZephyrBinaryRunner.check_call_ignore_sigint" title="链接到此定义。"></a></dt>
+<dd><p>运行一个忽略 SIGINT 的命令。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="runners.core.ZephyrBinaryRunner.check_output">
+<span class="sig-name descname"><span class="pre">check_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bytes</span></span></span><a class="headerlink" href="#runners.core.ZephyrBinaryRunner.check_output" title="链接到此定义。"></a></dt>
+<dd><p>供子类使用的 subprocess.check_output() 包装器。</p>
+<p>子类应使用此方法在子进程中运行命令并检查其是否正确执行，而不是直接使用 subprocess，以保持调试日志准确。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="runners.core.ZephyrBinaryRunner.create">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#runners.core.RunnerConfig" title="runners.core.RunnerConfig"><span class="pre">RunnerConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Namespace</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#runners.core.ZephyrBinaryRunner" title="runners.core.ZephyrBinaryRunner"><span class="pre">ZephyrBinaryRunner</span></a></span></span><a class="headerlink" href="#runners.core.ZephyrBinaryRunner.create" title="链接到此定义。"></a></dt>
+<dd><p>根据命令行参数创建实例。</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">cfg</span></code>：运行器配置（传递给超类的 __init__）</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">args</span></code>：按照 <code class="docutils literal notranslate"><span class="pre">add_parser()</span></code> 的规定，从执行环境中解析出的参数。</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="runners.core.ZephyrBinaryRunner.dev_id_help">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">dev_id_help</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#runners.core.ZephyrBinaryRunner.dev_id_help" title="链接到此定义。"></a></dt>
+<dd><p>获取 --dev-id 选项的 ArgParse 帮助文本。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="runners.core.ZephyrBinaryRunner.do_add_parser">
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">do_add_parser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#runners.core.ZephyrBinaryRunner.do_add_parser" title="链接到此定义。"></a></dt>
+<dd><p>用于添加运行器专用选项的钩子。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="runners.core.ZephyrBinaryRunner.do_create">
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">do_create</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cfg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#runners.core.RunnerConfig" title="runners.core.RunnerConfig"><span class="pre">RunnerConfig</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Namespace</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#runners.core.ZephyrBinaryRunner" title="runners.core.ZephyrBinaryRunner"><span class="pre">ZephyrBinaryRunner</span></a></span></span><a class="headerlink" href="#runners.core.ZephyrBinaryRunner.do_create" title="链接到此定义。"></a></dt>
+<dd><p>用于根据命令行参数创建实例的钩子。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="runners.core.ZephyrBinaryRunner.do_run">
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">do_run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#runners.core.ZephyrBinaryRunner.do_run" title="链接到此定义。"></a></dt>
+<dd><p>具体的运行器；run() 委托给此方法。在子类中实现。</p>
+<p>如果是不支持的命令，则引发 ValueError。</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="runners.core.ZephyrBinaryRunner.dry_run">
+<span class="sig-name descname"><span class="pre">dry_run</span></span><a class="headerlink" href="#runners.core.ZephyrBinaryRunner.dry_run" title="链接到此定义。"></a></dt>
+<dd><p>记录命令而不执行它们。可由子类设置</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="runners.core.ZephyrBinaryRunner.ensure_output">
+<span class="sig-name descname"><span class="pre">ensure_output</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">output_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#runners.core.ZephyrBinaryRunner.ensure_output" title="链接到此定义。"></a></dt>
+<dd><p>确保 self.cfg 具有特定的输出产物。</p>
+<p>例如，ensure_output('bin') 确保 self.cfg.bin_file 指向一个存在的文件。如果该文件缺失或未定义，则报错。</p>
+<dl class="field-list simple">
+<dt class="field-odd">参数<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>output_type</strong> -- 命名输出类型的字符串</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="runners.core.ZephyrBinaryRunner.extload_help">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">extload_help</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#runners.core.ZephyrBinaryRunner.extload_help" title="链接到此定义。"></a></dt>
+<dd><p>获取 --extload 选项的 ArgParse 帮助文本。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="runners.core.ZephyrBinaryRunner.flash_address_from_build_conf">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">flash_address_from_build_conf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">build_conf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#runners.core.BuildConfiguration" title="runners.core.BuildConfiguration"><span class="pre">BuildConfiguration</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#runners.core.ZephyrBinaryRunner.flash_address_from_build_conf" title="链接到此定义。"></a></dt>
+<dd><p>如果 build_conf 中 CONFIG_FLASH_USES_MAPPED_PARTITION 为 y，则返回 zephyr,code-partition 设备树节点的 reg 地址。否则，如果 build_conf 中 CONFIG_HAS_FLASH_LOAD_OFFSET 为 n，则返回 CONFIG_FLASH_BASE_ADDRESS 的值。其他情况下返回 CONFIG_FLASH_BASE_ADDRESS + CONFIG_FLASH_LOAD_OFFSET。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="runners.core.ZephyrBinaryRunner.gdb_ex_args">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">gdb_ex_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">commands</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#runners.core.ZephyrBinaryRunner.gdb_ex_args" title="链接到此定义。"></a></dt>
+<dd><p>将 GDB 命令转换为用于 GDB argv 的 '-ex', &lt;command&gt; 对。</p>
+<p>命令按原样传递。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="runners.core.ZephyrBinaryRunner.get_flash_address">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">get_flash_address</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Namespace</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">build_conf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#runners.core.BuildConfiguration" title="runners.core.BuildConfiguration"><span class="pre">BuildConfiguration</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">default</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#runners.core.ZephyrBinaryRunner.get_flash_address" title="链接到此定义。"></a></dt>
+<dd><p>用于提取 Flash 地址的辅助方法。</p>
+<p>如果 args.dt_flash 为 true，则返回从 ZephyrBinaryRunner.flash_address_from_build_conf(build_conf) 获得的地址。</p>
+<p>否则（当 args.dt_flash 为 False 时），返回默认值。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="runners.core.ZephyrBinaryRunner.get_rtt_address">
+<span class="sig-name descname"><span class="pre">get_rtt_address</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="headerlink" href="#runners.core.ZephyrBinaryRunner.get_rtt_address" title="链接到此定义。"></a></dt>
+<dd><p>用于提取 RTT 控制块地址的辅助方法。</p>
+<p>如果提供了 args.rtt_address，则返回该值。</p>
+<p>否则，尝试在 elf 文件中定位 rtt 块。如果未找到，则返回 None</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="runners.core.ZephyrBinaryRunner.get_runners">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">get_runners</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">type</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#runners.core.ZephyrBinaryRunner" title="runners.core.ZephyrBinaryRunner"><span class="pre">ZephyrBinaryRunner</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#runners.core.ZephyrBinaryRunner.get_runners" title="链接到此定义。"></a></dt>
+<dd><p>获取当前已定义的所有运行器类的列表。</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="runners.core.ZephyrBinaryRunner.logger">
+<span class="sig-name descname"><span class="pre">logger</span></span><a class="headerlink" href="#runners.core.ZephyrBinaryRunner.logger" title="链接到此定义。"></a></dt>
+<dd><p>此实例的 logging.Logger。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="runners.core.ZephyrBinaryRunner.name">
+<span class="property"><span class="k"><span class="pre">abstractmethod</span></span><span class="w"> </span><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">name</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#runners.core.ZephyrBinaryRunner.name" title="链接到此定义。"></a></dt>
+<dd><p>返回此运行器对用户可见的名称。</p>
+<p>选择名称时，请选取简短的小写名称，可以基于工具名称（例如 openocd、jlink 等）或目标架构/开发板（例如 xtensa 等）。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="runners.core.ZephyrBinaryRunner.normalize_chip">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">normalize_chip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#runners.core.ZephyrBinaryRunner.normalize_chip" title="链接到此定义。"></a></dt>
+<dd><p>规范化芯片名称，以便进行不区分大小写和连字符的匹配。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="runners.core.ZephyrBinaryRunner.popen_ignore_int">
+<span class="sig-name descname"><span class="pre">popen_ignore_int</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cmd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Popen</span></span></span><a class="headerlink" href="#runners.core.ZephyrBinaryRunner.popen_ignore_int" title="链接到此定义。"></a></dt>
+<dd><p>启动一个子命令，并确保它忽略 SIGINT。</p>
+<p>返回的 subprocess.Popen 对象必须手动终止。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="runners.core.ZephyrBinaryRunner.require">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">require</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">program</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#runners.core.ZephyrBinaryRunner.require" title="链接到此定义。"></a></dt>
+<dd><p>在继续之前要求某个程序已安装。</p>
+<dl class="field-list simple">
+<dt class="field-odd">参数<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>program</strong> -- 所需程序的名称，或程序二进制文件的路径。</p></li>
+<li><p><strong>path</strong> -- 搜索程序二进制文件的 PATH。默认在系统 PATH 中检查。</p></li>
+</ul>
+</dd>
+</dl>
+<p>如果 <code class="docutils literal notranslate"><span class="pre">program</span></code> 是指向已存在程序二进制文件的绝对路径，则此调用成功。否则，按名称在系统 PATH 中或（如果提供了）给定的 PATH 中查找该程序。</p>
+<p>如果能找到该程序，则返回其路径。否则，引发 MissingProgram。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="runners.core.ZephyrBinaryRunner.resolve_port_by_chip">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">resolve_port_by_chip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">detect_func</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">priority_vids</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#runners.core.ZephyrBinaryRunner.resolve_port_by_chip" title="链接到此定义。"></a></dt>
+<dd><p>探测串口，并返回所连接芯片与规范化目标名称匹配的第一个串口。</p>
+<dl class="field-list simple">
+<dt class="field-odd">参数<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>detect_func</strong> -- 一个可调用对象，接受端口设备路径，返回该端口报告的芯片名称；如果无法识别芯片，则返回 None。它负责打开和关闭端口。</p></li>
+<li><p><strong>target</strong> -- 要匹配的规范化芯片名称。</p></li>
+<li><p><strong>logger</strong> -- 用于输出进度和诊断信息的 Python logger，请参阅 ZephyrBinaryRunner 类。</p></li>
+<li><p><strong>priority_vids</strong> -- 可选的 USB VID 列表，优先探测这些 VID 对应的端口，以避免复位无关的串口适配器。</p></li>
+</ul>
+</dd>
+</dl>
+<p>返回匹配的端口设备路径；如果没有找到匹配项，则返回 None。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="runners.core.ZephyrBinaryRunner.run">
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">command</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#runners.core.ZephyrBinaryRunner.run" title="链接到此定义。"></a></dt>
+<dd><p>运行命令（'flash'、'debug'、'debugserver'、'attach'）。</p>
+<p>这是此运行器的主入口点。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="runners.core.ZephyrBinaryRunner.run_server_and_client">
+<span class="sig-name descname"><span class="pre">run_server_and_client</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">server</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">client</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#runners.core.ZephyrBinaryRunner.run_server_and_client" title="链接到此定义。"></a></dt>
+<dd><p>运行一个忽略 SIGINT 的服务器，以及一个处理 SIGINT 的客户端。</p>
+<p>此例程以可移植的方式：</p>
+<ul class="simple">
+<li><p>为 <code class="docutils literal notranslate"><span class="pre">server</span></code> 命令创建一个忽略 SIGINT 的 Popen 对象</p></li>
+<li><p>在临时忽略 SIGINT 的同时，在子进程中运行 <code class="docutils literal notranslate"><span class="pre">client</span></code></p></li>
+<li><p>在客户端退出后清理服务器。</p></li>
+<li><p>关键字参数（如果有）将同时传递给服务器和客户端的子进程调用</p></li>
+</ul>
+<p>这可用于例如打开 GDB 服务器和客户端。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="runners.core.ZephyrBinaryRunner.run_telnet_client">
+<span class="sig-name descname"><span class="pre">run_telnet_client</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">active_sock</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">send_on_connect</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#runners.core.ZephyrBinaryRunner.run_telnet_client" title="链接到此定义。"></a></dt>
+<dd><p>运行一个 telnet 客户端以供用户交互。</p>
+<dl class="field-list simple">
+<dt class="field-odd">参数<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>send_on_connect</strong> -- 连接到给定套接字后立即发送给定的字符串。如果提供了该参数，将避免使用 <cite>nc</cite> 作为客户端。</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="runners.core.ZephyrBinaryRunner.sram_address_from_build_conf">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">sram_address_from_build_conf</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">build_conf</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#runners.core.BuildConfiguration" title="runners.core.BuildConfiguration"><span class="pre">BuildConfiguration</span></a></span></em><span class="sig-paren">)</span><a class="headerlink" href="#runners.core.ZephyrBinaryRunner.sram_address_from_build_conf" title="链接到此定义。"></a></dt>
+<dd><p>返回 SRAM 地址。</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="runners.core.ZephyrBinaryRunner.sysbuild_conf">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">sysbuild_conf</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#runners.core.SysbuildConfiguration" title="runners.core.SysbuildConfiguration"><span class="pre">SysbuildConfiguration</span></a></span><a class="headerlink" href="#runners.core.ZephyrBinaryRunner.sysbuild_conf" title="链接到此定义。"></a></dt>
+<dd><p>获取 sysbuild 目录的 SysbuildConfiguration。</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="runners.core.ZephyrBinaryRunner.thread_info_enabled">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">thread_info_enabled</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></span><a class="headerlink" href="#runners.core.ZephyrBinaryRunner.thread_info_enabled" title="链接到此定义。"></a></dt>
+<dd><p>如果 self.build_conf 启用了 CONFIG_DEBUG_THREAD_INFO，则返回 True。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="runners.core.ZephyrBinaryRunner.tool_opt_help">
+<span class="property"><span class="k"><span class="pre">classmethod</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">tool_opt_help</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#runners.core.ZephyrBinaryRunner.tool_opt_help" title="链接到此定义。"></a></dt>
+<dd><p>获取 --tool-opt 选项的 ArgParse 帮助文本。</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="doing-it-by-hand">
+<h2><a class="toc-backref" href="#id53" role="doc-backlink">手动操作</a><a class="headerlink" href="#doing-it-by-hand" title="链接到此标题。"></a></h2>
+<p>如果不想使用 West 烧录或调试开发板，只需在构建目录中查看构建系统输出的二进制文件。根据开发板的构建系统集成方式，它们的名称类似 <code class="docutils literal notranslate"><span class="pre">zephyr/zephyr.elf</span></code>、<code class="docutils literal notranslate"><span class="pre">zephyr/zephyr.hex</span></code> 等。可以使用你选择的其他工具将这些二进制文件烧录到开发板，或根据需要将其用于调试，例如作为符号表的来源。</p>
+<p>默认情况下，这些 West 命令会在烧录和调试之前重新构建二进制文件。当然，这也可以使用 Zephyr 构建系统提供的常规目标来完成（事实上，这些命令正是这样做的）。</p>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 9月 04, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

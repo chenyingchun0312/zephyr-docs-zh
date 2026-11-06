@@ -1,0 +1,804 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bluetooth：经典 Bluetooth：AVRCP Shell &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/tabs.css?v=a5c4661c" />
+
+  
+    <link rel="shortcut icon" href="../../../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/connectivity/bluetooth/shell/classic/avrcp.html" />
+      <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+      <script src="../../../../../_static/tabs.js?v=3030b3cb"></script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../../../search.html" />
+    <link rel="next" title="Bluetooth：经典 Bluetooth：GOEP Shell" href="goep.html" />
+    <link rel="prev" title="Bluetooth：A2DP Shell 命令" href="a2dp.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../index.html">
+            
+              <img src="../../../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../index.html">服务</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../index.html">连接</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../networking/index.html">网络</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../index.html">Bluetooth</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../../features.html">支持的功能</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bluetooth-qual.html">认证</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bluetooth-arch.html">协议栈架构</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bluetooth-le-host.html">LE 主机</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/audio/bluetooth-le-audio-arch.html">LE Audio 协议栈</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/audio/bluetooth-le-audio-arch.html#le-audio-resources">LE Audio 资源</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bluetooth-ctlr-arch.html">LE 控制器</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bluetooth-dev.html">应用程序开发</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../api/index.html">API</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bluetooth-tools.html">工具</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../../bluetooth-shell.html">Shell</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="../audio/bap.html">Bluetooth：基本音频规范（Basic Audio Profile）Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../audio/bap_broadcast_assistant.html">Bluetooth：基本音频规范：广播助手（Broadcast Assistant）Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../audio/bap_scan_delegator.html">Bluetooth：基本音频规范：扫描委托者（Scan Delegator）Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../audio/cap.html">Bluetooth：通用音频规范（Common Audio Profile）Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../audio/ccp.html">Bluetooth：呼叫控制规范（Call Control Profile）Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../audio/csip.html">Bluetooth：协调集识别规范（Coordinated Set Identification Profile）Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../audio/gmap.html">Bluetooth：游戏音频规范（Gaming Audio Profile）Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../audio/mcp.html">Bluetooth：媒体控制规范（Media Control Profile）Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../audio/tbs.html">Bluetooth：电话承载服务（Telephone Bearer Service）Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../audio/tmap.html">Bluetooth：电话和媒体音频规范（Telephone and Media Audio Profile）Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../audio/pbp.html">Bluetooth：公共广播规范（Public Broadcast Profile）Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="a2dp.html">Bluetooth：A2DP Shell 命令</a></li>
+<li class="toctree-l5 current"><a class="current reference internal" href="#">Bluetooth：经典 Bluetooth：AVRCP Shell</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#prerequisites">前提条件</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="goep.html">Bluetooth：经典 Bluetooth：GOEP Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="hfp.html">Bluetooth：经典 Bluetooth：HFP Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="l2cap.html">Bluetooth：经典 Bluetooth：L2CAP Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="map.html">Bluetooth：MAP Shell 命令</a></li>
+<li class="toctree-l5"><a class="reference internal" href="pbap.html">Bluetooth：经典 Bluetooth：PBAP Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="spp.html">Bluetooth：经典 Bluetooth：SPP Shell</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../host/gap.html">Bluetooth：GAP Shell 命令</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../host/gatt.html">Bluetooth：GATT Shell 命令</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../host/iso.html">Bluetooth：等时信道 Shell 命令</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../host/l2cap.html">Bluetooth：L2CAP Shell 命令</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../bluetooth-shell.html#bluetooth-shell-setup-and-usage">Bluetooth Shell 的设置与使用</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../../bluetooth-shell.html#logging">日志</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usb/index.html">USB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../canbus/index.html">控制器局域网（CAN）总线协议</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lora_lorawan/index.html">LoRa 和 LoRaWAN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../modbus/index.html">Modbus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../modem/index.html">调制解调器模块</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../../../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../../../index.html">连接</a> &raquo;</li>
+  
+     <li><a href="../../index.html">Bluetooth</a> &raquo;</li>
+  
+     <li><a href="../../bluetooth-shell.html">Shell</a> &raquo;</li>
+  
+  <li>Bluetooth：经典 Bluetooth：AVRCP Shell</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="bluetooth-classic-avrcp-shell">
+<h1>Bluetooth：经典 Bluetooth：AVRCP Shell<a class="headerlink" href="#bluetooth-classic-avrcp-shell" title="链接到此标题。"></a></h1>
+<p>本文档介绍如何通过 Shell 命令使用经典 Bluetooth 的 AVRCP（音频/视频远程控制规范，Audio/Video Remote Control Profile）功能。<code class="code docutils literal notranslate"><span class="pre">avrcp</span></code> 命令同时提供控制器（Controller，CT）和目标（Target，TG）两种角色，用于试用 AVRCP 的控制和浏览功能。</p>
+<p>有两个子命令：<code class="code docutils literal notranslate"><span class="pre">avrcp</span> <span class="pre">ct</span></code> 和 <code class="code docutils literal notranslate"><span class="pre">avrcp</span> <span class="pre">tg</span></code>。<code class="code docutils literal notranslate"><span class="pre">avrcp</span> <span class="pre">ct</span></code> 子命令提供 <strong>控制器（CT）</strong> 功能，<code class="code docutils literal notranslate"><span class="pre">avrcp</span> <span class="pre">tg</span></code> 子命令提供 <strong>目标（TG）</strong> 功能。</p>
+<section id="prerequisites">
+<h2>前提条件<a class="headerlink" href="#prerequisites" title="链接到此标题。"></a></h2>
+<p>运行 <code class="code docutils literal notranslate"><span class="pre">avrcp</span></code> Shell 之前，请确保构建时启用了经典 Bluetooth 和 Shell。在创建 AVRCP 控制或浏览连接之前，必须先与对端设备建立 ACL BR/EDR 连接（通常通过通用的 <code class="code docutils literal notranslate"><span class="pre">bt</span></code> Shell 命令）。</p>
+<section id="commands">
+<h3>命令<a class="headerlink" href="#commands" title="链接到此标题。"></a></h3>
+<p>除 <code class="code docutils literal notranslate"><span class="pre">avrcp</span> <span class="pre">ct</span> <span class="pre">register_cb</span></code> 和 <code class="code docutils literal notranslate"><span class="pre">avrcp</span> <span class="pre">tg</span> <span class="pre">register_cb</span></code> 外，所有命令都只能在建立 ACL 连接后使用。</p>
+<p><code class="code docutils literal notranslate"><span class="pre">avrcp</span></code> 命令：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>avrcp
+<span class="go">avrcp - Bluetooth AVRCP shell commands</span>
+<span class="go">Subcommands:</span>
+<span class="go">  connect                : connect AVRCP</span>
+<span class="go">  disconnect             : disconnect AVRCP</span>
+<span class="go">  browsing_connect       : connect browsing AVRCP</span>
+<span class="go">  browsing_disconnect    : disconnect browsing AVRCP</span>
+<span class="go">  ct                     : AVRCP CT shell commands</span>
+<span class="go">  tg                     : AVRCP TG shell commands</span>
+</pre></div>
+</div>
+<p><code class="code docutils literal notranslate"><span class="pre">avrcp</span> <span class="pre">ct</span></code> 命令：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>avrcp<span class="w"> </span>ct
+<span class="go">ct - AVRCP CT shell commands</span>
+<span class="go">Subcommands:</span>
+<span class="go">  register_cb                 : register avrcp ct callbacks</span>
+<span class="go">  get_unit                    : get unit info</span>
+<span class="go">  get_subunit                 : get subunit info</span>
+<span class="go">  get_caps                    : get capabilities &lt;cap_id: company or events&gt;</span>
+<span class="go">  play                        : request a play at the remote player</span>
+<span class="go">  pause                       : request a pause at the remote player</span>
+<span class="go">  register_notification       : register notify &lt;event_id&gt; [playback_interval]</span>
+<span class="go">  set_browsed_player          : set browsed player &lt;player_id&gt;</span>
+<span class="go">  get_folder_items            : [none]</span>
+<span class="go">  change_path                 : [none]</span>
+<span class="go">  get_item_attrs              : get item attrs [scope]</span>
+<span class="go">  get_total_number_of_items   : get total number of items [scope]</span>
+<span class="go">  search                      : search [search_string]</span>
+<span class="go">  list_app_attrs              : [none]</span>
+<span class="go">  list_app_vals               : List App vals &lt;attr_id&gt;</span>
+<span class="go">  get_app_curr                : Get curr player app setting val [attr1] [attr2] ...</span>
+<span class="go">  set_app_val                 : Set app setting Val &lt;attr1&gt; &lt;val1&gt; [&lt;attr2&gt; &lt;val2&gt;] ...</span>
+<span class="go">  get_app_attr_text           : Get app setting attrs text &lt;attr1&gt; [attr2] ...</span>
+<span class="go">  get_app_val_text            : Get setting vals Text &lt;attr_id&gt; &lt;val1&gt; [val2] ...</span>
+<span class="go">  inform_displayable_char     : Inform Displayable Character Set &lt;charset_id1&gt; [charset_id2] ...</span>
+<span class="go">  inform_batt                 : Inform Battery Status Of CT &lt;Battery status&gt;</span>
+<span class="go">  set_absolute_volume         : set absolute volume &lt;volume&gt;</span>
+<span class="go">  get_element_attrs           : get element attrs [identifier] [attr1] [attr2] ...</span>
+<span class="go">  get_play_status             : [none]</span>
+<span class="go">  set_addressed_player        : set addressed player &lt;player_id&gt;</span>
+<span class="go">  play_item                   : PlayItem &lt;scope&gt; &lt;uid_hex&gt; &lt;uid_counter&gt;</span>
+<span class="go">  add_to_now_playing          : AddToNowPlaying &lt;scope&gt; &lt;uid_hex&gt; &lt;uid_counter&gt;</span>
+</pre></div>
+</div>
+<p><code class="code docutils literal notranslate"><span class="pre">avrcp</span> <span class="pre">tg</span></code> 命令：</p>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>avrcp<span class="w"> </span>tg
+<span class="go">tg - AVRCP TG shell commands</span>
+<span class="go">Subcommands:</span>
+<span class="go">  register_cb                                : register avrcp tg callbacks</span>
+<span class="go">  send_unit_rsp                              : send unit info response</span>
+<span class="go">  send_subunit_rsp                           : [none]</span>
+<span class="go">  send_get_caps_rsp                          : send get capabilities response [status]</span>
+<span class="go">  send_notification_rsp                      : send notify rsp &lt;event_id&gt; &lt;type&gt; [value...]</span>
+<span class="go">  send_browsed_player_rsp                    : Send SetBrowsedPlayer response</span>
+<span class="go">  send_get_folder_items_rsp                  : send get folder items [status]</span>
+<span class="go">  send_change_path_rsp                       : send change path [status]</span>
+<span class="go">  send_get_item_attrs_rsp                    : send get item attrs [status]</span>
+<span class="go">  send_get_total_number_of_items_rsp         : send get total number of items [status]</span>
+<span class="go">  send_search_rsp                            : search [status]</span>
+<span class="go">  send_browsing_general_reject               : send browsing general reject [reason]</span>
+<span class="go">  send_passthrough_rsp                       : send_passthrough_rsp &lt;op/opvu&gt; &lt;opid&gt; &lt;state&gt;</span>
+<span class="go">  send_list_player_app_setting_attrs_rsp     : send attrs rsp &lt;num&gt; [attr_id...]</span>
+<span class="go">  send_list_player_app_setting_vals_rsp      : send vals rsp &lt;num&gt; [val_id...]</span>
+<span class="go">  send_get_curr_player_app_setting_val_rsp   : send current vals rsp &lt;num_pairs&gt; [attr val]...</span>
+<span class="go">  send_set_player_app_setting_val_rsp        : set app setting val rsp [status]</span>
+<span class="go">  send_get_player_app_setting_attr_text_rsp  : send get player app setting attr text rsp [status]</span>
+<span class="go">  send_get_player_app_setting_val_text_rsp   : send get player app setting val text rsp [status]</span>
+<span class="go">  send_inform_displayable_char_rsp           : send displayable char rsp [status]</span>
+<span class="go">  send_inform_batt_status_of_ct_rsp          : send inform batt rsp [status]</span>
+<span class="go">  send_get_element_attrs_rsp                 : send get element attrs response&lt;large: 1&gt;</span>
+<span class="go">  send_absolute_volume_rsp                   : send absolute volume rsp &lt;volume&gt;</span>
+<span class="go">  send_get_play_status_rsp                   : send get play status [status]</span>
+<span class="go">  send_set_addressed_player_rsp              : send set addressed player rsp [status]</span>
+<span class="go">  send_play_item_rsp                         : send play item rsp [status]</span>
+<span class="go">  send_add_to_now_playing_rsp                : send add to now playing rsp [status]</span>
+</pre></div>
+</div>
+</section>
+<section id="basic-avrcp-operations">
+<span id="avrcp-basic-operations"></span><h3>基本 AVRCP 操作<a class="headerlink" href="#basic-avrcp-operations" title="链接到此标题。"></a></h3>
+<dl class="simple">
+<dt>演示基本 AVRCP 操作的流程：</dt><dd><ul class="simple">
+<li><p>双方分别使用 <code class="code docutils literal notranslate"><span class="pre">avrcp</span> <span class="pre">ct</span> <span class="pre">register_cb</span></code> 和 <code class="code docutils literal notranslate"><span class="pre">avrcp</span> <span class="pre">tg</span> <span class="pre">register_cb</span></code> 注册 AVRCP 回调。</p></li>
+<li><p>使用 <code class="code docutils literal notranslate"><span class="pre">avrcp</span> <span class="pre">connect</span></code> 创建 AVRCP 连接。</p></li>
+<li><p>CT 使用 <code class="code docutils literal notranslate"><span class="pre">avrcp</span> <span class="pre">ct</span> <span class="pre">get_caps</span> <span class="pre">events</span></code> 从 TG 获取能力。</p></li>
+<li><p>CT 使用 <code class="code docutils literal notranslate"><span class="pre">avrcp</span> <span class="pre">ct</span> <span class="pre">register_notification</span> <span class="pre">0x01</span></code> 注册通知。</p></li>
+<li><p>CT 使用 <code class="code docutils literal notranslate"><span class="pre">avrcp</span> <span class="pre">ct</span> <span class="pre">play</span></code> 请求播放控制。</p></li>
+<li><p>CT 使用 <code class="code docutils literal notranslate"><span class="pre">avrcp</span> <span class="pre">ct</span> <span class="pre">get_play_status</span></code> 获取当前播放状态。</p></li>
+<li><p>CT 使用 <code class="code docutils literal notranslate"><span class="pre">avrcp</span> <span class="pre">ct</span> <span class="pre">get_element_attrs</span></code> 获取元素属性（元数据）。</p></li>
+<li><p>CT 使用 <code class="code docutils literal notranslate"><span class="pre">avrcp</span> <span class="pre">ct</span> <span class="pre">set_absolute_volume</span> <span class="pre">50</span></code> 设置音量。</p></li>
+<li><p>CT 使用 <code class="code docutils literal notranslate"><span class="pre">avrcp</span> <span class="pre">ct</span> <span class="pre">pause</span></code> 暂停播放。</p></li>
+</ul>
+</dd>
+</dl>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>CT（控制器）发送命令，TG（目标）进行响应。对于支持通知的事件，TG 通常会在注册后立即发送 <strong>INTERIM</strong> 响应以指示当前值，之后在值实际发生变化时发送 <strong>CHANGED</strong> 响应。</p>
+</div>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-0-RGV2aWNlIEEgKENUIC0gQ29udHJvbGxlcik=" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-0-RGV2aWNlIEEgKENUIC0gQ29udHJvbGxlcik=" name="RGV2aWNlIEEgKENUIC0gQ29udHJvbGxlcik=" role="tab" tabindex="0">Device A (CT - Controller)</button><button aria-controls="panel-0-RGV2aWNlIEIgKFRHIC0gVGFyZ2V0KQ==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-0-RGV2aWNlIEIgKFRHIC0gVGFyZ2V0KQ==" name="RGV2aWNlIEIgKFRHIC0gVGFyZ2V0KQ==" role="tab" tabindex="-1">Device B (TG - Target)</button></div><div aria-labelledby="tab-0-RGV2aWNlIEEgKENUIC0gQ29udHJvbGxlcik=" class="sphinx-tabs-panel group-tab" id="panel-0-RGV2aWNlIEEgKENUIC0gQ29udHJvbGxlcik=" name="RGV2aWNlIEEgKENUIC0gQ29udHJvbGxlcik=" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>avrcp<span class="w"> </span>ct<span class="w"> </span>register_cb
+<span class="go">AVRCP CT callbacks registered</span>
+<span class="gp">uart:~$ </span>avrcp<span class="w"> </span>connect
+<span class="go">AVRCP CT connected</span>
+<span class="gp">uart:~$ </span>avrcp<span class="w"> </span>ct<span class="w"> </span>get_caps<span class="w"> </span>events
+<span class="go">GetCapabilities : status=0x04</span>
+<span class="go">Remote supported EventID = 0x01</span>
+<span class="go">Remote supported EventID = 0x02</span>
+<span class="go">Remote supported EventID = 0x0d</span>
+<span class="gp">uart:~$ </span>avrcp<span class="w"> </span>ct<span class="w"> </span>register_notification<span class="w"> </span>0x01
+<span class="go">Get capabilities command sent successfully: cap_id=events</span>
+<span class="go">Sent register notification event_id=0x01</span>
+<span class="go">AVRCP notification rsp: tid=0x01, status=0x04, event_id=0x01</span>
+<span class="go"> Notification type: INTERIM</span>
+<span class="go"> PLAYBACK_STATUS_CHANGED: status=0x00</span>
+<span class="gp">uart:~$ </span>avrcp<span class="w"> </span>ct<span class="w"> </span>play
+<span class="go">Passthrough PRESSED command sent successfully: opid=0x44</span>
+<span class="go">Passthrough RELEASED command sent successfully: opid=0x44</span>
+<span class="go">&lt;input `avrcp tg send_passthrough_rsp op play pressed` in TG side&gt;</span>
+<span class="go">AVRCP passthrough command accepted, operation id = 0x44, state = 0</span>
+<span class="go">&lt;input `avrcp tg send_passthrough_rsp op play released` in TG side&gt;</span>
+<span class="go">AVRCP passthrough command accepted, operation id = 0x44, state = 1</span>
+<span class="go">&lt;input `avrcp tg send_notification_rsp 0x01 changed 1` in TG side&gt;</span>
+<span class="go">AVRCP notification rsp: tid=0x01, status=0x04, event_id=0x01</span>
+<span class="go"> Notification type: CHANGED</span>
+<span class="go"> PLAYBACK_STATUS_CHANGED: status=0x01</span>
+<span class="gp">uart:~$ </span>avrcp<span class="w"> </span>ct<span class="w"> </span>get_play_status
+<span class="go">AVRCP GetPlayStatus</span>
+<span class="go">getplaystatus : status=0x04</span>
+<span class="go">GetPlayStatus: len=180000 ms, pos=30000 ms, status=0x01</span>
+<span class="go"> status: PLAYING</span>
+<span class="gp">uart:~$ </span>avrcp<span class="w"> </span>ct<span class="w"> </span>get_element_attrs
+<span class="go">Requesting element attributes: identifier=0x0000000000000000, num_attrs=0</span>
+<span class="go">AVRCP CT get element attrs command sent</span>
+<span class="go">GetElementAttributes : status=0x04</span>
+<span class="go">AVRCP GetElementAttributes response received, tid=0x05, num_attrs=7</span>
+<span class="go"> Attr[0]: ID=0x00000001 (TITLE), charset=0x006a, len=11</span>
+<span class="go">   Value: "Test Title"</span>
+<span class="go"> Attr[1]: ID=0x00000002 (ARTIST), charset=0x006a, len=11</span>
+<span class="go">   Value: "Test Artist"</span>
+<span class="gp">uart:~$ </span>avrcp<span class="w"> </span>ct<span class="w"> </span>set_absolute_volume<span class="w"> </span><span class="m">50</span>
+<span class="go">set absolute volume absolute_volume=0x32</span>
+<span class="go">AVRCP set absolute volume rsp: tid=0x02, status=0x04, volume=0x32</span>
+<span class="gp">uart:~$ </span>avrcp<span class="w"> </span>ct<span class="w"> </span>pause
+<span class="go">Passthrough PRESSED command sent successfully: opid=0x46</span>
+<span class="go">Passthrough RELEASED command sent successfully: opid=0x46</span>
+<span class="go">&lt;input `avrcp tg send_passthrough_rsp op pause pressed` in TG side&gt;</span>
+<span class="go">AVRCP passthrough command accepted, operation id = 0x46, state = 0</span>
+<span class="go">&lt;input `avrcp tg send_passthrough_rsp op pause released` in TG side&gt;</span>
+<span class="go">AVRCP passthrough command accepted, operation id = 0x46, state = 1</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-0-RGV2aWNlIEIgKFRHIC0gVGFyZ2V0KQ==" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-0-RGV2aWNlIEIgKFRHIC0gVGFyZ2V0KQ==" name="RGV2aWNlIEIgKFRHIC0gVGFyZ2V0KQ==" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>avrcp<span class="w"> </span>tg<span class="w"> </span>register_cb
+<span class="go">AVRCP TG callbacks registered</span>
+<span class="go">&lt;input `avrcp connect` in CT side&gt;</span>
+<span class="go">AVRCP TG connected</span>
+<span class="go">&lt;input `avrcp ct get_caps events` in CT side&gt;</span>
+<span class="go">AVRCP get capabilities command received: cap_id 0x03 (EVENTS_SUPPORTED)</span>
+<span class="gp">uart:~$ </span>avrcp<span class="w"> </span>tg<span class="w"> </span>send_get_caps_rsp
+<span class="go">Get capabilities response sent successfully</span>
+<span class="go">&lt;input `avrcp ct register_notification 0x01` in CT side&gt;</span>
+<span class="go">receive register notification request event_id=0x01</span>
+<span class="gp">uart:~$ </span>avrcp<span class="w"> </span>tg<span class="w"> </span>send_notification_rsp<span class="w"> </span>0x01<span class="w"> </span>interim<span class="w"> </span><span class="m">0</span>
+<span class="go">Sent notification rsp event_id=0x01 type=interim</span>
+<span class="go">&lt;input `avrcp ct play` in CT side&gt;</span>
+<span class="go">receive passthrough command: op_id=0x44 (PLAY)</span>
+<span class="gp">uart:~$ </span>avrcp<span class="w"> </span>tg<span class="w"> </span>send_passthrough_rsp<span class="w"> </span>op<span class="w"> </span>play<span class="w"> </span>pressed
+<span class="go">Passthrough opid=0x44 (STANDARD), state=pressed sent successfully</span>
+<span class="gp">uart:~$ </span>avrcp<span class="w"> </span>tg<span class="w"> </span>send_passthrough_rsp<span class="w"> </span>op<span class="w"> </span>play<span class="w"> </span>released
+<span class="go">Passthrough opid=0x44 (STANDARD), state=released sent successfully</span>
+<span class="gp">uart:~$ </span>avrcp<span class="w"> </span>tg<span class="w"> </span>send_notification_rsp<span class="w"> </span>0x01<span class="w"> </span>changed<span class="w"> </span><span class="m">1</span>
+<span class="go">Sent notification rsp event_id=0x01 type=changed</span>
+<span class="go">&lt;input `avrcp ct get_play_status` in CT side&gt;</span>
+<span class="go">receive get play status request</span>
+<span class="gp">uart:~$ </span>avrcp<span class="w"> </span>tg<span class="w"> </span>send_get_play_status_rsp
+<span class="go">GetPlayStatus rsp sent</span>
+<span class="go">&lt;input `avrcp ct get_element_attrs` in CT side&gt;</span>
+<span class="go">AVRCP GetElementAttributes command received</span>
+<span class="gp">uart:~$ </span>avrcp<span class="w"> </span>tg<span class="w"> </span>send_get_element_attrs_rsp<span class="w"> </span><span class="m">0</span>
+<span class="go">Sending standard GetElementAttributes response (7 attrs)</span>
+<span class="go">GetElementAttributes response sent successfully</span>
+<span class="go">&lt;input `avrcp ct set_absolute_volume 50` in CT side&gt;</span>
+<span class="go">AVRCP set_absolute_volume_req: tid=0x06, absolute_volume=0x32</span>
+<span class="gp">uart:~$ </span>avrcp<span class="w"> </span>tg<span class="w"> </span>send_absolute_volume_rsp<span class="w"> </span><span class="m">50</span>
+<span class="go">Set absolute volume response sent successfully</span>
+<span class="go">&lt;input `avrcp ct pause` in CT side&gt;</span>
+<span class="go">AVRCP passthrough command received: opid = 0x46</span>
+<span class="gp">uart:~$ </span>avrcp<span class="w"> </span>tg<span class="w"> </span>send_passthrough_rsp<span class="w"> </span>op<span class="w"> </span>pause<span class="w"> </span>pressed
+<span class="go">send passthrough response</span>
+<span class="gp">uart:~$ </span>avrcp<span class="w"> </span>tg<span class="w"> </span>send_passthrough_rsp<span class="w"> </span>op<span class="w"> </span>pause<span class="w"> </span>released
+<span class="go">send passthrough response</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="avrcp-connection">
+<h3>AVRCP 连接<a class="headerlink" href="#avrcp-connection" title="链接到此标题。"></a></h3>
+<p>AVRCP 规范同时支持控制连接和浏览连接。控制连接用于基本的远程控制功能，浏览连接则允许浏览媒体内容。</p>
+<section id="control-connection">
+<h4>控制连接<a class="headerlink" href="#control-connection" title="链接到此标题。"></a></h4>
+<p>建立 AVRCP 控制连接：</p>
+<ol class="arabic simple">
+<li><p>注册回调（CT 端）：</p></li>
+</ol>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>avrcp<span class="w"> </span>ct<span class="w"> </span>register_cb
+<span class="go">AVRCP CT callbacks registered</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>注册回调（TG 端）：</p></li>
+</ol>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>avrcp<span class="w"> </span>tg<span class="w"> </span>register_cb
+<span class="go">AVRCP TG callbacks registered</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>连接 AVRCP：</p></li>
+</ol>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>avrcp<span class="w"> </span>connect
+<span class="go">AVRCP CT connected</span>
+<span class="go">AVRCP TG connected</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>断开 AVRCP：</p></li>
+</ol>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>avrcp<span class="w"> </span>disconnect
+<span class="go">AVRCP CT disconnected</span>
+<span class="go">AVRCP TG disconnected</span>
+</pre></div>
+</div>
+</section>
+<section id="browsing-connection">
+<h4>浏览连接<a class="headerlink" href="#browsing-connection" title="链接到此标题。"></a></h4>
+<p>建立控制连接后，可以发起浏览连接：</p>
+<ol class="arabic simple">
+<li><p>连接浏览：</p></li>
+</ol>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>avrcp<span class="w"> </span>browsing_connect
+<span class="go">AVRCP browsing connect request sent</span>
+<span class="go">AVRCP CT browsing connected</span>
+<span class="go">AVRCP TG browsing connected</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>断开浏览：</p></li>
+</ol>
+<div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>avrcp<span class="w"> </span>browsing_disconnect
+<span class="go">AVRCP browsing disconnect request sent</span>
+<span class="go">AVRCP CT browsing disconnected</span>
+<span class="go">AVRCP TG browsing disconnected</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="basic-playback-control">
+<h3>基本播放控制<a class="headerlink" href="#basic-playback-control" title="链接到此标题。"></a></h3>
+<p>从 CT 端控制播放：</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-1-UGxheSBDb21tYW5k" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-1-UGxheSBDb21tYW5k" name="UGxheSBDb21tYW5k" role="tab" tabindex="0">Play Command</button><button aria-controls="panel-1-UGF1c2UgQ29tbWFuZA==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-1-UGF1c2UgQ29tbWFuZA==" name="UGF1c2UgQ29tbWFuZA==" role="tab" tabindex="-1">Pause Command</button></div><div aria-labelledby="tab-1-UGxheSBDb21tYW5k" class="sphinx-tabs-panel group-tab" id="panel-1-UGxheSBDb21tYW5k" name="UGxheSBDb21tYW5k" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>avrcp<span class="w"> </span>ct<span class="w"> </span>play
+<span class="go">Passthrough PRESSED command sent successfully: opid=0x44</span>
+<span class="go">Passthrough RELEASED command sent successfully: opid=0x44</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-1-UGF1c2UgQ29tbWFuZA==" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-1-UGF1c2UgQ29tbWFuZA==" name="UGF1c2UgQ29tbWFuZA==" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>avrcp<span class="w"> </span>ct<span class="w"> </span>pause
+<span class="go">Passthrough PRESSED command sent successfully: opid=0x46</span>
+<span class="go">Passthrough RELEASED command sent successfully: opid=0x46</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="get-capabilities">
+<h3>获取能力<a class="headerlink" href="#get-capabilities" title="链接到此标题。"></a></h3>
+<p>查询支持的能力：</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-2-Q29tcGFueSBJRA==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-2-Q29tcGFueSBJRA==" name="Q29tcGFueSBJRA==" role="tab" tabindex="0">Company ID</button><button aria-controls="panel-2-RXZlbnRzIFN1cHBvcnRlZA==" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-2-RXZlbnRzIFN1cHBvcnRlZA==" name="RXZlbnRzIFN1cHBvcnRlZA==" role="tab" tabindex="-1">Events Supported</button><button aria-controls="panel-2-VEcgUmVzcG9uc2U=" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-2-VEcgUmVzcG9uc2U=" name="VEcgUmVzcG9uc2U=" role="tab" tabindex="-1">TG Response</button></div><div aria-labelledby="tab-2-Q29tcGFueSBJRA==" class="sphinx-tabs-panel group-tab" id="panel-2-Q29tcGFueSBJRA==" name="Q29tcGFueSBJRA==" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>avrcp<span class="w"> </span>ct<span class="w"> </span>get_caps<span class="w"> </span>company
+<span class="go">Get capabilities command sent successfully: cap_id=company</span>
+<span class="go">GetCapabilities : status=0x04</span>
+<span class="go">Remote CompanyID = 0x001958</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-2-RXZlbnRzIFN1cHBvcnRlZA==" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-2-RXZlbnRzIFN1cHBvcnRlZA==" name="RXZlbnRzIFN1cHBvcnRlZA==" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>avrcp<span class="w"> </span>ct<span class="w"> </span>get_caps<span class="w"> </span>events
+<span class="go">Get capabilities command sent successfully: cap_id=events</span>
+<span class="go">GetCapabilities : status=0x04</span>
+<span class="go">Remote supported EventID = 0x01</span>
+<span class="go">Remote supported EventID = 0x02</span>
+<span class="go">Remote supported EventID = 0x03</span>
+<span class="go">Remote supported EventID = 0x04</span>
+<span class="go">Remote supported EventID = 0x0d</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-2-VEcgUmVzcG9uc2U=" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-2-VEcgUmVzcG9uc2U=" name="VEcgUmVzcG9uc2U=" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>avrcp<span class="w"> </span>tg<span class="w"> </span>send_get_caps_rsp
+<span class="go">Sending company ID capability rsp: 0x001958</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="media-metadata-operations">
+<h3>媒体元数据操作<a class="headerlink" href="#media-metadata-operations" title="链接到此标题。"></a></h3>
+<section id="get-element-attributes">
+<h4>获取元素属性<a class="headerlink" href="#get-element-attributes" title="链接到此标题。"></a></h4>
+<p>获取当前播放媒体的元数据：</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-3-Q1QgUmVxdWVzdA==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-3-Q1QgUmVxdWVzdA==" name="Q1QgUmVxdWVzdA==" role="tab" tabindex="0">CT Request</button><button aria-controls="panel-3-VEcgUmVzcG9uc2U=" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-3-VEcgUmVzcG9uc2U=" name="VEcgUmVzcG9uc2U=" role="tab" tabindex="-1">TG Response</button></div><div aria-labelledby="tab-3-Q1QgUmVxdWVzdA==" class="sphinx-tabs-panel group-tab" id="panel-3-Q1QgUmVxdWVzdA==" name="Q1QgUmVxdWVzdA==" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>avrcp<span class="w"> </span>ct<span class="w"> </span>get_element_attrs
+<span class="go">Requesting element attributes: identifier=0x0000000000000000, num_attrs=0</span>
+<span class="go">AVRCP CT get element attrs command sent</span>
+<span class="go">GetElementAttributes : status=0x04</span>
+<span class="go">AVRCP GetElementAttributes response received, tid=0x00, num_attrs=7</span>
+<span class="go"> Attr[0]: ID=0x00000001 (TITLE), charset=0x006a, len=11</span>
+<span class="go">   Value: "Test Title"</span>
+<span class="go"> Attr[1]: ID=0x00000002 (ARTIST), charset=0x006a, len=11</span>
+<span class="go">   Value: "Test Artist"</span>
+<span class="go"> Attr[2]: ID=0x00000003 (ALBUM), charset=0x006a, len=10</span>
+<span class="go">   Value: "Test Album"</span>
+<span class="go"> Attr[3]: ID=0x00000004 (TRACK_NUMBER), charset=0x006a, len=1</span>
+<span class="go">   Value: "1"</span>
+<span class="go"> Attr[4]: ID=0x00000005 (TOTAL_TRACKS), charset=0x006a, len=2</span>
+<span class="go">   Value: "10"</span>
+<span class="go"> Attr[5]: ID=0x00000006 (GENRE), charset=0x006a, len=4</span>
+<span class="go">   Value: "Rock"</span>
+<span class="go"> Attr[6]: ID=0x00000007 (PLAYING_TIME), charset=0x006a, len=6</span>
+<span class="go">   Value: "240000"</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-3-VEcgUmVzcG9uc2U=" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-3-VEcgUmVzcG9uc2U=" name="VEcgUmVzcG9uc2U=" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>avrcp<span class="w"> </span>tg<span class="w"> </span>send_get_element_attrs_rsp<span class="w"> </span><span class="m">0</span>
+<span class="go">Sending standard GetElementAttributes response (7 attrs)</span>
+<span class="go">GetElementAttributes response sent successfully</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="play-status">
+<h4>播放状态<a class="headerlink" href="#play-status" title="链接到此标题。"></a></h4>
+<p>获取当前播放状态：</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-4-Q1QgUmVxdWVzdA==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-4-Q1QgUmVxdWVzdA==" name="Q1QgUmVxdWVzdA==" role="tab" tabindex="0">CT Request</button><button aria-controls="panel-4-VEcgUmVzcG9uc2U=" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-4-VEcgUmVzcG9uc2U=" name="VEcgUmVzcG9uc2U=" role="tab" tabindex="-1">TG Response</button></div><div aria-labelledby="tab-4-Q1QgUmVxdWVzdA==" class="sphinx-tabs-panel group-tab" id="panel-4-Q1QgUmVxdWVzdA==" name="Q1QgUmVxdWVzdA==" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>avrcp<span class="w"> </span>ct<span class="w"> </span>get_play_status
+<span class="go">AVRCP GetPlayStatus</span>
+<span class="go">getplaystatus : status=0x04</span>
+<span class="go">GetPlayStatus: len=180000 ms, pos=30000 ms, status=0x01</span>
+<span class="go"> status: PLAYING</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-4-VEcgUmVzcG9uc2U=" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-4-VEcgUmVzcG9uc2U=" name="VEcgUmVzcG9uc2U=" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>avrcp<span class="w"> </span>tg<span class="w"> </span>send_get_play_status_rsp
+<span class="go">GetPlayStatus rsp sent</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+</section>
+<section id="volume-control">
+<h3>音量控制<a class="headerlink" href="#volume-control" title="链接到此标题。"></a></h3>
+<p>设置绝对音量：</p>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-5-Q1QgU2V0IFZvbHVtZQ==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-5-Q1QgU2V0IFZvbHVtZQ==" name="Q1QgU2V0IFZvbHVtZQ==" role="tab" tabindex="0">CT Set Volume</button><button aria-controls="panel-5-VEcgUmVzcG9uc2U=" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-5-VEcgUmVzcG9uc2U=" name="VEcgUmVzcG9uc2U=" role="tab" tabindex="-1">TG Response</button></div><div aria-labelledby="tab-5-Q1QgU2V0IFZvbHVtZQ==" class="sphinx-tabs-panel group-tab" id="panel-5-Q1QgU2V0IFZvbHVtZQ==" name="Q1QgU2V0IFZvbHVtZQ==" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>avrcp<span class="w"> </span>ct<span class="w"> </span>set_absolute_volume<span class="w"> </span><span class="m">50</span>
+<span class="go">set absolute volume absolute_volume=0x32</span>
+<span class="go">AVRCP set absolute volume rsp: tid=0x01, status=0x04, volume=0x32</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-5-VEcgUmVzcG9uc2U=" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-5-VEcgUmVzcG9uc2U=" name="VEcgUmVzcG9uc2U=" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>avrcp<span class="w"> </span>tg<span class="w"> </span>send_absolute_volume_rsp<span class="w"> </span><span class="m">50</span>
+<span class="go">Set absolute volume response sent successfully</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="event-notifications">
+<h3>事件通知<a class="headerlink" href="#event-notifications" title="链接到此标题。"></a></h3>
+<p>注册通知并处理事件：</p>
+<section id="register-for-volume-change-notification">
+<h4>注册音量变化通知<a class="headerlink" href="#register-for-volume-change-notification" title="链接到此标题。"></a></h4>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-6-Q1QgUmVnaXN0ZXI=" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-6-Q1QgUmVnaXN0ZXI=" name="Q1QgUmVnaXN0ZXI=" role="tab" tabindex="0">CT Register</button><button aria-controls="panel-6-VEcgU2VuZCBOb3RpZmljYXRpb24=" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-6-VEcgU2VuZCBOb3RpZmljYXRpb24=" name="VEcgU2VuZCBOb3RpZmljYXRpb24=" role="tab" tabindex="-1">TG Send Notification</button></div><div aria-labelledby="tab-6-Q1QgUmVnaXN0ZXI=" class="sphinx-tabs-panel group-tab" id="panel-6-Q1QgUmVnaXN0ZXI=" name="Q1QgUmVnaXN0ZXI=" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>avrcp<span class="w"> </span>ct<span class="w"> </span>register_notification<span class="w"> </span>0x0d
+<span class="go">Sent register notification event_id=0x0d</span>
+<span class="go">AVRCP notification rsp: tid=0x02, status=0x04, event_id=0x0d</span>
+<span class="go"> Notification type: INTERIM</span>
+<span class="go"> VOLUME_CHANGED: absolute_volume=0x0a</span>
+<span class="go">AVRCP notify_changed_cb received: event_id=0x0d</span>
+<span class="go"> Notification type: CHANGED</span>
+<span class="go"> VOLUME_CHANGED: absolute_volume=0x14</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-6-VEcgU2VuZCBOb3RpZmljYXRpb24=" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-6-VEcgU2VuZCBOb3RpZmljYXRpb24=" name="VEcgU2VuZCBOb3RpZmljYXRpb24=" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>avrcp<span class="w"> </span>tg<span class="w"> </span>send_notification_rsp<span class="w"> </span>0x0d<span class="w"> </span>interim<span class="w"> </span><span class="m">10</span>
+<span class="go">Sent notification rsp event_id=0x0d type=interim</span>
+
+<span class="gp">uart:~$ </span>avrcp<span class="w"> </span>tg<span class="w"> </span>send_notification_rsp<span class="w"> </span>0x0d<span class="w"> </span>changed<span class="w"> </span><span class="m">20</span>
+<span class="go">Sent notification rsp event_id=0x0d type=changed</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+</section>
+<section id="browsing-operations">
+<h3>浏览操作<a class="headerlink" href="#browsing-operations" title="链接到此标题。"></a></h3>
+<section id="set-browsed-player">
+<h4>设置浏览的播放器<a class="headerlink" href="#set-browsed-player" title="链接到此标题。"></a></h4>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-7-Q1QgUmVxdWVzdA==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-7-Q1QgUmVxdWVzdA==" name="Q1QgUmVxdWVzdA==" role="tab" tabindex="0">CT Request</button><button aria-controls="panel-7-VEcgUmVzcG9uc2U=" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-7-VEcgUmVzcG9uc2U=" name="VEcgUmVzcG9uc2U=" role="tab" tabindex="-1">TG Response</button></div><div aria-labelledby="tab-7-Q1QgUmVxdWVzdA==" class="sphinx-tabs-panel group-tab" id="panel-7-Q1QgUmVxdWVzdA==" name="Q1QgUmVxdWVzdA==" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>avrcp<span class="w"> </span>ct<span class="w"> </span>set_browsed_player<span class="w"> </span><span class="m">1</span>
+<span class="go">AVRCP send set browsed player req</span>
+<span class="go">AVRCP set browsed player success, tid = 0</span>
+<span class="go">  UID Counter: 1</span>
+<span class="go">  Number of Items: 100</span>
+<span class="go">  Charset ID: 0x006A</span>
+<span class="go">  Folder Depth: 1</span>
+<span class="go">  charset_id  : 0x006A</span>
+<span class="go">  Get folder Name (hex)  :</span>
+<span class="go">00000000: 4d 75 73 69 63                                   |Music            |</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-7-VEcgUmVzcG9uc2U=" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-7-VEcgUmVzcG9uc2U=" name="VEcgUmVzcG9uc2U=" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>avrcp<span class="w"> </span>tg<span class="w"> </span>send_browsed_player_rsp
+<span class="go">Send set browsed player response, status = 0x04</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="get-folder-items">
+<h4>获取文件夹条目<a class="headerlink" href="#get-folder-items" title="链接到此标题。"></a></h4>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-8-Q1QgUmVxdWVzdA==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-8-Q1QgUmVxdWVzdA==" name="Q1QgUmVxdWVzdA==" role="tab" tabindex="0">CT Request</button><button aria-controls="panel-8-VEcgUmVzcG9uc2U=" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-8-VEcgUmVzcG9uc2U=" name="VEcgUmVzcG9uc2U=" role="tab" tabindex="-1">TG Response</button></div><div aria-labelledby="tab-8-Q1QgUmVxdWVzdA==" class="sphinx-tabs-panel group-tab" id="panel-8-Q1QgUmVxdWVzdA==" name="Q1QgUmVxdWVzdA==" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>avrcp<span class="w"> </span>ct<span class="w"> </span>get_folder_items
+<span class="go">Sent GetFolderItems command</span>
+<span class="go">AVRCP get folder items success, tid = 1</span>
+<span class="go">  UID Counter: 1</span>
+<span class="go">  Number of Items: 1</span>
+<span class="go">Media Player Item:</span>
+<span class="go">  item_len   : 28</span>
+<span class="go">  player_id   : 1</span>
+<span class="go">  major_type  : 0x01</span>
+<span class="go">  sub_type    : 0x00000000</span>
+<span class="go">  play_status : 0x00</span>
+<span class="go">  charset_id  : 0x006A</span>
+<span class="go">  name_len    : 4</span>
+<span class="go">  charset_id  : 0x006A</span>
+<span class="go">  Name (hex)  :</span>
+<span class="go">00000000: 44:65:6d:6f                                      |Demo</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-8-VEcgUmVzcG9uc2U=" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-8-VEcgUmVzcG9uc2U=" name="VEcgUmVzcG9uc2U=" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>avrcp<span class="w"> </span>tg<span class="w"> </span>send_get_folder_items_rsp
+<span class="go">TG: Sent GetFolderItems response</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+</section>
+<section id="player-application-settings">
+<h3>播放器应用设置<a class="headerlink" href="#player-application-settings" title="链接到此标题。"></a></h3>
+<p>列出并获取、配置播放器应用设置：</p>
+<section id="list-available-settings">
+<h4>列出可用设置<a class="headerlink" href="#list-available-settings" title="链接到此标题。"></a></h4>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-9-Q1QgUmVxdWVzdA==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-9-Q1QgUmVxdWVzdA==" name="Q1QgUmVxdWVzdA==" role="tab" tabindex="0">CT Request</button><button aria-controls="panel-9-VEcgUmVzcG9uc2U=" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-9-VEcgUmVzcG9uc2U=" name="VEcgUmVzcG9uc2U=" role="tab" tabindex="-1">TG Response</button></div><div aria-labelledby="tab-9-Q1QgUmVxdWVzdA==" class="sphinx-tabs-panel group-tab" id="panel-9-Q1QgUmVxdWVzdA==" name="Q1QgUmVxdWVzdA==" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>avrcp<span class="w"> </span>ct<span class="w"> </span>list_app_attrs
+<span class="go">Sent list player app setting attrs</span>
+<span class="go">list player app setting attrs : status=0x04</span>
+<span class="go">attr =0x01 (EQUALIZER)</span>
+<span class="go">attr =0x02 (REPEAT_MODE)</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-9-VEcgUmVzcG9uc2U=" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-9-VEcgUmVzcG9uc2U=" name="VEcgUmVzcG9uc2U=" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>avrcp<span class="w"> </span>tg<span class="w"> </span>send_list_player_app_setting_attrs_rsp<span class="w"> </span><span class="m">2</span><span class="w"> </span>0x01<span class="w"> </span>0x02
+<span class="go">TG: Sent list player app setting attrs response</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+<section id="get-current-settings">
+<h4>获取当前设置<a class="headerlink" href="#get-current-settings" title="链接到此标题。"></a></h4>
+<div class="sphinx-tabs docutils container">
+<div aria-label="Tabbed content" class="closeable" role="tablist"><button aria-controls="panel-10-Q1QgUmVxdWVzdA==" aria-selected="true" class="sphinx-tabs-tab group-tab" id="tab-10-Q1QgUmVxdWVzdA==" name="Q1QgUmVxdWVzdA==" role="tab" tabindex="0">CT Request</button><button aria-controls="panel-10-VEcgUmVzcG9uc2U=" aria-selected="false" class="sphinx-tabs-tab group-tab" id="tab-10-VEcgUmVzcG9uc2U=" name="VEcgUmVzcG9uc2U=" role="tab" tabindex="-1">TG Response</button></div><div aria-labelledby="tab-10-Q1QgUmVxdWVzdA==" class="sphinx-tabs-panel group-tab" id="panel-10-Q1QgUmVxdWVzdA==" name="Q1QgUmVxdWVzdA==" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>avrcp<span class="w"> </span>ct<span class="w"> </span>get_app_curr<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="m">2</span>
+<span class="go">Sent get_curr_player_app_setting_val num=2</span>
+<span class="go">get curr player app setting val : status=0x04</span>
+<span class="go">attr_id :1 val 1</span>
+<span class="go">attr_id :2 val 1</span>
+</pre></div>
+</div>
+</div><div aria-labelledby="tab-10-VEcgUmVzcG9uc2U=" class="sphinx-tabs-panel group-tab" hidden="true" id="panel-10-VEcgUmVzcG9uc2U=" name="VEcgUmVzcG9uc2U=" role="tabpanel" tabindex="0"><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">uart:~$ </span>avrcp<span class="w"> </span>tg<span class="w"> </span>send_get_curr_player_app_setting_val_rsp<span class="w"> </span><span class="m">2</span><span class="w"> </span>0x01<span class="w"> </span>0x01<span class="w"> </span>0x02<span class="w"> </span>0x02
+<span class="go">TG: Send get curr player app setting val rsp (num=2)</span>
+</pre></div>
+</div>
+</div></div>
+</section>
+</section>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 3月 31, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

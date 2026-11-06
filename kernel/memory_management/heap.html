@@ -1,0 +1,417 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>内存堆 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/kernel/memory_management/heap.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="共享多堆" href="shared_multi_heap.html" />
+    <link rel="prev" title="内存管理" href="index.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">内核</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../services/index.html">内核服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../drivers/index.html">设备驱动模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usermode/index.html">用户模式</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">内存管理</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">内存堆</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#synchronized-heap-allocator">同步堆分配器</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#creating-a-heap">创建堆</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#allocating-memory">分配内存</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#releasing-memory">释放内存</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#enumerating-heaps">枚举堆</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#low-level-heap-allocator">底层堆分配器</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#implementation">实现</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#multi-heap-wrapper-utility">多堆包装工具</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#system-heap">系统堆</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#defining-the-heap-memory-pool">定义堆内存池</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#id1">分配内存</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#id2">释放内存</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#suggested-uses">建议用法</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#configuration-options">配置选项</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#api-reference">API 参考</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#heap-listener">堆监听器</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="shared_multi_heap.html">共享多堆</a></li>
+<li class="toctree-l3"><a class="reference internal" href="slabs.html">内存块（slab）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sys_mem_blocks.html">内存块分配器</a></li>
+<li class="toctree-l3"><a class="reference internal" href="demand_paging.html">按需分页</a></li>
+<li class="toctree-l3"><a class="reference internal" href="virtual_memory.html">虚拟内存</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../data_structures/index.html">数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../timing_functions/index.html">计时函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../object_cores/index.html">对象核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../timeutil.html">时间工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../precision_timing.html">精密计时</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../util/index.html">实用工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../iterable_sections/index.html">可迭代段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../code-relocation.html">代码和数据重定位</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanup.html">基于作用域的清理辅助工具</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">内核</a> &raquo;</li>
+  
+     <li><a href="index.html">内存管理</a> &raquo;</li>
+  
+  <li>内存堆</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="memory-heaps">
+<span id="heap-v2"></span><h1>内存堆<a class="headerlink" href="#memory-heaps" title="链接到此标题。"></a></h1>
+<p>Zephyr 提供了一组工具，允许线程动态分配内存。</p>
+<section id="synchronized-heap-allocator">
+<h2>同步堆分配器<a class="headerlink" href="#synchronized-heap-allocator" title="链接到此标题。"></a></h2>
+<section id="creating-a-heap">
+<h3>创建堆<a class="headerlink" href="#creating-a-heap" title="链接到此标题。"></a></h3>
+<p>定义堆最简单的方式是使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_HEAP_DEFINE</span></code> 宏静态定义。它会创建一个具有给定名称的静态 <code class="xref c c-struct docutils literal notranslate"><span class="pre">k_heap</span></code> 变量，用于管理指定大小的内存区域。</p>
+<p>还可以使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_heap_init()</span></code> 创建堆，来管理由应用程序控制的任意内存区域。</p>
+</section>
+<section id="allocating-memory">
+<h3>分配内存<a class="headerlink" href="#allocating-memory" title="链接到此标题。"></a></h3>
+<p>可以使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_heap_alloc()</span></code> 从堆中分配内存，向其传入堆对象的地址和所需的字节数。它的功能类似于标准 C 的 <code class="docutils literal notranslate"><span class="pre">malloc()</span></code>，分配失败时返回 NULL 指针。</p>
+<p>堆支持阻塞操作，允许线程休眠直到有可用内存。最后一个参数是一个 <code class="xref c c-type docutils literal notranslate"><span class="pre">k_timeout_t</span></code> 超时值，表示线程在返回之前最多可以休眠多久，也可以是常量超时值 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_NO_WAIT</span></code> 或 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_FOREVER</span></code> 之一。</p>
+<p>当需要特定对齐的内存块时，<code class="xref c c-func docutils literal notranslate"><span class="pre">k_heap_aligned_alloc()</span></code> 会分配一个起始地址为调用者指定的 2 的幂对齐值整数倍的内存块。<code class="xref c c-func docutils literal notranslate"><span class="pre">k_heap_calloc()</span></code> 分配一个数组并将其初始化为零。</p>
+<p>已分配内存的大小可以用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_heap_realloc()</span></code> 修改，它返回一个所请求大小的内存块，并保留原有内容（保留长度为新旧大小中较小者）。与标准 C 的 <code class="docutils literal notranslate"><span class="pre">realloc()</span></code> 一样，返回的指针可能与原指针不同。</p>
+</section>
+<section id="releasing-memory">
+<h3>释放内存<a class="headerlink" href="#releasing-memory" title="链接到此标题。"></a></h3>
+<p>用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_heap_alloc()</span></code> 分配的内存必须用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_heap_free()</span></code> 释放。与标准 C 的 <code class="docutils literal notranslate"><span class="pre">free()</span></code> 类似，所提供的指针必须是 <code class="docutils literal notranslate"><span class="pre">NULL</span></code> 值，或者是之前由 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_heap_alloc()</span></code> 针对同一个堆返回的指针。释放 <code class="docutils literal notranslate"><span class="pre">NULL</span></code> 值被定义为不产生任何效果。</p>
+</section>
+<section id="enumerating-heaps">
+<h3>枚举堆<a class="headerlink" href="#enumerating-heaps" title="链接到此标题。"></a></h3>
+<p>所有用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_HEAP_DEFINE</span></code> 静态定义的堆都放在一个专用的链接器段中，因此可以在运行时枚举它们。<code class="xref c c-func docutils literal notranslate"><span class="pre">k_heap_array_get()</span></code> 返回静态定义堆的数组地址及其包含的条目数。这主要用于需要检查系统中每个堆的插桩和诊断工具。</p>
+</section>
+</section>
+<section id="low-level-heap-allocator">
+<h2>底层堆分配器<a class="headerlink" href="#low-level-heap-allocator" title="链接到此标题。"></a></h2>
+<p><code class="xref c c-struct docutils literal notranslate"><span class="pre">k_heap</span></code> 抽象的底层实现由一个名为 <code class="xref c c-struct docutils literal notranslate"><span class="pre">sys_heap</span></code> 的数据结构提供。它实现了完全相同的分配语义，但不提供内核同步工具。它适用于希望在无法使用同步或同步更复杂的上下文（例如用户空间）中自行管理内存块的应用程序。与 <code class="docutils literal notranslate"><span class="pre">k_heap</span></code> 不同，对同一个堆的所有 <code class="docutils literal notranslate"><span class="pre">sys_heap</span></code> 函数调用都必须由调用者串行化，不允许不同线程同时使用。</p>
+<section id="implementation">
+<h3>实现<a class="headerlink" href="#implementation" title="链接到此标题。"></a></h3>
+<p>在内部，<code class="docutils literal notranslate"><span class="pre">sys_heap</span></code> 内存块被划分为 8 字节的“块单元（chunk）”。所有分配都来自一段连续的块单元区域。每个已分配或未使用内存块的第一个块单元前面都有一个块单元头，其中存储该块单元的长度、物理内存中相邻的下一个较低地址（“左侧”）块单元的长度、一个表示该块单元是否在使用中的位，以及以块单元为索引、指向“空闲链表”中前一个和后一个块单元的链接指针，未使用的块单元会被加入该空闲链表。</p>
+<p>堆代码会适当注意避免碎片。空闲块链表按大小存放在各个“桶”中，每个桶存放大小在一个 2 的幂范围内的块（即一个桶存放 3-4 个块单元的块，另一个存放 5-8 个，然后是 9-16 个，依此类推），这使得新的分配可以从可用的最小/最碎片化的块中进行。此外，当分配的内存被释放并归还给堆时，它们会自动与相邻的空闲块合并，以防止碎片。</p>
+<p>所有元数据都存储在连续堆内存块的开头，包括可变长度的桶链表头列表（其长度取决于堆大小）。唯一需要的外部内存就是 <code class="xref c c-struct docutils literal notranslate"><span class="pre">sys_heap</span></code> 结构体本身。</p>
+<p><code class="docutils literal notranslate"><span class="pre">sys_heap</span></code> 函数不做同步。所有使用者都必须注意防止并发访问。同一时刻只能有一个上下文处于某个 API 函数内部。</p>
+<p>堆代码注重提供高性能和可靠的延迟。所有 <code class="docutils literal notranslate"><span class="pre">sys_heap</span></code> API 函数都保证在常数时间内完成。在典型架构上，它们都会在 1 到 200 个周期内完成。其中一个复杂之处在于，为一次分配查找最小桶大小（即“可能放得下”的空闲块集合）时，迭代次数有一个编译时上限，以防止无界的链表搜索，代价是牺牲一些抗碎片能力。该值 <a class="reference internal" href="../../kconfig.html#CONFIG_SYS_HEAP_ALLOC_LOOPS" title="CONFIG_SYS_HEAP_ALLOC_LOOPS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_SYS_HEAP_ALLOC_LOOPS</span></code></a> 可由用户在构建时选择，默认为 3。</p>
+</section>
+</section>
+<section id="multi-heap-wrapper-utility">
+<h2>多堆包装工具<a class="headerlink" href="#multi-heap-wrapper-utility" title="链接到此标题。"></a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">sys_heap</span></code> 工具要求所有被管理的内存都位于一个连续的块中。而复杂的微控制器应用程序常常有更复杂的内存布局，但仍希望把它们作为“堆”进行动态管理。例如，内存可能是若干彼此不连续的区域，不同区域可能有不同的缓存、性能或功耗特性，外设可能只能对某些区域进行 DMA，等等。</p>
+<p>针对这些情况，Zephyr 提供了 <code class="docutils literal notranslate"><span class="pre">sys_multi_heap</span></code> 工具。它实际上是对一个或多个 <code class="docutils literal notranslate"><span class="pre">sys_heap</span></code> 对象集合的简单包装。应在其子堆之后通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">sys_multi_heap_init()</span></code> 初始化，之后可以通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">sys_multi_heap_add_heap()</span></code> 把每个堆加入被管理的集合。它不提供销毁工具；与 <code class="docutils literal notranslate"><span class="pre">sys_heap</span></code> 一样，想要销毁多堆的应用程序只需确保所有已分配的块都已释放（或至少永远不会再被使用），然后把底层内存挪作他用即可。</p>
+<p>它只有一对分配入口：<code class="xref c c-func docutils literal notranslate"><span class="pre">sys_multi_heap_alloc()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">sys_multi_heap_aligned_alloc()</span></code>。它们的行为与名称相似的 <code class="docutils literal notranslate"><span class="pre">sys_heap</span></code> 函数完全相同，只是还接受一个不透明的“配置”参数。多堆代码本身不检查这个指针，而是把它传给初始化时提供的回调函数。这个由应用程序提供的回调负责从某个被管理的堆中完成实际分配，并可以按任意方式使用该配置参数来做出决定。</p>
+<p>要修改已分配缓冲区的大小（无论是缩小还是扩大），可以使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">sys_multi_heap_realloc()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">sys_multi_heap_aligned_realloc()</span></code> API。如果缓冲区无法在其当前所在的堆上扩大，则可以使用配置参数所指定的任何符合条件的堆。</p>
+<p>不再使用时，可以通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">sys_multi_heap_free()</span></code> 释放多堆中的内存。应用程序不需要传入配置参数。从任何被管理的 <code class="docutils literal notranslate"><span class="pre">sys_heap</span></code> 对象中分配的内存都可以用同样的方式释放。</p>
+</section>
+<section id="system-heap">
+<h2>系统堆<a class="headerlink" href="#system-heap" title="链接到此标题。"></a></h2>
+<p><em class="dfn">system heap</em> 是一个预定义的内存分配器，允许线程以类似 <code class="xref c c-func docutils literal notranslate"><span class="pre">malloc()</span></code> 的方式从一块公共内存区域中动态分配内存。</p>
+<p>只定义了一个系统堆。与其他堆或内存池不同，系统堆不能通过其内存地址直接引用。</p>
+<p>系统堆的大小可以配置为任意值，只受可用空间的限制。</p>
+<p>线程可以调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_malloc()</span></code> 动态分配一块堆内存。所分配内存块的地址保证按指针大小的整数倍对齐。如果找不到合适的堆内存块，则返回 <code class="docutils literal notranslate"><span class="pre">NULL</span></code>。</p>
+<p>线程用完一块堆内存后，可以调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_free()</span></code> 将其归还给系统堆。</p>
+<section id="defining-the-heap-memory-pool">
+<h3>定义堆内存池<a class="headerlink" href="#defining-the-heap-memory-pool" title="链接到此标题。"></a></h3>
+<p>堆内存池的大小使用 <a class="reference internal" href="../../kconfig.html#CONFIG_HEAP_MEM_POOL_SIZE" title="CONFIG_HEAP_MEM_POOL_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HEAP_MEM_POOL_SIZE</span></code></a> 配置选项指定。</p>
+<p>默认情况下，堆内存池大小为零字节。该值指示内核不定义堆内存池对象。最大大小受系统中可用内存量的限制。如果无法支持所指定的大小，项目构建将在链接阶段失败。</p>
+<p>此外，每个子系统（开发板、驱动、库等）都可以通过定义一个以 <code class="docutils literal notranslate"><span class="pre">HEAP_MEM_POOL_ADD_SIZE_</span></code> 为前缀的 Kconfig 选项（值以字节为单位）来设置自定义的需求。如果多个子系统指定了自定义值，则以它们的总和作为最低需求。如果应用程序试图设置一个小于最低值的值，该值将被忽略，转而使用最低值。</p>
+<p>要强制使用小于最低值的值，应用程序可以启用 <a class="reference internal" href="../../kconfig.html#CONFIG_HEAP_MEM_POOL_IGNORE_MIN" title="CONFIG_HEAP_MEM_POOL_IGNORE_MIN"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HEAP_MEM_POOL_IGNORE_MIN</span></code></a> 选项。在优化堆大小、并且可以针对特定应用程序更准确地确定最低需求时，这会很有用。</p>
+</section>
+<section id="id1">
+<h3>分配内存<a class="headerlink" href="#id1" title="链接到此标题。"></a></h3>
+<p>调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_malloc()</span></code> 分配一块堆内存。</p>
+<p>以下代码分配一块 200 字节的堆内存，然后将其填充为零。如果没有获得合适的内存块，则发出警告。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">mem_ptr</span><span class="p">;</span>
+
+<span class="n">mem_ptr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">k_malloc</span><span class="p">(</span><span class="mi">200</span><span class="p">);</span>
+<span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">mem_ptr</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">))</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">memset</span><span class="p">(</span><span class="n">mem_ptr</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="mi">200</span><span class="p">);</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">printf</span><span class="p">(</span><span class="s">"Memory not allocated"</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="id2">
+<h3>释放内存<a class="headerlink" href="#id2" title="链接到此标题。"></a></h3>
+<p>调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_free()</span></code> 释放一块堆内存。</p>
+<p>以下代码分配一块 75 字节的内存，然后在不再需要时将其释放。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">char</span><span class="w"> </span><span class="o">*</span><span class="n">mem_ptr</span><span class="p">;</span>
+
+<span class="n">mem_ptr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">k_malloc</span><span class="p">(</span><span class="mi">75</span><span class="p">);</span>
+<span class="p">...</span><span class="w"> </span><span class="cm">/* use memory block */</span>
+<span class="n">k_free</span><span class="p">(</span><span class="n">mem_ptr</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="suggested-uses">
+<h3>建议用法<a class="headerlink" href="#suggested-uses" title="链接到此标题。"></a></h3>
+<p>使用堆内存池以类似 <code class="xref c c-func docutils literal notranslate"><span class="pre">malloc()</span></code> 的方式动态分配内存。</p>
+</section>
+<section id="configuration-options">
+<h3>配置选项<a class="headerlink" href="#configuration-options" title="链接到此标题。"></a></h3>
+<p>相关配置选项：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_HEAP_MEM_POOL_SIZE" title="CONFIG_HEAP_MEM_POOL_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HEAP_MEM_POOL_SIZE</span></code></a></p></li>
+</ul>
+</section>
+<section id="api-reference">
+<h3>API 参考<a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h3>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">heap_apis</span></dt>
+</dl>
+
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">low_level_heap_allocator</span></dt>
+</dl>
+
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">multi_heap_wrapper</span></dt>
+</dl>
+
+</section>
+</section>
+<section id="heap-listener">
+<h2>堆监听器<a class="headerlink" href="#heap-listener" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">heap_listener_apis</span></dt>
+</dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 6月 29, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,517 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>设备固件更新（DFU） &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/connectivity/bluetooth/api/mesh/dfu.html" />
+      <script src="../../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../../../search.html" />
+    <link rel="next" title="固件更新服务器" href="dfu_srv.html" />
+    <link rel="prev" title="BLOB Flash" href="blob_flash.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../../index.html">
+            
+              <img src="../../../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../../index.html">服务</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="../../../index.html">连接</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="../../../networking/index.html">网络</a></li>
+<li class="toctree-l3 current"><a class="reference internal" href="../../index.html">Bluetooth</a><ul class="current">
+<li class="toctree-l4"><a class="reference internal" href="../../features.html">支持的功能</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bluetooth-qual.html">认证</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bluetooth-arch.html">协议栈架构</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bluetooth-le-host.html">LE 主机</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../audio/bluetooth-le-audio-arch.html">LE Audio 协议栈</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../audio/bluetooth-le-audio-arch.html#le-audio-resources">LE Audio 资源</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bluetooth-ctlr-arch.html">LE 控制器</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bluetooth-dev.html">应用程序开发</a></li>
+<li class="toctree-l4 current"><a class="reference internal" href="../index.html">API</a><ul class="current">
+<li class="toctree-l5"><a class="reference internal" href="../index.html#bluetooth-classic-host-and-profiles">Bluetooth Classic Host 与配置文件</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../index.html#bluetooth-le-audio">Bluetooth LE Audio</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../index.html#bluetooth-le-host">Bluetooth LE Host</a></li>
+<li class="toctree-l5 current"><a class="reference internal" href="../index.html#bluetooth-mesh">Bluetooth Mesh</a><ul class="current">
+<li class="toctree-l6 current"><a class="reference internal" href="../mesh.html">Bluetooth Mesh 协议</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="../index.html#core-host-and-drivers">核心 Host 与驱动</a></li>
+<li class="toctree-l5"><a class="reference internal" href="../index.html#other">其他</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="../../bluetooth-tools.html">工具</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../../bluetooth-shell.html">Shell</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../../../usb/index.html">USB</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../canbus/index.html">控制器局域网（CAN）总线协议</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../lora_lorawan/index.html">LoRa 和 LoRaWAN</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../modbus/index.html">Modbus</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../../modem/index.html">调制解调器模块</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../security.html">安全</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../device_mgmt/index.html">设备管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../../../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../../../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="../../../index.html">连接</a> &raquo;</li>
+  
+     <li><a href="../../index.html">Bluetooth</a> &raquo;</li>
+  
+     <li><a href="../index.html">API</a> &raquo;</li>
+  
+     <li><a href="../mesh.html">Bluetooth Mesh 协议</a> &raquo;</li>
+  
+     <li><a href="models.html">Mesh 模型</a> &raquo;</li>
+  
+  <li>设备固件更新（DFU）</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="device-firmware-update-dfu">
+<span id="bluetooth-mesh-dfu"></span><h1>设备固件更新（DFU）<a class="headerlink" href="#device-firmware-update-dfu" title="链接到此标题。"></a></h1>
+<p>Bluetooth Mesh 支持在 Mesh 网络中分发固件镜像。Bluetooth Mesh DFU 子系统实现了 Bluetooth Mesh 设备固件更新模型规范（Device Firmware Update Model specification）1.0 版。</p>
+<p>Bluetooth Mesh DFU 实现了一种固件镜像分发机制，对镜像的大小、格式或用途不作任何限制。该子系统的主要设计目标是提供 Bluetooth Mesh DFU 规范中可认证（qualifiable）的部分，而将镜像的使用、固件验证和部署交给应用程序。</p>
+<p>在 Zephyr Bluetooth Mesh DFU 子系统中，DFU 规范以三个独立的模型实现：</p>
+<div class="toctree-wrapper compound">
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="dfu_srv.html">固件更新服务器</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dfu_cli.html">固件更新客户端</a></li>
+<li class="toctree-l1"><a class="reference internal" href="dfd_srv.html">固件分发服务器</a></li>
+</ul>
+</div>
+<section id="overview">
+<h2>概述<a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<section id="dfu-roles">
+<h3>DFU 角色<a class="headerlink" href="#dfu-roles" title="链接到此标题。"></a></h3>
+<p>Bluetooth Mesh DFU 子系统定义了 Mesh 节点在固件镜像分发过程中需要承担的三种不同角色：</p>
+<dl class="simple">
+<dt>目标节点</dt><dd><p>目标节点（Target node）是所传输固件镜像的接收者和使用者。它的全部功能都由 <a class="reference internal" href="dfu_srv.html#bluetooth-mesh-dfu-srv"><span class="std std-ref">固件更新服务器</span></a> 模型实现。一次传输可以针对任意数量的目标节点，这些节点会被同时更新。</p>
+</dd>
+<dt>分发者</dt><dd><p>分发者（Distributor）角色在 DFU 过程中有两个作用。首先，它在上传固件（Upload Firmware）过程中充当目标节点，然后再作为分发者将上传的镜像分发给其他目标节点。分发者不选择传输参数，而是依靠发起者（Initiator）为其提供目标节点列表和传输参数。分发者功能由两个模型实现：<a class="reference internal" href="dfd_srv.html#bluetooth-mesh-dfd-srv"><span class="std std-ref">固件分发服务器</span></a> 和 <a class="reference internal" href="dfu_cli.html#bluetooth-mesh-dfu-cli"><span class="std std-ref">固件更新客户端</span></a>。<a class="reference internal" href="dfd_srv.html#bluetooth-mesh-dfd-srv"><span class="std std-ref">固件分发服务器</span></a> 负责与发起者通信，<a class="reference internal" href="dfu_cli.html#bluetooth-mesh-dfu-cli"><span class="std std-ref">固件更新客户端</span></a> 负责将镜像分发给目标节点。</p>
+</dd>
+<dt>发起者</dt><dd><p>发起者（Initiator）角色通常由同时实现 Bluetooth Mesh <a class="reference internal" href="provisioning.html#bluetooth-mesh-provisioning"><span class="std std-ref">配网器</span></a> 和 <a class="reference internal" href="cfg_cli.html#bluetooth-mesh-models-cfg-cli"><span class="std std-ref">配置器</span></a> 角色的设备实现。发起者需要全面了解潜在的目标节点及其固件，并控制（和发起）所有固件更新。Zephyr Bluetooth Mesh DFU 子系统没有实现发起者角色。</p>
+</dd>
+</dl>
+<figure class="align-center" id="id1">
+<img alt="Mesh 节点在镜像分发过程中可以承担的 DFU 角色示意图" src="../../../../../_images/dfu_roles_mesh.svg" />
+<figcaption>
+<p><span class="caption-text">DFU 角色及相关的 Bluetooth Mesh 模型</span><a class="headerlink" href="#id1" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<p>Bluetooth Mesh 应用程序可以按任意方式组合 DFU 角色，甚至可以通过在不同元素上实例化模型来承担同一角色的多个实例。例如，可以在发起者节点上实例化 <a class="reference internal" href="dfu_cli.html#bluetooth-mesh-dfu-cli"><span class="std std-ref">固件更新客户端</span></a> 并直接调用其 API，从而将分发者角色和发起者角色组合在一起。</p>
+<p>也可以将发起者设备和分发者设备合并为单个设备，并用一种直接访问固件更新客户端模型的专有机制（例如通过串行协议）来替代固件分发服务器模型。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>所有 DFU 模型都会实例化一个或多个 <a class="reference internal" href="blob.html#bluetooth-mesh-blob"><span class="std std-ref">BLOB 传输模型</span></a>，对于某些角色组合，可能需要将它们分布在多个元素上。</p>
+</div>
+</section>
+<section id="stages">
+<h3>阶段<a class="headerlink" href="#stages" title="链接到此标题。"></a></h3>
+<p>Bluetooth Mesh DFU 过程设计为分三个阶段进行：</p>
+<dl class="simple">
+<dt>上传阶段</dt><dd><p>首先，由外部实体（例如手机或网关，即发起者）将镜像上传到 Mesh 网络中的分发者。在上传阶段，发起者将固件镜像及其所有元数据传输到 Mesh 网络内的分发者节点。分发者持久化存储固件镜像及其元数据，并等待发起者的进一步指令。完成上传过程所需的时间取决于镜像的大小。上传完成后，在耗时长得多的分发阶段，发起者可以断开与网络的连接。固件上传到分发者之后，发起者可以随时触发分发阶段。</p>
+</dd>
+<dt>固件能力检查阶段（可选）</dt><dd><p>在开始分发阶段之前，发起者可以选择检查目标节点是否能够接受新固件。没有响应的节点，或者响应表示无法接收新固件的节点，将被排除在固件分发过程之外。</p>
+</dd>
+<dt>分发阶段</dt><dd><p>在分发固件镜像之前，发起者将目标节点列表及其指定的固件镜像索引传输给分发者。接着，它通知分发者开始固件分发过程，该过程在后台运行，与此同时发起者和 Mesh 网络可以执行其他任务。固件镜像传输到目标节点后，分发者可以要求它们立即应用固件镜像，并回报其状态和新的固件 ID。</p>
+</dd>
+</dl>
+</section>
+<section id="firmware-images">
+<h3>固件镜像<a class="headerlink" href="#firmware-images" title="链接到此标题。"></a></h3>
+<p>Mesh 节点固件中所有可更新的部分都应表示为一个固件镜像。每个目标节点都维护一个固件镜像列表，其中每个镜像都应当可以独立更新和识别。</p>
+<p>固件镜像表示为一个 BLOB（即固件本身），并附带以下附加信息：</p>
+<dl>
+<dt>固件 ID</dt><dd><p>固件 ID 用于标识固件镜像。发起者节点可以向目标节点请求其当前固件 ID 列表，以确定是否有更新版本的固件可用。固件 ID 的格式由厂商自定义，但通常应包含足够的信息，使了解该格式的发起者节点能够确定镜像的类型及其版本。固件 ID 是可选的，其最大长度由 <a class="reference internal" href="../../../../../kconfig.html#CONFIG_BT_MESH_DFU_FWID_MAXLEN" title="CONFIG_BT_MESH_DFU_FWID_MAXLEN"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_MESH_DFU_FWID_MAXLEN</span></code></a> 决定。</p>
+</dd>
+<dt>固件元数据</dt><dd><p>目标节点使用固件元数据来确定是否应接受传入的固件更新，以及更新会产生什么影响。元数据格式由厂商自定义，应包含目标节点验证镜像所需的全部信息，以及目标节点在应用镜像之前必须进行的任何准备工作。典型的元数据信息可以是镜像签名、节点组成数据（Composition Data）的变化以及 BLOB 的格式。目标节点可以在接受传入传输之前执行元数据检查，以确定是否应启动该传输。元数据检查完成后，目标节点可以丢弃固件元数据，因为其他节点永远不会向目标节点请求元数据。固件元数据是可选的，其最大长度由 <a class="reference internal" href="../../../../../kconfig.html#CONFIG_BT_MESH_DFU_METADATA_MAXLEN" title="CONFIG_BT_MESH_DFU_METADATA_MAXLEN"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_MESH_DFU_METADATA_MAXLEN</span></code></a> 决定。</p>
+<p>Zephyr 中的 Bluetooth Mesh DFU 子系统提供了自己的元数据格式（<code class="xref c c-struct docutils literal notranslate"><span class="pre">bt_mesh_dfu_metadata</span></code>），以及一组可供最终产品使用的相关函数。可以使用 <a class="reference internal" href="../../../../../kconfig.html#CONFIG_BT_MESH_DFU_METADATA" title="CONFIG_BT_MESH_DFU_METADATA"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_MESH_DFU_METADATA</span></code></a> 选项启用对它的支持。元数据的格式如下表所示。</p>
+</dd>
+</dl>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>字段</p></th>
+<th class="head"><p>大小（字节）</p></th>
+<th class="head"><p>描述</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>新固件版本</p></td>
+<td><p>8 B</p></td>
+<td><p>1 B：主版本号 1 B：次版本号 2 B：修订号 4 B：构建号</p></td>
+</tr>
+<tr class="row-odd"><td><p>新固件大小</p></td>
+<td><p>3 B</p></td>
+<td><p>新固件的大小（以字节为单位）</p></td>
+</tr>
+<tr class="row-even"><td><p>新固件内核类型</p></td>
+<td><p>1 B</p></td>
+<td><p>位域：位 0：应用核 位 1：网络核 位 2：应用程序特定的 BLOB。其他位：保留供将来使用（RFU）</p></td>
+</tr>
+<tr class="row-odd"><td><p>传入组成数据的哈希</p></td>
+<td><p>4 B（可选）</p></td>
+<td><p>AES-CMAC（app-specific-key, composition data）的低 4 个八位组。如果新固件内核类型字段中设置了位 0，则该字段存在。</p></td>
+</tr>
+<tr class="row-even"><td><p>新的元素数量</p></td>
+<td><p>2 B（可选）</p></td>
+<td><p>应用固件后节点上的元素数量。如果新固件内核类型字段中设置了位 0，则该字段存在。</p></td>
+</tr>
+<tr class="row-odd"><td><p>新固件的应用程序特定数据</p></td>
+<td><p>&lt;可变&gt;（可选）</p></td>
+<td><p>应用程序特定的数据，使应用程序能够在回复状态消息之前，利用这些数据执行某些厂商自定义的行为。</p></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<div><div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>AES-CMAC 算法在这里充当使用固定密钥的哈希函数，在 Bluetooth Mesh DFU 元数据中并不用于加密。由于密钥是已知的，得到的哈希值并不安全。</p>
+</div>
+</div></blockquote>
+<dl>
+<dt>固件 URI</dt><dd><p>固件 URI 向发起者提供可以在何处找到该镜像固件更新的信息。URI 指向一个在线资源，发起者可以与之交互以获取新版本的固件。这样，发起者就可以通过与 URI 所指向的 Web 服务器交互，为 Mesh 网络中的任意节点执行更新。URI 必须使用 <code class="docutils literal notranslate"><span class="pre">http</span></code> 或 <code class="docutils literal notranslate"><span class="pre">https</span></code> 方案指向资源，并且目标 Web 服务器的行为必须符合规范定义的“通过 HTTPS 检查固件”（Firmware Check Over HTTPS）过程。固件 URI 是可选的，其最大长度由 <a class="reference internal" href="../../../../../kconfig.html#CONFIG_BT_MESH_DFU_URI_MAXLEN" title="CONFIG_BT_MESH_DFU_URI_MAXLEN"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_MESH_DFU_URI_MAXLEN</span></code></a> 决定。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>不支持带外分发机制。</p>
+</div>
+</dd>
+</dl>
+<section id="firmware-effect">
+<span id="bluetooth-mesh-dfu-firmware-effect"></span><h4>固件影响<a class="headerlink" href="#firmware-effect" title="链接到此标题。"></a></h4>
+<p>新镜像的组成数据页 0 可能与目标节点上已分配的不同。这可能会影响节点的配网数据，以及分发者完成 DFU 的方式。根据旧镜像和新镜像中是否提供远程配网服务器模型，设备在应用新固件后可能以未配网状态启动，或者需要重新配网。可用选项的完整列表定义在 <code class="xref c c-enum docutils literal notranslate"><span class="pre">bt_mesh_dfu_effect</span></code> 中：</p>
+<dl class="simple">
+<dt><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">BT_MESH_DFU_EFFECT_NONE</span></code></dt><dd><p>烧录新固件后，设备保持已配网状态。如果新固件的组成数据没有变化，则选择此影响。</p>
+</dd>
+<dt><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">BT_MESH_DFU_EFFECT_COMP_CHANGE_NO_RPR</span></code></dt><dd><p>当组成数据发生变化且设备不支持远程配网时，选择此影响。新的组成数据只有在重新配网后才会生效。</p>
+</dd>
+<dt><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">BT_MESH_DFU_EFFECT_COMP_CHANGE</span></code></dt><dd><p>当组成数据发生变化且设备支持远程配网时，选择此影响。在这种情况下，设备保持已配网状态，新的组成数据在使用远程配网模型重新配网后生效。</p>
+</dd>
+<dt><code class="xref c c-enumerator docutils literal notranslate"><span class="pre">BT_MESH_DFU_EFFECT_UNPROV</span></code></dt><dd><p>如果新固件中的组成数据发生变化、设备不支持远程配网，并且新的组成数据在应用固件后即生效，则选择此影响。如果出于应用程序特定的原因需要将设备取消配网，也可以选择此影响。</p>
+</dd>
+</dl>
+<p>当目标节点收到 Firmware Update Firmware Metadata Check 消息时，固件更新服务器模型会调用 <code class="xref c c-member docutils literal notranslate"><span class="pre">bt_mesh_dfu_srv_cb.check</span></code> 回调，应用程序随后可以处理元数据并提供影响值。如果影响为 <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">BT_MESH_DFU_EFFECT_COMP_CHANGE</span></code>，应用程序必须在应用新固件镜像之前调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">bt_mesh_comp_change_prepare()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">bt_mesh_models_metadata_change_prepare()</span></code> 函数，以准备组成数据页和模型元数据页的内容。更多信息请参阅 <a class="reference internal" href="dfu_srv.html#bluetooth-mesh-dfu-srv-comp-data-and-models-metadata"><span class="std std-ref">组成数据和模型元数据</span></a>。</p>
+</section>
+</section>
+</section>
+<section id="dfu-procedures">
+<h2>DFU 过程<a class="headerlink" href="#dfu-procedures" title="链接到此标题。"></a></h2>
+<p>DFU 协议由一组必须按特定顺序执行的过程实现。</p>
+<p>发起者控制 DFU 协议的上传阶段，分发者一侧对上传子过程的所有处理都在 <a class="reference internal" href="dfd_srv.html#bluetooth-mesh-dfd-srv"><span class="std std-ref">固件分发服务器</span></a> 中实现。</p>
+<p>分发阶段由分发者控制，由 <a class="reference internal" href="dfu_cli.html#bluetooth-mesh-dfu-cli"><span class="std std-ref">固件更新客户端</span></a> 实现。目标节点在 <a class="reference internal" href="dfu_srv.html#bluetooth-mesh-dfu-srv"><span class="std std-ref">固件更新服务器</span></a> 中实现对这些过程的全部处理，并通过一组回调通知应用程序。</p>
+<figure class="align-center" id="id2">
+<img alt="DFU 阶段和过程概览" src="../../../../../_images/dfu_stages_procedures_mesh.svg" />
+<figcaption>
+<p><span class="caption-text">从分发者角度看到的 DFU 阶段和过程</span><a class="headerlink" href="#id2" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<section id="uploading-the-firmware">
+<h3>上传固件<a class="headerlink" href="#uploading-the-firmware" title="链接到此标题。"></a></h3>
+<p>上传固件（Upload Firmware）过程使用 <a class="reference internal" href="blob.html#bluetooth-mesh-blob"><span class="std std-ref">BLOB 传输模型</span></a> 将固件镜像从发起者传输到分发者。上传固件过程分两步进行：</p>
+<ol class="arabic simple">
+<li><p>发起者生成一个 BLOB ID，并将其与固件信息以及 BLOB 传输的其他输入参数一起发送给分发者的固件分发服务器。固件分发服务器存储这些信息，并让其 BLOB 传输服务器为即将到来的传输做好准备，然后向发起者回复一条状态消息。</p></li>
+<li><p>发起者的 BLOB 传输客户端模型将固件镜像传输到分发者的 BLOB 传输服务器，后者将镜像存储在预先确定的 Flash 分区中。</p></li>
+</ol>
+<p>BLOB 传输完成后，固件镜像就可以分发了。发起者可以向分发者上传多个固件镜像，并要求它以任意顺序或在任意时间分发这些镜像。此外还有用于在分发者上查询和删除固件镜像的过程。</p>
+<p>分发者与固件镜像相关的以下能力可以通过配置选项进行配置：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../../../../kconfig.html#CONFIG_BT_MESH_DFU_SLOT_CNT" title="CONFIG_BT_MESH_DFU_SLOT_CNT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_MESH_DFU_SLOT_CNT</span></code></a>：设备上可用的镜像槽数量。</p></li>
+<li><p><a class="reference internal" href="../../../../../kconfig.html#CONFIG_BT_MESH_DFD_SRV_SLOT_MAX_SIZE" title="CONFIG_BT_MESH_DFD_SRV_SLOT_MAX_SIZE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_MESH_DFD_SRV_SLOT_MAX_SIZE</span></code></a>：每个镜像允许的最大大小。</p></li>
+<li><p><a class="reference internal" href="../../../../../kconfig.html#CONFIG_BT_MESH_DFD_SRV_SLOT_SPACE" title="CONFIG_BT_MESH_DFD_SRV_SLOT_SPACE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_MESH_DFD_SRV_SLOT_SPACE</span></code></a>：所有镜像可用的总空间。</p></li>
+</ul>
+</section>
+<section id="populating-the-distributor-s-receivers-list">
+<h3>填充分发者的接收者列表<a class="headerlink" href="#populating-the-distributor-s-receivers-list" title="链接到此标题。"></a></h3>
+<p>在分发者开始分发固件镜像之前，它需要一个接收镜像的目标节点列表。发起者可以直接查询潜在的目标节点，或者通过某个外部权威机构，获取完整的目标节点列表。发起者使用这些信息，以每个目标节点的地址和相应的固件镜像索引来填充分发者的接收者列表。发起者可以发送一条或多条 Firmware Distribution Receivers Add 消息来构建分发者的接收者列表，并发送 Firmware Distribution Receivers Delete All 消息来清空该列表。</p>
+<p>可以添加到分发者的最大接收者数量通过 <a class="reference internal" href="../../../../../kconfig.html#CONFIG_BT_MESH_DFD_SRV_TARGETS_MAX" title="CONFIG_BT_MESH_DFD_SRV_TARGETS_MAX"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_BT_MESH_DFD_SRV_TARGETS_MAX</span></code></a> 配置选项设置。</p>
+</section>
+<section id="initiating-the-distribution">
+<h3>发起分发<a class="headerlink" href="#initiating-the-distribution" title="链接到此标题。"></a></h3>
+<p>当分发者存储了固件镜像并收到目标节点列表后，发起者就可以发起分发过程。分发所用的 BLOB 传输参数会与更新策略一起传给分发者。更新策略决定分发者是否应请求目标节点应用固件。分发者存储传输参数，并开始向其目标节点列表分发固件镜像。</p>
+<section id="firmware-distribution">
+<h4>固件分发<a class="headerlink" href="#firmware-distribution" title="链接到此标题。"></a></h4>
+<p>分发者的固件更新客户端模型使用其 BLOB 传输客户端模型的广播子系统与所有目标节点通信。固件分发按以下步骤执行：</p>
+<ol class="arabic simple">
+<li><p>分发者的固件更新客户端模型生成一个 BLOB ID，并将其与其他 BLOB 传输参数、目标节点固件镜像索引以及固件镜像元数据一起发送给每个目标节点的固件更新服务器模型。每个目标节点执行元数据检查，并让其 BLOB 传输服务器模型为传输做好准备，然后向固件更新客户端发送状态响应，指明固件更新是否会对节点的 Bluetooth Mesh 状态产生影响。</p></li>
+<li><p>分发者的 BLOB 传输客户端模型将固件镜像传输到所有目标节点。</p></li>
+<li><p>收到 BLOB 传输后，目标节点的应用程序会根据镜像元数据执行签名验证或镜像校验和等检查，以验证固件是否有效。</p></li>
+<li><p>分发者的固件更新客户端模型查询所有目标节点，以确保它们都已验证了固件镜像。</p></li>
+</ol>
+<p>如果分发过程完成时，至少有一个目标节点报告已收到并验证了镜像，则认为分发过程成功。</p>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>只有在 <em>所有</em> 目标节点都丢失时，固件分发过程才会失败。当前尝试结束后，由发起者负责向分发者请求失败的目标节点列表，并发起额外的尝试来更新丢失的目标节点。</p>
+</div>
+</section>
+<section id="suspending-the-distribution">
+<h4>挂起分发<a class="headerlink" href="#suspending-the-distribution" title="链接到此标题。"></a></h4>
+<p>发起者还可以请求分发者挂起固件分发。在这种情况下，分发者将停止向目标节点发送任何消息。恢复固件分发时，分发者将从最后一个成功传输的块继续发送固件。</p>
+</section>
+</section>
+<section id="applying-the-firmware-image">
+<h3>应用固件镜像<a class="headerlink" href="#applying-the-firmware-image" title="链接到此标题。"></a></h3>
+<p>如果发起者提出了请求，分发者可以在所有成功接收并验证了固件镜像的目标节点上发起“在目标节点上应用固件”（Apply Firmware on Target Node）过程。该过程不带参数，为避免歧义，应在发起新的传输之前执行。在目标节点上应用固件过程包括以下步骤：</p>
+<ol class="arabic simple">
+<li><p>分发者的固件更新客户端模型指示所有已验证固件镜像的目标节点应用该镜像。目标节点的固件更新服务器模型先回复一条状态消息，然后再调用其应用程序的 <code class="docutils literal notranslate"><span class="pre">apply</span></code> 回调。</p></li>
+<li><p>目标节点的应用程序在应用传输之前执行所需的准备工作，例如存储组成数据的快照或清除其配置。</p></li>
+<li><p>目标节点的应用程序将当前固件替换为新镜像，并用新的固件 ID 更新其固件镜像列表。</p></li>
+<li><p>分发者的固件更新客户端模型向每个目标节点请求完整的固件镜像列表，并逐一检查该列表，确保新的固件 ID 已替换了旧的固件 ID。</p></li>
+</ol>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>在分发过程的元数据检查中，目标节点可能已报告在应用固件镜像后将变为未配网状态。在这种情况下，分发者的固件更新客户端模型将发送获取完整固件镜像列表的请求，并且不期待收到响应。</p>
+</div>
+</section>
+<section id="cancelling-the-distribution">
+<h3>取消分发<a class="headerlink" href="#cancelling-the-distribution" title="链接到此标题。"></a></h3>
+<p>发起者可以随时取消固件分发。在这种情况下，分发者通过向所有目标节点发送取消消息来启动取消过程。分发者等待所有目标节点的响应。当所有目标节点都已回复或请求超时后，分发过程即被取消。此后，可以从 <code class="docutils literal notranslate"><span class="pre">Firmware</span> <span class="pre">distribution</span></code> 一节所述步骤重新开始分发过程。</p>
+</section>
+</section>
+<section id="api-reference">
+<h2>API 参考<a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<p>本节列出设备固件更新 Mesh 模型通用的类型。</p>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">bt_mesh_dfd</span></dt>
+</dl>
+
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">bt_mesh_dfu</span></dt>
+</dl>
+
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">bt_mesh_dfu_metadata</span></dt>
+</dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 4月 15, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

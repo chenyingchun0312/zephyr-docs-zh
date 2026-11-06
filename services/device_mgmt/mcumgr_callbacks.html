@@ -1,0 +1,539 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MCUmgr 回调 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/services/device_mgmt/mcumgr_callbacks.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="SMP 协议规范" href="smp_protocol.html" />
+    <link rel="prev" title="MCUmgr 处理程序" href="mcumgr_handlers.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">服务</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../connectivity/index.html">连接</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../io.html">输入/输出</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../messaging.html">进程间通信</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../observability.html">日志、跟踪与调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../storage/index.html">存储与配置</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../memory_management.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../power_management.html">电源管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../security.html">安全</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">设备管理</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="mcumgr.html">MCUmgr</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mcumgr_handlers.html">MCUmgr 处理程序</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">MCUmgr 回调</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#overview">概述</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#implementation">实现</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#enabling">启用</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#events">事件</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#actions">动作</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#mcumgr-command-callback-usage-adding-new-event-types">MCUmgr 命令回调用法/添加新的事件类型</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#migration">迁移</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api-reference">API 参考</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="smp_protocol.html">SMP 协议规范</a></li>
+<li class="toctree-l3"><a class="reference internal" href="smp_transport.html">SMP 传输规范</a></li>
+<li class="toctree-l3"><a class="reference internal" href="dfu.html">设备固件升级</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ota.html">空中升级（OTA）</a></li>
+<li class="toctree-l3"><a class="reference internal" href="fota_http.html">基于 HTTP 的固件空中升级</a></li>
+<li class="toctree-l3"><a class="reference internal" href="ec_host_cmd.html">EC 主机命令</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../binary_descriptors/index.html">二进制描述符</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../algorithms.html">算法与数据</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../frameworks.html">框架</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../portability/index.html">操作系统抽象</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="category-link reference internal" href="../../samples/index.html">Samples and Demos</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">服务</a> &raquo;</li>
+  
+     <li><a href="index.html">设备管理</a> &raquo;</li>
+  
+  <li>MCUmgr 回调</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="mcumgr-callbacks">
+<span id="id1"></span><h1>MCUmgr 回调<a class="headerlink" href="#mcumgr-callbacks" title="链接到此标题。"></a></h1>
+<section id="overview">
+<h2>概述<a class="headerlink" href="#overview" title="链接到此标题。"></a></h2>
+<p>MCUmgr 有一套可定制的回调/通知系统，允许应用程序（和模块）代码接收其关心的 MCUmgr 事件的回调，并对其作出响应，或者向调用函数返回一个状态码，从而控制是否允许该操作。fs_mgmt 组就是一个例子：可以对文件访问进行把关，回调使应用程序能够检查请求的路径，允许或拒绝对该文件的访问，也可以将提供的路径改写为另一个路径，以支持透明的文件重定向。</p>
+</section>
+<section id="implementation">
+<h2>实现<a class="headerlink" href="#implementation" title="链接到此标题。"></a></h2>
+<section id="enabling">
+<h3>启用<a class="headerlink" href="#enabling" title="链接到此标题。"></a></h3>
+<p>可以使用 <a class="reference internal" href="../../kconfig.html#CONFIG_MCUMGR_MGMT_NOTIFICATION_HOOKS" title="CONFIG_MCUMGR_MGMT_NOTIFICATION_HOOKS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MCUMGR_MGMT_NOTIFICATION_HOOKS</span></code></a> 启用基础的回调/通知系统，它会将注册和通知系统编译进代码中。默认情况下这不会提供任何回调，因为构建所支持的回调还必须通过启用所需回调对应的 Kconfig 选项来选择（详情请参阅 <a class="reference internal" href="#mcumgr-cb-events"><span class="std std-ref">事件</span></a>）。然后，可以声明一个类型定义为 <code class="xref c c-type docutils literal notranslate"><span class="pre">mgmt_cb</span></code> 的回调函数，将其放入 <code class="xref c c-struct docutils literal notranslate"><span class="pre">mgmt_callback</span></code> 结构体中，并调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">mgmt_callback_register()</span></code> 为所需事件注册。处理程序按注册顺序被调用。</p>
+<p>启用该系统后，可以在应用程序代码中按如下方式设置和定义一个基本的处理程序：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/kernel.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/mgmt/mcumgr/mgmt/mgmt.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/mgmt/mcumgr/mgmt/callbacks.h&gt;</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">mgmt_callback</span><span class="w"> </span><span class="n">my_callback</span><span class="p">;</span>
+
+<span class="k">enum</span><span class="w"> </span><span class="n">mgmt_cb_return</span><span class="w"> </span><span class="nf">my_function</span><span class="p">(</span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">event</span><span class="p">,</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="n">mgmt_cb_return</span><span class="w"> </span><span class="n">prev_status</span><span class="p">,</span>
+<span class="w">                                </span><span class="kt">int32_t</span><span class="w"> </span><span class="o">*</span><span class="n">rc</span><span class="p">,</span><span class="w"> </span><span class="kt">uint16_t</span><span class="w"> </span><span class="o">*</span><span class="n">group</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="o">*</span><span class="n">abort_more</span><span class="p">,</span>
+<span class="w">                                </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">data_size</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">event</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">MGMT_EVT_OP_CMD_DONE</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="cm">/* This is the event we registered for */</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/* Return OK status code to continue with acceptance to underlying handler */</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">MGMT_CB_OK</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">my_callback</span><span class="p">.</span><span class="n">callback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">my_function</span><span class="p">;</span>
+<span class="w">    </span><span class="n">my_callback</span><span class="p">.</span><span class="n">event_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MGMT_EVT_OP_CMD_DONE</span><span class="p">;</span>
+<span class="w">    </span><span class="n">mgmt_callback_register</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_callback</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>这段代码为 <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">MGMT_EVT_OP_CMD_DONE</span></code> 事件注册了一个处理程序，该处理程序会在 MCUmgr 命令处理完毕并生成输出之后被调用。注意，要接收此回调，需要启用 <a class="reference internal" href="../../kconfig.html#CONFIG_MCUMGR_SMP_COMMAND_STATUS_HOOKS" title="CONFIG_MCUMGR_SMP_COMMAND_STATUS_HOOKS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MCUMGR_SMP_COMMAND_STATUS_HOOKS</span></code></a>。</p>
+<p>可以设置多个回调，让它们使用同一个函数作为公共回调；也可以通过为每个组各注册一次，为每个事件使用许多不同的函数；还可以使用某个 <code class="docutils literal notranslate"><span class="pre">MGMT_EVT_OP_*_ALL</span></code> 事件启用整个组的所有通知；或者使用 <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">MGMT_EVT_OP_ALL</span></code> 为所有通知设置处理程序。设置处理程序时，只能组合同一组中的事件。例如，可以通过一次注册调用设置 5 个 img_mgmt 回调，但如果还要为 os_mgmt 设置回调，则必须单独注册。之所以有这一限制，是因为组 ID 是递增的数值，而事件 ID 是位掩码值。</p>
+<p>例如，以下注册是允许的，它在一次注册中用单个回调函数注册了 3 个 SMP 事件：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">my_callback</span><span class="p">.</span><span class="n">callback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">my_function</span><span class="p">;</span>
+<span class="n">my_callback</span><span class="p">.</span><span class="n">event_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">MGMT_EVT_OP_CMD_RECV</span><span class="w"> </span><span class="o">|</span>
+<span class="w">                        </span><span class="n">MGMT_EVT_OP_CMD_STATUS</span><span class="w"> </span><span class="o">|</span>
+<span class="w">                        </span><span class="n">MGMT_EVT_OP_CMD_DONE</span><span class="p">);</span>
+<span class="n">mgmt_callback_register</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_callback</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>以下代码是不允许的，会导致未定义的行为，因为它将 IMG 管理组与 OS 管理组混在一起，而组<strong>不是</strong>位掩码值，只有事件才是：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">my_callback</span><span class="p">.</span><span class="n">callback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">my_function</span><span class="p">;</span>
+<span class="n">my_callback</span><span class="p">.</span><span class="n">event_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">MGMT_EVT_OP_IMG_MGMT_DFU_STARTED</span><span class="w"> </span><span class="o">|</span>
+<span class="w">                        </span><span class="n">MGMT_EVT_OP_OS_MGMT_RESET</span><span class="p">);</span>
+<span class="n">mgmt_callback_register</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_callback</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="events">
+<span id="mcumgr-cb-events"></span><h3>事件<a class="headerlink" href="#events" title="链接到此标题。"></a></h3>
+<p>可以通过启用相应的 Kconfig 选项来选择事件：</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt><a class="reference internal" href="../../kconfig.html#CONFIG_MCUMGR_SMP_COMMAND_STATUS_HOOKS" title="CONFIG_MCUMGR_SMP_COMMAND_STATUS_HOOKS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MCUMGR_SMP_COMMAND_STATUS_HOOKS</span></code></a></dt><dd><p>MCUmgr 命令状态（<code class="xref c c-enumerator docutils literal notranslate"><span class="pre">MGMT_EVT_OP_CMD_RECV</span></code>、<code class="xref c c-enumerator docutils literal notranslate"><span class="pre">MGMT_EVT_OP_CMD_STATUS</span></code>、<code class="xref c c-enumerator docutils literal notranslate"><span class="pre">MGMT_EVT_OP_CMD_DONE</span></code>）</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><a class="reference internal" href="../../kconfig.html#CONFIG_MCUMGR_GRP_FS_FILE_ACCESS_HOOK" title="CONFIG_MCUMGR_GRP_FS_FILE_ACCESS_HOOK"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MCUMGR_GRP_FS_FILE_ACCESS_HOOK</span></code></a></dt><dd><p>fs_mgmt 文件访问（<code class="xref c c-enumerator docutils literal notranslate"><span class="pre">MGMT_EVT_OP_FS_MGMT_FILE_ACCESS</span></code>）</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><a class="reference internal" href="../../kconfig.html#CONFIG_MCUMGR_GRP_IMG_UPLOAD_CHECK_HOOK" title="CONFIG_MCUMGR_GRP_IMG_UPLOAD_CHECK_HOOK"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MCUMGR_GRP_IMG_UPLOAD_CHECK_HOOK</span></code></a></dt><dd><p>img_mgmt 上传检查（<code class="xref c c-enumerator docutils literal notranslate"><span class="pre">MGMT_EVT_OP_IMG_MGMT_DFU_CHUNK</span></code>）</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><a class="reference internal" href="../../kconfig.html#CONFIG_MCUMGR_GRP_IMG_STATUS_HOOKS" title="CONFIG_MCUMGR_GRP_IMG_STATUS_HOOKS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MCUMGR_GRP_IMG_STATUS_HOOKS</span></code></a></dt><dd><p>img_mgmt 上传状态（<code class="xref c c-enumerator docutils literal notranslate"><span class="pre">MGMT_EVT_OP_IMG_MGMT_DFU_STOPPED</span></code>、<code class="xref c c-enumerator docutils literal notranslate"><span class="pre">MGMT_EVT_OP_IMG_MGMT_DFU_STARTED</span></code>、<code class="xref c c-enumerator docutils literal notranslate"><span class="pre">MGMT_EVT_OP_IMG_MGMT_DFU_PENDING</span></code>、<code class="xref c c-enumerator docutils literal notranslate"><span class="pre">MGMT_EVT_OP_IMG_MGMT_DFU_CONFIRMED</span></code>）</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><a class="reference internal" href="../../kconfig.html#CONFIG_MCUMGR_GRP_OS_RESET_HOOK" title="CONFIG_MCUMGR_GRP_OS_RESET_HOOK"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MCUMGR_GRP_OS_RESET_HOOK</span></code></a></dt><dd><p>os_mgmt 复位检查（<code class="xref c c-enumerator docutils literal notranslate"><span class="pre">MGMT_EVT_OP_OS_MGMT_RESET</span></code>）</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt><a class="reference internal" href="../../kconfig.html#CONFIG_MCUMGR_GRP_SETTINGS_ACCESS_HOOK" title="CONFIG_MCUMGR_GRP_SETTINGS_ACCESS_HOOK"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MCUMGR_GRP_SETTINGS_ACCESS_HOOK</span></code></a></dt><dd><p>settings_mgmt 访问（<code class="xref c c-enumerator docutils literal notranslate"><span class="pre">MGMT_EVT_OP_SETTINGS_MGMT_ACCESS</span></code>）</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</section>
+<section id="actions">
+<h3>动作<a class="headerlink" href="#actions" title="链接到此标题。"></a></h3>
+<p>有些回调需要返回一个状态，以允许或禁止某项操作，例如 fs_mgmt 访问钩子可以允许或拒绝对文件的访问。对于这类处理程序，第一个由处理程序返回的非 OK 错误码会被返回给 MCUmgr 客户端。</p>
+<p>选择性拒绝文件访问的示例：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/kernel.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/mgmt/mcumgr/mgmt/mgmt.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/mgmt/mcumgr/mgmt/callbacks.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;string.h&gt;</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">mgmt_callback</span><span class="w"> </span><span class="n">my_callback</span><span class="p">;</span>
+
+<span class="k">enum</span><span class="w"> </span><span class="n">mgmt_cb_return</span><span class="w"> </span><span class="nf">my_function</span><span class="p">(</span><span class="kt">uint32_t</span><span class="w"> </span><span class="n">event</span><span class="p">,</span><span class="w"> </span><span class="k">enum</span><span class="w"> </span><span class="n">mgmt_cb_return</span><span class="w"> </span><span class="n">prev_status</span><span class="p">,</span>
+<span class="w">                                </span><span class="kt">int32_t</span><span class="w"> </span><span class="o">*</span><span class="n">rc</span><span class="p">,</span><span class="w"> </span><span class="kt">uint16_t</span><span class="w"> </span><span class="o">*</span><span class="n">group</span><span class="p">,</span><span class="w"> </span><span class="kt">bool</span><span class="w"> </span><span class="o">*</span><span class="n">abort_more</span><span class="p">,</span>
+<span class="w">                                </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">data</span><span class="p">,</span><span class="w"> </span><span class="kt">size_t</span><span class="w"> </span><span class="n">data_size</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="cm">/* Only run this handler if a previous handler has not failed */</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">event</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">MGMT_EVT_OP_FS_MGMT_FILE_ACCESS</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">prev_status</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">MGMT_CB_OK</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">struct</span><span class="w"> </span><span class="nc">fs_mgmt_file_access</span><span class="w"> </span><span class="o">*</span><span class="n">fs_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">fs_mgmt_file_access</span><span class="w"> </span><span class="o">*</span><span class="p">)</span><span class="n">data</span><span class="p">;</span>
+
+<span class="w">        </span><span class="cm">/* Check if this is an upload and deny access if it is, otherwise check</span>
+<span class="cm">         * the path and deny if is matches a name</span>
+<span class="cm">         */</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">fs_data</span><span class="o">-&gt;</span><span class="n">access</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">FS_MGMT_FILE_ACCESS_WRITE</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="cm">/* Return an access denied error code to the client and abort calling</span>
+<span class="cm">             * further handlers</span>
+<span class="cm">             */</span>
+<span class="w">            </span><span class="o">*</span><span class="n">abort_more</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">true</span><span class="p">;</span>
+<span class="w">            </span><span class="o">*</span><span class="n">rc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MGMT_ERR_EACCESSDENIED</span><span class="p">;</span>
+
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">MGMT_CB_ERROR_RC</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">strcmp</span><span class="p">(</span><span class="n">fs_data</span><span class="o">-&gt;</span><span class="n">filename</span><span class="p">,</span><span class="w"> </span><span class="s">"/lfs1/false_deny.txt"</span><span class="p">)</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="cm">/* Return a no entry error code to the client, call additional handlers</span>
+<span class="cm">             * (which will have failed set to true)</span>
+<span class="cm">             */</span>
+<span class="w">            </span><span class="o">*</span><span class="n">rc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MGMT_ERR_ENOENT</span><span class="p">;</span>
+
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">MGMT_CB_ERROR_RC</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/* Return OK status code to continue with acceptance to underlying handler */</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">MGMT_CB_OK</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">int</span><span class="w"> </span><span class="nf">main</span><span class="p">()</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">my_callback</span><span class="p">.</span><span class="n">callback</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">my_function</span><span class="p">;</span>
+<span class="w">    </span><span class="n">my_callback</span><span class="p">.</span><span class="n">event_id</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MGMT_EVT_OP_FS_MGMT_FILE_ACCESS</span><span class="p">;</span>
+<span class="w">    </span><span class="n">mgmt_callback_register</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_callback</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>这段代码为 <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">MGMT_EVT_OP_FS_MGMT_FILE_ACCESS</span></code> 事件注册了一个处理程序，该处理程序会在收到 fs_mgmt 文件读/写命令之后被调用，以检查是否应允许访问该文件。注意，要接收此回调，需要启用 <a class="reference internal" href="../../kconfig.html#CONFIG_MCUMGR_GRP_FS_FILE_ACCESS_HOOK" title="CONFIG_MCUMGR_GRP_FS_FILE_ACCESS_HOOK"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MCUMGR_GRP_FS_FILE_ACCESS_HOOK</span></code></a>。可以返回两种类型的错误：一种是将 <code class="docutils literal notranslate"><span class="pre">rc</span></code> 参数设置为 <code class="xref c c-enum docutils literal notranslate"><span class="pre">mcumgr_err_t</span></code> 错误码并返回 <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">MGMT_CB_ERROR_RC</span></code>；另一种是设置组错误码（随 MCUmgr 协议版本 2 引入），即将 <code class="docutils literal notranslate"><span class="pre">group</span></code> 值设置为该组、将 <code class="docutils literal notranslate"><span class="pre">rc</span></code> 值设置为组错误码，并返回 <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">MGMT_CB_ERROR_ERR</span></code>。</p>
+</section>
+<section id="mcumgr-command-callback-usage-adding-new-event-types">
+<h3>MCUmgr 命令回调用法/添加新的事件类型<a class="headerlink" href="#mcumgr-command-callback-usage-adding-new-event-types" title="链接到此标题。"></a></h3>
+<p>要为 MCUmgr 命令添加回调，可以用事件 ID 调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">mgmt_callback_notify()</span></code>，并可选地传入一个要传给回调的数据结构体（处理程序可以修改它）。如果不需要回传数据，可以改用 <code class="docutils literal notranslate"><span class="pre">NULL</span></code>，并将数据大小设为 0。</p>
+<p>MCUmgr 命令处理程序示例：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/kernel.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zcbor_common.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zcbor_encode.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/mgmt/mcumgr/smp/smp.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/mgmt/mcumgr/mgmt/mgmt.h&gt;</span>
+<span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/mgmt/mcumgr/mgmt/callbacks.h&gt;</span>
+
+<span class="cp">#define MGMT_EVT_GRP_USER_ONE MGMT_EVT_GRP_USER_CUSTOM_START</span>
+
+<span class="k">enum</span><span class="w"> </span><span class="n">user_one_group_events</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="cm">/** Callback on first post, data is test_struct. */</span>
+<span class="w">    </span><span class="n">MGMT_EVT_OP_USER_ONE_FIRST</span><span class="w">  </span><span class="o">=</span><span class="w"> </span><span class="n">MGMT_DEF_EVT_OP_ID</span><span class="p">(</span><span class="n">MGMT_EVT_GRP_USER_ONE</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">),</span>
+
+<span class="w">    </span><span class="cm">/** Callback on second post, data is test_struct. */</span>
+<span class="w">    </span><span class="n">MGMT_EVT_OP_USER_ONE_SECOND</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">MGMT_DEF_EVT_OP_ID</span><span class="p">(</span><span class="n">MGMT_EVT_GRP_USER_ONE</span><span class="p">,</span><span class="w"> </span><span class="mi">1</span><span class="p">),</span>
+
+<span class="w">    </span><span class="cm">/** Used to enable all user_one events. */</span>
+<span class="w">    </span><span class="n">MGMT_EVT_OP_USER_ONE_ALL</span><span class="w">    </span><span class="o">=</span><span class="w"> </span><span class="n">MGMT_DEF_EVT_OP_ALL</span><span class="p">(</span><span class="n">MGMT_EVT_GRP_USER_ONE</span><span class="p">),</span>
+<span class="p">};</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">test_struct</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">uint8_t</span><span class="w"> </span><span class="n">some_value</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">test_command</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">mgmt_ctxt</span><span class="w"> </span><span class="o">*</span><span class="n">ctxt</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">rc</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">err_rc</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">uint16_t</span><span class="w"> </span><span class="n">err_group</span><span class="p">;</span>
+<span class="w">    </span><span class="n">zcbor_state_t</span><span class="w"> </span><span class="o">*</span><span class="n">zse</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">ctxt</span><span class="o">-&gt;</span><span class="n">cnbe</span><span class="o">-&gt;</span><span class="n">zs</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">bool</span><span class="w"> </span><span class="n">ok</span><span class="p">;</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">test_struct</span><span class="w"> </span><span class="n">test_data</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="p">.</span><span class="n">some_value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">8</span><span class="p">,</span>
+<span class="w">    </span><span class="p">};</span>
+
+<span class="w">    </span><span class="n">rc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mgmt_callback_notify</span><span class="p">(</span><span class="n">MGMT_EVT_OP_USER_ONE_FIRST</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">test_data</span><span class="p">,</span>
+<span class="w">                              </span><span class="k">sizeof</span><span class="p">(</span><span class="n">test_data</span><span class="p">),</span><span class="w"> </span><span class="o">&amp;</span><span class="n">err_rc</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">err_group</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rc</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="n">MGMT_CB_OK</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="cm">/* A handler returned a failure code */</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">rc</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="n">MGMT_CB_ERROR_RC</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="cm">/* The failure code is the RC value */</span>
+<span class="w">            </span><span class="k">return</span><span class="w"> </span><span class="n">err_rc</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+
+<span class="w">        </span><span class="cm">/* The failure is a group and ID error value */</span>
+<span class="w">        </span><span class="n">ok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">smp_add_cmd_err</span><span class="p">(</span><span class="n">zse</span><span class="p">,</span><span class="w"> </span><span class="n">err_group</span><span class="p">,</span><span class="w"> </span><span class="p">(</span><span class="kt">uint16_t</span><span class="p">)</span><span class="n">err_rc</span><span class="p">);</span>
+<span class="w">        </span><span class="k">goto</span><span class="w"> </span><span class="n">end</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="cm">/* All handlers returned success codes */</span>
+<span class="w">    </span><span class="n">ok</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">zcbor_tstr_put_lit</span><span class="p">(</span><span class="n">zse</span><span class="p">,</span><span class="w"> </span><span class="s">"output_value"</span><span class="p">)</span><span class="w"> </span><span class="o">&amp;&amp;</span>
+<span class="w">         </span><span class="n">zcbor_int32_put</span><span class="p">(</span><span class="n">zse</span><span class="p">,</span><span class="w"> </span><span class="mi">1234</span><span class="p">);</span>
+
+<span class="nl">end</span><span class="p">:</span>
+<span class="w">    </span><span class="n">rc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">ok</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="n">MGMT_ERR_EOK</span><span class="w"> </span><span class="o">:</span><span class="w"> </span><span class="n">MGMT_ERR_EMSGSIZE</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">rc</span><span class="p">;</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>如果回调不需要响应，可以直接调用该函数并将其返回值强制转换为 void。</p>
+</section>
+</section>
+<section id="migration">
+<span id="mcumgr-cb-migration"></span><h2>迁移<a class="headerlink" href="#migration" title="链接到此标题。"></a></h2>
+<p>如果现有代码使用的是 Zephyr 3.2 或更早版本中的旧回调系统，则需要将其迁移到新系统。迁移代码时，需要将以下回调注册函数改为使用 <code class="xref c c-func docutils literal notranslate"><span class="pre">mgmt_callback_register()</span></code> 注册回调（注意，除了进行这些迁移之外，还需要设置 <a class="reference internal" href="../../kconfig.html#CONFIG_MCUMGR_MGMT_NOTIFICATION_HOOKS" title="CONFIG_MCUMGR_MGMT_NOTIFICATION_HOOKS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MCUMGR_MGMT_NOTIFICATION_HOOKS</span></code></a> 以启用新的通知系统）：</p>
+<blockquote>
+<div><ul class="simple">
+<li><dl class="simple">
+<dt>mgmt_evt</dt><dd><p>使用 <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">MGMT_EVT_OP_CMD_RECV</span></code>、<code class="xref c c-enumerator docutils literal notranslate"><span class="pre">MGMT_EVT_OP_CMD_STATUS</span></code> 或 <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">MGMT_EVT_OP_CMD_DONE</span></code> 直接替换同名事件，提供的数据为 <code class="xref c c-struct docutils literal notranslate"><span class="pre">mgmt_evt_op_cmd_arg</span></code>。需要设置 <a class="reference internal" href="../../kconfig.html#CONFIG_MCUMGR_SMP_COMMAND_STATUS_HOOKS" title="CONFIG_MCUMGR_SMP_COMMAND_STATUS_HOOKS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MCUMGR_SMP_COMMAND_STATUS_HOOKS</span></code></a>。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>fs_mgmt_register_evt_cb</dt><dd><p>使用 <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">MGMT_EVT_OP_FS_MGMT_FILE_ACCESS</span></code>，提供的数据为 <code class="xref c c-struct docutils literal notranslate"><span class="pre">fs_mgmt_file_access</span></code>。不再通过返回 true 允许操作或返回 false 拒绝操作，而是需要返回一个 MCUmgr 结果码：<code class="xref c c-enumerator docutils literal notranslate"><span class="pre">MGMT_ERR_EOK</span></code> 表示允许该操作，任何其他返回码都会禁止该操作并将该返回码返回给客户端（访问被拒绝的错误可以使用 <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">MGMT_ERR_EACCESSDENIED</span></code>）。需要设置 <a class="reference internal" href="../../kconfig.html#CONFIG_MCUMGR_GRP_FS_FILE_ACCESS_HOOK" title="CONFIG_MCUMGR_GRP_FS_FILE_ACCESS_HOOK"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MCUMGR_GRP_FS_FILE_ACCESS_HOOK</span></code></a>。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>img_mgmt_register_callbacks</dt><dd><p>如果使用过 <code class="docutils literal notranslate"><span class="pre">dfu_started_cb</span></code>，则改用 <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">MGMT_EVT_OP_IMG_MGMT_DFU_STARTED</span></code>；如果使用过 <code class="docutils literal notranslate"><span class="pre">dfu_stopped_cb</span></code>，则改用 <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">MGMT_EVT_OP_IMG_MGMT_DFU_STOPPED</span></code>；如果使用过 <code class="docutils literal notranslate"><span class="pre">dfu_pending_cb</span></code>，则改用 <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">MGMT_EVT_OP_IMG_MGMT_DFU_PENDING</span></code>；如果使用过 <code class="docutils literal notranslate"><span class="pre">dfu_confirmed_cb</span></code>，则改用 <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">MGMT_EVT_OP_IMG_MGMT_DFU_CONFIRMED</span></code>。这些回调没有返回状态。需要设置 <a class="reference internal" href="../../kconfig.html#CONFIG_MCUMGR_GRP_IMG_STATUS_HOOKS" title="CONFIG_MCUMGR_GRP_IMG_STATUS_HOOKS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MCUMGR_GRP_IMG_STATUS_HOOKS</span></code></a>。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>img_mgmt_set_upload_cb</dt><dd><p>使用 <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">MGMT_EVT_OP_IMG_MGMT_DFU_CHUNK</span></code>，提供的数据为 <code class="xref c c-struct docutils literal notranslate"><span class="pre">img_mgmt_upload_check</span></code>。不再通过返回 true 允许操作或返回 false 拒绝操作，而是需要返回一个 MCUmgr 结果码：<code class="xref c c-enumerator docutils literal notranslate"><span class="pre">MGMT_ERR_EOK</span></code> 表示允许该操作，任何其他返回码都会禁止该操作并将该返回码返回给客户端（访问被拒绝的错误可以使用 <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">MGMT_ERR_EACCESSDENIED</span></code>）。需要设置 <a class="reference internal" href="../../kconfig.html#CONFIG_MCUMGR_GRP_IMG_UPLOAD_CHECK_HOOK" title="CONFIG_MCUMGR_GRP_IMG_UPLOAD_CHECK_HOOK"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MCUMGR_GRP_IMG_UPLOAD_CHECK_HOOK</span></code></a>。</p>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>os_mgmt_register_reset_evt_cb</dt><dd><p>使用 <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">MGMT_EVT_OP_OS_MGMT_RESET</span></code>。不再通过返回 true 允许操作或返回 false 拒绝操作，而是需要返回一个 MCUmgr 结果码：<code class="xref c c-enumerator docutils literal notranslate"><span class="pre">MGMT_ERR_EOK</span></code> 表示允许该操作，任何其他返回码都会禁止该操作并将该返回码返回给客户端（访问被拒绝的错误可以使用 <code class="xref c c-enumerator docutils literal notranslate"><span class="pre">MGMT_ERR_EACCESSDENIED</span></code>）。需要设置 <a class="reference internal" href="../../kconfig.html#CONFIG_MCUMGR_GRP_OS_RESET_HOOK" title="CONFIG_MCUMGR_GRP_OS_RESET_HOOK"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MCUMGR_GRP_OS_RESET_HOOK</span></code></a>。</p>
+</dd>
+</dl>
+</li>
+</ul>
+</div></blockquote>
+</section>
+<section id="api-reference">
+<h2>API 参考<a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">mcumgr_callback_api</span></dt>
+</dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 4月 01, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

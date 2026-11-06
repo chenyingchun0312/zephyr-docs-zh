@@ -1,0 +1,523 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>内存保护设计 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/kernel/usermode/memory_domain.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="内核对象" href="kernelobjects.html" />
+    <link rel="prev" title="概述" href="overview.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">内核</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../services/index.html">内核服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../drivers/index.html">设备驱动模型</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">用户模式</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="overview.html">概述</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">内存保护设计</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#boot-time-memory-configuration">启动时内存配置</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#hardware-stack-overflow">硬件栈溢出</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#thread-stack">线程栈</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#thread-resource-pools">线程资源池</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#memory-domains">内存域</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#memory-partitions">内存分区</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#manual-memory-partitions">手动内存分区</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#automatic-memory-partitions">自动内存分区</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#pre-defined-memory-partitions">预定义的内存分区</a></li>
+</ul>
+</li>
+<li class="toctree-l5"><a class="reference internal" href="#memory-domain-usage">内存域的使用</a><ul>
+<li class="toctree-l6"><a class="reference internal" href="#create-a-memory-domain">创建内存域</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#add-memory-partitions-into-a-memory-domain">向内存域添加内存分区</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#memory-domain-assignment">内存域的分配</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#remove-a-memory-partition-from-a-memory-domain">从内存域中移除内存分区</a></li>
+<li class="toctree-l6"><a class="reference internal" href="#available-partition-attributes">可用的分区属性</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#configuration-options">配置选项</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#api-reference">API 参考</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="kernelobjects.html">内核对象</a></li>
+<li class="toctree-l3"><a class="reference internal" href="syscalls.html">系统调用</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mpu_stack_objects.html">MPU 栈对象</a></li>
+<li class="toctree-l3"><a class="reference internal" href="mpu_userspace.html">基于 MPU 的用户空间</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../memory_management/index.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data_structures/index.html">数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../timing_functions/index.html">计时函数</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../object_cores/index.html">对象核心</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../timeutil.html">时间工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../precision_timing.html">精密计时</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../util/index.html">实用工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../iterable_sections/index.html">可迭代段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../code-relocation.html">代码和数据重定位</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanup.html">基于作用域的清理辅助工具</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">内核</a> &raquo;</li>
+  
+     <li><a href="index.html">用户模式</a> &raquo;</li>
+  
+  <li>内存保护设计</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="memory-protection-design">
+<span id="memory-domain"></span><h1>内存保护设计<a class="headerlink" href="#memory-protection-design" title="链接到此标题。"></a></h1>
+<p>Zephyr 的内存保护设计面向带有 MPU（内存保护单元）硬件的微控制器。我们也支持一些带有分页 MMU（内存管理单元）的架构，例如 x86，但这种情况下 MMU 是配合恒等页表当作 MPU 来使用的。</p>
+<p>下文的所有讨论都使用 MPU 术语；带有 MMU 的系统可以看作拥有无限多个可编程区域的 MPU。</p>
+<p>启用 Zephyr 内存保护特性后，内存访问的配置分为几个不同的层次，下面分别加以介绍：</p>
+<section id="boot-time-memory-configuration">
+<h2>启动时内存配置<a class="headerlink" href="#boot-time-memory-configuration" title="链接到此标题。"></a></h2>
+<p>这是内核启动后 MPU 的配置，应包含以下内容：</p>
+<ul class="simple">
+<li><p>基本硬件和驱动功能所需的、具有特殊缓存或回写策略的内存区域配置。注意，大多数 MPU 都有默认内存访问策略映射的概念，可以将其启用为“背景”映射，作用于没有 MPU 区域配置的任何内存区域。强烈建议使用这一机制，以便为最终用户留出尽可能多的可用 MPU 区域。在 ARMv7-M/ARMv8-M 上，这称为系统地址映射（System Address Map），其他 CPU 可能也有类似的能力。关于如何在设备树中标注系统映射，参见 <a class="reference internal" href="../../services/mem_mgmt/index.html#mem-mgmt-api"><span class="std std-ref">内存属性</span></a>。</p></li>
+<li><p>一个或多个只读、可执行的区域，用于存放用户模式可访问的程序代码段和只读数据。还可以进一步细分为用于只读数据的只读区域和用于代码段的只读可执行区域，但这需要额外占用一个 MPU 区域。之所以需要这些区域，是为了让运行在用户模式下的线程能够读取只读数据并取指令。</p></li>
+<li><p>根据配置，可能还有用户可访问的读写区域，用于支持 GCOV、HEP 等额外特性。</p></li>
+</ul>
+<p>假设存在允许管理态模式访问其所需任何内存的背景映射，并且定义了授予用户模式访问代码段/只读数据的区域，那么这对于启动时配置来说就足够了。</p>
+</section>
+<section id="hardware-stack-overflow">
+<h2>硬件栈溢出<a class="headerlink" href="#hardware-stack-overflow" title="链接到此标题。"></a></h2>
+<p><a class="reference internal" href="../../kconfig.html#CONFIG_HW_STACK_PROTECTION" title="CONFIG_HW_STACK_PROTECTION"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_HW_STACK_PROTECTION</span></code></a> 是一项可选特性，用于在系统运行于管理态模式时检测栈缓冲区溢出。它捕获的是整个栈缓冲区溢出的问题，而非单个栈帧的溢出。要检测单个栈帧的溢出，请使用编译器辅助的 <a class="reference internal" href="../../kconfig.html#CONFIG_STACK_CANARIES" title="CONFIG_STACK_CANARIES"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_STACK_CANARIES</span></code></a>。</p>
+<p>与管理态模式下的任何崩溃一样，管理态模式栈溢出之后无法对系统的整体健康状况做任何保证，任何此类情况都应被视为严重错误。不过，了解这些溢出何时发生仍然非常有用，因为如果没有可靠的检测逻辑，栈缓冲区溢出时系统要么会以莫名其妙的方式崩溃，要么会表现出未定义的行为。</p>
+<p>有些系统通过在运行时创建一个“保护”MPU 区域来实现这一特性，该区域被设为只读，位于管理态模式栈缓冲区的起始处或紧邻其前方。如果栈溢出，就会产生异常。</p>
+<p>该特性是可选的，捕获用户模式下的栈溢出并不需要它；根据 MPU 设计，禁用它可能会腾出 1 到 2 个 MPU 区域。</p>
+<p>其他系统可能有专门的 CPU 支持来捕获栈溢出，不需要额外的 MPU 区域。</p>
+</section>
+<section id="thread-stack">
+<h2>线程栈<a class="headerlink" href="#thread-stack" title="链接到此标题。"></a></h2>
+<p>任何运行在用户模式下的线程都需要访问其自身的栈缓冲区。上下文切换到用户模式线程时，会用栈缓冲区的边界编程一个专用的 MPU 区域或 MMU 页表项。超出其栈缓冲区的线程会开始把数据压入它无权访问的内存，从而产生内存访问违例异常。</p>
+<p>注意，用户线程可以访问同一内存域中其他用户线程的栈。这是架构支持内存域的最低要求。如果架构通过 <a class="reference internal" href="../../kconfig.html#CONFIG_ARCH_MEM_DOMAIN_SUPPORTS_ISOLATED_STACKS" title="CONFIG_ARCH_MEM_DOMAIN_SUPPORTS_ISOLATED_STACKS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_ARCH_MEM_DOMAIN_SUPPORTS_ISOLATED_STACKS</span></code></a> 声明具备相应能力，则可以进一步限制对栈的访问，使每个用户线程只能访问自己的栈。如果支持，该行为默认启用；如果架构同时支持两种工作模式，可以通过 <a class="reference internal" href="../../kconfig.html#CONFIG_MEM_DOMAIN_ISOLATED_STACKS" title="CONFIG_MEM_DOMAIN_ISOLATED_STACKS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MEM_DOMAIN_ISOLATED_STACKS</span></code></a> 有选择地禁用。不过，有些架构可能决定始终启用该行为，此时该选项无法禁用。无论这些 Kconfig 选项如何设置，用户线程都无法访问其内存域之外的其他用户线程的栈。</p>
+</section>
+<section id="thread-resource-pools">
+<h2>线程资源池<a class="headerlink" href="#thread-resource-pools" title="链接到此标题。"></a></h2>
+<p>有一小部分以系统调用方式调用的内核 API 需要从堆分配内存。这些内存仅供内核使用，用户模式无法直接访问。要使用这些系统调用，调用线程必须把自己分配给一个资源池，即一个 <code class="xref c c-struct docutils literal notranslate"><span class="pre">k_heap</span></code> 对象。内存通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">z_thread_malloc()</span></code> 从线程的资源池中获取，并通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_free()</span></code> 释放。</p>
+<p>使用资源池的 API 如下；对于不希望在应用程序中进行堆分配的用户，也列出了可选的替代方案：</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">k_stack_alloc_init()</span></code> 设置一个 k_stack，其存储缓冲区从资源池中分配，而不是使用用户提供的缓冲区。替代方案是用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_STACK_DEFINE()</span></code> 声明在启动时自动初始化的 k_stack，或者在管理态模式下用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_stack_init()</span></code> 初始化 k_stack。</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">k_msgq_alloc_init()</span></code> 设置一个 k_msgq 对象，其存储缓冲区从资源池中分配，而不是使用用户提供的缓冲区。替代方案是用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_MSGQ_DEFINE()</span></code> 声明在启动时自动初始化的 k_msgq，或者在管理态模式下用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_msgq_init()</span></code> 初始化 k_msgq。</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">k_poll()</span></code> 从用户模式调用时，需要在等待事件期间为所提供的事件数组在内核侧创建一份副本。无论 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_poll()</span></code> 因何种原因返回，该副本都会被释放。</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">k_queue_alloc_prepend()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_queue_alloc_append()</span></code> 会分配一个容器结构来存放数据，因为定义队列的内部簿记信息不能放在用户提供的内存中。</p></li>
+<li><p><code class="xref c c-func docutils literal notranslate"><span class="pre">k_object_alloc()</span></code> 允许在运行时动态分配整个内核对象，并向调用者返回指向它的可用指针。</p></li>
+</ul>
+</div></blockquote>
+<p>相关的 API 是 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_heap_assign()</span></code>，它为目标线程指定一个 k_heap，上述分配将从中获取内存。</p>
+<p>如果启用了系统堆，可以通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_thread_system_pool_assign()</span></code> 使用系统堆，但最好让系统上运行的不同逻辑应用程序各自拥有自己的池。</p>
+</section>
+<section id="memory-domains">
+<h2>内存域<a class="headerlink" href="#memory-domains" title="链接到此标题。"></a></h2>
+<p>内核确保任何用户线程都能访问其自身的栈缓冲区以及程序代码段和只读数据。要授予用户线程访问更多内存块的权限，需要使用内存域 API。</p>
+<p>从概念上讲，内存域是若干内存分区的集合。一个域中内存分区的最大数量受可用 MPU 区域数量的限制。这就是为什么要尽量减少启动时 MPU 区域的数量。</p>
+<p>内存域 <em>并非</em> 用于控制管理态模式对内存的访问。在某些情况下这可能无法避免；例如有些架构无法定义对用户模式只读、对管理态模式可读写的区域。处理这类区域时必须格外小心，以免内核在访问此类区域时意外崩溃。任何试图用内存域 API 控制管理态模式访问的做法，充其量也只是未定义行为；管理态模式的访问策略只应由启动时内存区域控制。</p>
+<p>内存域 API 只能在管理态模式下使用。用户模式对内存域唯一的控制是：任何用户线程的子线程都会自动成为父线程所在域的成员。</p>
+<p>所有线程都是某个内存域的成员，包括管理态线程（尽管这对其内存访问没有影响）。存在一个默认域 <code class="docutils literal notranslate"><span class="pre">k_mem_domain_default</span></code>，如果线程没有被明确分配到某个域，也没有从父线程继承内存域成员身份，就会被分配到该默认域。主线程一开始就是默认域的成员。</p>
+<section id="memory-partitions">
+<h3>内存分区<a class="headerlink" href="#memory-partitions" title="链接到此标题。"></a></h3>
+<p>每个内存分区由内存地址、大小和访问属性组成。内存分区用于控制对系统内存的访问。定义内存分区须遵守以下约束：</p>
+<ul class="simple">
+<li><p>分区所表示的内存区域必须能由底层内存管理硬件编程，并且需要符合底层硬件的各项约束。例如，许多基于 MPU 的系统要求分区大小为 2 的幂，并按自身大小对齐。对于基于 MMU 的系统，分区必须按页对齐，大小必须是页大小的整数倍。</p></li>
+<li><p>同一内存域中的分区不得相互重叠。内存域内的各分区之间没有优先级的概念。内存域中的分区被认为比任何启动时内存区域具有更高的优先级，但内存域分区能否与启动时内存区域重叠取决于具体架构。</p></li>
+<li><p>同一个分区可以出现在多个内存域中。例如，可能存在一块由多个域共同授权访问的共享内存区域。</p></li>
+<li><p>确定在分区中暴露哪些内存时必须谨慎。不应让用户模式直接访问任何包含内核私有数据的内存。</p></li>
+<li><p>内存域分区用于控制对系统 RAM 的访问。架构可能不支持配置与 RAM 不对应的内存分区；基于 MMU 的系统就是如此。</p></li>
+</ul>
+<p>定义内存分区有两种方式：手动或自动。</p>
+<section id="manual-memory-partitions">
+<h4>手动内存分区<a class="headerlink" href="#manual-memory-partitions" title="链接到此标题。"></a></h4>
+<p>以下代码声明了一个全局数组 <code class="docutils literal notranslate"><span class="pre">buf</span></code>，然后为它声明一个可以加入域的读写分区：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">uint8_t</span><span class="w"> </span><span class="nf">__aligned</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span><span class="w"> </span><span class="n">buf</span><span class="p">[</span><span class="mi">32</span><span class="p">];</span>
+
+<span class="n">K_MEM_PARTITION_DEFINE</span><span class="p">(</span><span class="n">my_partition</span><span class="p">,</span><span class="w"> </span><span class="n">buf</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">buf</span><span class="p">),</span>
+<span class="w">                       </span><span class="n">K_MEM_PARTITION_P_RW_U_RW</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>当我们想把分散在多个 C 文件中的多个对象纳入同一个分区时，这种方式的可扩展性不太好。</p>
+</section>
+<section id="automatic-memory-partitions">
+<h4>自动内存分区<a class="headerlink" href="#automatic-memory-partitions" title="链接到此标题。"></a></h4>
+<p>自动内存分区由构建系统创建。所有需要放入分区的全局变量都会标注其目标分区。构建系统随后会把它们合并到一块连续的内存中，在启动时将所有 BSS 变量清零，并定义一个基地址和大小合适、包含所有已标注数据的内存分区。</p>
+<figure class="align-center" id="id1">
+<img alt="自动内存域的构建流程" src="../../_images/auto_mem_domain.png" />
+<figcaption>
+<p><span class="caption-text">自动内存域的构建流程</span><a class="headerlink" href="#id1" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<p>自动内存分区只能配置为读写区域，使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_APPMEM_PARTITION_DEFINE()</span></code> 定义。然后使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_APP_DMEM()</span></code>（用于已初始化数据）和 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_APP_BMEM()</span></code>（用于 BSS）把全局变量放入该分区。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cp">#include</span><span class="w"> </span><span class="cpf">&lt;zephyr/app_memory/app_memdomain.h&gt;</span>
+
+<span class="cm">/* Declare a k_mem_partition "my_partition" that is read-write to</span>
+<span class="cm"> * user mode. Note that we do not specify a base address or size.</span>
+<span class="cm"> */</span>
+<span class="n">K_APPMEM_PARTITION_DEFINE</span><span class="p">(</span><span class="n">my_partition</span><span class="p">);</span>
+
+<span class="cm">/* The global variable var1 will be inside the bounds of my_partition</span>
+<span class="cm"> * and be initialized with 37 at boot.</span>
+<span class="cm"> */</span>
+<span class="n">K_APP_DMEM</span><span class="p">(</span><span class="n">my_partition</span><span class="p">)</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">var1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">37</span><span class="p">;</span>
+
+<span class="cm">/* The global variable var2 will be inside the bounds of my_partition</span>
+<span class="cm"> * and be zeroed at boot size K_APP_BMEM() was used, indicating a BSS</span>
+<span class="cm"> * variable.</span>
+<span class="cm"> */</span>
+<span class="n">K_APP_BMEM</span><span class="p">(</span><span class="n">my_partition</span><span class="p">)</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">var2</span><span class="p">;</span>
+</pre></div>
+</div>
+<p>构建系统会确保 <code class="docutils literal notranslate"><span class="pre">my_partition</span></code> 的基地址正确对齐，并且区域总大小符合内存管理硬件的要求，必要时会添加填充。</p>
+<p>如果要创建多个分区，可以使用 <code class="docutils literal notranslate"><span class="pre">app_macro_support.h</span></code> 中提供的可变参数预处理宏：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">FOR_EACH</span><span class="p">(</span><span class="n">K_APPMEM_PARTITION_DEFINE</span><span class="p">,</span><span class="w"> </span><span class="n">part0</span><span class="p">,</span><span class="w"> </span><span class="n">part1</span><span class="p">,</span><span class="w"> </span><span class="n">part2</span><span class="p">);</span>
+</pre></div>
+</div>
+<section id="automatic-partitions-for-static-library-globals">
+<h5>静态库全局变量的自动分区<a class="headerlink" href="#automatic-partitions-for-static-library-globals" title="链接到此标题。"></a></h5>
+<p>设置自动内存分区的构建时逻辑位于 <code class="docutils literal notranslate"><span class="pre">scripts/build/gen_app_partitions.py</span></code> 中。如果有静态库链接进 Zephyr，可以通过 <code class="docutils literal notranslate"><span class="pre">--library</span></code> 参数把该库中的所有全局变量放入特定的内存分区。</p>
+<p>例如，如果启用了 Newlib C 库，所有 Newlib 全局变量都需要放入 <code class="docutils literal notranslate"><span class="pre">z_libc_partition</span></code>。顶层 <code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code> 中对该脚本的调用添加了以下内容：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>gen_app_partitions.py ... --library libc.a z_libc_partition ..
+</pre></div>
+</div>
+<p>对于预编译库，无法在项目级配置或构建文件中表达这一点；必须编辑顶层 <code class="docutils literal notranslate"><span class="pre">CMakeLists.txt</span></code>。</p>
+<p>对于使用 <code class="docutils literal notranslate"><span class="pre">zephyr_library</span></code> 或 <code class="docutils literal notranslate"><span class="pre">zephyr_library_named</span></code> 创建的 Zephyr 库，可以使用 <code class="docutils literal notranslate"><span class="pre">zephyr_library_app_memory</span></code> 函数指定该库中所有全局变量应放入的内存分区。</p>
+</section>
+</section>
+<section id="pre-defined-memory-partitions">
+<span id="memory-domain-predefined-partitions"></span><h4>预定义的内存分区<a class="headerlink" href="#pre-defined-memory-partitions" title="链接到此标题。"></a></h4>
+<p>系统预定义了以下几个内存分区：</p>
+<blockquote>
+<div><ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">z_malloc_partition</span></code>：该分区包含 libc malloc() 使用的系统级内存池。由于可能出现饥饿问题，不建议从全局池获取堆内存，更好的做法是定义多个 sys_heap 对象并将其分配给特定的内存域。</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">z_libc_partition</span></code>：包含 C 库和运行时所需的全局变量。使用 Minimal C 库或 Newlib C 库时都需要该分区。启用 <a class="reference internal" href="../../kconfig.html#CONFIG_STACK_CANARIES" title="CONFIG_STACK_CANARIES"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_STACK_CANARIES</span></code></a> 时也需要该分区。</p></li>
+</ul>
+</div></blockquote>
+<p>各库专用的分区列在 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/app_memory/partitions.h">include/zephyr/app_memory/partitions.h</a> 中。例如，要在用户模式下使用 MBEDTLS 库，必须把 <code class="docutils literal notranslate"><span class="pre">k_mbedtls_partition</span></code> 加入域中。</p>
+</section>
+</section>
+<section id="memory-domain-usage">
+<h3>内存域的使用<a class="headerlink" href="#memory-domain-usage" title="链接到此标题。"></a></h3>
+<section id="create-a-memory-domain">
+<h4>创建内存域<a class="headerlink" href="#create-a-memory-domain" title="链接到此标题。"></a></h4>
+<p>内存域使用 <code class="xref c c-struct docutils literal notranslate"><span class="pre">k_mem_domain</span></code> 类型的变量定义，然后必须调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_mem_domain_init()</span></code> 对其进行初始化。</p>
+<p>以下代码定义并初始化一个空的内存域。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">k_mem_domain</span><span class="w"> </span><span class="n">app0_domain</span><span class="p">;</span>
+
+<span class="n">k_mem_domain_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">app0_domain</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+</pre></div>
+</div>
+</section>
+<section id="add-memory-partitions-into-a-memory-domain">
+<h4>向内存域添加内存分区<a class="headerlink" href="#add-memory-partitions-into-a-memory-domain" title="链接到此标题。"></a></h4>
+<p>向内存域添加内存分区有两种方式。</p>
+<p>第一个代码示例展示如何在创建内存域时添加内存分区。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* the start address of the MPU region needs to align with its size */</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="nf">__aligned</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span><span class="w"> </span><span class="n">app0_buf</span><span class="p">[</span><span class="mi">32</span><span class="p">];</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="nf">__aligned</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span><span class="w"> </span><span class="n">app1_buf</span><span class="p">[</span><span class="mi">32</span><span class="p">];</span>
+
+<span class="n">K_MEM_PARTITION_DEFINE</span><span class="p">(</span><span class="n">app0_part0</span><span class="p">,</span><span class="w"> </span><span class="n">app0_buf</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">app0_buf</span><span class="p">),</span>
+<span class="w">                       </span><span class="n">K_MEM_PARTITION_P_RW_U_RW</span><span class="p">);</span>
+
+<span class="n">K_MEM_PARTITION_DEFINE</span><span class="p">(</span><span class="n">app0_part1</span><span class="p">,</span><span class="w"> </span><span class="n">app1_buf</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">app1_buf</span><span class="p">),</span>
+<span class="w">                       </span><span class="n">K_MEM_PARTITION_P_RW_U_RO</span><span class="p">);</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">k_mem_partition</span><span class="w"> </span><span class="o">*</span><span class="n">app0_parts</span><span class="p">[]</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">app0_part0</span><span class="p">,</span>
+<span class="w">    </span><span class="n">app0_part1</span>
+<span class="p">};</span>
+
+<span class="n">k_mem_domain_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">app0_domain</span><span class="p">,</span><span class="w"> </span><span class="n">ARRAY_SIZE</span><span class="p">(</span><span class="n">app0_parts</span><span class="p">),</span><span class="w"> </span><span class="n">app0_parts</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>第二个代码示例展示如何向已初始化的内存域逐个添加内存分区。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* the start address of the MPU region needs to align with its size */</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="nf">__aligned</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span><span class="w"> </span><span class="n">app0_buf</span><span class="p">[</span><span class="mi">32</span><span class="p">];</span>
+<span class="kt">uint8_t</span><span class="w"> </span><span class="nf">__aligned</span><span class="p">(</span><span class="mi">32</span><span class="p">)</span><span class="w"> </span><span class="n">app1_buf</span><span class="p">[</span><span class="mi">32</span><span class="p">];</span>
+
+<span class="n">K_MEM_PARTITION_DEFINE</span><span class="p">(</span><span class="n">app0_part0</span><span class="p">,</span><span class="w"> </span><span class="n">app0_buf</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">app0_buf</span><span class="p">),</span>
+<span class="w">                       </span><span class="n">K_MEM_PARTITION_P_RW_U_RW</span><span class="p">);</span>
+
+<span class="n">K_MEM_PARTITION_DEFINE</span><span class="p">(</span><span class="n">app0_part1</span><span class="p">,</span><span class="w"> </span><span class="n">app1_buf</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">app1_buf</span><span class="p">),</span>
+<span class="w">                       </span><span class="n">K_MEM_PARTITION_P_RW_U_RO</span><span class="p">);</span>
+
+<span class="n">k_mem_domain_add_partition</span><span class="p">(</span><span class="o">&amp;</span><span class="n">app0_domain</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">app0_part0</span><span class="p">);</span>
+<span class="n">k_mem_domain_add_partition</span><span class="p">(</span><span class="o">&amp;</span><span class="n">app0_domain</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">app0_part1</span><span class="p">);</span>
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">备注</p>
+<p>内存分区的最大数量受 MPU 区域的最大数量或 MMU 表的最大数量限制。</p>
+</div>
+</section>
+<section id="memory-domain-assignment">
+<h4>内存域的分配<a class="headerlink" href="#memory-domain-assignment" title="链接到此标题。"></a></h4>
+<p>任何线程都可以加入内存域，任何内存域都可以分配多个线程。通过以下 API 调用把线程分配给内存域：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">k_mem_domain_add_thread</span><span class="p">(</span><span class="o">&amp;</span><span class="n">app0_domain</span><span class="p">,</span><span class="w"> </span><span class="n">app_thread_id</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>如果线程已经是其他某个域（包括默认域）的成员，则会将其从原来的域中移除，改为加入新的域。</p>
+<p>此外，如果某个线程是内存域的成员，它创建的子线程也会属于该域。</p>
+</section>
+<section id="remove-a-memory-partition-from-a-memory-domain">
+<h4>从内存域中移除内存分区<a class="headerlink" href="#remove-a-memory-partition-from-a-memory-domain" title="链接到此标题。"></a></h4>
+<p>以下代码展示如何从内存域中移除内存分区。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="n">k_mem_domain_remove_partition</span><span class="p">(</span><span class="o">&amp;</span><span class="n">app0_domain</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">app0_part1</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>k_mem_domain_remove_partition() API 会查找与给定参数匹配的内存分区，并将该分区从内存域中移除。</p>
+</section>
+<section id="available-partition-attributes">
+<h4>可用的分区属性<a class="headerlink" href="#available-partition-attributes" title="链接到此标题。"></a></h4>
+<p>定义分区时，需要为其设置访问权限属性。由于内存分区的访问控制依赖于 MPU 或 MMU，可用的分区属性与架构相关。</p>
+<p>特定架构可用分区属性的完整列表位于架构相关的头文件 <code class="docutils literal notranslate"><span class="pre">include/zephyr/arch/&lt;arch</span> <span class="pre">name&gt;/arch.h</span></code> 中（例如 <a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/arch/arm/arch.h">include/zephyr/arch/arm/arch.h</a>）。分区属性示例如下：</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Denote partition is privileged read/write, unprivileged read/write */</span>
+<span class="n">K_MEM_PARTITION_P_RW_U_RW</span>
+<span class="cm">/* Denote partition is privileged read/write, unprivileged read-only */</span>
+<span class="n">K_MEM_PARTITION_P_RW_U_RO</span>
+</pre></div>
+</div>
+<p>几乎在所有情况下，<code class="docutils literal notranslate"><span class="pre">K_MEM_PARTITION_P_RW_U_RW</span></code> 都是正确的选择。</p>
+</section>
+</section>
+</section>
+<section id="configuration-options">
+<h2>配置选项<a class="headerlink" href="#configuration-options" title="链接到此标题。"></a></h2>
+<p>相关配置选项：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_MAX_DOMAIN_PARTITIONS" title="CONFIG_MAX_DOMAIN_PARTITIONS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_MAX_DOMAIN_PARTITIONS</span></code></a></p></li>
+</ul>
+</section>
+<section id="api-reference">
+<h2>API 参考<a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<p><a class="reference external" href="https://github.com/zephyrproject-rtos/zephyr/blob/v4.5.0/include/zephyr/kernel.h">include/zephyr/kernel.h</a> 提供了以下内存域 API：</p>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">mem_domain_apis</span></dt>
+</dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 10月 13, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

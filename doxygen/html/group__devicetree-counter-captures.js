@@ -1,0 +1,27 @@
+var group__devicetree_counter_captures =
+[
+    [ "DT_COUNTER_CAPTURES_CELL", "group__devicetree-counter-captures.html#ga34a50c10fbfe829ddf51c7f0b0c336c0", null ],
+    [ "DT_COUNTER_CAPTURES_CELL_BY_IDX", "group__devicetree-counter-captures.html#ga899ef5d48c9ee7e12511269808a73814", null ],
+    [ "DT_COUNTER_CAPTURES_CELL_BY_NAME", "group__devicetree-counter-captures.html#gaa19b8b56e49400b827e5540b1d8e6d01", null ],
+    [ "DT_COUNTER_CAPTURES_CHANNEL", "group__devicetree-counter-captures.html#ga8481e2f89be3ad932615fd364ae95833", null ],
+    [ "DT_COUNTER_CAPTURES_CHANNEL_BY_IDX", "group__devicetree-counter-captures.html#gac138145649e993113c562b832db14cae", null ],
+    [ "DT_COUNTER_CAPTURES_CHANNEL_BY_NAME", "group__devicetree-counter-captures.html#gafde28f4e0654eb57e2e1e975e17df5cb", null ],
+    [ "DT_COUNTER_CAPTURES_CTLR", "group__devicetree-counter-captures.html#ga2ba4a8a409e4f972c8ff41437e6ebe2a", null ],
+    [ "DT_COUNTER_CAPTURES_CTLR_BY_IDX", "group__devicetree-counter-captures.html#ga797294ed195afc14ceeb2f8660f7155a", null ],
+    [ "DT_COUNTER_CAPTURES_CTLR_BY_NAME", "group__devicetree-counter-captures.html#ga518b9cc323985a7e7023eff8f559906a", null ],
+    [ "DT_COUNTER_CAPTURES_FLAGS", "group__devicetree-counter-captures.html#ga53d317303b57d55d9b6e6c8f9bf5a096", null ],
+    [ "DT_COUNTER_CAPTURES_FLAGS_BY_IDX", "group__devicetree-counter-captures.html#ga52b098f3186a035dc066e06ed4e6c851", null ],
+    [ "DT_COUNTER_CAPTURES_FLAGS_BY_NAME", "group__devicetree-counter-captures.html#gabcbb14a6e712ffd43ca19c8b4f9f9421", null ],
+    [ "DT_INST_COUNTER_CAPTURES_CELL", "group__devicetree-counter-captures.html#ga1fa4e31f22dd9770474f51594e458b7c", null ],
+    [ "DT_INST_COUNTER_CAPTURES_CELL_BY_IDX", "group__devicetree-counter-captures.html#ga2b8b64753952f0ff83b7f816df17347f", null ],
+    [ "DT_INST_COUNTER_CAPTURES_CELL_BY_NAME", "group__devicetree-counter-captures.html#ga173f2364e1fea7193a599baa5025fbd8", null ],
+    [ "DT_INST_COUNTER_CAPTURES_CHANNEL", "group__devicetree-counter-captures.html#ga2970ab647943cf7a1c5902a2c4949af6", null ],
+    [ "DT_INST_COUNTER_CAPTURES_CHANNEL_BY_IDX", "group__devicetree-counter-captures.html#ga094c51d396ca05b8e835b8d8b383e779", null ],
+    [ "DT_INST_COUNTER_CAPTURES_CHANNEL_BY_NAME", "group__devicetree-counter-captures.html#ga70b546e8edea4bdba18d460267150243", null ],
+    [ "DT_INST_COUNTER_CAPTURES_CTLR", "group__devicetree-counter-captures.html#ga87867be04a27482dcd53c2bb09952090", null ],
+    [ "DT_INST_COUNTER_CAPTURES_CTLR_BY_IDX", "group__devicetree-counter-captures.html#ga65ddee9c6518567bcae47b6905bf0fe2", null ],
+    [ "DT_INST_COUNTER_CAPTURES_CTLR_BY_NAME", "group__devicetree-counter-captures.html#ga06ad7cd3c0f62c770305c2a89bd11b12", null ],
+    [ "DT_INST_COUNTER_CAPTURES_FLAGS", "group__devicetree-counter-captures.html#gabaf2d611f3a485ee966d66ed970b930f", null ],
+    [ "DT_INST_COUNTER_CAPTURES_FLAGS_BY_IDX", "group__devicetree-counter-captures.html#ga1fadaa5598b2d218a12798fbe35f8e6a", null ],
+    [ "DT_INST_COUNTER_CAPTURES_FLAGS_BY_NAME", "group__devicetree-counter-captures.html#ga185a1e1a18a7fa1badca35412b31a7dd", null ]
+];

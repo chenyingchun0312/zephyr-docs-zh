@@ -1,0 +1,644 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ACRN 虚拟机监控程序 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/boards/acrn/acrn/doc/index.html" />
+      <script src="../../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../../../genindex.html" />
+    <link rel="search" title="搜索" href="../../../../search.html" />
+    <link rel="next" title="Actinius" href="../../../actinius/index.html" />
+    <link rel="prev" title="ACRN 项目" href="../../index.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../../index.html">
+            
+              <img src="../../../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../../index.html">支持的开发板和扩展板</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../../01space/index.html">01space</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../96boards/index.html">96Boards</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../aconno/index.html">Aconno</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../../index.html">ACRN 项目</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">ACRN 虚拟机监控程序</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#build-your-zephyr-app">构建 Zephyr 应用程序</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#configure-and-build-acrn">配置并构建 ACRN</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#configure-zephyr-memory-layout">配置 Zephyr 内存布局</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#configure-zephyr-cpus">配置 Zephyr CPU</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#build-acrn">构建 ACRN</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#assemble-efi-boot-media">制作 EFI 启动介质</a><ul>
+<li class="toctree-l5"><a class="reference internal" href="#locate-grub">获取 GRUB</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#create-efi-boot-filesystem">创建 EFI 启动文件系统</a></li>
+<li class="toctree-l5"><a class="reference internal" href="#copy-images-and-configure-grub">复制镜像并配置 GRUB</a></li>
+</ul>
+</li>
+<li class="toctree-l4"><a class="reference internal" href="#boot-acrn">启动 ACRN</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../../actinius/index.html">Actinius</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../adafruit/index.html">Adafruit Industries LLC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../adi/index.html">Analog Devices, Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../aesc/index.html">Aesc Silicon</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../aithinker/index.html">Ai-Thinker Co.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../alientek/index.html">Alientek</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../alif/index.html">Alif Semiconductor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ambiq/index.html">Ambiq</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../amd/index.html">Advanced Micro Devices (AMD), Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../andestech/index.html">Andes Technology（晶心科技）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../antmicro/index.html">Antmicro</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../arduino/index.html">Arduino</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../arm/index.html">ARM Ltd.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../armfly/index.html">Armfly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../aspeed/index.html">ASPEED Technology Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../atmarktechno/index.html">Atmark Techno</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../atmel/index.html">Atmel Corporation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../barth/index.html">Barth Elektronik GmbH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../bbc/index.html">BBC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../bcdevices/index.html">Blue Clover Devices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../beagle/index.html">BeagleBoard.org Foundation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../bflb/index.html">Bouffalo Lab Intelligent Technology (Nanjing) Co., Ltd.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../blackberry/index.html">BlackBerry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../bliiot/index.html">BLIIoT Technology Co., Ltd.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../blues/index.html">Blues</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../brcm/index.html">Broadcom Corporation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../bytesatwork/index.html">bytesatwork</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../canmodule/index.html">CAN-Module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cdac/index.html">C-DAC (Centre for Development of Advanced Computing)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cdns/index.html">Cadence Design Systems Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../circuitdojo/index.html">Circuit Dojo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cirrus/index.html">Cirrus Logic, Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../contextualelectronics/index.html">Contextual Electronics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../coredevices/index.html">Core Devices LLC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../croxel/index.html">Croxel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ct/index.html">CTHINGS.CO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cypress/index.html">Cypress</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../cytron/index.html">Cytron</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../dfrobot/index.html">DFRobot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../dh/index.html">DH electronics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../digilent/index.html">Digilent, Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../doiting/index.html">Doctors of Intelligence &amp; Technology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../dptechnics/index.html">DPTechnics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../dragino/index.html">Dragino</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ebyte/index.html">Chengdu Ebyte Electronic Technology</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../efinix/index.html">Efinix, Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../egis/index.html">Egis Technology Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../elan/index.html">Elan Microelectronics Corp.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../electronut/index.html">Electronut Labs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../element14/index.html">Element 14</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../embedsky/index.html">Guangdong Embedsky Technology Co., Ltd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../emtrion/index.html">emtrion GmbH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ene/index.html">ENE</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../enjoydigital/index.html">EnjoyDigital</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../espressif/index.html">Espressif</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../eurovibes/index.html">Eurovibes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ezurio/index.html">Ezurio</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../fanke/index.html">Fanke</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../firefly/index.html">Firefly</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../flysky/index.html">FlySky</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../fobe/index.html">FoBE Studio</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../framework/index.html">Framework Computer Inc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../franzininho/index.html">Franzininho</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../fysetc/index.html">FYSETC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gaisler/index.html">Gaisler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gardena/index.html">GARDENA GmbH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../gd/index.html">GigaDevice Semiconductor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../google/index.html">Google, Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../hardkernel/index.html">HardKernel</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../heimann/index.html">Heimann Sensor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../heltec/index.html">Heltec</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../holyiot/index.html">Shenzhen Holyiot Technology Co.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../iar/index.html">IAR</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../infineon/index.html">Infineon Technologies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../innblue/index.html">innblue</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../intel/index.html">Intel Corporation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ite/index.html">ITE Tech. Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../jhoinrch/index.html">Jhoinrch</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../jlc/index.html">Shenzhen JLC Technology Group Co., Ltd.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../kaga-fei/index.html">KAGA-FEI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../khadas/index.html">Khadas</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../kincony/index.html">Kincony</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../kosagi/index.html">Kosagi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../kws/index.html">KWS Computersysteme Gmbh</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../lilygo/index.html">Lilygo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../longan/index.html">Longan Labs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../lowrisc/index.html">lowRISC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../luatos/index.html">Luatos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../luckfox/index.html">Shenzhen Luckfox Technology Co., Ltd.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../m5stack/index.html">M5Stack</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../madmachine/index.html">Mad Machine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../makerbase/index.html">Makerbase</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../makerdiary/index.html">Maker Diary</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../makerfabs/index.html">Makerfabs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../mediatek/index.html">MediaTek Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../microchip/index.html">Microchip Technology Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../mikroe/index.html">MikroElektronika d.o.o.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../muselab/index.html">Muselab</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../mxchip/index.html">MXCHIP</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../native/index.html">POSIX/Native 开发板</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../nordic/index.html">Nordic Semiconductor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../norik/index.html">Norik Systems</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../nucode/index.html">NUCODE Co., Ltd.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../nuvoton/index.html">Nuvoton Technology Corporation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../nxp/index.html">NXP Semiconductors</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../oct/index.html">Octavo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../olimex/index.html">OLIMEX Ltd.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../openhwgroup/index.html">OpenHW Group</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../openisa/index.html">OpenISA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../others/index.html">其他及未知厂商</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../panasonic/index.html">Panasonic Corporation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../particle/index.html">Particle Industries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../pcbcupid/index.html">PCB Cupid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../peregrine/index.html">Peregrine</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../phytec/index.html">PHYTEC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../pimoroni/index.html">Pimoroni Ltd.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../pine64/index.html">Pine64</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../pjrc/index.html">PJRC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../qcom/index.html">Qualcomm Technologies, Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../qemu/index.html">QEMU</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../qorvo/index.html">Qorvo, Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../quicklogic/index.html">QuickLogic Corp.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../radxa/index.html">Radxa</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../rakwireless/index.html">RAKwireless</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../raspberrypi/index.html">Raspberry Pi Foundation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../raytac/index.html">Raytac Corporation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../realtek/index.html">Realtek</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../renesas/index.html">Renesas Electronics Corporation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../renode/index.html">Renode</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../retronix/index.html">Retronix Technology Inc</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ronoth/index.html">Ronoth</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ruiside/index.html">Ruiside</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ruuvi/index.html">Ruuvi</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../sc/index.html">Space Cubics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../seagate/index.html">Seagate Technology PLC</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../seco/index.html">SECO SpA</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../seeed/index.html">Seeed Technology Co., Ltd</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../segger/index.html">SEGGER Microcontroller GmbH</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../sensry/index.html">Sensry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../shakti/index.html">SHAKTI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../shields/index.html">扩展板（shield）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../sifive/index.html">SiFive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../sifli/index.html">SiFli Technologies</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../silabs/index.html">Silicon Labs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../sipeed/index.html">Sipeed</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../snps/index.html">Synopsys</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../solderedelectronics/index.html">Soldered Electronics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../sparkfun/index.html">SparkFun Electronics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../st/index.html">STMicroelectronics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../starfive/index.html">StarFive</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../steelseries/index.html">SteelSeries</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../syna/index.html">Synaptics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../t3gemstone/index.html">T3 Gemstone</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tdk/index.html">TDK</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../technexion/index.html">TECHNEXION</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../telink/index.html">Telink Semiconductor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../thirdreality/index.html">Third Reality, Inc.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../ti/index.html">Texas Instruments</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../toradex/index.html">Toradex</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../trenz/index.html">Trenz Electronic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../tuya/index.html">Tuya</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../u-blox/index.html">u-blox</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../udoo/index.html">UDOO</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../uiap/index.html">Umeta &amp; Ikki Automotive Parts</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../up-bridge-the-gap/index.html">UP Bridge the Gap.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../variscite/index.html">Variscite</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../vcc-gnd/index.html">VCC-GND</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../vicharak/index.html">Vicharak</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../viewe/index.html">VIEWE Display Co., Ltd.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../vngiotlab/index.html">VNG Corporation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../waiken-smart/index.html">Dongguan Waiken-Smart Technology Co., Ltd.</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../waveshare/index.html">Waveshare Electronics</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../wch/index.html">WCH - 南京沁恒微电子股份有限公司（Nanjing Qinheng Microelectronics Co.）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../we/index.html">Würth Elektronik</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../weact/index.html">WeAct Studio</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../wemos/index.html">Wemos</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../witte/index.html">Witte</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../wiznet/index.html">WIZnet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../xen/index.html">Xen Hypervisor</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../xunlong/index.html">深圳市迅龙软件有限公司（Shenzhen Xunlong Software Co., Limited）</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../../../index.html">支持的开发板和扩展板</a> &raquo;</li>
+  
+     <li><a href="../../index.html">ACRN 项目</a> &raquo;</li>
+  
+  <li>ACRN 虚拟机监控程序</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="acrn-hypervisor">
+<h1>ACRN 虚拟机监控程序<a class="headerlink" href="#acrn-hypervisor" title="链接到此标题。"></a></h1>
+<p>Zephyr 能够作为客户机运行在 x86 ACRN 虚拟机监控程序（hypervisor）之上（参见 <a class="reference external" href="https://projectacrn.org/">https://projectacrn.org/</a>）。不过，实现这一点的过程相对复杂。</p>
+<p>ACRN 虚拟机监控程序支持一种混合场景，其中 Zephyr 以所谓的“预启动”（pre-launched）模式运行。这意味着 Zephyr 将直接访问 ACRN 虚拟机监控程序，而不经过 SOS VM。这是现实中最实用的用户场景，因为 Zephyr 的实时性和安全能力可以得到保证，不受其他 VM 的影响。下图摘自 ACRN 官方文档，展示了混合场景的工作方式：</p>
+<figure class="align-center" id="id1">
+<img alt="ACRN 混合用户场景" src="../../../../_images/ACRN-Hybrid.jpg" />
+<figcaption>
+<p><span class="caption-text">ACRN 混合用户场景</span><a class="headerlink" href="#id1" title="链接到此图片"></a></p>
+</figcaption>
+</figure>
+<p>本教程将演示如何构建一个最小的 Zephyr 与 ACRN 虚拟机监控程序运行实例，以证明其可以正常工作。要了解 ACRN 的其他功能，例如构建和使用 SOS VM 或其他客户机 VM，请参阅 ACRN 入门指南：<a class="reference external" href="https://projectacrn.github.io/latest/tutorials/using_hybrid_mode_on_nuc.html">https://projectacrn.github.io/latest/tutorials/using_hybrid_mode_on_nuc.html</a></p>
+<section id="build-your-zephyr-app">
+<h2>构建 Zephyr 应用程序<a class="headerlink" href="#build-your-zephyr-app" title="链接到此标题。"></a></h2>
+<p>首先，像平常一样构建要在 ACRN 中运行的 Zephyr 应用程序，并选择合适的开发板：</p>
+<blockquote>
+<div><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">west build -b acrn_ehl_crb samples/hello_world</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>本教程使用 Intel Elkhart Lake 参考板（<a class="reference external" href="https://www.intel.com/content/www/us/en/products/docs/processors/embedded/enhanced-for-iot-platform-brief.html">EHL</a> CRB），因为它是此类场景的推荐平台之一。使用 <code class="docutils literal notranslate"><span class="pre">acrn_ehl_crb</span></code> 作为目标开发板参数。</p>
+<p>注意 <code class="docutils literal notranslate"><span class="pre">build/zephyr/.config</span></code> 中的 Kconfig 输出，稍后配置 ACRN 时需要参考它。</p>
+<p>需要的 Zephyr 构建产物是 <code class="docutils literal notranslate"><span class="pre">build/zephyr/zephyr.bin</span></code>，它是一个原始内存镜像。与其他 x86 目标不同，这里不应使用 <code class="docutils literal notranslate"><span class="pre">zephyr.elf</span></code>！</p>
+</section>
+<section id="configure-and-build-acrn">
+<h2>配置并构建 ACRN<a class="headerlink" href="#configure-and-build-acrn" title="链接到此标题。"></a></h2>
+<p>首先需要获取源代码，从以下地址克隆：</p>
+<blockquote>
+<div><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">git clone https://github.com/projectacrn/acrn-hypervisor</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>建议使用 v2.5.1 或更高版本的 ACRN 虚拟机监控程序，因为这些版本对 Zephyr 中 SMP 的支持更好。</p>
+<p>与 Zephyr 一样，ACRN 倾向于在构建时进行配置管理，而不是在运行时探测或控制。与 Zephyr 不同的是，ACRN 使用单个大型配置文件，而不是像 Kconfig defconfig 文件或设备树 include 那样易于合并的小型配置单元。需要编辑一个很大的 XML 文件来匹配 Zephyr 配置。选择与硬件匹配的 ACRN 主机配置（本例中为 &quot;ehl-crb-b&quot;），然后找到对应的文件 <code class="docutils literal notranslate"><span class="pre">misc/config_tools/data/&lt;platform&gt;/hybrid.xml</span></code>。</p>
+<p>首先，找到 <code class="docutils literal notranslate"><span class="pre">&lt;vm&gt;</span></code> 声明列表。每个声明都有一个 <code class="docutils literal notranslate"><span class="pre">id=</span></code> 属性。测试 Zephyr 时，应确保 Zephyr 镜像的 ID 为零。这样只需一个 VM 镜像即可启动 ACRN，避免将大型 Linux 二进制文件无谓地复制到引导文件系统中。在当前测试过的配置下，Zephyr 的 &quot;vm_type&quot; 标签始终为 &quot;SAFETY_VM&quot;。</p>
+<section id="configure-zephyr-memory-layout">
+<h3>配置 Zephyr 内存布局<a class="headerlink" href="#configure-zephyr-memory-layout" title="链接到此标题。"></a></h3>
+<p>接下来，确定 Zephyr 镜像的加载地址及其入口点地址。这些地址必须在 ACRN 中手动配置。Zephyr 传统上以 ELF 镜像形式发布，可以从中自动提取这些地址，但 ACRN 不支持这样做，它只能将单个连续的数据区域加载到内存中并跳转到指定地址。</p>
+<p>找到 &quot;&lt;vm id=&quot;0&quot;&gt;...&lt;os_config&gt;&quot; 标签，其内容类似如下：</p>
+<blockquote>
+<div><div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;os_config&gt;</span>
+<span class="w">    </span><span class="nt">&lt;name&gt;</span>Zephyr<span class="nt">&lt;/name&gt;</span>
+<span class="w">    </span><span class="nt">&lt;kern_type&gt;</span>KERNEL_ZEPHYR<span class="nt">&lt;/kern_type&gt;</span>
+<span class="w">    </span><span class="nt">&lt;kern_mod&gt;</span>Zephyr_RawImage<span class="nt">&lt;/kern_mod&gt;</span>
+<span class="w">    </span><span class="nt">&lt;ramdisk_mod/&gt;</span>
+<span class="w">    </span><span class="nt">&lt;bootargs&gt;&lt;/bootargs&gt;</span>
+<span class="w">    </span><span class="nt">&lt;kern_load_addr&gt;</span>0x1000<span class="nt">&lt;/kern_load_addr&gt;</span>
+<span class="w">    </span><span class="nt">&lt;kern_entry_addr&gt;</span>0x1000<span class="nt">&lt;/kern_entry_addr&gt;</span>
+<span class="nt">&lt;/os_config&gt;</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p><code class="docutils literal notranslate"><span class="pre">kern_load_addr</span></code> 标签必须与 include/arch/x86/memory.ld 中的 Zephyr LOCORE_BASE 符号一致。该值目前为 0x1000，与 ACRN 默认配置相符。</p>
+<p><code class="docutils literal notranslate"><span class="pre">kern_entry_addr</span></code> 标签必须与构建出的 <code class="docutils literal notranslate"><span class="pre">zephyr.elf</span></code> 文件中的入口点一致。可以使用 binutils 查找，例如：</p>
+<blockquote>
+<div><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>objdump<span class="w"> </span>-f<span class="w"> </span>build/zephyr/zephyr.elf
+
+<span class="go">build/zephyr/zephyr.elf:     file format elf64-x86-64</span>
+<span class="go">architecture: i386:x86-64, flags 0x00000012:</span>
+<span class="go">EXEC_P, HAS_SYMS</span>
+<span class="go">start address 0x0000000000001000</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>默认情况下，该入口地址同样为 0x1000。但并非所有配置都一直如此，将来也可能会改变。</p>
+</section>
+<section id="configure-zephyr-cpus">
+<h3>配置 Zephyr CPU<a class="headerlink" href="#configure-zephyr-cpus" title="链接到此标题。"></a></h3>
+<p>现在需要配置 ACRN 提供给客户机的 CPU 环境。Zephyr 默认以 SMP 模式构建，但 ACRN 的默认配置只为其分配一个 CPU。在 Zephyr 的 .config 文件中找到 <code class="docutils literal notranslate"><span class="pre">CONFIG_MP_MAX_NUM_CPUS</span></code> 的值，并在 <code class="docutils literal notranslate"><span class="pre">&lt;cpu_affinity&gt;</span></code> 标签中为客户机分配相同数量的 CPU。例如：</p>
+<blockquote>
+<div><div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;vm</span><span class="w"> </span><span class="na">id=</span><span class="s">"0"</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;vm_type&gt;</span>SAFETY_VM<span class="nt">&lt;/vm_type&gt;</span>
+<span class="w">    </span><span class="nt">&lt;name&gt;</span>ACRN<span class="w"> </span>PRE-LAUNCHED<span class="w"> </span>VM0<span class="nt">&lt;/name&gt;</span>
+<span class="w">    </span><span class="nt">&lt;guest_flags&gt;</span>
+<span class="w">        </span><span class="nt">&lt;guest_flag&gt;</span>0<span class="nt">&lt;/guest_flag&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/guest_flags&gt;</span>
+<span class="w">    </span><span class="nt">&lt;cpu_affinity&gt;</span>
+<span class="w">        </span><span class="nt">&lt;pcpu_id&gt;</span>0<span class="nt">&lt;/pcpu_id&gt;</span>
+<span class="w">        </span><span class="nt">&lt;pcpu_id&gt;</span>1<span class="nt">&lt;/pcpu_id&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/cpu_affinity&gt;</span>
+<span class="w">    </span>...
+<span class="w">    </span><span class="nt">&lt;clos&gt;</span>
+<span class="w">        </span><span class="nt">&lt;vcpu_clos&gt;</span>0<span class="nt">&lt;/vcpu_clos&gt;</span>
+<span class="w">        </span><span class="nt">&lt;vcpu_clos&gt;</span>0<span class="nt">&lt;/vcpu_clos&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/clos&gt;</span>
+<span class="w">    </span>...
+<span class="nt">&lt;/vm&gt;</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>要使用 SMP，必须将 VM0 的 pcpu_id 改为 0 和 1，从而让 ACRN 在 CPU0 和 CPU1 上运行 Zephyr。不做此修改，ACRN 虚拟机监控程序和 Zephyr 应用程序将无法成功启动。如果计划只用一个 CPU 运行 Zephyr，可以跳过此步骤。</p>
+<p>由于 Zephyr 使用 CPU0 和 CPU1，还必须修改 VM1 的配置，使其运行在 CPU2 和 CPU3 上。如果 ACRN 环境中还有其他 VM，也应相应修改它们的配置。</p>
+<blockquote>
+<div><div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;vm</span><span class="w"> </span><span class="na">id=</span><span class="s">"1"</span><span class="nt">&gt;</span>
+<span class="w">    </span><span class="nt">&lt;vm_type&gt;</span>SOS_VM<span class="nt">&lt;/vm_type&gt;</span>
+<span class="w">    </span><span class="nt">&lt;name&gt;</span>ACRN<span class="w"> </span>SOS<span class="w"> </span>VM<span class="nt">&lt;/name&gt;</span>
+<span class="w">    </span><span class="nt">&lt;guest_flags&gt;</span>
+<span class="w">        </span><span class="nt">&lt;guest_flag&gt;</span>0<span class="nt">&lt;/guest_flag&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/guest_flags&gt;</span>
+<span class="w">    </span><span class="nt">&lt;cpu_affinity&gt;</span>
+<span class="w">        </span><span class="nt">&lt;pcpu_id&gt;</span>2<span class="nt">&lt;/pcpu_id&gt;</span>
+<span class="w">        </span><span class="nt">&lt;pcpu_id&gt;</span>3<span class="nt">&lt;/pcpu_id&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/cpu_affinity&gt;</span>
+<span class="w">    </span><span class="nt">&lt;clos&gt;</span>
+<span class="w">        </span><span class="nt">&lt;vcpu_clos&gt;</span>0<span class="nt">&lt;/vcpu_clos&gt;</span>
+<span class="w">        </span><span class="nt">&lt;vcpu_clos&gt;</span>0<span class="nt">&lt;/vcpu_clos&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/clos&gt;</span>
+<span class="w">    </span>...
+<span class="nt">&lt;/vm&gt;</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>注意，这些序号是主机上的物理 CPU。配置多个客户机时，通常不希望这些分配与其他客户机重叠。但测试 Zephyr 时，只使用 CPU 0 和 1 即可正常工作。（注意 ehl-crb-b 有四个物理 CPU，因此配置全部 0-3 也能正常工作，但这样就没有空余 CPU 可专门分配给其他客户机了。）</p>
+</section>
+<section id="build-acrn">
+<h3>构建 ACRN<a class="headerlink" href="#build-acrn" title="链接到此标题。"></a></h3>
+<p>配置完成后，ACRN 的构建过程相当顺利：</p>
+<blockquote>
+<div><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$ </span>make<span class="w"> </span>-j<span class="w"> </span><span class="nv">BOARD</span><span class="o">=</span>ehl-crb-b<span class="w"> </span><span class="nv">SCENARIO</span><span class="o">=</span>hybrid
+</pre></div>
+</div>
+</div></blockquote>
+<p>唯一需要的构建产物是 <code class="docutils literal notranslate"><span class="pre">build/hypervisor/acrn.bin</span></code> 中的 ACRN multiboot 镜像</p>
+</section>
+</section>
+<section id="assemble-efi-boot-media">
+<h2>制作 EFI 启动介质<a class="headerlink" href="#assemble-efi-boot-media" title="链接到此标题。"></a></h2>
+<p>ACRN 通过 GNU GRUB 引导加载程序在硬件上启动，而 GRUB 本身由 EFI 固件启动。两者都需要正确配置。</p>
+<section id="locate-grub">
+<h3>获取 GRUB<a class="headerlink" href="#locate-grub" title="链接到此标题。"></a></h3>
+<p>首先，需要一个与硬件相匹配的 GRUB EFI 二进制文件。很多情况下，直接从上游源码构建，或从合适的 Linux 发行版中复制一份即可。但有些情况下不行，需要针对特定硬件给 GRUB 打补丁。请联系硬件支持团队（此处应有笑声），获取构建可用 GRUB 的明确说明。实际上，可能只需四处问问，从别人上次测试成功的环境中复制一个二进制文件即可。</p>
+</section>
+<section id="create-efi-boot-filesystem">
+<h3>创建 EFI 启动文件系统<a class="headerlink" href="#create-efi-boot-filesystem" title="链接到此标题。"></a></h3>
+<p>现在将启动介质（例如位于 /dev/sdb 的 U 盘，具体硬件可能不同！）连接到 Linux 系统，并创建一个足以存放启动文件的 EFI 启动分区（类型代码 0xEF）。下面的命令直接将相关命令传给 fdisk，也可以手动输入这些命令：</p>
+<blockquote>
+<div><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span><span class="k">for</span><span class="w"> </span>i<span class="w"> </span><span class="k">in</span><span class="w"> </span>n<span class="w"> </span>p<span class="w"> </span><span class="m">1</span><span class="w"> </span><span class="s2">""</span><span class="w"> </span><span class="s2">""</span><span class="w"> </span>t<span class="w"> </span>ef<span class="w"> </span>w<span class="p">;</span><span class="w"> </span><span class="k">do</span><span class="w"> </span><span class="nb">echo</span><span class="w"> </span><span class="nv">$i</span><span class="p">;</span><span class="w"> </span><span class="k">done</span><span class="w"> </span><span class="p">|</span><span class="w"> </span>fdisk<span class="w"> </span>/dev/sdb
+<span class="go">...</span>
+<span class="go">&lt;lots of fdisk output&gt;</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>现在在新分区中创建 FAT 文件系统并挂载：</p>
+<blockquote>
+<div><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>mkfs.vfat<span class="w"> </span>-n<span class="w"> </span>ACRN_ZEPHYR<span class="w"> </span>/dev/sdb1
+<span class="gp"># </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/mnt/acrn
+<span class="gp"># </span>mount<span class="w"> </span>/dev/sdb1<span class="w"> </span>/mnt/acrn
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+<section id="copy-images-and-configure-grub">
+<h3>复制镜像并配置 GRUB<a class="headerlink" href="#copy-images-and-configure-grub" title="链接到此标题。"></a></h3>
+<p>ACRN 自身无法访问运行时文件系统。它以 GRUB &quot;multiboot&quot; 模块的形式接收客户机 VM（即 zephyr.bin），因此必须依赖 GRUB 的文件系统驱动。三个文件（GRUB、ACRN 和 Zephyr）都需要复制到启动介质的 &quot;/efi/boot&quot; 目录中。注意，GRUB 必须命名为 &quot;bootx64.efi&quot;，固件才能将其识别为引导加载程序：</p>
+<blockquote>
+<div><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>mkdir<span class="w"> </span>-p<span class="w"> </span>/mnt/acrn/efi/boot
+<span class="gp"># </span>cp<span class="w"> </span><span class="nv">$PATH_TO_GRUB_BINARY</span><span class="w"> </span>/mnt/acrn/efi/boot/bootx64.efi
+<span class="gp"># </span>cp<span class="w"> </span><span class="nv">$ZEPHYR_BASE</span>/build/zephyr/zephyr.bin<span class="w"> </span>/mnt/acrn/efi/boot/
+<span class="gp"># </span>cp<span class="w"> </span><span class="nv">$PATH_TO_ACRN</span>/build/hypervisor/acrn.bin<span class="w"> </span>/mnt/acrn/efi/boot/
+</pre></div>
+</div>
+</div></blockquote>
+<p>启动时，GRUB 会加载 &quot;efi/boot/grub.cfg&quot; 文件以获取运行时配置指令（讽刺的是，ACRN 和 Zephyr 都没有这项功能！）。该文件需要将 acrn.bin 作为启动目标加载，并将 zephyr.bin 文件作为其第一个模块传入（因为上面将 Zephyr 配置为 <code class="docutils literal notranslate"><span class="pre">&lt;vm</span> <span class="pre">id=&quot;0&quot;&gt;</span></code>）。除极个别特殊硬件外，这个最小配置都能正常工作（&quot;hd0&quot; 几乎总是 GRUB 被加载时所在的启动文件系统），无需折腾 GRUB 插件、菜单或超时设置：</p>
+<blockquote>
+<div><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>cat<span class="w"> </span>&gt;<span class="w"> </span>/mnt/acrn/efi/boot/grub.cfg&lt;&lt;EOF
+<span class="go">set root='hd0,msdos1'</span>
+<span class="go">multiboot2 /efi/boot/acrn.bin</span>
+<span class="go">module2 /efi/boot/zephyr.bin Zephyr_RawImage</span>
+<span class="go">boot</span>
+<span class="go">EOF</span>
+</pre></div>
+</div>
+</div></blockquote>
+<p>至此文件系统已准备完毕</p>
+<blockquote>
+<div><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp"># </span>umount<span class="w"> </span>/dev/sdb1
+<span class="gp"># </span>sync
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+</section>
+<section id="boot-acrn">
+<h2>启动 ACRN<a class="headerlink" href="#boot-acrn" title="链接到此标题。"></a></h2>
+<p>如果一切顺利，在硬件上从 EFI 介质启动后，ACRN 和 Zephyr 都会运行起来（因为 Zephyr 默认配置为“预启动”VM），控制台上会出现可用的 ACRN 命令行。</p>
+<p>可以使用 &quot;vm_console&quot; 命令查看 Zephyr（vm 0）的控制台输出：</p>
+<blockquote>
+<div><div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="go">ACRN:\&gt;vm_console 0</span>
+
+<span class="go">----- Entering VM 0 Shell -----</span>
+<span class="go">*** Booting Zephyr OS build v2.6.0-rc1-324-g1a03783861ad  ***</span>
+<span class="go">Hello World! acrn</span>
+</pre></div>
+</div>
+</div></blockquote>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 9月 14, 2024.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

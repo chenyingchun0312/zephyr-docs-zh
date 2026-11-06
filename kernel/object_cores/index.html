@@ -1,0 +1,541 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>对象核心 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/kernel/object_cores/index.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="时间工具" href="../timeutil.html" />
+    <link rel="prev" title="计时函数" href="../timing_functions/index.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../develop/index.html">使用 Zephyr 进行开发</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">内核</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../services/index.html">内核服务</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../drivers/index.html">设备驱动模型</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../usermode/index.html">用户模式</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../memory_management/index.html">内存管理</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../data_structures/index.html">数据结构</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../timing_functions/index.html">计时函数</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">对象核心</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#object-core-concepts">对象核心概念</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#object-core-statistics-concepts">对象核心统计概念</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#implementation">实现</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#defining-a-new-object-type">定义新的对象类型</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#initializing-a-new-object-core">初始化新的对象核心</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#walking-a-list-of-object-cores">遍历对象核心列表</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#object-core-statistics-querying">查询对象核心统计</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#configuration-options">配置选项</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#api-reference">API 参考</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../timeutil.html">时间工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../precision_timing.html">精密计时</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../util/index.html">实用工具</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../iterable_sections/index.html">可迭代段</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../code-relocation.html">代码和数据重定位</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../cleanup.html">基于作用域的清理辅助工具</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">内核</a> &raquo;</li>
+  
+  <li>对象核心</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="object-cores">
+<span id="object-cores-api"></span><h1>对象核心<a class="headerlink" href="#object-cores" title="链接到此标题。"></a></h1>
+<p>对象核心（object core）是一种内核调试工具，可用于识别已注册的对象并对其执行操作。</p>
+<nav class="contents local" id="id1">
+<ul class="simple">
+<li><p><a class="reference internal" href="#object-core-concepts" id="id2">对象核心概念</a></p></li>
+<li><p><a class="reference internal" href="#object-core-statistics-concepts" id="id3">对象核心统计概念</a></p></li>
+<li><p><a class="reference internal" href="#implementation" id="id4">实现</a></p>
+<ul>
+<li><p><a class="reference internal" href="#defining-a-new-object-type" id="id5">定义新的对象类型</a></p></li>
+<li><p><a class="reference internal" href="#initializing-a-new-object-core" id="id6">初始化新的对象核心</a></p></li>
+<li><p><a class="reference internal" href="#walking-a-list-of-object-cores" id="id7">遍历对象核心列表</a></p></li>
+<li><p><a class="reference internal" href="#object-core-statistics-querying" id="id8">查询对象核心统计</a></p></li>
+</ul>
+</li>
+<li><p><a class="reference internal" href="#configuration-options" id="id9">配置选项</a></p></li>
+<li><p><a class="reference internal" href="#api-reference" id="id10">API 参考</a></p></li>
+</ul>
+</nav>
+<section id="object-core-concepts">
+<h2><a class="toc-backref" href="#id2" role="doc-backlink">对象核心概念</a><a class="headerlink" href="#object-core-concepts" title="链接到此标题。"></a></h2>
+<p>每个对象实例都嵌入一个名为 <code class="docutils literal notranslate"><span class="pre">obj_core</span></code> 的对象核心字段。对象核心将对象与其对象类型关联起来，而每个对象类型都让调试工具能够枚举该类型的对象。对象类型之间通过一个单向链表连接在一起。综合起来，调试工具就可以遍历系统中的所有对象。</p>
+<p>对象类型从两个地方枚举其对象：</p>
+<ul class="simple">
+<li><p>它的永久对象，即静态定义的实例，例如使用 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_SEM_DEFINE</span></code> 创建的实例。这些对象直接在其可迭代段中原地遍历，从不在运行时注册。</p></li>
+<li><p>一个容量有限的注册表，记录在运行时初始化的对象，例如驱动数据结构中通过 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_sem_init()</span></code> 初始化的信号量。注册表只引用这些对象，从不在对象内部存储任何内容。</p></li>
+</ul>
+<p>因此，对象可以在任何存储中初始化、原地再次初始化，或者在不调用任何对象核心函数的情况下被丢弃：已不存在的对象不会破坏注册表。由这一模型可以得出以下规则：</p>
+<ul class="simple">
+<li><p>位于当前运行线程的栈或中断栈中的对象不会被注册：它的生命周期随栈帧结束而结束。对象类型会在其 <code class="docutils literal notranslate"><span class="pre">skipped</span></code> 字段中统计此类对象。其他栈不会被识别，例如用户线程执行系统调用时所用的特权栈，或某个架构特有的异常栈；位于这些栈中的对象会被注册，并一直被报告，直到其存储被重用。</p></li>
+<li><p>当注册表已满时，后续对象不会被注册，对象类型会在其 <code class="docutils literal notranslate"><span class="pre">dropped</span></code> 字段中统计这些对象。注册表大小通过 <a class="reference internal" href="../../kconfig.html#CONFIG_OBJ_CORE_MAX_DYNAMIC_OBJECTS" title="CONFIG_OBJ_CORE_MAX_DYNAMIC_OBJECTS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_OBJ_CORE_MAX_DYNAMIC_OBJECTS</span></code></a> 设置。</p></li>
+<li><p>未注销就被丢弃的对象会一直被报告，直到其存储被重用：遍历时会根据缺失的类型标签识别出被重用的存储，并删除该条目。内核在释放对象时会自行将其注销：在线程中止时，在 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_object_free()</span></code>、<code class="xref c c-func docutils literal notranslate"><span class="pre">k_timer_cleanup()</span></code>、<code class="xref c c-func docutils literal notranslate"><span class="pre">k_msgq_cleanup()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_stack_cleanup()</span></code> 中，以及在启用 <a class="reference internal" href="../../kconfig.html#CONFIG_OBJ_CORE_EVICT_ON_FREE" title="CONFIG_OBJ_CORE_EVICT_ON_FREE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_OBJ_CORE_EVICT_ON_FREE</span></code></a> 时将内存归还给堆、内存块（slab）或内存块分配器（Memory Blocks）时。以其他方式结束对象生命周期的代码可以调用 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_obj_core_unlink()</span></code>，使该对象立即不再被报告；类型标签检查只是一道兜底措施，而且它会读取对象原先的存储，该存储必须仍处于映射状态。</p></li>
+<li><p>一旦某个类型的 <code class="docutils literal notranslate"><span class="pre">dropped</span></code> 计数不为零，就存在任何遍历都不会报告的对象，因此只有在该计数为零时，对象清单才是完整的。</p></li>
+</ul>
+<p>以下内核对象已集成对象核心：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../services/synchronization/condvar.html#condvar"><span class="std std-ref">条件变量</span></a></p></li>
+<li><p><a class="reference internal" href="../services/synchronization/events.html#events"><span class="std std-ref">事件</span></a></p></li>
+<li><p><a class="reference internal" href="../services/data_passing/fifos.html#fifos-v2"><span class="std std-ref">FIFO</span></a> 和 <a class="reference internal" href="../services/data_passing/lifos.html#lifos-v2"><span class="std std-ref">LIFO</span></a></p></li>
+<li><p><a class="reference internal" href="../services/data_passing/mailboxes.html#mailboxes-v2"><span class="std std-ref">邮箱</span></a></p></li>
+<li><p><a class="reference internal" href="../memory_management/slabs.html#memory-slabs-v2"><span class="std std-ref">内存块（slab）</span></a></p></li>
+<li><p><a class="reference internal" href="../services/data_passing/message_queues.html#message-queues-v2"><span class="std std-ref">消息队列</span></a></p></li>
+<li><p><a class="reference internal" href="../services/synchronization/mutexes.html#mutexes-v2"><span class="std std-ref">互斥量</span></a></p></li>
+<li><p><a class="reference internal" href="../services/data_passing/pipes.html#pipes-v2"><span class="std std-ref">管道</span></a></p></li>
+<li><p><a class="reference internal" href="../services/data_passing/queues.html#queues"><span class="std std-ref">队列</span></a></p></li>
+<li><p><a class="reference internal" href="../services/synchronization/semaphores.html#semaphores-v2"><span class="std std-ref">信号量</span></a></p></li>
+<li><p><a class="reference internal" href="../services/threads/index.html#threads-v2"><span class="std std-ref">线程</span></a></p></li>
+<li><p><a class="reference internal" href="../services/timing/timers.html#timers-v2"><span class="std std-ref">定时器</span></a></p></li>
+<li><p><a class="reference internal" href="../memory_management/sys_mem_blocks.html#sys-mem-blocks"><span class="std std-ref">系统内存块（Memory Blocks）</span></a></p></li>
+</ul>
+<p>开发者可以根据需要自由地将对象核心集成到其项目中的其他对象中。<a class="reference internal" href="../../samples/kernel/object_cores/README.html#object_cores" title="枚举运行中系统的内核对象并查询其统计信息。">Object cores</a> 示例逐步展示了这一机制，<a class="reference internal" href="../../samples/kernel/object_monitor/README.html#object_monitor" title="观察运行中应用程序的内核对象的出现与消失。">Object monitor</a> 示例则使用它来监视正在运行的应用程序中的对象。</p>
+</section>
+<section id="object-core-statistics-concepts">
+<h2><a class="toc-backref" href="#id3" role="doc-backlink">对象核心统计概念</a><a class="headerlink" href="#object-core-statistics-concepts" title="链接到此标题。"></a></h2>
+<p>许多内核对象支持收集和报告统计信息。对象核心通过对象核心统计提供了一种获取这些信息的统一方式。启用后，对象类型包含一个指向统计描述符的指针，该描述符定义了为对接对象统计信息而启用的各种操作。此外，对象核心还包含一个指针，指向与该对象关联的“原始”统计信息。原始数据是与统计信息相关的、未经处理的原始数据。查询得到的数据可能是“原始”数据，也可能经过某种计算处理（例如求平均值）。</p>
+<p>下表列出了哪些对象已集成到对象核心统计中，以及用于“原始”数据和“查询”数据的结构体。</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>对象</p></th>
+<th class="head"><p>原始数据类型</p></th>
+<th class="head"><p>查询数据类型</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>struct mem_slab</p></td>
+<td><p>struct mem_slab_info</p></td>
+<td><p>struct sys_memory_stats</p></td>
+</tr>
+<tr class="row-odd"><td><p>struct sys_mem_blocks</p></td>
+<td><p>struct sys_mem_blocks_info</p></td>
+<td><p>struct sys_memory_stats</p></td>
+</tr>
+<tr class="row-even"><td><p>struct k_thread</p></td>
+<td><p>struct k_cycle_stats</p></td>
+<td><p>struct k_thread_runtime_stats</p></td>
+</tr>
+<tr class="row-odd"><td><p>struct _cpu</p></td>
+<td><p>struct k_cycle_stats</p></td>
+<td><p>struct k_thread_runtime_stats</p></td>
+</tr>
+<tr class="row-even"><td><p>struct z_kernel</p></td>
+<td><p>struct k_cycle_stats[CPU 数量]</p></td>
+<td><p>struct k_thread_runtime_stats</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="implementation">
+<h2><a class="toc-backref" href="#id4" role="doc-backlink">实现</a><a class="headerlink" href="#implementation" title="链接到此标题。"></a></h2>
+<section id="defining-a-new-object-type">
+<h3><a class="toc-backref" href="#id5" role="doc-backlink">定义新的对象类型</a><a class="headerlink" href="#defining-a-new-object-type" title="链接到此标题。"></a></h3>
+<p>对象类型是一个 <code class="xref c c-struct docutils literal notranslate"><span class="pre">k_obj_type</span></code> 类型的全局变量。当对象结构体在可迭代段中有静态定义的实例时，该类型在构建时通过 <code class="xref c c-macro docutils literal notranslate"><span class="pre">K_OBJ_TYPE_DEFINE</span></code> 定义，这些实例就成为它的永久对象。以下代码展示了如何定义一个新的对象类型，以便与对象核心和对象核心统计一起使用。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="cm">/* Unique object type ID */</span>
+
+<span class="cp">#define K_OBJ_TYPE_MY_NEW_TYPE  K_OBJ_TYPE_ID_GEN("UNIQ")</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">my_obj_type_raw_info</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="p">};</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">my_obj_type_query_stats</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="p">};</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">my_new_obj</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">k_obj_core</span><span class="w"> </span><span class="n">obj_core</span><span class="p">;</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">my_obj_type_raw_info</span><span class="w">  </span><span class="n">info</span><span class="p">;</span>
+<span class="p">};</span>
+
+<span class="k">struct</span><span class="w"> </span><span class="nc">k_obj_core_stats_desc</span><span class="w"> </span><span class="n">my_obj_type_stats_desc</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="p">.</span><span class="n">raw_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">my_obj_type_raw_stats</span><span class="p">),</span>
+<span class="w">    </span><span class="p">.</span><span class="n">query_size</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">my_obj_type_query_stats</span><span class="p">),</span>
+<span class="w">    </span><span class="p">.</span><span class="n">raw</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">my_obj_type_stats_raw</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">query</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">my_obj_type_stats_query</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">reset</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">my_obj_type_stats_reset</span><span class="p">,</span>
+<span class="w">    </span><span class="p">.</span><span class="n">disable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w">    </span><span class="cm">/* Stats gathering is always on */</span>
+<span class="w">    </span><span class="p">.</span><span class="n">enable</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="nb">NULL</span><span class="p">,</span><span class="w">     </span><span class="cm">/* Stats gathering is always on */</span>
+<span class="p">};</span>
+
+<span class="n">K_OBJ_TYPE_DEFINE_STATS</span><span class="p">(</span><span class="n">my_obj_type</span><span class="p">,</span><span class="w"> </span><span class="n">my_new_obj</span><span class="p">,</span><span class="w"> </span><span class="n">K_OBJ_TYPE_MY_NEW_TYPE</span><span class="p">,</span>
+<span class="w">                        </span><span class="o">&amp;</span><span class="n">my_obj_type_stats_desc</span><span class="p">,</span><span class="w"> </span><span class="n">info</span><span class="p">);</span>
+</pre></div>
+</div>
+<p>如果某个类型的对象不在可迭代段中，则改为在运行时、在其任何对象之前初始化该类型。可以将一个永久的对象数组注册为该类型的范围，这样其中的对象就不需要注册表条目。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">k_obj_type</span><span class="w">  </span><span class="n">my_obj_type</span><span class="p">;</span>
+<span class="k">struct</span><span class="w"> </span><span class="nc">my_new_obj</span><span class="w">  </span><span class="n">my_objects</span><span class="p">[</span><span class="mi">8</span><span class="p">];</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">my_obj_type_init</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="n">z_obj_type_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_obj_type</span><span class="p">,</span><span class="w"> </span><span class="n">K_OBJ_TYPE_MY_NEW_TYPE</span><span class="p">,</span>
+<span class="w">                    </span><span class="n">offsetof</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">my_new_obj</span><span class="p">,</span><span class="w"> </span><span class="n">obj_core</span><span class="p">));</span>
+<span class="w">    </span><span class="n">k_obj_type_init_range</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_obj_type</span><span class="p">,</span><span class="w"> </span><span class="n">my_objects</span><span class="p">,</span>
+<span class="w">                          </span><span class="o">&amp;</span><span class="n">my_objects</span><span class="p">[</span><span class="n">ARRAY_SIZE</span><span class="p">(</span><span class="n">my_objects</span><span class="p">)],</span>
+<span class="w">                          </span><span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">my_new_obj</span><span class="p">),</span><span class="w"> </span><span class="nb">false</span><span class="p">);</span>
+<span class="w">    </span><span class="n">k_obj_type_stats_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_obj_type</span><span class="p">,</span><span class="w"> </span><span class="o">&amp;</span><span class="n">my_obj_type_stats_desc</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="initializing-a-new-object-core">
+<h3><a class="toc-backref" href="#id6" role="doc-backlink">初始化新的对象核心</a><a class="headerlink" href="#initializing-a-new-object-core" title="链接到此标题。"></a></h3>
+<p>已集成到对象核心框架中的内核对象，会在对象初始化时自动初始化其对象核心。但是，希望将自己的对象加入该框架的开发者，需要既初始化对象核心，又对其进行注册。注册属于该类型永久范围内的对象不会产生任何效果，因为该对象会从该范围中被报告。以下代码在上面示例的基础上初始化对象核心。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">void</span><span class="w"> </span><span class="nf">my_new_obj_init</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">my_new_obj</span><span class="w"> </span><span class="o">*</span><span class="n">new_obj</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="p">...</span>
+<span class="w">    </span><span class="n">k_obj_core_init</span><span class="p">(</span><span class="n">K_OBJ_CORE</span><span class="p">(</span><span class="n">new_obj</span><span class="p">),</span><span class="w"> </span><span class="o">&amp;</span><span class="n">my_obj_type</span><span class="p">);</span>
+<span class="w">    </span><span class="n">k_obj_core_link</span><span class="p">(</span><span class="n">K_OBJ_CORE</span><span class="p">(</span><span class="n">new_obj</span><span class="p">));</span>
+<span class="w">    </span><span class="n">k_obj_core_stats_register</span><span class="p">(</span><span class="n">K_OBJ_CORE</span><span class="p">(</span><span class="n">new_obj</span><span class="p">),</span><span class="w"> </span><span class="o">&amp;</span><span class="n">new_obj</span><span class="o">-&gt;</span><span class="n">raw_stats</span><span class="p">,</span>
+<span class="w">                              </span><span class="k">sizeof</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">my_obj_type_raw_info</span><span class="p">));</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="walking-a-list-of-object-cores">
+<h3><a class="toc-backref" href="#id7" role="doc-backlink">遍历对象核心列表</a><a class="headerlink" href="#walking-a-list-of-object-cores" title="链接到此标题。"></a></h3>
+<p>有两个例程可用于遍历某个对象类型的对象核心：<code class="xref c c-func docutils literal notranslate"><span class="pre">k_obj_type_walk_locked()</span></code> 和 <code class="xref c c-func docutils literal notranslate"><span class="pre">k_obj_type_walk_unlocked()</span></code>。两者都会先访问该类型的永久对象，然后访问已注册的对象。以下代码在上面示例的基础上，打印该新对象类型所有对象的地址。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="kt">int</span><span class="w"> </span><span class="nf">walk_op</span><span class="p">(</span><span class="k">struct</span><span class="w"> </span><span class="nc">k_obj_core</span><span class="w"> </span><span class="o">*</span><span class="n">obj_core</span><span class="p">,</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="o">*</span><span class="n">data</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="kt">uint8_t</span><span class="w"> </span><span class="o">*</span><span class="n">ptr</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">ptr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">obj_core</span><span class="p">;</span>
+<span class="w">    </span><span class="n">ptr</span><span class="w"> </span><span class="o">-=</span><span class="w"> </span><span class="n">obj_core</span><span class="o">-&gt;</span><span class="n">type</span><span class="o">-&gt;</span><span class="n">obj_core_offset</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">printk</span><span class="p">(</span><span class="s">"%p</span><span class="se">\n</span><span class="s">"</span><span class="p">,</span><span class="w"> </span><span class="n">ptr</span><span class="p">);</span>
+
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="mi">0</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="nf">print_object_addresses</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">k_obj_type</span><span class="w"> </span><span class="o">*</span><span class="n">obj_type</span><span class="p">;</span>
+
+<span class="w">    </span><span class="cm">/* Find the object type */</span>
+
+<span class="w">    </span><span class="n">obj_type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">k_obj_type_find</span><span class="p">(</span><span class="n">K_OBJ_TYPE_MY_NEW_TYPE</span><span class="p">);</span>
+
+<span class="w">    </span><span class="cm">/* Walk the list of objects */</span>
+
+<span class="w">    </span><span class="n">k_obj_type_walk_unlocked</span><span class="p">(</span><span class="n">obj_type</span><span class="p">,</span><span class="w"> </span><span class="n">walk_op</span><span class="p">,</span><span class="w"> </span><span class="nb">NULL</span><span class="p">);</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+<section id="object-core-statistics-querying">
+<h3><a class="toc-backref" href="#id8" role="doc-backlink">查询对象核心统计</a><a class="headerlink" href="#object-core-statistics-querying" title="链接到此标题。"></a></h3>
+<p>以下代码在上面示例的基础上，展示了已集成到对象核心统计框架中的对象如何获取查询数据，以及如何重置与该对象关联的统计信息。</p>
+<div class="highlight-c notranslate"><div class="highlight"><pre><span></span><span class="k">struct</span><span class="w"> </span><span class="nc">my_new_obj</span><span class="w"> </span><span class="n">my_obj</span><span class="p">;</span>
+
+<span class="p">...</span>
+
+<span class="kt">void</span><span class="w"> </span><span class="n">my_func</span><span class="p">(</span><span class="kt">void</span><span class="p">)</span>
+<span class="p">{</span>
+<span class="w">    </span><span class="k">struct</span><span class="w"> </span><span class="nc">my_obj_type_query_stats</span><span class="w">  </span><span class="n">my_stats</span><span class="p">;</span>
+<span class="w">    </span><span class="kt">int</span><span class="w">  </span><span class="n">status</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">my_obj_type_init</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_obj</span><span class="p">);</span>
+
+<span class="w">    </span><span class="p">...</span>
+
+<span class="w">    </span><span class="n">status</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">k_obj_core_stats_query</span><span class="p">(</span><span class="n">K_OBJ_CORE</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_obj</span><span class="p">),</span>
+<span class="w">                                    </span><span class="o">&amp;</span><span class="n">my_stats</span><span class="p">,</span><span class="w"> </span><span class="k">sizeof</span><span class="p">(</span><span class="n">my_stats</span><span class="p">));</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">status</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="mi">0</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="cm">/* Failed to get stats */</span>
+<span class="w">        </span><span class="p">...</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">k_obj_core_stats_reset</span><span class="p">(</span><span class="n">K_OBJ_CORE</span><span class="p">(</span><span class="o">&amp;</span><span class="n">my_obj</span><span class="p">));</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="p">...</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</section>
+</section>
+<section id="configuration-options">
+<h2><a class="toc-backref" href="#id9" role="doc-backlink">配置选项</a><a class="headerlink" href="#configuration-options" title="链接到此标题。"></a></h2>
+<p>相关配置选项：</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_OBJ_CORE" title="CONFIG_OBJ_CORE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_OBJ_CORE</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_OBJ_CORE_MAX_DYNAMIC_OBJECTS" title="CONFIG_OBJ_CORE_MAX_DYNAMIC_OBJECTS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_OBJ_CORE_MAX_DYNAMIC_OBJECTS</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_OBJ_CORE_EVICT_ON_FREE" title="CONFIG_OBJ_CORE_EVICT_ON_FREE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_OBJ_CORE_EVICT_ON_FREE</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_OBJ_CORE_CONDVAR" title="CONFIG_OBJ_CORE_CONDVAR"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_OBJ_CORE_CONDVAR</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_OBJ_CORE_EVENT" title="CONFIG_OBJ_CORE_EVENT"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_OBJ_CORE_EVENT</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_OBJ_CORE_FIFO" title="CONFIG_OBJ_CORE_FIFO"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_OBJ_CORE_FIFO</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_OBJ_CORE_LIFO" title="CONFIG_OBJ_CORE_LIFO"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_OBJ_CORE_LIFO</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_OBJ_CORE_MAILBOX" title="CONFIG_OBJ_CORE_MAILBOX"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_OBJ_CORE_MAILBOX</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_OBJ_CORE_MEM_SLAB" title="CONFIG_OBJ_CORE_MEM_SLAB"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_OBJ_CORE_MEM_SLAB</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_OBJ_CORE_MSGQ" title="CONFIG_OBJ_CORE_MSGQ"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_OBJ_CORE_MSGQ</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_OBJ_CORE_MUTEX" title="CONFIG_OBJ_CORE_MUTEX"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_OBJ_CORE_MUTEX</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_OBJ_CORE_PIPE" title="CONFIG_OBJ_CORE_PIPE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_OBJ_CORE_PIPE</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_OBJ_CORE_QUEUE" title="CONFIG_OBJ_CORE_QUEUE"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_OBJ_CORE_QUEUE</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_OBJ_CORE_SEM" title="CONFIG_OBJ_CORE_SEM"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_OBJ_CORE_SEM</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_OBJ_CORE_STACK" title="CONFIG_OBJ_CORE_STACK"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_OBJ_CORE_STACK</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_OBJ_CORE_THREAD" title="CONFIG_OBJ_CORE_THREAD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_OBJ_CORE_THREAD</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_OBJ_CORE_TIMER" title="CONFIG_OBJ_CORE_TIMER"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_OBJ_CORE_TIMER</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_OBJ_CORE_SYS_MEM_BLOCKS" title="CONFIG_OBJ_CORE_SYS_MEM_BLOCKS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_OBJ_CORE_SYS_MEM_BLOCKS</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_OBJ_CORE_STATS" title="CONFIG_OBJ_CORE_STATS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_OBJ_CORE_STATS</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_OBJ_CORE_STATS_MEM_SLAB" title="CONFIG_OBJ_CORE_STATS_MEM_SLAB"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_OBJ_CORE_STATS_MEM_SLAB</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_OBJ_CORE_STATS_THREAD" title="CONFIG_OBJ_CORE_STATS_THREAD"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_OBJ_CORE_STATS_THREAD</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_OBJ_CORE_STATS_SYSTEM" title="CONFIG_OBJ_CORE_STATS_SYSTEM"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_OBJ_CORE_STATS_SYSTEM</span></code></a></p></li>
+<li><p><a class="reference internal" href="../../kconfig.html#CONFIG_OBJ_CORE_STATS_SYS_MEM_BLOCKS" title="CONFIG_OBJ_CORE_STATS_SYS_MEM_BLOCKS"><code class="xref kconfig kconfig-option docutils literal notranslate"><span class="pre">CONFIG_OBJ_CORE_STATS_SYS_MEM_BLOCKS</span></code></a></p></li>
+</ul>
+</section>
+<section id="api-reference">
+<h2><a class="toc-backref" href="#id10" role="doc-backlink">API 参考</a><a class="headerlink" href="#api-reference" title="链接到此标题。"></a></h2>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">obj_core_apis</span></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/kernel/object_cores/README.html#object_cores" title="枚举运行中系统的内核对象并查询其统计信息。">Object cores</a></span><span class="code-sample-description">枚举运行中系统的内核对象并查询其统计信息。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/kernel/object_monitor/README.html#object_monitor" title="观察运行中应用程序的内核对象的出现与消失。">Object monitor</a></span><span class="code-sample-description">观察运行中应用程序的内核对象的出现与消失。</span></li>
+</ul>
+</div>
+<dl>
+<dt class="sig sig-object c">
+<span class="pre">obj_core_stats_apis</span></dt>
+</dl>
+
+<div class="related-code-samples dropdown toggle-shown admonition">
+<p class="admonition-title">Related code samples</p>
+<ul class="code-sample-list">
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/kernel/object_cores/README.html#object_cores" title="枚举运行中系统的内核对象并查询其统计信息。">Object cores</a></span><span class="code-sample-description">枚举运行中系统的内核对象并查询其统计信息。</span></li>
+<li><span class="code-sample-name"><a class="reference internal" href="../../samples/kernel/object_monitor/README.html#object_monitor" title="观察运行中应用程序的内核对象的出现与消失。">Object monitor</a></span><span class="code-sample-description">观察运行中应用程序的内核对象的出现与消失。</span></li>
+</ul>
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 9月 14, 2026.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

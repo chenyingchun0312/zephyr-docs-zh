@@ -1,0 +1,387 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="zh-CN" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>West 故障排除 &mdash; Zephyr 项目文档（中文翻译）</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../../_static/doxytooltip.css?v=07852572" />
+      <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
+      <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css?v=9c3e77be" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/custom.css?v=1679f004" />
+      <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
+
+  
+    <link rel="shortcut icon" href="../../_static/favicon.png"/>
+    <link rel="canonical" href="https://chenyingchun0312.github.io/zephyr-docs-zh/develop/west/troubleshooting.html" />
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=ef5c4f8a"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+      <script src="../../_static/tippy/popper.min.js?v=f051b558"></script>
+      <script src="../../_static/tippy/tippy-bundle.umd.min.js?v=873d6056"></script>
+      <script src="../../_static/doxytooltip.js?v=ab77ca7a"></script>
+      <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
+      <script src="../../_static/copybutton.js?v=761fddf6"></script>
+      <script src="../../_static/js/custom.js?v=4daa9211"></script>
+      <script>
+document.addEventListener("DOMContentLoaded", function () {
+  var main = document.querySelector("div[role=main]") || document.body;
+  var div = document.createElement("div");
+  div.className = "admonition note";
+  div.style.marginBottom = "1.5em";
+  div.innerHTML = '<p class="admonition-title">说明</p><p>本站是 Zephyr 项目文档的非官方中文翻译（基于 v4.5.0），与 Zephyr 项目及 Linux 基金会无隶属关系。原文以 Apache-2.0 许可证发布，版权归 Zephyr 项目贡献者所有。以英文官方文档为准：<a href="https://docs.zephyrproject.org/latest/">docs.zephyrproject.org</a></p>';
+  main.insertBefore(div, main.firstChild);
+});
+</script>
+      <script>let toggleHintShow = 'Click to show';</script>
+      <script>let toggleHintHide = 'Click to hide';</script>
+      <script>let toggleOpenOnPrint = 'true';</script>
+      <script src="../../_static/togglebutton.js?v=b8b12719"></script>
+      <script src="../../_static/translations.js?v=540d3cec"></script>
+      <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+      <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="索引" href="../../genindex.html" />
+    <link rel="search" title="搜索" href="../../search.html" />
+    <link rel="next" title="基础知识" href="basics.html" />
+    <link rel="prev" title="West 发布说明" href="release-notes.html" />
+  <meta name="color-scheme" content="dark light">
+  
+  <noscript id="dark-mode-toggle-stylesheets">
+    <link rel="stylesheet" href="../../_static/css/light.css" type="text/css" media="(prefers-color-scheme: light)"/>
+    <link rel="stylesheet" href="../../_static/css/dark.css" type="text/css" media="(prefers-color-scheme: dark)"/>
+  </noscript>
+  <script src="../../_static/js/dark-mode-toggle-stylesheets-loader.min.js"></script>
+  <script type="module" src="../../_static/js/dark-mode-toggle.min.mjs"></script>
+  
+
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html">
+            
+              <img src="../../_static/logo.svg" class="logo" alt="Logo"/>
+          </a>
+<div class="search-container" role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="search" name="q" placeholder="搜索文档"
+           aria-label="搜索文档" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="导航菜单">
+  <div data-nosnippet>
+    
+  <div class="rst-versions" data-toggle="rst-versions" role="note" aria-label="versions">
+    <span class="rst-current-version" data-toggle="rst-current-version">
+      <span class="fa fa-book"> Zephyr Project</span>
+      v: latest
+      <span class="fa fa-caret-down"></span>
+    </span>
+    <div class="rst-other-versions">
+      <dl>
+        <dt>Document Release Versions</dt>
+        
+      </dl>
+      <dl>
+        <dt>下载</dt>
+        
+        <dd><a href="/latest/zephyr.pdf">PDF</a></dd>
+      </dl>
+      <dl>
+        <dt>zephyrproject.org Links</dt>
+          <dd>
+            <a href="https://www.zephyrproject.org/">Project Home</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/sdk-ng/releases">SDK</a>
+          </dd>
+          <dd>
+            <a href="https://github.com/zephyrproject-rtos/zephyr/releases">Releases</a>
+          </dd>
+      </dl>
+    </div>
+  </div>
+    
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../introduction/index.html">简介</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">使用 Zephyr 进行开发</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../getting_started/index.html">入门指南</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../beyond-GSG.html">入门指南之外</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../env_vars.html">环境变量</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../application/index.html">应用程序开发</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../debug/index.html">调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../api/index.html">API 状态与准则</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../languages/index.html">编程语言支持</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../optimizations/index.html">优化</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../flash_debug/index.html">烧录与硬件调试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modules.html">模块（外部项目）</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="index.html">West（Zephyr 的元工具）</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="install.html">安装 west</a></li>
+<li class="toctree-l3"><a class="reference internal" href="release-notes.html">West 发布说明</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">West 故障排除</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#west-update-fetching-failures"><code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">update</span></code> 获取失败</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#west-is-not-recognized-as-an-internal-or-external-command-operable-program-or-batch-file">&quot;'west' is not recognized as an internal or external command, operable program or batch file.'</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#invalid-choice-build-or-flash-etc">&quot;invalid choice: 'build'&quot;（或 'flash' 等）</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#invalid-choice-post-init">&quot;invalid choice: 'post-init'&quot;</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="basics.html">基础知识</a></li>
+<li class="toctree-l3"><a class="reference internal" href="built-in.html">内置命令</a></li>
+<li class="toctree-l3"><a class="reference internal" href="workspaces.html">工作区</a></li>
+<li class="toctree-l3"><a class="reference internal" href="manifest.html">West 清单</a></li>
+<li class="toctree-l3"><a class="reference internal" href="config.html">配置</a></li>
+<li class="toctree-l3"><a class="reference internal" href="alias.html">West 别名</a></li>
+<li class="toctree-l3"><a class="reference internal" href="extensions.html">扩展</a></li>
+<li class="toctree-l3"><a class="reference internal" href="build-flash-debug.html">构建、烧录和调试</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sign.html">签名二进制文件</a></li>
+<li class="toctree-l3"><a class="reference internal" href="zephyr-cmds.html">其他 Zephyr 扩展命令</a></li>
+<li class="toctree-l3"><a class="reference internal" href="why.html">历史与动机</a></li>
+<li class="toctree-l3"><a class="reference internal" href="without-west.html">不使用 west 使用 Zephyr</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../twister/index.html">测试运行器（Twister）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../test/index.html">测试</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sca/index.html">静态代码分析（SCA）</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../toolchains/index.html">工具链</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../tools/index.html">工具与 IDE</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../../kernel/index.html">内核</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../services/index.html">服务</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../build/index.html">构建与配置系统</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../hardware/index.html">硬件支持</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../contribute/index.html">为 Zephyr 做贡献</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../project/index.html">项目与治理</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../security/index.html">信息安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../safety/index.html">功能安全</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../samples/index.html">示例与演示</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../boards/index.html">支持的开发板和扩展板</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../releases/index.html">版本发布</a></li>
+</ul>
+
+    
+    <div class="toctree-wrapper compound">
+      <p class="caption"><span class="caption-text">Reference</span></p>
+      <ul>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/doxygen/html/index.html">API</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/kconfig.html">Kconfig Options</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/dts/api/bindings.html">Devicetree Bindings</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/build/cmake-ref/index.html">CMake modules</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/develop/manifest/index.html">West Projects</a>
+        </li>
+        
+        <li class="toctree-l1">
+          <a class="reference internal" href="/zephyr-docs-zh/glossary.html">Glossary</a>
+        </li>
+        
+      </ul>
+    </div>
+    
+  </div>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="移动版导航菜单" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Zephyr Project</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="页面导航">
+  <ul class="wy-breadcrumbs">
+  <!-- Docs / Latest -->
+  
+  
+
+  <li><a href="../../index.html">Docs / Latest</a> &raquo;</li>
+  
+     <li><a href="../index.html">使用 Zephyr 进行开发</a> &raquo;</li>
+  
+     <li><a href="index.html">West（Zephyr 的元工具）</a> &raquo;</li>
+  
+  <li>West 故障排除</li>
+
+
+  <li class="wy-breadcrumbs-aside">
+    <dark-mode-toggle id="dark-mode-toggle" appearance="three-way" permanent="true"/>
+  </li>
+  <li class="wy-breadcrumbs-aside">
+  </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+  
+  
+           <div itemprop="articleBody">
+             
+  <section id="troubleshooting-west">
+<span id="west-troubleshooting"></span><h1>West 故障排除<a class="headerlink" href="#troubleshooting-west" title="链接到此标题。"></a></h1>
+<p>本页介绍 west 的常见问题及其解决方法。</p>
+<section id="west-update-fetching-failures">
+<h2><code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">update</span></code> 获取失败<a class="headerlink" href="#west-update-fetching-failures" title="链接到此标题。"></a></h2>
+<p>排查获取问题的一个好方法是以详细模式运行 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">update</span></code>，例如：</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>west<span class="w"> </span>-v<span class="w"> </span>update
+</pre></div>
+</div>
+<p>输出中包含 west 运行的 Git 命令及其输出。请查找类似下面的内容：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>=== updating your_project (path/to/your/project):
+west.manifest: your_project: checking if cloned
+[...other west.manifest logs...]
+--- your_project: fetching, need revision SOME_SHA
+west.manifest: running 'git fetch ... https://github.com/your-username/your_project ...' in /some/directory
+</pre></div>
+</div>
+<p>上面最后一行中的 <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">fetch</span></code> 命令示例就是需要成功执行的命令。</p>
+<p>一种办法是进入 <code class="docutils literal notranslate"><span class="pre">/path/to/your/project</span></code>，复制粘贴并运行完整的 <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">fetch</span></code> 命令，然后参考你所用凭据存储助手的文档从那里开始调试。</p>
+<p>如果你处在公司防火墙之后，可能存在代理或其他问题，此时 <code class="docutils literal notranslate"><span class="pre">curl</span> <span class="pre">-v</span> <span class="pre">FETCH_URL</span></code> （用于 HTTPS URL）或 <code class="docutils literal notranslate"><span class="pre">ssh</span> <span class="pre">-v</span> <span class="pre">FETCH_URL</span></code> （用于 SSH URL）可能会有帮助。</p>
+<p>如果直接运行 <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">fetch</span></code> 命令时能够成功执行且不提示输入密码，那么在同一个 shell 中运行 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">update</span></code> 时也无需输入密码。</p>
+</section>
+<section id="west-is-not-recognized-as-an-internal-or-external-command-operable-program-or-batch-file">
+<h2>&quot;'west' is not recognized as an internal or external command, operable program or batch file.'<a class="headerlink" href="#west-is-not-recognized-as-an-internal-or-external-command-operable-program-or-batch-file" title="链接到此标题。"></a></h2>
+<p>在 Windows 上，这意味着要么没有安装 west，要么 <span class="target" id="index-12"></span><a class="reference internal" href="../env_vars.html#envvar-PATH"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">PATH</span></code></a> 环境变量中不包含 pip 安装 <code class="file docutils literal notranslate"><span class="pre">west.exe</span></code> 的目录。</p>
+<p>首先，确保已经安装了 west；请参阅 <a class="reference internal" href="install.html#west-install"><span class="std std-ref">安装 west</span></a>。然后尝试在新的 <code class="docutils literal notranslate"><span class="pre">cmd.exe</span></code> 窗口中运行 <code class="docutils literal notranslate"><span class="pre">west</span></code>。如果仍然不行，请继续阅读。</p>
+<p>你需要找到包含 <code class="file docutils literal notranslate"><span class="pre">west.exe</span></code> 的目录，然后将其添加到 <span class="target" id="index-13"></span><a class="reference internal" href="../env_vars.html#envvar-PATH"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">PATH</span></code></a> 中。（安装 Python 和 pip 时应该已经为你完成了对 <span class="target" id="index-14"></span><a class="reference internal" href="../env_vars.html#envvar-PATH"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">PATH</span></code></a> 的这一修改，因此通常不需要执行这些步骤。）</p>
+<p>在 <code class="docutils literal notranslate"><span class="pre">cmd.exe</span></code> 中运行以下命令：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>pip3 show west
+</pre></div>
+</div>
+<p>然后：</p>
+<ol class="arabic">
+<li><p>在输出中查找类似 <code class="docutils literal notranslate"><span class="pre">Location:</span> <span class="pre">C:\foo\python\python38\lib\site-packages</span></code> 的一行。你计算机上的具体位置会有所不同。</p></li>
+<li><p>在 <code class="docutils literal notranslate"><span class="pre">scripts</span></code> 目录 <code class="docutils literal notranslate"><span class="pre">C:\foo\python\python38\scripts</span></code> 中查找名为 <code class="docutils literal notranslate"><span class="pre">west.exe</span></code> 的文件。</p>
+<div class="admonition important">
+<p class="admonition-title">重要</p>
+<p>注意，<code class="docutils literal notranslate"><span class="pre">pip3</span> <span class="pre">show</span></code> 输出中的 <code class="docutils literal notranslate"><span class="pre">lib\site-packages</span></code> 被换成了 <code class="docutils literal notranslate"><span class="pre">scripts</span></code>！</p>
+</div>
+</li>
+<li><p>如果在 <code class="docutils literal notranslate"><span class="pre">scripts</span></code> 目录中看到了 <code class="docutils literal notranslate"><span class="pre">west.exe</span></code>，请使用类似下面的命令将 <code class="docutils literal notranslate"><span class="pre">scripts</span></code> 的完整路径添加到 <span class="target" id="index-15"></span><a class="reference internal" href="../env_vars.html#envvar-PATH"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">PATH</span></code></a> 中：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>setx PATH "%PATH%;C:\foo\python\python38\scripts"
+</pre></div>
+</div>
+<p><strong>不要直接复制粘贴此命令</strong>。在你的系统上，<code class="docutils literal notranslate"><span class="pre">scripts</span></code> 目录的位置会有所不同。</p>
+</li>
+<li><p>关闭 <code class="docutils literal notranslate"><span class="pre">cmd.exe</span></code> 窗口并打开一个新窗口。现在应该可以运行 <code class="docutils literal notranslate"><span class="pre">west</span></code> 了。</p></li>
+</ol>
+</section>
+<section id="invalid-choice-build-or-flash-etc">
+<h2>&quot;invalid choice: 'build'&quot;（或 'flash' 等）<a class="headerlink" href="#invalid-choice-build-or-flash-etc" title="链接到此标题。"></a></h2>
+<p>如果在尝试运行 Zephyr 扩展命令（例如 <a class="reference internal" href="build-flash-debug.html#west-flashing"><span class="std std-ref">west flash</span></a>、<a class="reference internal" href="build-flash-debug.html#west-building"><span class="std std-ref">west build</span></a> 等）时看到类似下面的意外错误：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ west build [...]
+west: error: argument &lt;command&gt;: invalid choice: 'build' (choose from 'init', [...])
+
+$ west flash [...]
+west: error: argument &lt;command&gt;: invalid choice: 'flash' (choose from 'init', [...])
+</pre></div>
+</div>
+<p>最可能的原因是你在 <a class="reference internal" href="basics.html#west-workspace"><span class="std std-ref">west 工作区</span></a> 之外运行了该命令。West 需要知道工作区的位置才能找到 <a class="reference internal" href="extensions.html#west-extensions"><span class="std std-ref">扩展</span></a>。</p>
+<p>要解决此问题，有两种选择：</p>
+<ol class="arabic">
+<li><p>在工作区内运行该命令（例如在 <a class="reference internal" href="../getting_started/index.html#getting-started"><span class="std std-ref">入门</span></a> 时创建的 <code class="file docutils literal notranslate"><span class="pre">zephyrproject</span></code> 目录中）。</p>
+<p>例如，在工作区内创建构建目录，或者在工作区内运行 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">flash</span> <span class="pre">--build-dir</span> <span class="pre">YOUR_BUILD_DIR</span></code>。</p>
+</li>
+<li><p>设置 <span class="target" id="index-16"></span><a class="reference internal" href="../env_vars.html#envvar-ZEPHYR_BASE"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">ZEPHYR_BASE</span></code></a> <a class="reference internal" href="../env_vars.html#env-vars"><span class="std std-ref">环境变量</span></a>，然后重新运行 west 扩展命令。如果设置了该变量，west 会使用 <span class="target" id="index-17"></span><a class="reference internal" href="../env_vars.html#envvar-ZEPHYR_BASE"><code class="xref std std-envvar docutils literal notranslate"><span class="pre">ZEPHYR_BASE</span></code></a> 查找你的工作区。</p></li>
+</ol>
+<p>如果不确定某个命令是内置命令还是扩展，请在工作区内运行 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">help</span></code>。输出会单独列出扩展命令，对于主线 Zephyr，输出如下所示：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>$ west help
+
+built-in commands for managing git repositories:
+  init:                 create a west workspace
+  [...]
+
+other built-in commands:
+  help:                 get help for west or a command
+  [...]
+
+extension commands from project manifest (path: zephyr):
+  build:                compile a Zephyr application
+  flash:                flash and run a binary on a board
+  [...]
+</pre></div>
+</div>
+</section>
+<section id="invalid-choice-post-init">
+<h2>&quot;invalid choice: 'post-init'&quot;<a class="headerlink" href="#invalid-choice-post-init" title="链接到此标题。"></a></h2>
+<p>如果在运行 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">init</span></code> 时看到此错误：</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>west: error: argument &lt;command&gt;: invalid choice: 'post-init'
+(choose from 'init', 'update', 'list', 'manifest', 'diff',
+'status', 'forall', 'config', 'selfupdate', 'help')
+</pre></div>
+</div>
+<p>说明你安装的 west 版本较旧，而你正试图在一个需要更新版本的工作区中使用它。</p>
+<p>解决此问题最简单的方法是升级 west，然后按如下步骤重试：</p>
+<ol class="arabic simple">
+<li><p>按照 <a class="reference internal" href="install.html#west-install"><span class="std std-ref">安装 west</span></a> 中所示，使用 <code class="docutils literal notranslate"><span class="pre">pip3</span> <span class="pre">install</span></code> 的 <code class="docutils literal notranslate"><span class="pre">-U</span></code> 选项安装最新版本的 west。</p></li>
+<li><p>备份 <code class="file docutils literal notranslate"><span class="pre">zephyrproject/.west/config</span></code> 中你想保留的内容。（如果没有设置任何配置选项，可以放心跳过此步骤。）</p></li>
+<li><p>完全删除 <code class="file docutils literal notranslate"><span class="pre">zephyrproject/.west</span></code> 目录（否则会出现下文所述的“already in a workspace”错误消息）。</p></li>
+<li><p>再次运行 <code class="docutils literal notranslate"><span class="pre">west</span> <span class="pre">init</span></code>。</p></li>
+</ol>
+</section>
+</section>
+
+
+           </div>
+          </div>
+
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+<p>
+  &#169; Copyright 2015-2026 Zephyr Project members and individual contributors.
+  <div class="lastupdated">
+    Last generated: 11月 06, 2026.
+    Last source update: 9月 19, 2025.
+  </div></p>
+
+  </div>
+
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
